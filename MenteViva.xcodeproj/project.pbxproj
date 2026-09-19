@@ -1,0 +1,165 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = { };
+	objectVersion = 56;
+	objects = {
+		18180C4157C1561D00000021 /* MemoryMatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 250E769752DD6A430000001B; };
+		2A7F83F1E2F186E800000014 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C04053E45A48AC460000000E; };
+		6866AB30C9E6CF9000000018 /* MenteVivaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65242C715F07923E00000012; };
+		E2080412E5AF86210000001E /* GameSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC9E51A3CFE79A4700000018; };
+
+		250E769752DD6A430000001B /* MemoryMatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/MemoryMatchView.swift; sourceTree = "<group>"; };
+		C04053E45A48AC460000000E /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		65242C715F07923E00000012 /* MenteVivaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaApp.swift; sourceTree = "<group>"; };
+		AC9E51A3CFE79A4700000018 /* GameSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models/GameSession.swift; sourceTree = "<group>"; };
+		5D90A9FDEC5CFCA50000000D /* MenteViva.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MenteViva.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1983297D696F1E1B0000000A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5791C14BF0160AFA00000009 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+
+		1FBF111C1EE1FE7C0000000F /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 5791C14BF0160AFA00000009; };
+
+		DC57E42946F6E08C00000005 /* MenteViva */ = {
+			isa = PBXGroup;
+			children = (
+				250E769752DD6A430000001B /* MemoryMatchView.swift */,
+				C04053E45A48AC460000000E /* HomeView.swift */,
+				65242C715F07923E00000012 /* MenteVivaApp.swift */,
+				AC9E51A3CFE79A4700000018 /* GameSession.swift */,
+				1983297D696F1E1B0000000A /* Info.plist */,
+				5791C14BF0160AFA00000009 /* Localizable.xcstrings */,
+			);
+			path = MenteViva;
+			sourceTree = "<group>";
+		};
+
+		16F3E46051EEE3E800000006 /* MenteViva */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 623D50793F221C220000000A /* Build configuration list for PBXNativeTarget "MenteViva" */;
+			buildPhases = ( 91E3A47599412F5100000007 /* Sources */, E2FAF168207B0A480000000A /* Frameworks */, A93C79C57508885200000009 /* Resources */ );
+			buildRules = ( );
+			dependencies = ( );
+			name = MenteViva;
+			productName = MenteViva;
+			productReference = 5D90A9FDEC5CFCA50000000D;
+			productType = "com.apple.product-type.application";
+		};
+
+		8572920E3537AD1600000004 /* Project object */ = {
+			isa = PBXProject;
+			attributes = { BuildIndependentTargetsInParallel = 1; LastSwiftUpdateCheck = 1600; LastUpgradeCheck = 1600; };
+			buildConfigurationList = E58D6E7C2FA70EB30000000A /* Build configuration list for PBXProject "MenteViva" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = ( en, Base, es );
+			mainGroup = DC57E42946F6E08C00000005;
+			productRefGroup = DC57E42946F6E08C00000005;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = ( 16F3E46051EEE3E800000006 /* MenteViva */ );
+		};
+
+		A93C79C57508885200000009 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = ( 1FBF111C1EE1FE7C0000000F /* Localizable.xcstrings in Resources */ );
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+
+		E2FAF168207B0A480000000A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = ( );
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+
+		91E3A47599412F5100000007 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				18180C4157C1561D00000021 /* MemoryMatchView.swift in Sources */,
+				2A7F83F1E2F186E800000014 /* HomeView.swift in Sources */,
+				6866AB30C9E6CF9000000018 /* MenteVivaApp.swift in Sources */,
+				E2080412E5AF86210000001E /* GameSession.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+
+		52B780FCD975D91800000006 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				ENABLE_PREVIEWS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+
+		BE028481DAB8D9CA00000008 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				ENABLE_PREVIEWS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+
+		52B784FCD975DFE400000006 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				ENABLE_PREVIEWS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MenteViva/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Mente Viva";
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.igmarin.MenteViva;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+
+		BE028081DAB8D2FE00000008 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				ENABLE_PREVIEWS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MenteViva/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Mente Viva";
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.igmarin.MenteViva;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+
+		E58D6E7C2FA70EB30000000A = { isa = XCConfigurationList; buildConfigurations = ( 52B780FCD975D91800000006, BE028481DAB8D9CA00000008 ); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+
+		623D50793F221C220000000A = { isa = XCConfigurationList; buildConfigurations = ( 52B784FCD975DFE400000006, BE028081DAB8D2FE00000008 ); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+
+	};
+	rootObject = 8572920E3537AD1600000004 /* Project object */;
+}

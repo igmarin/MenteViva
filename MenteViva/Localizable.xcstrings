@@ -1,0 +1,30 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "app.title" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Mente Viva" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Mente Viva" } }
+      }
+    },
+    "game.memory.title" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Memory Lane" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Camino de Memoria" } }
+      }
+    },
+    "game.memory.instruction" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Find the matching pairs" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Encuentra las parejas" } }
+      }
+    },
+    "game.memory.card.hidden" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Hidden card" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Carta oculta" } }
+      }
+    }
+  },
+  "version" : "1.0"
+}

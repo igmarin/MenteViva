@@ -1,0 +1,8 @@
+# Swift / Xcode
+build/
+DerivedData/
+*.xcuserstate
+xcuserdata/
+.DS_Store
+*.ipa
+*.dSYM.zip
