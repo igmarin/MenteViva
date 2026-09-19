@@ -117,6 +117,7 @@
 		52B780FCD975D91800000006 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
 				ENABLE_PREVIEWS = YES;
@@ -128,6 +129,7 @@
 		BE028481DAB8D9CA00000008 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
 				ENABLE_PREVIEWS = YES;
@@ -139,6 +141,7 @@
 		52B784FCD975DFE400000006 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
 				ENABLE_PREVIEWS = YES;
@@ -163,6 +166,7 @@
 		BE028081DAB8D2FE00000008 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
 				ENABLE_PREVIEWS = YES;

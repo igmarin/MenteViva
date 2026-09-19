@@ -56,7 +56,7 @@ p += "\t\t\(fwID) /* Frameworks */ = {\n\t\t\tisa = PBXFrameworksBuildPhase;\n\t
 p += "\t\t\(srcsID) /* Sources */ = {\n\t\t\tisa = PBXSourcesBuildPhase;\n\t\t\tbuildActionMask = 2147483647;\n\t\t\tfiles = (\n\(phaseFiles)\t\t\t);\n\t\t\trunOnlyForDeploymentPostprocessing = 0;\n\t\t};\n\n"
 func configBlock(_ name: String, _ opt: String, _ target: Bool) -> String {
     let cfgID = oid(name + (target ? "T" : "P"))
-    var s = "\t\t" + cfgID + " /* " + name + " */ = {\n\t\t\tisa = XCBuildConfiguration;\n\t\t\tbuildSettings = {\n\t\t\t\tSDKROOT = iphoneos;\n\t\t\t\tSWIFT_VERSION = 5.0;\n\t\t\t\tENABLE_PREVIEWS = YES;\n\t\t\t\t" + opt + "\n"
+    var s = "\t\t" + cfgID + " /* " + name + " */ = {\n\t\t\tisa = XCBuildConfiguration;\n\t\t\tbuildSettings = {\n\t\t\t\tALWAYS_SEARCH_USER_PATHS = NO;\n\t\t\t\tSDKROOT = iphoneos;\n\t\t\t\tSWIFT_VERSION = 5.0;\n\t\t\t\tENABLE_PREVIEWS = YES;\n\t\t\t\t" + opt + "\n"
     if target {
         s += """
 \t\t\t\tCODE_SIGN_STYLE = Automatic;
