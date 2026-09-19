@@ -4,6 +4,7 @@ Jev is **seasoning, not the meal**. All four games are 100% deterministic and wo
 Jev answers two narrow questions per day; code stays in control of everything else.
 
 Source of truth: https://docs.typesafe.ai/llms.txt (fetched 2025; append `.md` to doc paths).
+Verified against live API 2026-09-19 (model served: `jev-1.13.0`; raw pairs in `jev-json/000`–`005`).
 
 ## API contract used
 
@@ -12,9 +13,13 @@ Source of truth: https://docs.typesafe.ai/llms.txt (fetched 2025; append `.md` t
 - Body: `{ "state": <string|object>, "model": "jev-latest", "questions": { "<key>": {...} } }`
 - One request can mix Choice / Score / Noul questions; all see the same state and are
   evaluated independently. We send **one request per day** with 8 questions.
-- Answers: `choice` → `{type, choice, probabilities, confidence}`;
-  `score` → `{type, score (float, e.g. 1.06), legend, probabilities, confidence}`;
+- Answers (verified live): `choice` → `{type, choice, probabilities, confidence}`;
+  `score` → `{type, score (float, e.g. 1.93), legend (object keyed by level),
+  probabilities (object keyed by level), confidence}`;
   `noul` → `{type, noul (P(yes), 0..1)}` — **no confidence field on Noul**.
+- Real observed values: score float `1.7`–`1.93`, legend echoing our criteria verbatim,
+  probabilities summing to ~1.0, `usage: {input_tokens, output_tokens}` on every response
+  (001: 890 in / 95 out). Client ignores `usage` today.
 - `confidence` (0..1) is derived from the probability distribution's shape; it's a
   separate axis from the answer itself. Gate actions on it.
 
