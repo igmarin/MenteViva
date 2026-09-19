@@ -68,6 +68,14 @@ human decides, and disagreements get recorded, not silently resolved.
   for shipped code (#20). No tests for layout trivia or wire models.
 - **MVP:** gates G0–G4 in docs/mvp.md adopted as the definition of done (#19).
 
+## 2026-09-19 — Number Trail role defined (#17 closed)
+
+Jev 002 scored numeracy 0.62 (weakest domain, P(skip)=0.39). Resolution:
+Number Trail stays as **engagement variety, not an evidence pillar** —
+math is familiar, low-friction, and confidence-building for the target
+audience; the evidence pillars are speed (Quick Eyes) and memory (Memory
+Lane). Playtest data (#6) confirms engagement or we cut it at MVP review.
+
 ## Open questions (not yet decided)
 
 - Business model: research leans **one-time $12.99 + Family Sharing**
