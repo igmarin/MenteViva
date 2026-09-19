@@ -7,7 +7,10 @@ screen of real content, split it — long docs don't get read.
 |---|---|---|
 | [product-brief.md](product-brief.md) | What are we building, for whom, and why | Current |
 | [conventions.md](conventions.md) | Rules every commit must follow | Current |
-| [jev-integration.md](jev-integration.md) | How Jev/TypeSafe fits (seasoning, not the meal) | Current |
+| [jev-integration.md](jev-integration.md) | How Jev/TypeSafe fits (seasoning, not the meal) | Verified live |
+| [jev-revisit.md](jev-revisit.md) | Our 5 early decisions vs Jev's judgments | 2026-09-19 |
+| [jev-json/](jev-json/) | Raw Jev request/response archive (audit trail) | Growing |
+| [mvp.md](mvp.md) | MVP definition of done + phase gates | Living |
 | [decisions.md](decisions.md) | Every significant decision, with date and reason | Living log |
 | [research-2026-09.md](research-2026-09.md) | Evidence + market scan behind the decisions | Snapshot |
 | [roadmap.md](roadmap.md) | What happens next, in order | Living |
