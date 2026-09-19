@@ -1,0 +1,24 @@
+{
+  "model": "jev-1.13.0",
+  "answers": {
+    "primary_audience": {
+      "type": "choice",
+      "choice": "healthy_preventive_60plus",
+      "confidence": 0.94,
+      "probabilities": {
+        "diagnosed_mci": 0.05,
+        "early_dementia": 0.0,
+        "general_public": 0.0,
+        "healthy_preventive_60plus": 0.95
+      }
+    },
+    "dementia_claims_risky": {
+      "type": "noul",
+      "noul": 0.98
+    }
+  },
+  "usage": {
+    "input_tokens": 890,
+    "output_tokens": 95
+  }
+}

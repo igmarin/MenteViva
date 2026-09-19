@@ -1,0 +1,13 @@
+{
+  "model": "jev-1.13.0",
+  "answers": {
+    "include_math": {
+      "type": "noul",
+      "noul": 0.79
+    }
+  },
+  "usage": {
+    "input_tokens": 341,
+    "output_tokens": 21
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "model": "jev-latest",
+  "state": {
+    "product": "MenteViva, an iOS brain-training app for healthy-to-mild older adults 60+. Purchase channel: an adult child buys it for their aging parent; family progress sharing via CloudKit is a core feature. Built by a solo developer; ongoing content cadence will be slow.",
+    "market_evidence": {
+      "norms": "Mainstream brain-training apps (Lumosity, Elevate, Peak, Impulse, CogniFit, BrainHQ) are freemium subscriptions at $35-95/yr with 4.5+ ratings, free tiers of 3-5 games, and aggressive trials. No mainstream app succeeds at one-time pricing.",
+      "reviewer_complaints": "Cluster on subscription cost / paywall after a few games, repetitive content, and trials that auto-convert.",
+      "senior_subscription_aversion": "Seniors/caregivers distrust subscriptions; care facilities avoid auto-renewing app purchases entirely. Seniors have the lowest subscription tolerance of any demographic [unverified survey, but consistent with FTC-vintage wariness]."
+    },
+    "options_context": {
+      "one_time": "One-time $12.99 with Family Sharing: one purchase covers the whole family, fits the adult-child-purchaser channel, dodges subscription fatigue in App Store review, simplifies refunds. Zero recurring revenue; updates funded by new sales only.",
+      "freemium_annual": "Cheap annual $24.99 plus generous free tier (3 games free forever): converts the engaged, doesn't alienate the casual, funds ongoing content.",
+      "free_forever": "No revenue at all; unsustainable for even a solo dev long-term.",
+      "subscription_monthly": "$4.99/month: market-standard shape but highest friction for this audience; auto-renew is exactly what seniors and facilities avoid."
+    }
+  },
+  "questions": {
+    "launch_model": {
+      "type": "choice",
+      "instructions": "Which launch monetization model best fits this product and audience?",
+      "criteria": {
+        "one_time_1299_family_sharing": "Single $12.99 purchase, Family Sharing enabled, no free tier",
+        "freemium_annual_2499": "Free tier with a few games forever; $24.99/yr unlocks everything",
+        "free_forever": "Completely free, no monetization at launch",
+        "subscription_499_month": "$4.99/month auto-renewing subscription, short free trial"
+      }
+    }
+  }
+}

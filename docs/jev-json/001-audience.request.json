@@ -1,0 +1,36 @@
+{
+  "model": "jev-latest",
+  "state": {
+    "product": "MenteViva, an iOS brain-training app: 4 simple warm-toned games (memory pairs, Stroop, category fluency, adaptive math), offline-first, EN/ES bilingual, no accounts, no clinical scores. Zero third-party deps, solo developer.",
+    "purchase_channel": "Adult child buys the app for their aging parent; family views progress via CloudKit share.",
+    "evidence": {
+      "healthy_older_adults": "Small near-transfer gains on trained tasks; far transfer to daily life weak/unproven. Overall computerized-cognitive-training effect small (g≈0.22, meta-analysis of 51 studies).",
+      "mci": "Small-to-moderate improvements across domains; best-supported target population for CCT in the literature.",
+      "dementia": "No reliable benefit; literature says do not target.",
+      "consensus": "2014 Stanford/Max Planck consensus (70 scientists): no compelling evidence brain games improve everyday cognition or prevent decline; ads exploiting seniors' anxieties called out.",
+      "regulatory": "FDA general-wellness safe harbor only if claims stay lifestyle-level. FTC fined Lumosity $2M for unsubstantiated claims. App Store 1.4.1 scrutinizes apps usable for diagnosing or treating. Claiming dementia/MCI benefit = medical device territory.",
+      "design_cost": "Diagnosed-impairment audiences raise the design bar (simplification, caregiver supervision) at the same time as the regulatory bar."
+    },
+    "constraints": "Solo developer, zero-dep native iOS, offline-first, accessibility floor (WCAG 2.2 AA), must stay clear of App Store medical scrutiny."
+  },
+  "questions": {
+    "primary_audience": {
+      "type": "choice",
+      "instructions": "Which population should v1 primarily target?",
+      "criteria": {
+        "healthy_preventive_60plus": "Healthy older adults 60+ who want to stay sharp; preventive framing, lifestyle-level marketing claims only",
+        "diagnosed_mci": "Adults with diagnosed mild cognitive impairment; strongest CCT evidence but higher design and regulatory bar",
+        "early_dementia": "Adults in early dementia; strongest need but no reliable training benefit in the literature",
+        "general_public": "General adult public of all ages, competing head-on with Lumosity/Elevate/Peak"
+      }
+    },
+    "dementia_claims_risky": {
+      "type": "noul",
+      "instructions": "Is targeting dementia-claimed benefit both evidence-unsupported and regulatorily risky for this app?",
+      "criteria": {
+        "true": "Evidence shows no reliable benefit for dementia and such claims trigger FDA/FTC/App Store medical scrutiny",
+        "false": "Dementia-targeted claims are evidence-supported or carry no meaningful regulatory risk"
+      }
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "model": "jev-1.13.0",
+  "answers": {
+    "offline_first_daily_right": {
+      "type": "noul",
+      "noul": 0.9
+    },
+    "per_session_worth_it": {
+      "type": "noul",
+      "noul": 0.17
+    }
+  },
+  "usage": {
+    "input_tokens": 751,
+    "output_tokens": 43
+  }
+}

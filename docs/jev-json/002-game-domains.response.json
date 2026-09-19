@@ -1,0 +1,99 @@
+{
+  "model": "jev-1.13.0",
+  "answers": {
+    "processing_speed": {
+      "type": "score",
+      "score": 1.93,
+      "confidence": 0.89,
+      "legend": {
+        "0": "Not worth v1: skip it for launch",
+        "1": "Nice variety: include only if trivially cheap to build",
+        "2": "Core pillar: strongest-evidence domain; v1 should find a way to cover it"
+      },
+      "probabilities": {
+        "0": 0.02,
+        "1": 0.03,
+        "2": 0.95
+      }
+    },
+    "working_memory": {
+      "type": "score",
+      "score": 1.79,
+      "confidence": 0.69,
+      "legend": {
+        "0": "Not worth v1: skip it for launch",
+        "1": "Nice variety: include only if trivially cheap to build",
+        "2": "Core pillar: v1 should find a way to cover it"
+      },
+      "probabilities": {
+        "0": 0.01,
+        "1": 0.18,
+        "2": 0.81
+      }
+    },
+    "episodic_memory": {
+      "type": "score",
+      "score": 1.7,
+      "confidence": 0.54,
+      "legend": {
+        "0": "Not worth v1: skip it for launch",
+        "1": "Nice variety: include only if trivially cheap to build",
+        "2": "Core pillar: v1 should find a way to cover it"
+      },
+      "probabilities": {
+        "0": 0.01,
+        "1": 0.28,
+        "2": 0.71
+      }
+    },
+    "executive_inhibition": {
+      "type": "score",
+      "score": 1.34,
+      "confidence": 0.43,
+      "legend": {
+        "0": "Not worth v1: skip it for launch",
+        "1": "Nice variety: include only if trivially cheap to build",
+        "2": "Core pillar: v1 should find a way to cover it"
+      },
+      "probabilities": {
+        "0": 0.02,
+        "1": 0.62,
+        "2": 0.36
+      }
+    },
+    "verbal_fluency": {
+      "type": "score",
+      "score": 0.81,
+      "confidence": 0.67,
+      "legend": {
+        "0": "Not worth v1: skip it for launch",
+        "1": "Nice variety: include only if trivially cheap to build",
+        "2": "Core pillar: v1 should find a way to cover it"
+      },
+      "probabilities": {
+        "0": 0.21,
+        "1": 0.78,
+        "2": 0.01
+      }
+    },
+    "numeracy": {
+      "type": "score",
+      "score": 0.62,
+      "confidence": 0.41,
+      "legend": {
+        "0": "Not worth v1: skip it for launch",
+        "1": "Nice variety: include only if trivially cheap to build",
+        "2": "Core pillar: v1 should find a way to cover it"
+      },
+      "probabilities": {
+        "0": 0.39,
+        "1": 0.6,
+        "2": 0.01
+      }
+    }
+  },
+  "usage": {
+    "input_tokens": 1176,
+    "output_tokens": 100
+  }
+}

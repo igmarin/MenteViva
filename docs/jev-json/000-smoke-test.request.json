@@ -1,0 +1,19 @@
+{
+  "model": "jev-latest",
+  "state": {
+    "player": {
+      "sessions_last_14d": 6,
+      "mean_accuracy": 0.75
+    }
+  },
+  "questions": {
+    "include_math": {
+      "type": "noul",
+      "instructions": "Should math streaks be included in todays recommended mix for this player?",
+      "criteria": {
+        "true": "The player has engaged recently and shows steady accuracy",
+        "false": "The player has not engaged or is struggling"
+      }
+    }
+  }
+}

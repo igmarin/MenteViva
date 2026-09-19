@@ -1,0 +1,77 @@
+{
+  "model": "jev-latest",
+  "state": {
+    "product": "MenteViva, an iOS brain-training app for healthy-to-mild older adults 60+ (preventive focus), purchased by adult children. Offline-first, EN/ES bilingual, warm tone, huge touch targets, no timers pressuring the player, no fail shame, no clinical scores.",
+    "current_games": [
+      "Memory Lane: emoji pair matching (episodic/working memory)",
+      "Color Clash: Stroop, tap the ink color (executive inhibition)",
+      "Name the Herd: name N animals in a category (verbal fluency)",
+      "Number Trail: simple adaptive math streaks (numeracy + processing)"
+    ],
+    "evidence_by_domain": {
+      "processing_speed": "Strongest evidence: ACTIVE trial (N=2,802, 10-yr follow-up) speed-of-processing arm cut dementia incidence 29%, dose-dependent; broad transfer to daily function. UFOV implementation is licensed; generic speed tasks are buildable.",
+      "working_memory": "Near transfer reliable, far transfer unproven (23-study meta-analysis).",
+      "episodic_memory": "Trains reliably in healthy older adults; strategy training persists but rarely transfers beyond memory tasks.",
+      "executive_inhibition": "Improves on trained tasks; far transfer inconsistent.",
+      "verbal_fluency": "Least studied as a training target; more a language/social exercise.",
+      "numeracy": "Not a distinct evidence domain in the CCT literature; math streaks here mix simple processing speed with engagement."
+    },
+    "constraints": "Solo developer; v1 ships 4 games; small and polished beats broad and shallow. v1 currently covers working/episodic memory, inhibition, fluency, and numeracy; processing speed is NOT yet covered as a dedicated game."
+  },
+  "questions": {
+    "processing_speed": {
+      "type": "score",
+      "instructions": "How important is processing speed as a dedicated game domain for v1 of this product?",
+      "criteria": [
+        "Not worth v1: skip it for launch",
+        "Nice variety: include only if trivially cheap to build",
+        "Core pillar: strongest-evidence domain; v1 should find a way to cover it"
+      ]
+    },
+    "working_memory": {
+      "type": "score",
+      "instructions": "How important is working memory as a dedicated game domain for v1 of this product?",
+      "criteria": [
+        "Not worth v1: skip it for launch",
+        "Nice variety: include only if trivially cheap to build",
+        "Core pillar: v1 should find a way to cover it"
+      ]
+    },
+    "episodic_memory": {
+      "type": "score",
+      "instructions": "How important is episodic memory as a dedicated game domain for v1 of this product?",
+      "criteria": [
+        "Not worth v1: skip it for launch",
+        "Nice variety: include only if trivially cheap to build",
+        "Core pillar: v1 should find a way to cover it"
+      ]
+    },
+    "executive_inhibition": {
+      "type": "score",
+      "instructions": "How important is executive function / inhibition (e.g. Stroop) as a dedicated game domain for v1 of this product?",
+      "criteria": [
+        "Not worth v1: skip it for launch",
+        "Nice variety: include only if trivially cheap to build",
+        "Core pillar: v1 should find a way to cover it"
+      ]
+    },
+    "verbal_fluency": {
+      "type": "score",
+      "instructions": "How important is verbal fluency (category naming) as a dedicated game domain for v1 of this product?",
+      "criteria": [
+        "Not worth v1: skip it for launch",
+        "Nice variety: include only if trivially cheap to build",
+        "Core pillar: v1 should find a way to cover it"
+      ]
+    },
+    "numeracy": {
+      "type": "score",
+      "instructions": "How important is numeracy (simple adaptive math) as a dedicated game domain for v1 of this product?",
+      "criteria": [
+        "Not worth v1: skip it for launch",
+        "Nice variety: include only if trivially cheap to build",
+        "Core pillar: v1 should find a way to cover it"
+      ]
+    }
+  }
+}

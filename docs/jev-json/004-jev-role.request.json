@@ -1,0 +1,28 @@
+{
+  "model": "jev-latest",
+  "state": {
+    "product": "MenteViva, an iOS brain-training app for older adults 60+. All 4 games are 100% deterministic and fully playable offline. Jev (a small fast cloud judgment model, <1s latency, ~50-100 output tokens per call) is used only as seasoning: it ranks the daily game mix and nudges per-game difficulty.",
+    "current_architecture": "One Jev request per local day (4 Noul + 4 Score questions, one state object of anonymized aggregates), fired lazily on first appearance of the game list, cached in UserDefaults for the day. Any failure degrades silently to a deterministic rotation + 3-strikes difficulty rule. The app never blocks on network.",
+    "audience_context": "Players are seniors, many in care facilities or homes with poor/restricted wifi. Difficulty that shifts mid-day feels erratic to older adults. Per-session calls would multiply API cost 4-6x and move difficulty within a single day.",
+    "constraints": "Solo developer, offline-first is a hard requirement (App Store review also requires no forced login for core function). API key must stay behind a tiny proxy.",
+    "alternative": "Per-session Jev calls: re-rank and re-judge difficulty after every play session instead of once daily."
+  },
+  "questions": {
+    "offline_first_daily_right": {
+      "type": "noul",
+      "instructions": "Is offline-first with once-daily Jev ranking the right architecture for this audience's context (senior facilities, poor wifi)?",
+      "criteria": {
+        "true": "Yes: the audience's connectivity reality and need for stability make once-daily ranking with deterministic offline fallback the right design",
+        "false": "No: this architecture sacrifices too much adaptivity; the audience context does not justify it"
+      }
+    },
+    "per_session_worth_it": {
+      "type": "noul",
+      "instructions": "Would per-session Jev calls meaningfully improve outcomes enough to justify the 4-6x cost and mid-day difficulty shifts?",
+      "criteria": {
+        "true": "Yes: session-level adaptivity would produce meaningfully better engagement or training outcomes, worth the cost and mid-day difficulty movement",
+        "false": "No: once-daily granularity captures nearly all the benefit; per-session calls add cost and erratic feel without meaningful outcome gains"
+      }
+    }
+  }
+}

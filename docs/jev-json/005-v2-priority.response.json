@@ -1,0 +1,20 @@
+{
+  "model": "jev-1.13.0",
+  "answers": {
+    "v020_focus": {
+      "type": "choice",
+      "choice": "polish_existing_from_playtest",
+      "confidence": 0.98,
+      "probabilities": {
+        "more_game_breadth": 0.0,
+        "polish_existing_from_playtest": 0.99,
+        "add_processing_speed_game": 0.01,
+        "build_family_sharing_first": 0.0
+      }
+    }
+  },
+  "usage": {
+    "input_tokens": 725,
+    "output_tokens": 72
+  }
+}
