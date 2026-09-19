@@ -1,144 +1,406 @@
 {
-  "sourceLanguage" : "en",
-  "strings" : {
-    "app.title" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Mente Viva" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Mente Viva" } }
+  "sourceLanguage": "en",
+  "strings": {
+    "%lld / %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$lld / %2$lld"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld / %2$lld"
+          }
+        }
       }
     },
-    "game.memory.title" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Memory Lane" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Camino de Memoria" } }
+    "%lld + %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$lld + %2$lld"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld + %2$lld"
+          }
+        }
       }
     },
-    "game.memory.instruction" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Find the matching pairs" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Encuentra las parejas" } }
+    "app.title": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mente Viva"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mente Viva"
+          }
+        }
       }
     },
-    "game.memory.card.hidden" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Hidden card" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Carta oculta" } }
+    "game.category.animals": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Animals"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Animales"
+          }
+        }
       }
     },
-    "game.common.welldone" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Well done! 🎉" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "¡Muy bien! 🎉" } }
+    "game.category.colors": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Colors"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Colores"
+          }
+        }
       }
     },
-    "game.colorclash.title" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Color Clash" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Choque de Colores" } }
+    "game.category.fruits": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fruits"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Frutas"
+          }
+        }
       }
     },
-    "game.colorclash.instruction" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Tap the color of the ink, not the word" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Toca el color de la tinta, no la palabra" } }
+    "game.category.instruction": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap all that belong to"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toca todos los que sean"
+          }
+        }
       }
     },
-    "game.colorclash.word.red" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "RED" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "ROJO" } }
+    "game.category.title": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Name the Herd"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nombra la Manada"
+          }
+        }
       }
     },
-    "game.colorclash.word.blue" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "BLUE" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "AZUL" } }
+    "game.category.vehicles": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vehicles"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vehículos"
+          }
+        }
       }
     },
-    "game.colorclash.word.green" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "GREEN" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "VERDE" } }
+    "game.colorclash.color.blue": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Blue"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Azul"
+          }
+        }
       }
     },
-    "game.colorclash.word.orange" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "ORANGE" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "NARANJA" } }
+    "game.colorclash.color.green": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Green"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verde"
+          }
+        }
       }
     },
-    "game.colorclash.color.red" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Red" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Rojo" } }
+    "game.colorclash.color.orange": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Orange"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Naranja"
+          }
+        }
       }
     },
-    "game.colorclash.color.blue" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Blue" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Azul" } }
+    "game.colorclash.color.red": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Red"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rojo"
+          }
+        }
       }
     },
-    "game.colorclash.color.green" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Green" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Verde" } }
+    "game.colorclash.instruction": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap the color of the ink, not the word"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toca el color de la tinta, no la palabra"
+          }
+        }
       }
     },
-    "game.colorclash.color.orange" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Orange" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Naranja" } }
+    "game.colorclash.title": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Color Clash"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choque de Colores"
+          }
+        }
       }
     },
-    "game.category.title" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Name the Herd" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Nombra la Manada" } }
+    "game.colorclash.word.blue": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "BLUE"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "AZUL"
+          }
+        }
       }
     },
-    "game.category.instruction" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Tap all that belong to" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Toca todos los que sean" } }
+    "game.colorclash.word.green": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GREEN"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "VERDE"
+          }
+        }
       }
     },
-    "game.category.animals" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Animals" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Animales" } }
+    "game.colorclash.word.orange": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ORANGE"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NARANJA"
+          }
+        }
       }
     },
-    "game.category.fruits" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Fruits" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Frutas" } }
+    "game.colorclash.word.red": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "RED"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ROJO"
+          }
+        }
       }
     },
-    "game.category.colors" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Colors" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Colores" } }
+    "game.common.welldone": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Well done! 🎉"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "¡Muy bien! 🎉"
+          }
+        }
       }
     },
-    "game.category.vehicles" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Vehicles" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Vehículos" } }
+    "game.math.instruction": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap the correct answer"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toca la respuesta correcta"
+          }
+        }
       }
     },
-    "game.math.title" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Number Trail" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Sendero de Números" } }
+    "game.math.title": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Number Trail"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sendero de Números"
+          }
+        }
       }
     },
-    "game.math.instruction" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Tap the correct answer" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Toca la respuesta correcta" } }
+    "game.memory.card.hidden": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hidden card"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Carta oculta"
+          }
+        }
+      }
+    },
+    "game.memory.instruction": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Find the matching pairs"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Encuentra las parejas"
+          }
+        }
+      }
+    },
+    "game.memory.title": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Memory Lane"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Camino de Memoria"
+          }
+        }
       }
     }
   },
-  "version" : "1.0"
+  "version": "1.0"
 }
