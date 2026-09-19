@@ -8,7 +8,7 @@ Source of truth: https://docs.typesafe.ai/llms.txt (fetched 2025; append `.md` t
 ## API contract used
 
 - `POST https://api.typesafe.ai/v1/systemone`
-- Header: `Authorization: Bearer <TYPESAFE_API_KEY>`
+- Header: `Authorization: Bearer <TYPESAFE_AI_KEY>`
 - Body: `{ "state": <string|object>, "model": "jev-latest", "questions": { "<key>": {...} } }`
 - One request can mix Choice / Score / Noul questions; all see the same state and are
   evaluated independently. We send **one request per day** with 8 questions.
@@ -90,14 +90,14 @@ same — sync changes storage, not what Jev sees.
 
 ## Server-side proxy requirement
 
-An iOS app cannot hold `TYPESAFE_API_KEY` safely (extractable from the binary —
+An iOS app cannot hold `TYPESAFE_AI_KEY` safely (extractable from the binary —
 convention 7: server-side proxy before public release). `JevService` therefore posts the
 identical request body to a **configurable proxy URL** (`JEV_PROXY_URL` in Info.plist /
 xcconfig; unset → offline fallback). The proxy is ~20 lines of any stack:
 
 ```
 POST /jev  →  forward body to https://api.typesafe.ai/v1/systemone
-              with header Authorization: Bearer $TYPESAFE_API_KEY
+              with header Authorization: Bearer $TYPESAFE_AI_KEY
               return response verbatim
 ```
 
