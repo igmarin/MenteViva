@@ -1,0 +1,21 @@
+# Docs — Mente Viva
+
+Read in this order. Each doc is short on purpose. If a doc grows past one
+screen of real content, split it — long docs don't get read.
+
+| Doc | Question it answers | Status |
+|---|---|---|
+| [product-brief.md](product-brief.md) | What are we building, for whom, and why | Current |
+| [conventions.md](conventions.md) | Rules every commit must follow | Current |
+| [jev-integration.md](jev-integration.md) | How Jev/TypeSafe fits (seasoning, not the meal) | Current |
+| [decisions.md](decisions.md) | Every significant decision, with date and reason | Living log |
+| [research-2026-09.md](research-2026-09.md) | Evidence + market scan behind the decisions | Snapshot |
+| [roadmap.md](roadmap.md) | What happens next, in order | Living |
+
+## Writing rules for these docs
+
+1. One idea per sentence. No filler ("It's important to note that…").
+2. Every claim that isn't our own decision gets a source URL.
+3. Decisions say **who decided, when, and why** — so future-us can reverse them.
+4. No boilerplate sections. A section with nothing to say gets deleted.
+5. Spanish summaries land when the product copy stabilizes — YAGNI for now.
