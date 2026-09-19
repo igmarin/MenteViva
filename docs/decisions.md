@@ -58,6 +58,16 @@ Rule adopted: significant product decisions get a Jev judgment archived in
 docs/jev-json/ before being logged here. Jev is evidence, not truth — the
 human decides, and disagreements get recorded, not silently resolved.
 
+## 2026-09-19 — Confirmed by owner (via discussion + Jev evidence)
+
+- **Pricing:** one-time $12.99 + Family Sharing is *decided for beta* (#21);
+  freemium-annual (Jev minority 0.28) revisited only with beta conversion data.
+- **Audience:** v1 stays healthy preventive 60+ (Jev 001, P=0.95). Segment
+  expansion becomes a Jev research study in v0.4.0 — not v1 scope.
+- **Testing:** TDD for logic, BDD (Given/When/Then) for user flows, backfill
+  for shipped code (#20). No tests for layout trivia or wire models.
+- **MVP:** gates G0–G4 in docs/mvp.md adopted as the definition of done (#19).
+
 ## Open questions (not yet decided)
 
 - Business model: research leans **one-time $12.99 + Family Sharing**
