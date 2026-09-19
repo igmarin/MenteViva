@@ -23,8 +23,12 @@ struct CelebrationView: View {
                     .multilineTextAlignment(.center)
                     .accessibilityAddTraits(.isHeader)
 
+                // Fixed size, not a Dynamic Type style — the score is display
+                // type, not body text. At AX5 it clips instead of growing.
                 Text("\(score)")
                     .font(.system(size: 88, weight: .bold, design: .rounded))
+                    .minimumScaleFactor(0.4)
+                    .lineLimit(1)
                     .accessibilityLabel(String(localized: "game.celebration.score.a11y"))
                     .accessibilityValue("\(score)")
 

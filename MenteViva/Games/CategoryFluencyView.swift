@@ -47,6 +47,7 @@ struct CategoryFluencyView: View {
     @State private var startedAt = Date.now
     @State private var showCelebration = false
     @State private var finalScore = 0
+    @State private var tilePositions: [Int: Int] = [:]
 
     private let columns = [GridItem(.adaptive(minimum: 100), spacing: 16)]
 
@@ -74,10 +75,18 @@ struct CategoryFluencyView: View {
                                 .frame(maxWidth: .infinity, minHeight: 100)
                                 .background(tiles[i].isPicked ? .green.opacity(0.25) : .blue.opacity(0.15),
                                             in: .rect(cornerRadius: 16))
+                                // Non-color cue: picked tiles get a visible checkmark,
+                                // not just a green tint (WCAG 1.4.1, conventions.md §4).
+                                .overlay(alignment: .topTrailing) {
+                                    pickedBadge(isPicked: tiles[i].isPicked)
+                                }
                         }
                         .buttonStyle(.plain)
                         .disabled(tiles[i].isPicked)
                         .accessibilityLabel(tiles[i].emoji)
+                        .accessibilityHint(tiles[i].isPicked
+                                           ? String(localized: "game.category.a11y.picked")
+                                           : String(localized: "game.category.a11y.position \(tilePositions[i] ?? 0) \(tiles.count)"))
                     }
                 }
             }
@@ -89,6 +98,17 @@ struct CategoryFluencyView: View {
             CelebrationView(score: finalScore,
                             onPlayAgain: { showCelebration = false; restart() },
                             onHome: { showCelebration = false; dismiss() })
+        }
+    }
+
+    @ViewBuilder
+    private func pickedBadge(isPicked: Bool) -> some View {
+        if isPicked {
+            Image(systemName: "checkmark.circle.fill")
+                .font(.title2)
+                .foregroundStyle(.white, .green) // solid badge, readable on any tile tint
+                .padding(6)
+                .accessibilityHidden(true)
         }
     }
 
@@ -111,6 +131,7 @@ struct CategoryFluencyView: View {
         let mixed = category.items.map { (emoji: $0, belongs: true) }
             + decoys.map { (emoji: $0, belongs: false) }
         tiles = mixed.shuffled().enumerated().map { Tile(id: $0, emoji: $1.emoji, belongs: $1.belongs) }
+        tilePositions = Dictionary(uniqueKeysWithValues: tiles.indices.map { (tiles[$0].id, $0 + 1) })
         found = 0
     }
 

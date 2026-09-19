@@ -17,6 +17,7 @@ struct MemoryMatchView: View {
     @State private var startedAt = Date.now
     @State private var showCelebration = false
     @State private var finalScore = 0
+    @State private var cardPositions: [Int: Int] = [:]
 
     struct Card: Identifiable {
         let id: Int
@@ -45,6 +46,9 @@ struct MemoryMatchView: View {
                     .accessibilityLabel(cards[i].isFaceUp || cards[i].isMatched
                                         ? cards[i].emoji
                                         : String(localized: "game.memory.card.hidden"))
+                    .accessibilityHint(cards[i].isMatched
+                                       ? String(localized: "game.memory.a11y.matched")
+                                       : String(localized: "game.memory.a11y.position \(cardPositions[i] ?? 0) \(cards.count)"))
                 }
             }
             .padding()
@@ -61,6 +65,7 @@ struct MemoryMatchView: View {
 
     private func deal() {
         cards = (emojis + emojis).shuffled().enumerated().map { Card(id: $0, emoji: $1) }
+        cardPositions = Dictionary(uniqueKeysWithValues: cards.indices.map { (cards[$0].id, $0 + 1) })
         flipped = []
         matched = 0
         moves = 0

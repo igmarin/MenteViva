@@ -40,6 +40,7 @@ struct HistoryView: View {
                     .multilineTextAlignment(.center)
                     .frame(maxWidth: .infinity)
                     .listRowBackground(Color.clear)
+                    .accessibilityAddTraits(.isHeader)
             }
 
             ForEach(groupedDays, id: \.day) { group in
@@ -111,6 +112,8 @@ struct HistoryView: View {
             return ("🐾", String(localized: "game.category.title"))
         case "math_streaks":
             return ("🔢", String(localized: "game.math.title"))
+        case "quick_eyes":
+            return ("👀", String(localized: "game.quickeyes.title"))
         default:
             return ("🎮", String(localized: "history.game.unknown"))
         }
