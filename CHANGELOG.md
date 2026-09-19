@@ -8,6 +8,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 - Quick Eyes: processing-speed game — a picture flashes for a shrinking
   display time (1.2 s → 0.35 s floor, relaxes after a miss), then the player
   picks it among four big buttons. 12 rounds, no countdown timer. ES/EN copy.
+- Shared end-of-game celebration screen (#8): gentle pure-SwiftUI confetti,
+  warm "Well done! 🎉" headline, big session score, and ≥100pt
+  "Play again / Home" buttons. All four games present it on finish
+  (fullScreenCover); Reduced Motion shows static confetti.
 
 ## [0.1.0] — 2026-09-19
 

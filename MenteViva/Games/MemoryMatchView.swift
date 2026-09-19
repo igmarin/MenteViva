@@ -15,6 +15,8 @@ struct MemoryMatchView: View {
     @State private var matched = 0
     @State private var moves = 0
     @State private var startedAt = Date.now
+    @State private var showCelebration = false
+    @State private var finalScore = 0
 
     struct Card: Identifiable {
         let id: Int
@@ -50,10 +52,18 @@ struct MemoryMatchView: View {
         .padding()
         .navigationTitle(String(localized: "game.memory.title"))
         .onAppear(perform: deal)
+        .fullScreenCover(isPresented: $showCelebration) {
+            CelebrationView(score: finalScore,
+                            onPlayAgain: { showCelebration = false; deal() },
+                            onHome: { showCelebration = false; dismiss() })
+        }
     }
 
     private func deal() {
         cards = (emojis + emojis).shuffled().enumerated().map { Card(id: $0, emoji: $1) }
+        flipped = []
+        matched = 0
+        moves = 0
         startedAt = .now
     }
 
@@ -85,6 +95,8 @@ struct MemoryMatchView: View {
         let score = max(10, emojis.count * 20 - moves * 2)
         modelContext.insert(GameSession(gameID: "memory", score: score,
                                         rounds: moves, durationSeconds: elapsed))
+        finalScore = score
+        showCelebration = true
     }
 }
 

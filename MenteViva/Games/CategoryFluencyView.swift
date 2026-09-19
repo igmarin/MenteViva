@@ -5,6 +5,7 @@ import SwiftData
 /// from a grid of 12 big emoji tiles (5 decoys). 3 categories per session.
 struct CategoryFluencyView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.dismiss) private var dismiss
 
     private enum Category: CaseIterable {
         case animals, fruits, colors, vehicles
@@ -44,17 +45,14 @@ struct CategoryFluencyView: View {
     @State private var found = 0
     @State private var totalCorrect = 0
     @State private var startedAt = Date.now
-    @State private var isDone = false
+    @State private var showCelebration = false
+    @State private var finalScore = 0
 
     private let columns = [GridItem(.adaptive(minimum: 100), spacing: 16)]
 
     var body: some View {
         VStack(spacing: 24) {
-            if isDone {
-                Text(String(localized: "game.common.welldone"))
-                    .font(.largeTitle)
-                    .accessibilityAddTraits(.isHeader)
-            } else if !rounds.isEmpty {
+            if !rounds.isEmpty {
                 Text(String(localized: "game.category.instruction"))
                     .font(.title2)
                     .multilineTextAlignment(.center)
@@ -87,6 +85,17 @@ struct CategoryFluencyView: View {
         .padding()
         .navigationTitle(String(localized: "game.category.title"))
         .onAppear(perform: setup)
+        .fullScreenCover(isPresented: $showCelebration) {
+            CelebrationView(score: finalScore,
+                            onPlayAgain: { showCelebration = false; restart() },
+                            onHome: { showCelebration = false; dismiss() })
+        }
+    }
+
+    private func restart() {
+        roundIndex = 0
+        totalCorrect = 0
+        setup()
     }
 
     private func setup() {
@@ -120,10 +129,12 @@ struct CategoryFluencyView: View {
     }
 
     private func finish() {
-        isDone = true
         let elapsed = Int(Date.now.timeIntervalSince(startedAt))
-        modelContext.insert(GameSession(gameID: "category_fluency", score: totalCorrect * 10,
+        let score = totalCorrect * 10
+        modelContext.insert(GameSession(gameID: "category_fluency", score: score,
                                         rounds: roundsPerSession, durationSeconds: elapsed))
+        finalScore = score
+        showCelebration = true
     }
 }
 

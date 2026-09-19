@@ -5,6 +5,7 @@
 	objectVersion = 56;
 	objects = {
 		2526D29DE5FE6C8300000025 /* CategoryFluencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 915FB304D5C7D9690000001F; };
+		1DA22A903C3C9B3500000021 /* CelebrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4174FC9AF3B1DBCB0000001B; };
 		B59E327BE0BD12A700000020 /* ColorClashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7571F11C435CE80D0000001A; };
 		A120B5E94542D41F00000020 /* MathStreakView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B13B6166437470950000001A; };
 		18180C4157C1561D00000021 /* MemoryMatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 250E769752DD6A430000001B; };
@@ -15,6 +16,7 @@
 		89CAE55D19053AF10000001F /* JevService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42B3456BD42F17B700000019; };
 
 		915FB304D5C7D9690000001F /* CategoryFluencyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/CategoryFluencyView.swift; sourceTree = "<group>"; };
+		4174FC9AF3B1DBCB0000001B /* CelebrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/CelebrationView.swift; sourceTree = "<group>"; };
 		7571F11C435CE80D0000001A /* ColorClashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/ColorClashView.swift; sourceTree = "<group>"; };
 		B13B6166437470950000001A /* MathStreakView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/MathStreakView.swift; sourceTree = "<group>"; };
 		250E769752DD6A430000001B /* MemoryMatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/MemoryMatchView.swift; sourceTree = "<group>"; };
@@ -33,6 +35,7 @@
 			isa = PBXGroup;
 			children = (
 				915FB304D5C7D9690000001F /* CategoryFluencyView.swift */,
+				4174FC9AF3B1DBCB0000001B /* CelebrationView.swift */,
 				7571F11C435CE80D0000001A /* ColorClashView.swift */,
 				B13B6166437470950000001A /* MathStreakView.swift */,
 				250E769752DD6A430000001B /* MemoryMatchView.swift */,
@@ -94,6 +97,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2526D29DE5FE6C8300000025 /* CategoryFluencyView.swift in Sources */,
+				1DA22A903C3C9B3500000021 /* CelebrationView.swift in Sources */,
 				B59E327BE0BD12A700000020 /* ColorClashView.swift in Sources */,
 				A120B5E94542D41F00000020 /* MathStreakView.swift in Sources */,
 				18180C4157C1561D00000021 /* MemoryMatchView.swift in Sources */,
