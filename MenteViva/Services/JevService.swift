@@ -51,6 +51,7 @@ struct PlayerStateSummary: Codable {
         let currentDifficulty: Difficulty
     }
     let games: [String: GameStats]    // keyed by GameID.rawValue
+}
 
 enum JevServiceError: Error {
     case badResponse(Int)
@@ -136,7 +137,6 @@ actor JevService {
         return try JSONDecoder().decode(JevResponse.self, from: data).answers
     }
 
-}
 
     // MARK: - Policy in code: answers -> plan
 
