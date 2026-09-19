@@ -24,6 +24,120 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Hidden card" } },
         "es" : { "stringUnit" : { "state" : "translated", "value" : "Carta oculta" } }
       }
+    },
+    "game.common.welldone" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Well done! 🎉" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "¡Muy bien! 🎉" } }
+      }
+    },
+    "game.colorclash.title" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Color Clash" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Choque de Colores" } }
+      }
+    },
+    "game.colorclash.instruction" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Tap the color of the ink, not the word" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Toca el color de la tinta, no la palabra" } }
+      }
+    },
+    "game.colorclash.word.red" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "RED" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "ROJO" } }
+      }
+    },
+    "game.colorclash.word.blue" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "BLUE" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "AZUL" } }
+      }
+    },
+    "game.colorclash.word.green" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "GREEN" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "VERDE" } }
+      }
+    },
+    "game.colorclash.word.orange" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "ORANGE" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "NARANJA" } }
+      }
+    },
+    "game.colorclash.color.red" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Red" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Rojo" } }
+      }
+    },
+    "game.colorclash.color.blue" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Blue" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Azul" } }
+      }
+    },
+    "game.colorclash.color.green" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Green" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Verde" } }
+      }
+    },
+    "game.colorclash.color.orange" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Orange" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Naranja" } }
+      }
+    },
+    "game.category.title" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Name the Herd" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Nombra la Manada" } }
+      }
+    },
+    "game.category.instruction" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Tap all that belong to" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Toca todos los que sean" } }
+      }
+    },
+    "game.category.animals" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Animals" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Animales" } }
+      }
+    },
+    "game.category.fruits" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Fruits" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Frutas" } }
+      }
+    },
+    "game.category.colors" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Colors" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Colores" } }
+      }
+    },
+    "game.category.vehicles" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Vehicles" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Vehículos" } }
+      }
+    },
+    "game.math.title" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Number Trail" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Sendero de Números" } }
+      }
+    },
+    "game.math.instruction" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Tap the correct answer" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Toca la respuesta correcta" } }
+      }
     }
   },
   "version" : "1.0"

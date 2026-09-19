@@ -1,0 +1,132 @@
+import SwiftUI
+import SwiftData
+
+/// Name the Herd: pick the 7 items that belong to the shown category
+/// from a grid of 12 big emoji tiles (5 decoys). 3 categories per session.
+struct CategoryFluencyView: View {
+    @Environment(\.modelContext) private var modelContext
+
+    private enum Category: CaseIterable {
+        case animals, fruits, colors, vehicles
+
+        var name: String {
+            switch self {
+            case .animals: String(localized: "game.category.animals")
+            case .fruits: String(localized: "game.category.fruits")
+            case .colors: String(localized: "game.category.colors")
+            case .vehicles: String(localized: "game.category.vehicles")
+            }
+        }
+
+        var items: [String] {
+            switch self {
+            case .animals: ["🐶", "🐱", "🦁", "🐸", "🐢", "🦋", "🐘"]
+            case .fruits: ["🍎", "🍌", "🍇", "🍊", "🍓", "🍉", "🍑"]
+            case .colors: ["🔴", "🔵", "🟢", "🟡", "🟠", "🟣", "🟤"]
+            case .vehicles: ["🚗", "🚌", "✈️", "🚀", "🚲", "🚂", "⛵️"]
+            }
+        }
+    }
+
+    private let roundsPerSession = 3
+    private let decoyCount = 5
+
+    struct Tile: Identifiable {
+        let id: Int
+        let emoji: String
+        let belongs: Bool
+        var isPicked = false
+    }
+
+    @State private var rounds: [Category] = []
+    @State private var tiles: [Tile] = []
+    @State private var roundIndex = 0
+    @State private var found = 0
+    @State private var totalCorrect = 0
+    @State private var startedAt = Date.now
+    @State private var isDone = false
+
+    private let columns = [GridItem(.adaptive(minimum: 100), spacing: 16)]
+
+    var body: some View {
+        VStack(spacing: 24) {
+            if isDone {
+                Text(String(localized: "game.common.welldone"))
+                    .font(.largeTitle)
+                    .accessibilityAddTraits(.isHeader)
+            } else if !rounds.isEmpty {
+                Text(String(localized: "game.category.instruction"))
+                    .font(.title2)
+                    .multilineTextAlignment(.center)
+
+                Text(rounds[roundIndex].name)
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                    .accessibilityAddTraits(.isHeader)
+
+                Text("\(found) / \(rounds[roundIndex].items.count)")
+                    .font(.title3)
+                    .foregroundStyle(.secondary)
+
+                LazyVGrid(columns: columns, spacing: 16) {
+                    ForEach(tiles.indices, id: \.self) { i in
+                        Button { tap(i) } label: {
+                            Text(tiles[i].emoji)
+                                .font(.system(size: 52))
+                                .frame(maxWidth: .infinity, minHeight: 100)
+                                .background(tiles[i].isPicked ? .green.opacity(0.25) : .blue.opacity(0.15),
+                                            in: .rect(cornerRadius: 16))
+                        }
+                        .buttonStyle(.plain)
+                        .disabled(tiles[i].isPicked)
+                        .accessibilityLabel(tiles[i].emoji)
+                    }
+                }
+            }
+        }
+        .padding()
+        .navigationTitle(String(localized: "game.category.title"))
+        .onAppear(perform: setup)
+    }
+
+    private func setup() {
+        rounds = Category.allCases.shuffled().prefix(roundsPerSession).map { $0 }
+        startedAt = .now
+        dealRound()
+    }
+
+    private func dealRound() {
+        let category = rounds[roundIndex]
+        let decoys = Category.allCases.filter { $0 != category }
+            .flatMap(\.items).shuffled().prefix(decoyCount)
+        let mixed = category.items.map { (emoji: $0, belongs: true) }
+            + decoys.map { (emoji: $0, belongs: false) }
+        tiles = mixed.shuffled().enumerated().map { Tile(id: $0, emoji: $1.emoji, belongs: $1.belongs) }
+        found = 0
+    }
+
+    private func tap(_ i: Int) {
+        guard tiles[i].belongs else { return } // decoy taps: no shame, nothing happens
+        tiles[i].isPicked = true
+        found += 1
+        totalCorrect += 1
+        guard found == rounds[roundIndex].items.count else { return }
+        roundIndex += 1
+        if roundIndex == roundsPerSession {
+            finish()
+        } else {
+            dealRound()
+        }
+    }
+
+    private func finish() {
+        isDone = true
+        let elapsed = Int(Date.now.timeIntervalSince(startedAt))
+        modelContext.insert(GameSession(gameID: "category_fluency", score: totalCorrect * 10,
+                                        rounds: roundsPerSession, durationSeconds: elapsed))
+    }
+}
+
+#Preview {
+    CategoryFluencyView()
+}
