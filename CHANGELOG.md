@@ -5,6 +5,12 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 ## [Unreleased]
 
 ### Added
+- Accessibility audit fixes (#5, docs/a11y-audit-2026-09.md): Color Clash
+  buttons now carry a distinct shape (circle/triangle/square/diamond) so
+  color never carries the answer alone; Name the Herd picked tiles get a
+  visible checkmark; VoiceOver position/state hints in Memory Lane and Name
+  the Herd ("Card 3 of 16", "Pair found", "Already picked") — all ES/EN.
+  "My Week" now shows Quick Eyes sessions instead of "Unknown game".
 - Quick Eyes: processing-speed game — a picture flashes for a shrinking
   display time (1.2 s → 0.35 s floor, relaxes after a miss), then the player
   picks it among four big buttons. 12 rounds, no countdown timer. ES/EN copy.

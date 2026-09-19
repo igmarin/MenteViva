@@ -36,6 +36,26 @@ struct ColorClashView: View {
             case .orange: String(localized: "game.colorclash.color.orange")
             }
         }
+
+        /// Non-color cue: each ink has a distinct shape so color alone never
+        /// carries the answer (WCAG 1.4.1, conventions.md §4).
+        var shape: String {
+            switch self {
+            case .red: "circle.fill"
+            case .blue: "triangle.fill"
+            case .green: "square.fill"
+            case .orange: "diamond.fill"
+            }
+        }
+
+        var shapeName: String {
+            switch self {
+            case .red: String(localized: "game.colorclash.shape.circle")
+            case .blue: String(localized: "game.colorclash.shape.triangle")
+            case .green: String(localized: "game.colorclash.shape.square")
+            case .orange: String(localized: "game.colorclash.shape.diamond")
+            }
+        }
     }
 
     private let totalRounds = 10
@@ -65,9 +85,17 @@ struct ColorClashView: View {
                         RoundedRectangle(cornerRadius: 16)
                             .fill(candidate.color)
                             .frame(maxWidth: .infinity, minHeight: 110)
+                            .overlay {
+                                Image(systemName: candidate.shape)
+                                    .font(.system(size: 40, weight: .bold))
+                                    .foregroundStyle(.white)
+                                    .shadow(color: .black.opacity(0.35), radius: 2, y: 1)
+                                    .accessibilityHidden(true)
+                            }
                     }
                     .buttonStyle(.plain)
                     .accessibilityLabel(candidate.label)
+                    .accessibilityHint(candidate.shapeName)
                 }
             }
 
