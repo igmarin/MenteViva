@@ -10,6 +10,7 @@
 		A120B5E94542D41F00000020 /* MathStreakView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B13B6166437470950000001A; };
 		18180C4157C1561D00000021 /* MemoryMatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 250E769752DD6A430000001B; };
 		06316652C0C975F40000001F /* QuickEyesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D757F5352AE1A200000019; };
+		EE94290C1D7CE37100000017 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F548AF03C8043700000011; };
 		2A7F83F1E2F186E800000014 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C04053E45A48AC460000000E; };
 		6866AB30C9E6CF9000000018 /* MenteVivaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65242C715F07923E00000012; };
 		E2080412E5AF86210000001E /* GameSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC9E51A3CFE79A4700000018; };
@@ -21,6 +22,7 @@
 		B13B6166437470950000001A /* MathStreakView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/MathStreakView.swift; sourceTree = "<group>"; };
 		250E769752DD6A430000001B /* MemoryMatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/MemoryMatchView.swift; sourceTree = "<group>"; };
 		B4D757F5352AE1A200000019 /* QuickEyesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/QuickEyesView.swift; sourceTree = "<group>"; };
+		E1F548AF03C8043700000011 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
 		C04053E45A48AC460000000E /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		65242C715F07923E00000012 /* MenteVivaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaApp.swift; sourceTree = "<group>"; };
 		AC9E51A3CFE79A4700000018 /* GameSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models/GameSession.swift; sourceTree = "<group>"; };
@@ -40,6 +42,7 @@
 				B13B6166437470950000001A /* MathStreakView.swift */,
 				250E769752DD6A430000001B /* MemoryMatchView.swift */,
 				B4D757F5352AE1A200000019 /* QuickEyesView.swift */,
+				E1F548AF03C8043700000011 /* HistoryView.swift */,
 				C04053E45A48AC460000000E /* HomeView.swift */,
 				65242C715F07923E00000012 /* MenteVivaApp.swift */,
 				AC9E51A3CFE79A4700000018 /* GameSession.swift */,
@@ -102,6 +105,7 @@
 				A120B5E94542D41F00000020 /* MathStreakView.swift in Sources */,
 				18180C4157C1561D00000021 /* MemoryMatchView.swift in Sources */,
 				06316652C0C975F40000001F /* QuickEyesView.swift in Sources */,
+				EE94290C1D7CE37100000017 /* HistoryView.swift in Sources */,
 				2A7F83F1E2F186E800000014 /* HomeView.swift in Sources */,
 				6866AB30C9E6CF9000000018 /* MenteVivaApp.swift in Sources */,
 				E2080412E5AF86210000001E /* GameSession.swift in Sources */,

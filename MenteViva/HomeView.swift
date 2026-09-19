@@ -19,6 +19,14 @@ struct HomeView: View {
                 NavigationLink(String(localized: "game.quickeyes.title")) {
                     QuickEyesView()
                 }
+
+                Section {
+                    NavigationLink {
+                        HistoryView()
+                    } label: {
+                        Label(String(localized: "history.title"), systemImage: "calendar")
+                    }
+                }
             }
             .navigationTitle(String(localized: "app.title"))
         }

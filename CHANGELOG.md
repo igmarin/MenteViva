@@ -12,6 +12,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
   warm "Well done! 🎉" headline, big session score, and ≥100pt
   "Play again / Home" buttons. All four games present it on finish
   (fullScreenCover); Reduced Motion shows static confetti.
+- "My Week" session history (#9): last 7 days grouped by day, big rows with
+  game emoji + score, warm weekly summary line, gentle empty state.
 
 ## [0.1.0] — 2026-09-19
 
