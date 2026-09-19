@@ -44,6 +44,20 @@ Native everything. No packages. Convention 1 in conventions.md.
 
 Revisit when: a concrete need fails twice against stdlib/native.
 
+## 2026-09-19 — Decision revisit with Jev (jev-revisit.md)
+
+All five early decisions re-asked as real Jev judgments against an
+evidence/constraints state; raw JSON archived in docs/jev-json/000–005.
+Result: audience, monetization lean, and offline-first/once-daily architecture
+confirmed (0.72–0.95). Two tensions became tickets: #18 (playtest-before-content
+gate — Jev 005 at P=0.99 said polish-first; Quick Eyes had already shipped, so
+the gate applies from game #6 onward) and #17 (numeracy scored 0.62, weakest
+domain — Number Trail must justify itself via playtest).
+
+Rule adopted: significant product decisions get a Jev judgment archived in
+docs/jev-json/ before being logged here. Jev is evidence, not truth — the
+human decides, and disagreements get recorded, not silently resolved.
+
 ## Open questions (not yet decided)
 
 - Business model: research leans **one-time $12.99 + Family Sharing**
