@@ -98,7 +98,8 @@ same — sync changes storage, not what Jev sees.
 An iOS app cannot hold `TYPESAFE_AI_KEY` safely (extractable from the binary —
 convention 7: server-side proxy before public release). `JevService` therefore posts the
 identical request body to a **configurable proxy URL** (`JEV_PROXY_URL` in Info.plist /
-xcconfig; unset → offline fallback). The proxy is ~20 lines of any stack:
+xcconfig; unset → offline fallback). Reference implementation: `proxy/worker.js`
+(~20-line Cloudflare Worker; deploy guide in `proxy/README.md`):
 
 ```
 POST /jev  →  forward body to https://api.typesafe.ai/v1/systemone
@@ -106,6 +107,6 @@ POST /jev  →  forward body to https://api.typesafe.ai/v1/systemone
               return response verbatim
 ```
 
-No request rewriting, no logging of bodies. The app code does not change when the proxy
-goes live — only the config value does. During local beta the proxy can be a local
-server reading the key from the environment.
+No request rewriting, no logging of bodies, rejects anything but `POST /jev`. The app
+code does not change when the proxy goes live — only the config value does. During
+local beta, run the same worker locally (`npx wrangler dev`, key from the environment).
