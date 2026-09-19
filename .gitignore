@@ -7,3 +7,6 @@ xcuserdata/
 *.ipa
 *.dSYM.zip
 graphify-out/
+
+# Graphify (derived, regenerable)
+graphify-out/
