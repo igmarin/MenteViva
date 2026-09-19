@@ -15,6 +15,7 @@ enum GameID: String, CaseIterable, Codable {
     case stroop = "stroop"
     case categoryFluency = "category_fluency"
     case mathStreaks = "math_streaks"
+    case quickEyes = "quick_eyes"
 }
 
 enum Difficulty: Int, Codable {
