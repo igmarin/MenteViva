@@ -16,6 +16,9 @@ struct HomeView: View {
                 NavigationLink(String(localized: "game.math.title")) {
                     MathStreakView()
                 }
+                NavigationLink(String(localized: "game.quickeyes.title")) {
+                    QuickEyesView()
+                }
             }
             .navigationTitle(String(localized: "app.title"))
         }

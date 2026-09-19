@@ -4,6 +4,11 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 
 ## [Unreleased]
 
+### Added
+- Quick Eyes: processing-speed game — a picture flashes for a shrinking
+  display time (1.2 s → 0.35 s floor, relaxes after a miss), then the player
+  picks it among four big buttons. 12 rounds, no countdown timer. ES/EN copy.
+
 ## [0.1.0] — 2026-09-19
 
 First playable. Built in one session with agent teammates.

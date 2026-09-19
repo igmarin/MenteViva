@@ -385,6 +385,86 @@
         }
       }
     },
+    "game.quickeyes.a11y.showing": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A picture is being shown briefly"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Se muestra una imagen por un instante"
+          }
+        }
+      }
+    },
+    "game.quickeyes.almost": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Almost — let's slow down a touch"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Casi — vamos un poquito más despacio"
+          }
+        }
+      }
+    },
+    "game.quickeyes.instruction": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A picture flashes on screen. Look closely, then tap the one you saw"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aparecerá una imagen por un instante. Mírala bien y luego tócala"
+          }
+        }
+      }
+    },
+    "game.quickeyes.prompt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Which one did you see?"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "¿Cuál viste?"
+          }
+        }
+      }
+    },
+    "game.quickeyes.title": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quick Eyes"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ojos Ágiles"
+          }
+        }
+      }
+    },
     "game.memory.title": {
       "localizations": {
         "en": {
