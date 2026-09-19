@@ -1,0 +1,27 @@
+# Changelog
+
+Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
+
+## [Unreleased]
+
+## [0.1.0] — 2026-09-19
+
+First playable. Built in one session with agent teammates.
+
+### Added
+- Four games: Memory Lane (pairs), Color Clash (Stroop), Name the Herd
+  (category fluency), Number Trail (adaptive math).
+- ES/EN localization for every user-facing string (25 keys).
+- Jev/TypeSafe service: daily game-mix ranking + difficulty nudge,
+  once per day, silent deterministic fallback when offline.
+  Key never on device — proxy contract documented.
+- Docs system: product brief, conventions, decision log, cited research
+  (audience evidence, domain ranking, licensing table, App Store pricing),
+  roadmap.
+- VoiceOver labels on all game elements; ≥100pt touch targets.
+
+### Fixed
+- JevService brace nesting (caught by first real build; parse ≠ compile).
+- Missing ES translations for math format strings auto-extracted by Xcode.
+
+[0.1.0]: https://github.com/igmarin/MenteViva/releases/tag/v0.1.0
