@@ -344,7 +344,7 @@ let appRef = "<BuildableReference BuildableIdentifier=\"primary\" BlueprintIdent
 
 let scheme = """
 <?xml version="1.0" encoding="UTF-8"?>
-<Scheme LastUpgradeVersion="1600" version="1.7">
+<Scheme LastUpgradeVersion="2700" version="1.7">
    <BuildAction parallelizeBuildables="YES" buildImplicitDependencies="YES">
       <BuildActionEntries>
          <BuildActionEntry buildForTesting="YES" buildForRunning="YES" buildForProfiling="YES" buildForArchiving="YES" buildForAnalyzing="YES">
@@ -374,7 +374,13 @@ let scheme = """
 
 let schemeDir = projDir.appendingPathComponent("xcshareddata/xcschemes")
 try FileManager.default.createDirectory(at: schemeDir, withIntermediateDirectories: true)
-try scheme.write(to: schemeDir.appendingPathComponent("MenteViva.xcscheme"), atomically: true, encoding: .utf8)
+// Write the scheme only if absent: Xcode owns and reformats it from here on, and
+// regenerating over it causes churn (formatting/LastUpgradeVersion) with no
+// semantic value. Target IDs are deterministic, so a committed scheme stays valid.
+let schemeFile = schemeDir.appendingPathComponent("MenteViva.xcscheme")
+if !FileManager.default.fileExists(atPath: schemeFile.path) {
+    try scheme.write(to: schemeFile, atomically: true, encoding: .utf8)
+}
 
 // Xcode expects the project's embedded workspace file. Without it (and with
 // stale xcuserdata around) the GUI reports a "file format integrity issue"
