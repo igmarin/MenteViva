@@ -9,7 +9,6 @@ Instructions for AI agents (and humans in a hurry) working on MenteViva.
 3. `docs/roadmap.md` — what phase we're in. Work outside "Now" needs a reason.
 
 ## Non-negotiables
-
 - **Zero third-party dependencies.** SwiftUI/SwiftData/Foundation only.
 - **Every user-facing string** goes in `Localizable.xcstrings` with EN + ES
   in the same commit. Hardcoded strings = rejected.
@@ -23,6 +22,18 @@ Instructions for AI agents (and humans in a hurry) working on MenteViva.
   exercise" is the ceiling. See docs/research-2026-09.md §1.
 - **The API key never enters the repo or the binary.** Jev goes through the
   proxy; unset proxy URL = offline fallback, which must always work.
+
+## Signing
+
+- The generator pre-fills `DEVELOPMENT_TEAM` (Ismael Marin Cabrera, Personal
+  Team, `VB42T7NYX2`), so device builds never stop to ask. Change the constant
+  in `tools/generate_project.swift` when the paid team replaces it.
+- Free provisioning means every device install **expires 7 days after signing**;
+  re-sign by running ⌘R (or the equivalent `xcodebuild` device build) with the
+  device connected. Verified: the installed profile for `com.igmarin.MenteViva`
+  expires 2026-09-27 for a build signed 2026-09-20.
+- Device builds must use `--local-only` (no CloudKit entitlement); see Workflow
+  step 3 for why a CloudKit build without the entitlement traps at launch.
 
 ## Workflow
 

@@ -11,6 +11,13 @@ let appDir = root.appendingPathComponent("MenteViva")
 /// (iCloud/CloudKit entitlements require the paid Developer Program).
 /// Default (no flag) keeps CloudKit enabled.
 let localOnly = CommandLine.arguments.contains("--local-only")
+
+/// Signing team, pre-filled so device builds never stop to ask.
+/// Ismael Marin Cabrera (Personal Team) — free provisioning, so installs on a
+/// device expire 7 days after signing. Verified against the installed
+/// provisioning profile for com.igmarin.MenteViva (TeamIdentifier VB42T7NYX2).
+/// Change this one line when the paid team replaces it.
+let developmentTeam = "VB42T7NYX2"
 let testsDir = root.appendingPathComponent("MenteVivaTests")
 let uiTestsDir = root.appendingPathComponent("MenteVivaUITests")
 
@@ -240,6 +247,7 @@ let common: [(String, String)] = [
     ("SWIFT_VERSION", "5.0"),
     ("ENABLE_PREVIEWS", "YES"),
     ("CODE_SIGN_STYLE", "Automatic"),
+    ("DEVELOPMENT_TEAM", "\"\(developmentTeam)\""),
     ("IPHONEOS_DEPLOYMENT_TARGET", "17.0"),
     ("TARGETED_DEVICE_FAMILY", "\"1,2\""),
 ]
