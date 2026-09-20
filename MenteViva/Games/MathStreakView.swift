@@ -35,7 +35,7 @@ struct MathStreakView: View {
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
                 ForEach(options, id: \.self) { option in
                     Button { tap(option) } label: {
-                        Text("\(option)")
+                        Text(verbatim: "\(option)")
                             .font(.system(size: 44, weight: .semibold))
                             .frame(maxWidth: .infinity, minHeight: 110)
                             .background(.blue.opacity(0.15), in: .rect(cornerRadius: 16))
