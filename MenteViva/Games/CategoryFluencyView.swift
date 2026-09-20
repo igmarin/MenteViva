@@ -51,19 +51,27 @@ struct CategoryFluencyView: View {
 
     private let columns = [GridItem(.adaptive(minimum: 100), spacing: 16)]
 
+    /// The round being played, or nil once the session ends. Body reads this
+    /// instead of `rounds[roundIndex]`: `roundIndex` legitimately equals
+    /// `rounds.count` for one render pass after the last round completes, and
+    /// indexing there crashed with "Index out of range".
+    private var currentRound: Category? {
+        rounds.indices.contains(roundIndex) ? rounds[roundIndex] : nil
+    }
+
     var body: some View {
         VStack(spacing: 24) {
-            if !rounds.isEmpty {
+            if let round = currentRound {
                 Text(String(localized: "game.category.instruction"))
                     .font(.title2)
                     .multilineTextAlignment(.center)
 
-                Text(rounds[roundIndex].name)
+                Text(round.name)
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .accessibilityAddTraits(.isHeader)
 
-                Text("\(found) / \(rounds[roundIndex].items.count)")
+                Text("\(found) / \(round.items.count)")
                     .font(.title3)
                     .foregroundStyle(.secondary)
 
@@ -125,7 +133,7 @@ struct CategoryFluencyView: View {
     }
 
     private func dealRound() {
-        let category = rounds[roundIndex]
+        guard let category = currentRound else { return }
         let decoys = Category.allCases.filter { $0 != category }
             .flatMap(\.items).shuffled().prefix(decoyCount)
         let mixed = category.items.map { (emoji: $0, belongs: true) }
@@ -140,9 +148,9 @@ struct CategoryFluencyView: View {
         tiles[i].isPicked = true
         found += 1
         totalCorrect += 1
-        guard found == rounds[roundIndex].items.count else { return }
+        guard found == currentRound?.items.count ?? 0 else { return }
         roundIndex += 1
-        if roundIndex == roundsPerSession {
+        if roundIndex >= rounds.count {
             finish()
         } else {
             dealRound()
