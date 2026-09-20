@@ -11,8 +11,8 @@ final class GameSession {
     var durationSeconds: Int = 0
     var playedAt: Date = Date.now
 
-    init(gameID: String, score: Int, rounds: Int, durationSeconds: Int) {
-        self.gameID = gameID
+    init(gameID: GameID, score: Int, rounds: Int, durationSeconds: Int) {
+        self.gameID = gameID.rawValue
         self.score = score
         self.rounds = rounds
         self.durationSeconds = durationSeconds

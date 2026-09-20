@@ -16,7 +16,7 @@ struct CelebrationView: View {
             VStack(spacing: 32) {
                 Spacer()
 
-                Text(String(localized: "game.common.welldone"))
+                Text(AppLanguage.localized( "game.common.welldone"))
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .multilineTextAlignment(.center)
@@ -28,31 +28,31 @@ struct CelebrationView: View {
                     .font(.system(size: 88, weight: .bold, design: .rounded))
                     .minimumScaleFactor(0.4)
                     .lineLimit(1)
-                    .accessibilityLabel(String(localized: "game.celebration.score.a11y"))
+                    .accessibilityLabel(AppLanguage.localized( "game.celebration.score.a11y"))
                     .accessibilityValue("\(score)")
 
                 Spacer()
 
                 VStack(spacing: 16) {
                     Button(action: onPlayAgain) {
-                        Text(String(localized: "game.celebration.playagain"))
+                        Text(AppLanguage.localized( "game.celebration.playagain"))
                             .font(.title2)
                             .fontWeight(.semibold)
                             .frame(maxWidth: .infinity, minHeight: 100)
                             .background(.blue.opacity(0.2), in: .rect(cornerRadius: 20))
                     }
                     .buttonStyle(.plain)
-                    .accessibilityLabel(String(localized: "game.celebration.playagain"))
+                    .accessibilityLabel(AppLanguage.localized( "game.celebration.playagain"))
 
                     Button(action: onHome) {
-                        Text(String(localized: "game.celebration.home"))
+                        Text(AppLanguage.localized( "game.celebration.home"))
                             .font(.title2)
                             .fontWeight(.semibold)
                             .frame(maxWidth: .infinity, minHeight: 100)
                             .background(.green.opacity(0.2), in: .rect(cornerRadius: 20))
                     }
                     .buttonStyle(.plain)
-                    .accessibilityLabel(String(localized: "game.celebration.home"))
+                    .accessibilityLabel(AppLanguage.localized( "game.celebration.home"))
                 }
             }
             .padding(24)
@@ -88,7 +88,7 @@ private struct ConfettiView: View {
               duration: Double.random(in: 7...12),
               sway: Double.random(in: 8...28) * (Bool.random() ? 1 : -1),
               spin: Double.random(in: 0.5...1.5) * (Bool.random() ? 1 : -1),
-              color: palette.randomElement()!.opacity(0.8),
+              color: (palette.randomElement() ?? .blue).opacity(0.8),
               isCircle: Bool.random())
     }
 

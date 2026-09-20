@@ -16,6 +16,26 @@ nonisolated enum GameID: String, CaseIterable, Codable {
     case categoryFluency = "category_fluency"
     case mathStreaks = "math_streaks"
     case quickEyes = "quick_eyes"
+
+    var emoji: String {
+        switch self {
+        case .memoryMatch: "🧩"
+        case .stroop: "🎨"
+        case .categoryFluency: "🐾"
+        case .mathStreaks: "🔢"
+        case .quickEyes: "👀"
+        }
+    }
+
+    var title: String.LocalizationValue {
+        switch self {
+        case .memoryMatch: "game.memory.title"
+        case .stroop: "game.colorclash.title"
+        case .categoryFluency: "game.category.title"
+        case .mathStreaks: "game.math.title"
+        case .quickEyes: "game.quickeyes.title"
+        }
+    }
 }
 
 nonisolated enum Difficulty: Int, Codable {
@@ -35,9 +55,23 @@ nonisolated struct DailyPlan: Codable {
     /// Deterministic fallback: day-of-year rotation, current difficulty unchanged.
     static func fallback(current: [GameID: Difficulty], dayStamp: String) -> DailyPlan {
         let all = GameID.allCases
-        let offset = Calendar.current.ordinality(of: .day, in: .year, for: .now) ?? 0
+        let offset = dayOfYear(from: dayStamp)
         let rotated = (0..<all.count).map { all[($0 + offset) % all.count] }
         return DailyPlan(dayStamp: dayStamp, games: Array(rotated.prefix(3)), difficulty: current)
+    }
+
+    private static func dayOfYear(from stamp: String) -> Int {
+        let parts = stamp.split(separator: "-").compactMap { Int($0) }
+        guard parts.count == 3 else { return 0 }
+
+        var calendar = Calendar.current
+        calendar.timeZone = .current
+        let components = DateComponents(year: parts[0], month: parts[1], day: parts[2])
+        guard let date = calendar.date(from: components),
+              let ordinal = calendar.ordinality(of: .day, in: .year, for: date) else {
+            return 0
+        }
+        return max(ordinal - 1, 0)
     }
 }
 
@@ -159,7 +193,8 @@ actor JevService {
                 difficulty[game] = Difficulty(jevScore: score)
             }
         }
-        return DailyPlan(dayStamp: dayStamp, games: Array(ranked.prefix(gamesPerDay)), difficulty: difficulty)
+        let count = min(max(gamesPerDay, 0), ranked.count)
+        return DailyPlan(dayStamp: dayStamp, games: Array(ranked.prefix(count)), difficulty: difficulty)
     }
 
     // MARK: - Cache (UserDefaults, per local day)
@@ -177,6 +212,9 @@ actor JevService {
 
     nonisolated static func dayStamp(_ date: Date = .now) -> String {
         let f = DateFormatter()
+        f.calendar = Calendar.current
+        f.locale = Locale(identifier: "en_US_POSIX")
+        f.timeZone = .current
         f.dateFormat = "yyyy-MM-dd"
         return f.string(from: date)
     }

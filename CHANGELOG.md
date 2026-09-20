@@ -5,6 +5,12 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 ## [Unreleased]
 
 ### Changed
+- Review pass: game IDs now share one typed source of truth across Jev, Home,
+  history, and saved sessions; delayed game tasks cancel when their round ends;
+  interactive settings and language controls now use the app's 100pt target
+  floor.
+- Language selection now updates the visible app immediately, including settings
+  labels and game names.
 - Round bookkeeping extracted into a tested `RoundProgress` type (#30), used by
   Name the Herd, Color Clash and Quick Eyes. A counter can no longer run past the
   end of a game: advancing is idempotent, the displayed round is clamped, and 8

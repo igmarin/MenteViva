@@ -12,10 +12,10 @@ struct CategoryFluencyView: View {
 
         var name: String {
             switch self {
-            case .animals: String(localized: "game.category.animals")
-            case .fruits: String(localized: "game.category.fruits")
-            case .colors: String(localized: "game.category.colors")
-            case .vehicles: String(localized: "game.category.vehicles")
+            case .animals: AppLanguage.localized( "game.category.animals")
+            case .fruits: AppLanguage.localized( "game.category.fruits")
+            case .colors: AppLanguage.localized( "game.category.colors")
+            case .vehicles: AppLanguage.localized( "game.category.vehicles")
             }
         }
 
@@ -49,6 +49,10 @@ struct CategoryFluencyView: View {
     @State private var finalScore = 0
     @State private var tilePositions: [Int: Int] = [:]
 
+    static func score(totalCorrect: Int) -> Int {
+        totalCorrect * 10
+    }
+
     private let columns = [GridItem(.adaptive(minimum: 100), spacing: 16)]
 
     /// The round being played, or nil once the session ends. Body reads this
@@ -61,7 +65,7 @@ struct CategoryFluencyView: View {
     var body: some View {
         VStack(spacing: 24) {
             if let round = currentRound {
-                Text(String(localized: "game.category.instruction"))
+                Text(AppLanguage.localized( "game.category.instruction"))
                     .font(.title2)
                     .multilineTextAlignment(.center)
 
@@ -75,31 +79,31 @@ struct CategoryFluencyView: View {
                     .foregroundStyle(.secondary)
 
                 LazyVGrid(columns: columns, spacing: 16) {
-                    ForEach(tiles.indices, id: \.self) { i in
-                        Button { tap(i) } label: {
-                            Text(tiles[i].emoji)
+                    ForEach(tiles) { tile in
+                        Button { tap(tile.id) } label: {
+                            Text(tile.emoji)
                                 .font(.system(size: 52))
                                 .frame(maxWidth: .infinity, minHeight: 100)
-                                .background(tiles[i].isPicked ? .green.opacity(0.25) : .blue.opacity(0.15),
+                                .background(tile.isPicked ? .green.opacity(0.25) : .blue.opacity(0.15),
                                             in: .rect(cornerRadius: 16))
                                 // Non-color cue: picked tiles get a visible checkmark,
                                 // not just a green tint (WCAG 1.4.1, conventions.md §4).
                                 .overlay(alignment: .topTrailing) {
-                                    pickedBadge(isPicked: tiles[i].isPicked)
+                                    pickedBadge(isPicked: tile.isPicked)
                                 }
                         }
                         .buttonStyle(.plain)
-                        .disabled(tiles[i].isPicked)
-                        .accessibilityLabel(tiles[i].emoji)
-                        .accessibilityHint(tiles[i].isPicked
-                                           ? String(localized: "game.category.a11y.picked")
-                                           : String(localized: "game.category.a11y.position \(tilePositions[i] ?? 0) \(tiles.count)"))
+                        .disabled(tile.isPicked)
+                        .accessibilityLabel(tile.emoji)
+                        .accessibilityHint(tile.isPicked
+                                           ? AppLanguage.localized( "game.category.a11y.picked")
+                                           : AppLanguage.localized( "game.category.a11y.position \(tilePositions[tile.id] ?? 0) \(tiles.count)"))
                     }
                 }
             }
         }
         .padding()
-        .navigationTitle(String(localized: "game.category.title"))
+        .navigationTitle(AppLanguage.localized( "game.category.title"))
         .onAppear(perform: setup)
         .fullScreenCover(isPresented: $showCelebration) {
             CelebrationView(score: finalScore,
@@ -143,7 +147,8 @@ struct CategoryFluencyView: View {
         found = 0
     }
 
-    private func tap(_ i: Int) {
+    private func tap(_ tileID: Int) {
+        guard let i = tiles.firstIndex(where: { $0.id == tileID }) else { return }
         guard tiles[i].belongs else { Feedback.play(.miss); return } // decoy: kind, quiet
         tiles[i].isPicked = true
         found += 1
@@ -159,8 +164,8 @@ struct CategoryFluencyView: View {
 
     private func finish() {
         let elapsed = Int(Date.now.timeIntervalSince(startedAt))
-        let score = totalCorrect * 10
-        modelContext.insert(GameSession(gameID: "category_fluency", score: score,
+        let score = Self.score(totalCorrect: totalCorrect)
+        modelContext.insert(GameSession(gameID: .categoryFluency, score: score,
                                         rounds: roundsPerSession, durationSeconds: elapsed))
         finalScore = score
         showCelebration = true

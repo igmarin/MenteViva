@@ -27,15 +27,15 @@ struct HistoryView: View {
                 sessionList
             }
         }
-        .navigationTitle(String(localized: "history.title"))
+        .navigationTitle(AppLanguage.localized( "history.title"))
         .toolbar {
             if !weekSessions.isEmpty {
                 ToolbarItem(placement: .topBarTrailing) {
                     ShareLink(item: shareSummary) {
-                        Label(String(localized: "history.share"), systemImage: "square.and.arrow.up")
+                        Label(AppLanguage.localized( "history.share"), systemImage: "square.and.arrow.up")
                             .font(.title3)
                     }
-                    .accessibilityHint(String(localized: "history.share.hint"))
+                    .accessibilityHint(AppLanguage.localized( "history.share.hint"))
                 }
             }
         }
@@ -46,9 +46,9 @@ struct HistoryView: View {
     private var shareSummary: String {
         let lines = weekSessions.map { session -> String in
             let info = gameInfo(for: session.gameID)
-            return "\(info.emoji) \(info.name) — \(String(format: String(localized: "history.score %lld"), session.score))"
+            return "\(info.emoji) \(info.name) — \(String(format: AppLanguage.localized( "history.score %lld"), session.score))"
         }
-        let header = String(format: String(localized: "history.summary %lld"), weekSessions.count)
+        let header = String(format: AppLanguage.localized( "history.summary %lld"), weekSessions.count)
         return ([header] + lines).joined(separator: "\n")
     }
 
@@ -94,7 +94,7 @@ struct HistoryView: View {
             Text("history.score \(session.score)")
                 .font(.title2.weight(.bold))
         }
-        .frame(minHeight: 72)
+        .frame(minHeight: 100)
         .accessibilityElement(children: .combine)
         .accessibilityLabel(Text("history.a11y.session \(info.name) \(session.score)"))
     }
@@ -116,29 +116,20 @@ struct HistoryView: View {
 
     private func dayTitle(_ day: Date) -> String {
         if Calendar.current.isDateInToday(day) {
-            return String(localized: "history.today")
+            return AppLanguage.localized( "history.today")
         }
         if Calendar.current.isDateInYesterday(day) {
-            return String(localized: "history.yesterday")
+            return AppLanguage.localized( "history.yesterday")
         }
         return day.formatted(.dateTime.weekday(.wide).day().month(.wide))
     }
 
     private func gameInfo(for gameID: String) -> (emoji: String, name: String) {
-        switch gameID {
-        case "memory":
-            return ("🧩", String(localized: "game.memory.title"))
-        case "stroop":
-            return ("🎨", String(localized: "game.colorclash.title"))
-        case "category_fluency":
-            return ("🐾", String(localized: "game.category.title"))
-        case "math_streaks":
-            return ("🔢", String(localized: "game.math.title"))
-        case "quick_eyes":
-            return ("👀", String(localized: "game.quickeyes.title"))
-        default:
-            return ("🎮", String(localized: "history.game.unknown"))
+        let game = GameID(rawValue: gameID) ?? (gameID == "memory" ? .memoryMatch : nil)
+        guard let game else {
+            return ("🎮", AppLanguage.localized( "history.game.unknown"))
         }
+        return (game.emoji, AppLanguage.localized( game.title))
     }
 }
 

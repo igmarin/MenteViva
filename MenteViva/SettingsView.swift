@@ -9,15 +9,38 @@ enum AppLanguage: String, CaseIterable, Identifiable {
 
     var label: String {
         switch self {
-        case .system: String(localized: "settings.language.system")
+        case .system: AppLanguage.localized("settings.language.system")
         case .english: "English"
         case .spanish: "Español"
         }
     }
 
+    static var currentLocale: Locale {
+        let defaults = UserDefaults.standard
+        if let storedLanguage = defaults.array(forKey: "AppleLanguages")?.first as? String {
+            return locale(for: storedLanguage)
+        }
+        return locale(for: defaults.string(forKey: "appLanguage") ?? system.rawValue)
+    }
+
+    static func locale(for rawValue: String) -> Locale {
+        guard let language = AppLanguage(rawValue: rawValue), language != .system else {
+            return .current
+        }
+        return Locale(identifier: language.rawValue)
+    }
+
+    static func localized(_ key: String) -> String {
+        String(localized: String.LocalizationValue(key), locale: currentLocale)
+    }
+
+    static func localized(_ resource: String.LocalizationValue) -> String {
+        String(localized: resource, locale: currentLocale)
+    }
+
     /// Applies the choice by writing AppleLanguages, which is what
-    /// `String(localized:)` resolves against. Takes effect on next launch —
-    /// the settings screen says so plainly rather than pretending otherwise.
+    /// `AppLanguage.localized()` resolves against. The root view observes the
+    /// stored choice, so the visible language changes without relaunching.
     static func apply(_ rawValue: String) {
         let defaults = UserDefaults.standard
         guard let language = AppLanguage(rawValue: rawValue), language != .system else {
@@ -40,61 +63,76 @@ struct SettingsView: View {
         NavigationStack {
             List {
                 Section {
-                    Picker(String(localized: "settings.language"), selection: $appLanguage) {
+                    VStack(spacing: 0) {
                         ForEach(AppLanguage.allCases) { language in
-                            Text(language.label).tag(language.rawValue)
+                            Button {
+                                AppLanguage.apply(language.rawValue)
+                                appLanguage = language.rawValue
+                            } label: {
+                                HStack {
+                                    Text(language.label)
+                                    Spacer()
+                                    if language.rawValue == appLanguage {
+                                        Image(systemName: "checkmark")
+                                            .accessibilityHidden(true)
+                                    }
+                                }
+                                .frame(maxWidth: .infinity, minHeight: 100, alignment: .leading)
+                            }
+                            .buttonStyle(.plain)
+                            .frame(maxWidth: .infinity, minHeight: 100)
+                            .contentShape(Rectangle())
+                            .accessibilityAddTraits(language.rawValue == appLanguage ? [.isSelected] : [])
                         }
                     }
-                    .pickerStyle(.inline)
-                    .accessibilityHint(String(localized: "settings.language.restart"))
+                    .accessibilityHint(AppLanguage.localized( "settings.language.restart"))
                 } header: {
-                    Text(String(localized: "settings.language"))
+                    Text(AppLanguage.localized( "settings.language"))
                         .font(.title3)
                 } footer: {
-                    Text(String(localized: "settings.language.restart"))
+                    Text(AppLanguage.localized( "settings.language.restart"))
                         .font(.footnote)
                 }
 
                 Section {
-                    Toggle(String(localized: "settings.sound"), isOn: $soundEnabled)
+                    Toggle(AppLanguage.localized( "settings.sound"), isOn: $soundEnabled)
                         .font(.title3)
-                        .frame(minHeight: 60)
-                        .accessibilityHint(String(localized: "settings.sound.hint"))
+                        .frame(minHeight: 100)
+                        .accessibilityHint(AppLanguage.localized( "settings.sound.hint"))
                 }
 
                 Section {
-                    Toggle(String(localized: "settings.textsize"), isOn: $biggerText)
+                    Toggle(AppLanguage.localized( "settings.textsize"), isOn: $biggerText)
                         .font(.title3)
-                        .frame(minHeight: 60)
+                        .frame(minHeight: 100)
                 }
 
                 Section {
-                    Text(String(localized: "settings.privacy.body"))
+                    Text(AppLanguage.localized( "settings.privacy.body"))
                         .font(.body)
                         .accessibilityAddTraits(.isStaticText)
                 } header: {
-                    Text(String(localized: "settings.privacy.title"))
+                    Text(AppLanguage.localized( "settings.privacy.title"))
                         .font(.title3)
                 }
 
                 Section {
-                    LabeledContent(String(localized: "settings.version"),
+                    LabeledContent(AppLanguage.localized( "settings.version"),
                                    value: Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "—")
                         .font(.body)
                 }
             }
-            .navigationTitle(String(localized: "settings.title"))
+            .navigationTitle(AppLanguage.localized( "settings.title"))
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(String(localized: "settings.done")) { dismiss() }
+                    Button(AppLanguage.localized( "settings.done")) { dismiss() }
                         .font(.title3)
                 }
             }
-            .onChange(of: appLanguage) { _, newValue in
-                AppLanguage.apply(newValue)
-            }
         }
+        .id(appLanguage)
     }
+
 }
 
 #Preview {

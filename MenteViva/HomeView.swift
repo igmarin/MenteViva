@@ -4,15 +4,6 @@ import SwiftUI
 /// navigation puzzles. Tiles carry the game emoji so the screen is readable
 /// even when the text is too small for him to bother with.
 struct HomeView: View {
-    /// Emoji per game, matching HistoryView and the tile grid.
-    private static let games: [(id: String, emoji: String, titleKey: String)] = [
-        ("memory", "🧩", "game.memory.title"),
-        ("colorclash", "🎨", "game.colorclash.title"),
-        ("herd", "🐾", "game.category.title"),
-        ("math", "🔢", "game.math.title"),
-        ("quickeyes", "👀", "game.quickeyes.title"),
-    ]
-
     private let columns = [GridItem(.adaptive(minimum: 150), spacing: 16)]
     @State private var showSettings = false
 
@@ -20,18 +11,17 @@ struct HomeView: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
-                    Text(String(localized: "home.greeting"))
+                    Text(AppLanguage.localized( "home.greeting"))
                         .font(.title2)
                         .foregroundStyle(.secondary)
                         .padding(.horizontal, 4)
 
                     LazyVGrid(columns: columns, spacing: 16) {
-                        ForEach(Self.games, id: \.id) { game in
+                        ForEach(GameID.allCases, id: \.self) { game in
                             NavigationLink {
-                                destination(for: game.id)
+                                destination(for: game)
                             } label: {
-                                GameTile(emoji: game.emoji,
-                                         title: String(localized: String.LocalizationValue(game.titleKey)))
+                                GameTile(emoji: game.emoji, title: AppLanguage.localized( game.title))
                             }
                             .buttonStyle(.plain)
                         }
@@ -40,26 +30,26 @@ struct HomeView: View {
                     NavigationLink {
                         HistoryView()
                     } label: {
-                        Label(String(localized: "history.title"), systemImage: "calendar")
+                        Label(AppLanguage.localized( "history.title"), systemImage: "calendar")
                             .font(.title3.weight(.semibold))
-                            .frame(maxWidth: .infinity, minHeight: 72)
+                            .frame(maxWidth: .infinity, minHeight: 100)
                             .background(.blue.opacity(0.12), in: .rect(cornerRadius: 16))
                     }
                     .buttonStyle(.plain)
-                    .accessibilityHint(String(localized: "home.week.hint"))
+                    .accessibilityHint(AppLanguage.localized( "home.week.hint"))
                 }
                 .padding()
             }
-            .navigationTitle(String(localized: "app.title"))
+            .navigationTitle(AppLanguage.localized( "app.title"))
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         showSettings = true
                     } label: {
-                        Label(String(localized: "settings.title"), systemImage: "gearshape")
+                        Label(AppLanguage.localized( "settings.title"), systemImage: "gearshape")
                             .font(.title3)
                     }
-                    .accessibilityHint(String(localized: "settings.open.hint"))
+                    .accessibilityHint(AppLanguage.localized( "settings.open.hint"))
                 }
             }
             .sheet(isPresented: $showSettings) {
@@ -69,14 +59,13 @@ struct HomeView: View {
     }
 
     @ViewBuilder
-    private func destination(for id: String) -> some View {
-        switch id {
-        case "memory": MemoryMatchView()
-        case "colorclash": ColorClashView()
-        case "herd": CategoryFluencyView()
-        case "math": MathStreakView()
-        case "quickeyes": QuickEyesView()
-        default: EmptyView()
+    private func destination(for game: GameID) -> some View {
+        switch game {
+        case .memoryMatch: MemoryMatchView()
+        case .stroop: ColorClashView()
+        case .categoryFluency: CategoryFluencyView()
+        case .mathStreaks: MathStreakView()
+        case .quickEyes: QuickEyesView()
         }
     }
 }

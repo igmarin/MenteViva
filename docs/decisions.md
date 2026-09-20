@@ -2,6 +2,25 @@
 
 Newest first. Format: date — decision — why — what would make us revisit.
 
+## 2026-09-20 — Keep game identity typed and local to the domain
+
+Game IDs are the single source of truth for Jev payloads, navigation, saved
+sessions, history labels, and tile metadata. Views may choose a destination, but
+they do not invent alternate string IDs. This prevents a saved session from
+quietly becoming an unknown history row when two screens use different names.
+
+Revisit when: games become independently installable modules or their metadata
+comes from a server-owned catalog.
+
+## 2026-09-20 — Cancel delayed round work with the view lifecycle
+
+Memory matching and Quick Eyes cancel pending delays when a round restarts or a
+view disappears. Delayed UI work must not mutate a later round or a screen that
+is no longer visible. Audio graph changes likewise stay out of render-thread
+completion callbacks.
+
+Revisit when: a shared session coordinator owns round timing across screens.
+
 ## 2026-09-19 — Primary audience: healthy-to-mild older adults, preventive focus
 
 Decided with the grill interview: dad is "mostly fine, we want to slow decline
@@ -172,4 +191,3 @@ on stability, because there are still no findings to act on.
 - Processing-speed game is the strongest-evidence domain we don't cover yet
   (research-2026-09.md §2) — candidate for the fifth game. Must be a generic
   speed task, NOT a UFOV® clone (licensed, §3).
-

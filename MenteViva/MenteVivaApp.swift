@@ -49,6 +49,7 @@ struct MenteVivaApp: App {
 /// someone who's been here before. Also applies the bigger-text choice.
 private struct RootView: View {
     @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding = false
+    @AppStorage("appLanguage") private var appLanguage = AppLanguage.system.rawValue
     @AppStorage("biggerText") private var biggerText = false
 
     var body: some View {
@@ -62,5 +63,6 @@ private struct RootView: View {
         // Only ever bumps text up: forcing a size when the toggle is off would
         // shrink the app for someone using the system's largest setting.
         .dynamicTypeSize(biggerText ? .xxxLarge : .large)
+        .environment(\.locale, AppLanguage.locale(for: appLanguage))
     }
 }

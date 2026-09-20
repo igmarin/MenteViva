@@ -1030,13 +1030,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "A new language applies when you reopen the app."
+            "value": "The language changes right away."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "El nuevo idioma se aplica al reabrir la app."
+            "value": "El idioma cambia al instante."
           }
         }
       }
