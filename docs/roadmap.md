@@ -34,7 +34,7 @@ Exit criteria: dad picks it up unprompted, twice in one week (docs/mvp.md G1).
 
 **Tier 1 — free path (now, no paid account):**
 
-- Device installs: `swift tools/generate_project.swift --local-only` → Xcode → ⌘R.
+- Device installs: `swift tools/generate_project.swift` → Xcode → ⌘R (local-only is the default).
   Builds expire after 7 days; re-sign from Xcode to renew (#38 runbook).
 - Family + in-person testing on whatever devices we can lay hands on.
 - Jev proxy on Cloudflare's free tier → live daily mix/difficulty (#13 deploy).

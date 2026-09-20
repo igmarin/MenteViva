@@ -10,7 +10,7 @@ the generator, so Xcode never asks.
 
 ```sh
 cd /Users/igmarin/Developer/Personal/Projects/MenteViva
-swift tools/generate_project.swift --local-only   # required: no CloudKit entitlement
+swift tools/generate_project.swift               # local-only is the default
 open MenteViva.xcodeproj
 ```
 
@@ -59,10 +59,8 @@ once: built 2026-09-20, profile `com.igmarin.MenteViva` expires 2026-09-27.
 - **Installs lasting longer than a week.**
 - **Remote testers** — they must bring the device to this Mac.
 
-## Before committing the project file
+## CloudKit later
 
 ```sh
-swift tools/generate_project.swift   # back to CloudKit mode (the shipped config)
+swift tools/generate_project.swift --cloudkit   # only with the paid account + container
 ```
-
-Never commit the local-only `project.pbxproj`.

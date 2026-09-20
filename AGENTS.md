@@ -32,7 +32,7 @@ Instructions for AI agents (and humans in a hurry) working on MenteViva.
   re-sign by running ⌘R (or the equivalent `xcodebuild` device build) with the
   device connected. Verified: the installed profile for `com.igmarin.MenteViva`
   expires 2026-09-27 for a build signed 2026-09-20.
-- Device builds must use `--local-only` (no CloudKit entitlement); see Workflow
+- Device builds use the default local-only mode (no CloudKit entitlement); see Workflow
   step 3 for why a CloudKit build without the entitlement traps at launch.
 
 ## Workflow
@@ -40,11 +40,10 @@ Instructions for AI agents (and humans in a hurry) working on MenteViva.
 1. Branch from `main`, PR back to `main`.
 2. After adding/removing a `.swift` file: `swift tools/generate_project.swift`
    and commit the regenerated `project.pbxproj`.
-3. **Two build modes.** Default = CloudKit entitlements (simulator, or a device
-   signed with the paid Developer Program). `--local-only` = no entitlements and
-   `LOCAL_ONLY` defined, required to install on a real device with a free
-   Apple ID. Regenerate before switching modes; never commit a local-only
-   `project.pbxproj`.
+3. **Two build modes.** **Default = local-only** (`swift tools/generate_project.swift`):
+   no CloudKit entitlement, `LOCAL_ONLY` defined — required for a free Apple ID
+   and safe for the simulator. `--cloudkit` opts back in, but only with the paid
+   Developer Program and a provisioned container.
    **Never run a CloudKit-enabled build without its entitlement**: it traps at
    launch inside CloudKit (`EXC_BREAKPOINT`), and the simulator does not
    reproduce it because it tolerates the missing entitlement. Test the mode you

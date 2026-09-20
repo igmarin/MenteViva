@@ -149,7 +149,7 @@ it. Testing happens by connecting devices to Xcode and installing directly.
 
 **What stays free and is enough for now:**
 
-- Device installs via a free Apple ID (`--local-only` builds; re-sign weekly)
+- Device installs via a free Apple ID (local-only builds are now the default; re-sign weekly)
 - Real playtests — as long as the tester is physically with us and the session
   fits inside the 7-day window (see playtest.md)
 - Cloudflare Workers free tier for the Jev proxy (#13)

@@ -38,12 +38,13 @@ Two build modes, chosen at generation time:
 
 | Mode | Command | Use when |
 |---|---|---|
-| **CloudKit** (default) | `swift tools/generate_project.swift` | Simulator, or any device signed with a **paid** Apple Developer account |
-| **Local-only** | `swift tools/generate_project.swift --local-only` | Installing on a real iPhone/iPad with a **free** Apple ID — iCloud entitlements can't be provisioned for free accounts |
+| **Local-only** (default) | `swift tools/generate_project.swift` | Everything for now — free Apple ID, simulator, any device. Store is on-device. |
+| **CloudKit** | `swift tools/generate_project.swift --cloudkit` | Later, with the paid Developer account + provisioned container (iCloud sync/`CKShare`) |
 
-Local-only drops the entitlements file and defines `LOCAL_ONLY` at compile time, so the
-store is on-device only. Everything else behaves identically; session data just
-doesn't sync between devices.
+Local-only defines `LOCAL_ONLY` at compile time and drops the entitlements file,
+so the store is on-device only and a free Apple ID can provision it. CloudKit
+mode traps on launch if built without the entitlement — that is why it is not
+the default (see `AGENTS.md`).
 
 After adding a `.swift` file: regenerate and commit the updated
 `project.pbxproj` (see docs/conventions.md §6).

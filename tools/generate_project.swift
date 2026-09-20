@@ -6,11 +6,16 @@ import Foundation
 let root = URL(fileURLWithPath: FileManager.default.currentDirectoryPath)
 let appDir = root.appendingPathComponent("MenteViva")
 
-/// `--local-only`: drop the CloudKit entitlement and disable the CloudKit
-/// container in the app, so a free Apple ID can install on a real device
-/// (iCloud/CloudKit entitlements require the paid Developer Program).
-/// Default (no flag) keeps CloudKit enabled.
-let localOnly = CommandLine.arguments.contains("--local-only")
+/// CloudKit is **off by default** until the paid Developer Program is bought
+/// (decisions.md 2026-09-20). A CloudKit-enabled build without the iCloud
+/// entitlement traps at launch on device, and the simulator does not reproduce
+/// it, so the safe default is the one that works for a free Apple ID.
+///
+///   swift tools/generate_project.swift            # local-only (default)
+///   swift tools/generate_project.swift --cloudkit # opt in later, with the
+///                                                 # paid account + container
+let cloudKit = CommandLine.arguments.contains("--cloudkit")
+let localOnly = !cloudKit
 
 /// Signing team, pre-filled so device builds never stop to ask.
 /// Ismael Marin Cabrera (Personal Team) — free provisioning, so installs on a
@@ -398,6 +403,6 @@ for stale in [
     try? FileManager.default.removeItem(at: stale)
 }
 
-print("Generated MenteViva.xcodeproj: \(appFiles.count) app files, \(testFiles.count) test files, \(uiTestFiles.count) UI test files\(localOnly ? " [local-only]" : "")")
+print("Generated MenteViva.xcodeproj: \(appFiles.count) app files, \(testFiles.count) test files, \(uiTestFiles.count) UI test files\(cloudKit ? " [cloudkit]" : " [local-only]")")
 
 

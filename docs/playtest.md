@@ -66,7 +66,7 @@ Until the paid Developer Program is bought, every build installed on a device
 - Free provisioning also caps how many apps/devices can be signed at once, so
   keep the device list short and remove stale ones in Xcode → Settings →
   Accounts → Manage Certificates/Devices.
-- **Local-only builds** (`--local-only`) are required: no CloudKit entitlement,
+- **Local-only builds are the default**: no CloudKit entitlement,
   so a free Apple ID can provision them. Store data stays on that iPad.
 
 ## What counts as success
