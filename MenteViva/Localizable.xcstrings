@@ -784,6 +784,54 @@
           }
         }
       }
+    },
+    "history.share": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Share with family"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Compartir con la familia"
+          }
+        }
+      }
+    },
+    "history.share.hint": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sends this week's games as a message"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Envía los juegos de esta semana como mensaje"
+          }
+        }
+      }
+    },
+    "history.score.format": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Score: %lld"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Puntos: %lld"
+          }
+        }
+      }
     }
   },
   "version": "1.0"
