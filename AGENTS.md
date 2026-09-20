@@ -16,8 +16,9 @@ Instructions for AI agents (and humans in a hurry) working on MenteViva.
 - **Accessibility floor:** ≥100pt touch targets, VoiceOver labels on every
   interactive element, no color-only information, `.title2` minimum for
   instructions.
-- **Warm failure copy only.** Never "wrong/error/failed" — the player is
-  someone's dad. "Almost — try again."
+- **Tone:** warm failure copy only. Never "wrong/error/failed" — the player is
+  someone's dad you will never meet, installing this without anyone to explain
+  it to them.
 - **No medical claims** in any copy, code comment, or doc. "Fun mental
   exercise" is the ceiling. See docs/research-2026-09.md §1.
 - **The API key never enters the repo or the binary.** Jev goes through the

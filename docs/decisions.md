@@ -91,6 +91,28 @@ honestly verified without an Apple Developer Program container and two Apple
 IDs on real devices. Revisit when the developer account is set up and the
 TestFlight beta (#10) is running.
 
+## 2026-09-20 — Commercial intent: ship for strangers, not just for dad
+
+Owner direction: the app is for dad first, but is meant to be **sold** to
+families like ours. What this changes — and deliberately does not:
+
+**Changes.** v1 must work without us in the room: self-serve first-run
+onboarding, in-app settings (language, sound, larger text) reachable by an
+older adult alone, privacy policy + support contact, App Store listing assets
+in EN/ES, price, refunds. Playtesting must include people who are not family
+(#33).
+
+**Does not change.** The target segment. Jev 001 (P=0.95) put v1 on healthy
+preventive 60+ and that is also the viable market: broad "brain training for
+everyone" competes with Lumosity/Elevate on their terms; "warm, bilingual,
+senior-first, no dark patterns" is a position we can actually own. Marketing
+ceiling stays "fun mental exercise".
+
+**Consequence for prior decisions.** The family-only framing in
+`product-brief.md`, `AGENTS.md` tone rules and the MVP gates is superseded;
+segment, pricing lean (one-time $12.99 + Family Sharing, #21) and the
+Jev-as-seasoning architecture all stand.
+
 ## Open questions (not yet decided)
 
 - Business model: research leans **one-time $12.99 + Family Sharing**

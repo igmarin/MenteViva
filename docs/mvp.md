@@ -15,8 +15,9 @@ No game #6 before playtest findings (#18).
 | G2 — Sound | A11y audit passed; tests green; TDD/BDD rule live | #5, #20 |
 | G3 — Connected | Jev live via proxy (daily mix + difficulty); CloudKit family share + cheers | #13, #11 |
 | G4 — Shippable | Disclaimer copy, ES native review, TestFlight beta ≥5 people ≥2 wks, price set | #12, #10, #21 |
+| G5 — Sellable | Works for strangers: self-serve onboarding, in-app settings, privacy policy + support, store listing EN/ES, price + refund path | #31–#35 |
 
-MVP = G4 passed. Anything not listed here is not MVP.
+MVP = G4 passed. **Launch = G5 passed** (commercial intent, 2026-09-20).
 
 ## Checklist (owner → evidence)
 
@@ -30,6 +31,16 @@ MVP = G4 passed. Anything not listed here is not MVP.
 - [ ] ES review by native speaker 65+ → #12 sign-off
 - [ ] TestFlight family beta → #10, feedback log
 - [ ] Price tier set in App Store Connect → #21
+
+### G5 — Sellable (commercial intent, 2026-09-20)
+
+- [ ] First-run onboarding a stranger can follow with no help → #31
+- [ ] In-app settings an older adult can reach alone (language, sound, text size) → #32
+- [ ] Playtest with non-family seniors (≥3 people) → #33
+- [ ] Privacy policy + support contact page → #34
+- [ ] App Store listing: description + screenshots in EN **and** ES → #35
+- [ ] Price + refund/purchase path verified in sandbox → #21
+- [ ] Device support matrix documented (which iPads/iPhones we claim) → #36
 
 ## Explicitly NOT in MVP
 
