@@ -1,22 +1,54 @@
-# This workflow will build a Swift project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-swift
+# Build and test MenteViva on a macOS runner.
+#
+# NOTE: the stock "Swift" template runs `swift build` / `swift test` — those are
+# SwiftPM commands and this project has no Package.swift, so it fails every run.
+# We use xcodebuild against the generated project instead.
+#
+# Cost warning: macOS runners bill at a much higher rate than Linux and this is a
+# private repo. Triggers are push-to-main + manual only; drop the push trigger if
+# the minutes matter more than the signal.
 
-name: Swift
+name: Build and test
 
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
-  build:
-
+  test:
     runs-on: macos-latest
 
     steps:
     - uses: actions/checkout@v4
+
+    - name: Show toolchain
+      run: xcodebuild -version
+
+    - name: Regenerate project
+      run: swift tools/generate_project.swift
+
+    - name: Pick an available iPhone simulator
+      id: sim
+      run: |
+        UDID=$(xcrun simctl list devices available --json \
+          | python3 -c "import json,sys; d=json.load(sys.stdin)['devices']; \
+devs=[x for rt in d.values() for x in rt if x['name'].startswith('iPhone')]; \
+print(devs[0]['udid'] if devs else '')")
+        if [ -z "$UDID" ]; then echo "No iPhone simulator available"; exit 1; fi
+        echo "udid=$UDID" >> "$GITHUB_OUTPUT"
+        echo "Using simulator $UDID"
+
     - name: Build
-      run: swift build -v
-    - name: Run tests
-      run: swift test -v
+      run: |
+        xcodebuild build \
+          -project MenteViva.xcodeproj \
+          -scheme MenteViva \
+          -destination "id=${{ steps.sim.outputs.udid }}"
+
+    - name: Test
+      run: |
+        xcodebuild test \
+          -project MenteViva.xcodeproj \
+          -scheme MenteViva \
+          -destination "id=${{ steps.sim.outputs.udid }}"
