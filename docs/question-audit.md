@@ -61,6 +61,36 @@ whose `state` is wrong is wrong no matter how confident the output.
   it's which free mechanics best serve an early-dementia player — and that may
   shift the current five-game lineup.
 
+## Review results — 2026-09-20 (owner walk-through)
+
+The owner re-examined every question against the reality that this is a
+**family**, not one person: dad (early dementia), mom (healthy 60+), owner
+(healthy 40+). Answers:
+
+| # | Question | Answer |
+|---|---|---|
+| 1 | Design floor (who must never be frustrated) | **All three equal** |
+| 2 | Games: same library or per person | **Per-person libraries (C)** — the north star, reached in slices |
+| 3 | How the app knows who's playing | **Per-device for now** (dad's iPad = dad, my phone = me); named profiles later |
+| 4 | Jev mix/difficulty | **Per-device** — already true, no change |
+| 5 | Family sharing vs profiles | **Profiles later**; per-device now; text-share already shipped |
+| 6 | Devices/sync | Per-device assumption makes sync non-blocking; CloudKit still blocked (paid account) |
+| 7 | Languages (market) | **ES + EN for v1** (owner-validated); more languages = #40, gated on a named validator |
+| 8 | Pricing | Unchanged: one-time, adult-child-buys |
+
+**Consequences of C (per-person libraries):** it needs profiles, per-person Jev,
+and *more games* — none of which exist yet. So C is the destination; the path
+starts per-device (already true) and only adds profiles + new games once dad's
+own playtest (#6) says what *his* library should be. No three-libraries build
+until the warm games are validated as loved.
+
+## Still open (and where they live)
+
+- **Dad's actual game library** → gated on playtest (#6) + Jev 008 (#42).
+- **Market languages** → #40 (validator-gated).
+- **"Which person is this device" at first run** → implementation detail of the
+  per-device model; decide when the first new game ships (not now).
+
 ## Open re-asks (queued)
 
 - [ ] Jev 007 — audience with corrected state (done, archived)
