@@ -36,6 +36,7 @@ func oid(_ s: String) -> String {
 }
 
 let appID = oid("MenteViva.app"), grpID = oid("group"), srcsID = oid("Sources")
+let rootGrpID = oid("rootGroup"), productsGrpID = oid("productsGroup")
 let resID = oid("Resources"), fwID = oid("Frameworks"), pbxID = oid("proj")
 let tgtID = oid("target"), plistID = oid("Info.plist"), catID = oid("xcstrings")
 let catBuildID = oid("xcstrings.build")
@@ -106,6 +107,15 @@ p += "\n"
 
 // MARK: Groups
 
+// Root group + Products group: Xcode expects a container group holding the
+// source group and a Products group holding built products. Without them the
+// GUI reports a "file format integrity issue" even though xcodebuild parses fine.
+var productsChildren = "\t\t\t\t\(appID) /* MenteViva.app */,\n"
+if hasTests { productsChildren += "\t\t\t\t\(testsProductID) /* MenteVivaTests.xctest */,\n" }
+if hasUITests { productsChildren += "\t\t\t\t\(uiProductID) /* MenteVivaUITests.xctest */,\n" }
+p += "\t\t\(rootGrpID) = {\n\t\t\tisa = PBXGroup;\n\t\t\tchildren = ( \(grpID) /* MenteViva */, \(productsGrpID) /* Products */ );\n\t\t\tsourceTree = \"<group>\";\n\t\t};\n"
+p += "\t\t\(productsGrpID) /* Products */ = {\n\t\t\tisa = PBXGroup;\n\t\t\tchildren = (\n\(productsChildren)\t\t\t);\n\t\t\tname = Products;\n\t\t\tsourceTree = \"<group>\";\n\t\t};\n\n"
+
 p += "\t\t\(grpID) /* MenteViva */ = {\n\t\t\tisa = PBXGroup;\n\t\t\tchildren = (\n\(children)\t\t\t\t\(plistID) /* Info.plist */,\n" + (localOnly ? "" : "\t\t\t\t\(entID) /* MenteViva.entitlements */,\n") + "\t\t\t\t\(catID) /* Localizable.xcstrings */,\n"
 if hasTests { p += "\t\t\t\t\(testsGrpID) /* MenteVivaTests */,\n" }
 if hasUITests { p += "\t\t\t\t\(uiGrpID) /* MenteVivaUITests */,\n" }
@@ -140,7 +150,7 @@ var targetsList = "\(tgtID) /* MenteViva */"
 if hasTests { targetsList += ", \(testsTgtID) /* MenteVivaTests */" }
 if hasUITests { targetsList += ", \(uiTgtID) /* MenteVivaUITests */" }
 
-p += "\t\t\(pbxID) /* Project object */ = {\n\t\t\tisa = PBXProject;\n\t\t\tattributes = { BuildIndependentTargetsInParallel = 1; LastSwiftUpdateCheck = 1600; LastUpgradeCheck = 1600; TargetAttributes = { \(targetAttrs) }; };\n\t\t\tbuildConfigurationList = \(oid("prjCfgList")) /* Build configuration list for PBXProject \"MenteViva\" */;\n\t\t\tcompatibilityVersion = \"Xcode 14.0\";\n\t\t\tdevelopmentRegion = en;\n\t\t\thasScannedForEncodings = 0;\n\t\t\tknownRegions = ( en, Base, es );\n\t\t\tmainGroup = \(grpID);\n\t\t\tproductRefGroup = \(grpID);\n\t\t\tprojectDirPath = \"\";\n\t\t\tprojectRoot = \"\";\n\t\t\ttargets = ( \(targetsList) );\n\t\t};\n\n"
+p += "\t\t\(pbxID) /* Project object */ = {\n\t\t\tisa = PBXProject;\n\t\t\tattributes = { BuildIndependentTargetsInParallel = 1; LastSwiftUpdateCheck = 1600; LastUpgradeCheck = 1600; TargetAttributes = { \(targetAttrs) }; };\n\t\t\tbuildConfigurationList = \(oid("prjCfgList")) /* Build configuration list for PBXProject \"MenteViva\" */;\n\t\t\tcompatibilityVersion = \"Xcode 14.0\";\n\t\t\tdevelopmentRegion = en;\n\t\t\thasScannedForEncodings = 0;\n\t\t\tknownRegions = ( en, Base, es );\n\t\t\tmainGroup = \(rootGrpID);\n\t\t\tproductRefGroup = \(productsGrpID) /* Products */;\n\t\t\tprojectDirPath = \"\";\n\t\t\tprojectRoot = \"\";\n\t\t\ttargets = ( \(targetsList) );\n\t\t};\n\n"
 
 
 // MARK: Build phases
@@ -280,6 +290,33 @@ let schemeDir = projDir.appendingPathComponent("xcshareddata/xcschemes")
 try FileManager.default.createDirectory(at: schemeDir, withIntermediateDirectories: true)
 try scheme.write(to: schemeDir.appendingPathComponent("MenteViva.xcscheme"), atomically: true, encoding: .utf8)
 
-print("Generated MenteViva.xcodeproj: \(appFiles.count) app files, \(testFiles.count) test files, \(uiTestFiles.count) UI test files")
+// Xcode expects the project's embedded workspace file. Without it (and with
+// stale xcuserdata around) the GUI reports a "file format integrity issue"
+// even though xcodebuild parses the project fine.
+let wsDir = projDir.appendingPathComponent("project.xcworkspace")
+try FileManager.default.createDirectory(at: wsDir, withIntermediateDirectories: true)
+let workspaceData = """
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "self:">
+   </FileRef>
+</Workspace>
+
+"""
+try workspaceData.write(to: wsDir.appendingPathComponent("contents.xcworkspacedata"), atomically: true, encoding: .utf8)
+
+// Drop stale per-user state: both the project and the embedded workspace store
+// caches of the previous generation's scheme/target IDs, which makes Xcode
+// complain that a project changed underneath it.
+for stale in [
+    projDir.appendingPathComponent("xcuserdata"),
+    wsDir.appendingPathComponent("xcuserdata"),
+] {
+    try? FileManager.default.removeItem(at: stale)
+}
+
+print("Generated MenteViva.xcodeproj: \(appFiles.count) app files, \(testFiles.count) test files, \(uiTestFiles.count) UI test files\(localOnly ? " [local-only]" : "")")
 
 

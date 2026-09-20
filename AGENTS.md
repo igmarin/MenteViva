@@ -33,6 +33,10 @@ Instructions for AI agents (and humans in a hurry) working on MenteViva.
    `CloudKitEnabled = NO`, required to install on a real device with a free
    Apple ID. Regenerate before switching modes; never commit a local-only
    `project.pbxproj`.
+4. **Close Xcode before regenerating the project.** The generator rewrites
+   `project.pbxproj` and clears cached `xcuserdata`; Xcode holding the old
+   object graph open is what produces "the project has a file format integrity
+   issue". Close → regenerate → reopen.
 3. Verify before committing: build must pass —
    `xcodebuild -project MenteViva.xcodeproj -scheme MenteViva -destination 'generic/platform=iOS Simulator' build`
    Syntax checks (`swiftc -parse`) are NOT verification.

@@ -44,6 +44,21 @@
 
 		A58ADB6BD2BDA9D800000015 /* MenteVivaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MenteVivaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 
+		5E7A65D83969B94C00000009 = {
+			isa = PBXGroup;
+			children = ( DC57E42946F6E08C00000005 /* MenteViva */, E897528800A16D540000000D /* Products */ );
+			sourceTree = "<group>";
+		};
+		E897528800A16D540000000D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5D90A9FDEC5CFCA50000000D /* MenteViva.app */,
+				A58ADB6BD2BDA9D800000015 /* MenteVivaTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+
 		DC57E42946F6E08C00000005 /* MenteViva */ = {
 			isa = PBXGroup;
 			children = (
@@ -114,8 +129,8 @@
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = ( en, Base, es );
-			mainGroup = DC57E42946F6E08C00000005;
-			productRefGroup = DC57E42946F6E08C00000005;
+			mainGroup = 5E7A65D83969B94C00000009;
+			productRefGroup = E897528800A16D540000000D /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = ( 16F3E46051EEE3E800000006 /* MenteViva */, B80E8AC65778C4F10000000C /* MenteVivaTests */ );
