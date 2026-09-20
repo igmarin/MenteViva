@@ -40,6 +40,7 @@ let rootGrpID = oid("rootGroup"), productsGrpID = oid("productsGroup")
 let resID = oid("Resources"), fwID = oid("Frameworks"), pbxID = oid("proj")
 let tgtID = oid("target"), plistID = oid("Info.plist"), catID = oid("xcstrings")
 let catBuildID = oid("xcstrings.build")
+let assetsID = oid("Assets.xcassets"), assetsBuildID = oid("Assets.xcassets.build")
 let entID = oid("entitlements")
 
 // Test-target IDs (salted so they can never collide with app file hashes).
@@ -97,7 +98,9 @@ p += "\t\t\(catID) /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKn
 if !localOnly {
     p += "\t\t\(entID) /* MenteViva.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MenteViva.entitlements; sourceTree = \"<group>\"; };\n"
 }
-p += "\t\t\(catBuildID) /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = \(catID); };\n\n"
+p += "\t\t\(catBuildID) /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = \(catID); };\n"
+p += "\t\t\(assetsID) /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = \"<group>\"; };\n"
+p += "\t\t\(assetsBuildID) /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = \(assetsID); };\n\n"
 if hasTests {
     p += "\t\t\(testsProductID) /* MenteVivaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MenteVivaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };\n"
 }
@@ -117,7 +120,7 @@ if hasUITests { productsChildren += "\t\t\t\t\(uiProductID) /* MenteVivaUITests.
 p += "\t\t\(rootGrpID) = {\n\t\t\tisa = PBXGroup;\n\t\t\tchildren = ( \(grpID) /* MenteViva */, \(productsGrpID) /* Products */ );\n\t\t\tsourceTree = \"<group>\";\n\t\t};\n"
 p += "\t\t\(productsGrpID) /* Products */ = {\n\t\t\tisa = PBXGroup;\n\t\t\tchildren = (\n\(productsChildren)\t\t\t);\n\t\t\tname = Products;\n\t\t\tsourceTree = \"<group>\";\n\t\t};\n\n"
 
-p += "\t\t\(grpID) /* MenteViva */ = {\n\t\t\tisa = PBXGroup;\n\t\t\tchildren = (\n\(children)\t\t\t\t\(plistID) /* Info.plist */,\n" + (localOnly ? "" : "\t\t\t\t\(entID) /* MenteViva.entitlements */,\n") + "\t\t\t\t\(catID) /* Localizable.xcstrings */,\n"
+p += "\t\t\(grpID) /* MenteViva */ = {\n\t\t\tisa = PBXGroup;\n\t\t\tchildren = (\n\(children)\t\t\t\t\(plistID) /* Info.plist */,\n" + (localOnly ? "" : "\t\t\t\t\(entID) /* MenteViva.entitlements */,\n") + "\t\t\t\t\(catID) /* Localizable.xcstrings */,\n\t\t\t\t\(assetsID) /* Assets.xcassets */,\n"
 if hasTests { p += "\t\t\t\t\(testsGrpID) /* MenteVivaTests */,\n" }
 if hasUITests { p += "\t\t\t\t\(uiGrpID) /* MenteVivaUITests */,\n" }
 p += "\t\t\t);\n\t\t\tpath = MenteViva;\n\t\t\tsourceTree = \"<group>\";\n\t\t};\n\n"
@@ -156,7 +159,7 @@ p += "\t\t\(pbxID) /* Project object */ = {\n\t\t\tisa = PBXProject;\n\t\t\tattr
 
 // MARK: Build phases
 
-p += "\t\t\(resID) /* Resources */ = {\n\t\t\tisa = PBXResourcesBuildPhase;\n\t\t\tbuildActionMask = 2147483647;\n\t\t\tfiles = ( \(catBuildID) /* Localizable.xcstrings in Resources */ );\n\t\t\trunOnlyForDeploymentPostprocessing = 0;\n\t\t};\n\n"
+p += "\t\t\(resID) /* Resources */ = {\n\t\t\tisa = PBXResourcesBuildPhase;\n\t\t\tbuildActionMask = 2147483647;\n\t\t\tfiles = ( \(catBuildID) /* Localizable.xcstrings in Resources */, \(assetsBuildID) /* Assets.xcassets in Resources */ );\n\t\t\trunOnlyForDeploymentPostprocessing = 0;\n\t\t};\n\n"
 p += "\t\t\(fwID) /* Frameworks */ = {\n\t\t\tisa = PBXFrameworksBuildPhase;\n\t\t\tbuildActionMask = 2147483647;\n\t\t\tfiles = ( );\n\t\t\trunOnlyForDeploymentPostprocessing = 0;\n\t\t};\n\n"
 p += "\t\t\(srcsID) /* Sources */ = {\n\t\t\tisa = PBXSourcesBuildPhase;\n\t\t\tbuildActionMask = 2147483647;\n\t\t\tfiles = (\n\(phaseFiles)\t\t\t);\n\t\t\trunOnlyForDeploymentPostprocessing = 0;\n\t\t};\n\n"
 if hasTests {
@@ -242,6 +245,7 @@ let common: [(String, String)] = [
 ]
 
 let appSettings = common + [
+    ("ASSETCATALOG_COMPILER_APPICON_NAME", "AppIcon"),
     ("CODE_SIGN_ENTITLEMENTS", "MenteViva/MenteViva.entitlements"),
     ("CURRENT_PROJECT_VERSION", "1"),
     ("GENERATE_INFOPLIST_FILE", "YES"),
