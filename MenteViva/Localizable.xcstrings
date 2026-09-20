@@ -1,1142 +1,1145 @@
 {
-  "sourceLanguage": "en",
-  "strings": {
-    "%lld / %lld": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "new",
-            "value": "%1$lld / %2$lld"
+  "sourceLanguage" : "en",
+  "strings" : {
+    "%lld" : {
+
+    },
+    "%lld / %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld / %2$lld"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$lld / %2$lld"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld / %2$lld"
           }
         }
       }
     },
-    "%lld + %lld": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "new",
-            "value": "%1$lld + %2$lld"
+    "%lld + %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld + %2$lld"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$lld + %2$lld"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld + %2$lld"
           }
         }
       }
     },
-    "app.title": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mente Viva"
+    "app.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mente Viva"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mente Viva"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mente Viva"
           }
         }
       }
     },
-    "game.category.a11y.picked": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Already picked"
+    "game.category.a11y.picked" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Already picked"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ya elegido"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ya elegido"
           }
         }
       }
     },
-    "game.category.a11y.position %lld %lld": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tile %lld of %lld"
+    "game.category.a11y.position %lld %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tile %lld of %lld"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ficha %lld de %lld"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ficha %lld de %lld"
           }
         }
       }
     },
-    "game.category.animals": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Animals"
+    "game.category.animals" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Animals"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Animales"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Animales"
           }
         }
       }
     },
-    "game.category.colors": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Colors"
+    "game.category.colors" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Colors"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Colores"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Colores"
           }
         }
       }
     },
-    "game.category.fruits": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Fruits"
+    "game.category.fruits" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fruits"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Frutas"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Frutas"
           }
         }
       }
     },
-    "game.category.instruction": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tap all that belong to"
+    "game.category.instruction" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tap all that belong to"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Toca todos los que sean"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toca todos los que sean"
           }
         }
       }
     },
-    "game.category.title": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Name the Herd"
+    "game.category.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Name the Herd"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nombra la Manada"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nombra la Manada"
           }
         }
       }
     },
-    "game.category.vehicles": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Vehicles"
+    "game.category.vehicles" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vehicles"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Vehículos"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vehículos"
           }
         }
       }
     },
-    "game.celebration.home": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Home"
+    "game.celebration.home" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Home"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Inicio"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inicio"
           }
         }
       }
     },
-    "game.celebration.playagain": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Play again"
+    "game.celebration.playagain" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Play again"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Jugar de nuevo"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jugar de nuevo"
           }
         }
       }
     },
-    "game.celebration.score.a11y": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Your score"
+    "game.celebration.score.a11y" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your score"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tu puntuación"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tu puntuación"
           }
         }
       }
     },
-    "game.colorclash.color.blue": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Blue"
+    "game.colorclash.color.blue" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Blue"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Azul"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Azul"
           }
         }
       }
     },
-    "game.colorclash.color.green": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Green"
+    "game.colorclash.color.green" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Green"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Verde"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verde"
           }
         }
       }
     },
-    "game.colorclash.color.orange": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Orange"
+    "game.colorclash.color.orange" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Orange"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Naranja"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Naranja"
           }
         }
       }
     },
-    "game.colorclash.color.red": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Red"
+    "game.colorclash.color.red" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Red"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Rojo"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rojo"
           }
         }
       }
     },
-    "game.colorclash.instruction": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tap the color of the ink, not the word"
+    "game.colorclash.instruction" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tap the color of the ink, not the word"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Toca el color de la tinta, no la palabra"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toca el color de la tinta, no la palabra"
           }
         }
       }
     },
-    "game.colorclash.shape.circle": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Circle"
+    "game.colorclash.shape.circle" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Circle"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Círculo"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Círculo"
           }
         }
       }
     },
-    "game.colorclash.shape.diamond": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Diamond"
+    "game.colorclash.shape.diamond" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diamond"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Rombo"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rombo"
           }
         }
       }
     },
-    "game.colorclash.shape.square": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Square"
+    "game.colorclash.shape.square" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Square"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cuadrado"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cuadrado"
           }
         }
       }
     },
-    "game.colorclash.shape.triangle": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Triangle"
+    "game.colorclash.shape.triangle" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Triangle"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Triángulo"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Triángulo"
           }
         }
       }
     },
-    "game.colorclash.title": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Color Clash"
+    "game.colorclash.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Color Clash"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Choque de Colores"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choque de Colores"
           }
         }
       }
     },
-    "game.colorclash.word.blue": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "BLUE"
+    "game.colorclash.word.blue" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "BLUE"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "AZUL"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AZUL"
           }
         }
       }
     },
-    "game.colorclash.word.green": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "GREEN"
+    "game.colorclash.word.green" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GREEN"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "VERDE"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "VERDE"
           }
         }
       }
     },
-    "game.colorclash.word.orange": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ORANGE"
+    "game.colorclash.word.orange" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ORANGE"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "NARANJA"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "NARANJA"
           }
         }
       }
     },
-    "game.colorclash.word.red": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "RED"
+    "game.colorclash.word.red" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "RED"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ROJO"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ROJO"
           }
         }
       }
     },
-    "game.common.welldone": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Well done! 🎉"
+    "game.common.welldone" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Well done! 🎉"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "¡Muy bien! 🎉"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Muy bien! 🎉"
           }
         }
       }
     },
-    "game.math.instruction": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tap the correct answer"
+    "game.math.instruction" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tap the correct answer"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Toca la respuesta correcta"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toca la respuesta correcta"
           }
         }
       }
     },
-    "game.math.title": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Number Trail"
+    "game.math.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Number Trail"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sendero de Números"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sendero de Números"
           }
         }
       }
     },
-    "game.memory.a11y.matched": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pair found"
+    "game.memory.a11y.matched" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pair found"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pareja encontrada"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pareja encontrada"
           }
         }
       }
     },
-    "game.memory.a11y.position %lld %lld": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Card %lld of %lld"
+    "game.memory.a11y.position %lld %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Card %lld of %lld"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Carta %lld de %lld"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Carta %lld de %lld"
           }
         }
       }
     },
-    "game.memory.card.hidden": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hidden card"
+    "game.memory.card.hidden" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hidden card"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Carta oculta"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Carta oculta"
           }
         }
       }
     },
-    "game.memory.instruction": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Find the matching pairs"
+    "game.memory.instruction" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Find the matching pairs"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Encuentra las parejas"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Encuentra las parejas"
           }
         }
       }
     },
-    "game.memory.title": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Memory Lane"
+    "game.memory.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Memory Lane"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Camino de Memoria"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Camino de Memoria"
           }
         }
       }
     },
-    "game.quickeyes.a11y.showing": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "A picture is being shown briefly"
+    "game.quickeyes.a11y.showing" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A picture is being shown briefly"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Se muestra una imagen por un instante"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se muestra una imagen por un instante"
           }
         }
       }
     },
-    "game.quickeyes.almost": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Almost — let's slow down a touch"
+    "game.quickeyes.almost" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Almost — let's slow down a touch"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Casi — vamos un poquito más despacio"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casi — vamos un poquito más despacio"
           }
         }
       }
     },
-    "game.quickeyes.instruction": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "A picture flashes on screen. Look closely, then tap the one you saw"
+    "game.quickeyes.instruction" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A picture flashes on screen. Look closely, then tap the one you saw"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Aparecerá una imagen por un instante. Mírala bien y luego tócala"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aparecerá una imagen por un instante. Mírala bien y luego tócala"
           }
         }
       }
     },
-    "game.quickeyes.prompt": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Which one did you see?"
+    "game.quickeyes.prompt" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Which one did you see?"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "¿Cuál viste?"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Cuál viste?"
           }
         }
       }
     },
-    "game.quickeyes.title": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Quick Eyes"
+    "game.quickeyes.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quick Eyes"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ojos Ágiles"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ojos Ágiles"
           }
         }
       }
     },
-    "history.a11y.session %@ %lld": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@, score %2$lld"
+    "history.a11y.session %@ %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@, score %2$lld"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@, puntos %2$lld"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@, puntos %2$lld"
           }
         }
       }
     },
-    "history.empty": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No games yet this week. Pick a game and have some fun!"
+    "history.empty" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No games yet this week. Pick a game and have some fun!"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Aún no hay juegos esta semana. ¡Elige un juego y diviértete!"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aún no hay juegos esta semana. ¡Elige un juego y diviértete!"
           }
         }
       }
     },
-    "history.game.unknown": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Game"
+    "history.game.unknown" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Game"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Juego"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Juego"
           }
         }
       }
     },
-    "history.score %lld": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld points"
+    "history.score %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld points"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld puntos"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld puntos"
           }
         }
       }
     },
-    "history.share": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Share with family"
+    "history.share" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Share with family"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Compartir con la familia"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compartir con la familia"
           }
         }
       }
     },
-    "history.share.hint": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sends this week's games as a message"
+    "history.share.hint" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sends this week's games as a message"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Envía los juegos de esta semana como mensaje"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Envía los juegos de esta semana como mensaje"
           }
         }
       }
     },
-    "history.summary %lld": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "You played %lld times this week! 🌟"
+    "history.summary %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You played %lld times this week! 🌟"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "¡Jugaste %lld veces esta semana! 🌟"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Jugaste %lld veces esta semana! 🌟"
           }
         }
       }
     },
-    "history.title": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "My Week"
+    "history.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "My Week"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mi Semana"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mi Semana"
           }
         }
       }
     },
-    "history.today": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Today"
+    "history.today" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hoy"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hoy"
           }
         }
       }
     },
-    "history.yesterday": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Yesterday"
+    "history.yesterday" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yesterday"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ayer"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayer"
           }
         }
       }
     },
-    "home.greeting": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Shall we play a game?"
+    "home.greeting" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shall we play a game?"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "¿Jugamos un rato?"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Jugamos un rato?"
           }
         }
       }
     },
-    "home.week.hint": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "See what you played this week"
+    "home.week.hint" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "See what you played this week"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mira lo que jugaste esta semana"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mira lo que jugaste esta semana"
           }
         }
       }
     },
-    "onboarding.line1": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Short games to keep your mind active."
+    "language.restart.notice" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Close and reopen the app to see the change.\nCierra y vuelve a abrir la app para ver el cambio."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Juegos cortos para mantener tu mente activa."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Close and reopen the app to see the change.\nCierra y vuelve a abrir la app para ver el cambio."
           }
         }
       }
     },
-    "onboarding.line2": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No rush, no pressure."
+    "language.restart.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Language / Idioma"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sin prisa y sin presión."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Idioma / Language"
           }
         }
       }
     },
-    "onboarding.line3": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pick a game and start."
+    "onboarding.disclaimer" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This is not a medical device."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Elige un juego y empieza."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No es un dispositivo médico."
           }
         }
       }
     },
-    "onboarding.disclaimer": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "This is not a medical device."
+    "onboarding.line1" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Short games to keep your mind active."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No es un dispositivo médico."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Juegos cortos para mantener tu mente activa."
           }
         }
       }
     },
-    "onboarding.start": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Let's play"
+    "onboarding.line2" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No rush, no pressure."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "A jugar"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin prisa y sin presión."
           }
         }
       }
     },
-    "onboarding.start.hint": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Opens the games"
+    "onboarding.line3" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pick a game and start."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Abre los juegos"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elige un juego y empieza."
           }
         }
       }
     },
-    "settings.title": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Settings"
+    "onboarding.start" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Let's play"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ajustes"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A jugar"
           }
         }
       }
     },
-    "settings.open.hint": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Language, bigger text and privacy"
+    "onboarding.start.hint" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opens the games"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Idioma, texto más grande y privacidad"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abre los juegos"
           }
         }
       }
     },
-    "settings.done": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Done"
+    "settings.done" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Done"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Listo"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Listo"
           }
         }
       }
     },
-    "settings.language": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Language"
+    "settings.language" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Language"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Idioma"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Idioma"
           }
         }
       }
     },
-    "settings.language.system": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Device"
+    "settings.language.restart" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A new language applies when you reopen the app."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sistema"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El nuevo idioma se aplica al reabrir la app."
           }
         }
       }
     },
-    "settings.language.restart": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "A new language applies when you reopen the app."
+    "settings.language.system" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Device"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "El nuevo idioma se aplica al reabrir la app."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sistema"
           }
         }
       }
     },
-    "settings.textsize": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bigger text"
+    "settings.open.hint" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Language, bigger text and privacy"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Texto más grande"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Idioma, texto más grande y privacidad"
           }
         }
       }
     },
-    "settings.privacy.title": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Your privacy"
+    "settings.privacy.body" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No ads. No tracking. No account. Your games stay on your device. If daily suggestions are on, only anonymous totals leave it — which games, how many, how well. Never your name."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tu privacidad"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin anuncios. Sin rastreo. Sin cuenta. Tus partidas se quedan en tu dispositivo. Si las sugerencias diarias están activas, solo salen totales anónimos: qué juegos, cuántos y qué tan bien. Nunca tu nombre."
           }
         }
       }
     },
-    "settings.privacy.body": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No ads. No tracking. No account. Your games stay on your device. If daily suggestions are on, only anonymous totals leave it — which games, how many, how well. Never your name."
+    "settings.privacy.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your privacy"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sin anuncios. Sin rastreo. Sin cuenta. Tus partidas se quedan en tu dispositivo. Si las sugerencias diarias están activas, solo salen totales anónimos: qué juegos, cuántos y qué tan bien. Nunca tu nombre."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tu privacidad"
           }
         }
       }
     },
-    "settings.version": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Version"
+    "settings.textsize" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bigger text"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Versión"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Texto más grande"
           }
         }
       }
     },
-    "language.restart.title": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Language / Idioma"
+    "settings.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Idioma / Language"
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajustes"
           }
         }
       }
     },
-    "language.restart.notice": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Close and reopen the app to see the change.\nCierra y vuelve a abrir la app para ver el cambio."
+    "settings.version" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Version"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Close and reopen the app to see the change.\nCierra y vuelve a abrir la app para ver el cambio."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Versión"
           }
         }
       }
     }
   },
-  "version": "1.0"
+  "version" : "1.0"
 }

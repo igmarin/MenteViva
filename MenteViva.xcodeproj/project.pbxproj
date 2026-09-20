@@ -5,55 +5,119 @@
 	};
 	objectVersion = 90;
 	objects = {
-		2526D29DE5FE6C8300000025 /* CategoryFluencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 915FB304D5C7D9690000001F; };
-		1DA22A903C3C9B3500000021 /* CelebrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4174FC9AF3B1DBCB0000001B; };
-		B59E327BE0BD12A700000020 /* ColorClashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7571F11C435CE80D0000001A; };
-		A120B5E94542D41F00000020 /* MathStreakView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B13B6166437470950000001A; };
-		18180C4157C1561D00000021 /* MemoryMatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 250E769752DD6A430000001B; };
-		06316652C0C975F40000001F /* QuickEyesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D757F5352AE1A200000019; };
-		EE94290C1D7CE37100000017 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F548AF03C8043700000011; };
-		2A7F83F1E2F186E800000014 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C04053E45A48AC460000000E; };
-		6866AB30C9E6CF9000000018 /* MenteVivaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65242C715F07923E00000012; };
-		E2080412E5AF86210000001E /* GameSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC9E51A3CFE79A4700000018; };
-		83C5727F27BD566A0000001A /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7B3B616009A42E800000014; };
-		89CAE55D19053AF10000001F /* JevService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42B3456BD42F17B700000019; };
-		F1CAEDFBEAB27E7A00000018 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881D5FFD680EE69800000012; };
-		89155436CE7D610300000037 /* DailyPlanFallbackTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34DE3FBC170271E900000031; };
-		35A281A4703D4C320000002E /* DayStampTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 704A57A9A9F6E88000000028; };
-		C524FB5039855DE400000036 /* DifficultyPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F28BC63EFC28057200000030; };
-		C7BB50E2D28ADBC300000033 /* JevPlanPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67ADC4F8E1EC78290000002D; };
 
-		915FB304D5C7D9690000001F /* CategoryFluencyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/CategoryFluencyView.swift; sourceTree = "<group>"; };
-		4174FC9AF3B1DBCB0000001B /* CelebrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/CelebrationView.swift; sourceTree = "<group>"; };
-		7571F11C435CE80D0000001A /* ColorClashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/ColorClashView.swift; sourceTree = "<group>"; };
-		B13B6166437470950000001A /* MathStreakView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/MathStreakView.swift; sourceTree = "<group>"; };
-		250E769752DD6A430000001B /* MemoryMatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/MemoryMatchView.swift; sourceTree = "<group>"; };
-		B4D757F5352AE1A200000019 /* QuickEyesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/QuickEyesView.swift; sourceTree = "<group>"; };
-		E1F548AF03C8043700000011 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
-		C04053E45A48AC460000000E /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
-		65242C715F07923E00000012 /* MenteVivaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaApp.swift; sourceTree = "<group>"; };
-		AC9E51A3CFE79A4700000018 /* GameSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models/GameSession.swift; sourceTree = "<group>"; };
-		D7B3B616009A42E800000014 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
-		42B3456BD42F17B700000019 /* JevService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/JevService.swift; sourceTree = "<group>"; };
-		881D5FFD680EE69800000012 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
-		34DE3FBC170271E900000031 /* DailyPlanFallbackTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/DailyPlanFallbackTests.swift; sourceTree = SOURCE_ROOT; };
-		704A57A9A9F6E88000000028 /* DayStampTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/DayStampTests.swift; sourceTree = SOURCE_ROOT; };
-		F28BC63EFC28057200000030 /* DifficultyPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/DifficultyPolicyTests.swift; sourceTree = SOURCE_ROOT; };
-		67ADC4F8E1EC78290000002D /* JevPlanPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/JevPlanPolicyTests.swift; sourceTree = SOURCE_ROOT; };
-		5D90A9FDEC5CFCA50000000D /* MenteViva.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MenteViva.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* Begin PBXBuildFile section */
+		06316652C0C975F40000001F /* Games/QuickEyesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D757F5352AE1A200000019 /* Games/QuickEyesView.swift */; };
+		18180C4157C1561D00000021 /* Games/MemoryMatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 250E769752DD6A430000001B /* Games/MemoryMatchView.swift */; };
+		1DA22A903C3C9B3500000021 /* Games/CelebrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4174FC9AF3B1DBCB0000001B /* Games/CelebrationView.swift */; };
+		1FBF111C1EE1FE7C0000000F /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 5791C14BF0160AFA00000009 /* Localizable.xcstrings */; };
+		2526D29DE5FE6C8300000025 /* Games/CategoryFluencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 915FB304D5C7D9690000001F /* Games/CategoryFluencyView.swift */; };
+		2A7F83F1E2F186E800000014 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C04053E45A48AC460000000E /* HomeView.swift */; };
+		35A281A4703D4C320000002E /* MenteVivaTests/DayStampTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 704A57A9A9F6E88000000028 /* MenteVivaTests/DayStampTests.swift */; };
+		6866AB30C9E6CF9000000018 /* MenteVivaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65242C715F07923E00000012 /* MenteVivaApp.swift */; };
+		83C5727F27BD566A0000001A /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7B3B616009A42E800000014 /* OnboardingView.swift */; };
+		89155436CE7D610300000037 /* MenteVivaTests/DailyPlanFallbackTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34DE3FBC170271E900000031 /* MenteVivaTests/DailyPlanFallbackTests.swift */; };
+		89CAE55D19053AF10000001F /* Services/JevService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42B3456BD42F17B700000019 /* Services/JevService.swift */; };
+		8E02F7648BCD071800000015 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A5DD4286E2AD05560000000F /* Assets.xcassets */; };
+		A120B5E94542D41F00000020 /* Games/MathStreakView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B13B6166437470950000001A /* Games/MathStreakView.swift */; };
+		B59E327BE0BD12A700000020 /* Games/ColorClashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7571F11C435CE80D0000001A /* Games/ColorClashView.swift */; };
+		C524FB5039855DE400000036 /* MenteVivaTests/DifficultyPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F28BC63EFC28057200000030 /* MenteVivaTests/DifficultyPolicyTests.swift */; };
+		C7BB50E2D28ADBC300000033 /* MenteVivaTests/JevPlanPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67ADC4F8E1EC78290000002D /* MenteVivaTests/JevPlanPolicyTests.swift */; };
+		E2080412E5AF86210000001E /* Models/GameSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC9E51A3CFE79A4700000018 /* Models/GameSession.swift */; };
+		EE94290C1D7CE37100000017 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F548AF03C8043700000011 /* HistoryView.swift */; };
+		F1CAEDFBEAB27E7A00000018 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881D5FFD680EE69800000012 /* SettingsView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		CBB6EFD6363B39180000000B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8572920E3537AD1600000004 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 16F3E46051EEE3E800000006;
+			remoteInfo = MenteViva;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
 		1983297D696F1E1B0000000A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		250E769752DD6A430000001B /* Games/MemoryMatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/MemoryMatchView.swift; sourceTree = "<group>"; };
+		34DE3FBC170271E900000031 /* MenteVivaTests/DailyPlanFallbackTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/DailyPlanFallbackTests.swift; sourceTree = SOURCE_ROOT; };
+		4174FC9AF3B1DBCB0000001B /* Games/CelebrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/CelebrationView.swift; sourceTree = "<group>"; };
+		42B3456BD42F17B700000019 /* Services/JevService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/JevService.swift; sourceTree = "<group>"; };
 		5791C14BF0160AFA00000009 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
-
-		76A988240B655E890000000C /* MenteViva.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MenteViva.entitlements; sourceTree = "<group>"; };
-		1FBF111C1EE1FE7C0000000F /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 5791C14BF0160AFA00000009; };
-		A5DD4286E2AD05560000000F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		8E02F7648BCD071800000015 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A5DD4286E2AD05560000000F; };
-
+		5D90A9FDEC5CFCA50000000D /* MenteViva.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MenteViva.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		65242C715F07923E00000012 /* MenteVivaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaApp.swift; sourceTree = "<group>"; };
+		67ADC4F8E1EC78290000002D /* MenteVivaTests/JevPlanPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/JevPlanPolicyTests.swift; sourceTree = SOURCE_ROOT; };
+		704A57A9A9F6E88000000028 /* MenteVivaTests/DayStampTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/DayStampTests.swift; sourceTree = SOURCE_ROOT; };
+		7571F11C435CE80D0000001A /* Games/ColorClashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/ColorClashView.swift; sourceTree = "<group>"; };
+		881D5FFD680EE69800000012 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		915FB304D5C7D9690000001F /* Games/CategoryFluencyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/CategoryFluencyView.swift; sourceTree = "<group>"; };
 		A58ADB6BD2BDA9D800000015 /* MenteVivaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MenteVivaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A5DD4286E2AD05560000000F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		AC9E51A3CFE79A4700000018 /* Models/GameSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models/GameSession.swift; sourceTree = "<group>"; };
+		B13B6166437470950000001A /* Games/MathStreakView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/MathStreakView.swift; sourceTree = "<group>"; };
+		B4D757F5352AE1A200000019 /* Games/QuickEyesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/QuickEyesView.swift; sourceTree = "<group>"; };
+		C04053E45A48AC460000000E /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		D7B3B616009A42E800000014 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		E1F548AF03C8043700000011 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
+		F28BC63EFC28057200000030 /* MenteVivaTests/DifficultyPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/DifficultyPolicyTests.swift; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
 
+/* Begin PBXFrameworksBuildPhase section */
+		E2FAF168207B0A480000000A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+			);
+		};
+		E35AEB91D67BEC3900000010 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+			);
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
 		5E7A65D83969B94C00000009 = {
 			isa = PBXGroup;
-			children = ( DC57E42946F6E08C00000005 /* MenteViva */, E897528800A16D540000000D /* Products */ );
+			children = (
+				DC57E42946F6E08C00000005 /* MenteViva */,
+				E897528800A16D540000000D /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		956A7D38BC89506B0000000B /* MenteVivaTests */ = {
+			isa = PBXGroup;
+			children = (
+				34DE3FBC170271E900000031 /* MenteVivaTests/DailyPlanFallbackTests.swift */,
+				704A57A9A9F6E88000000028 /* MenteVivaTests/DayStampTests.swift */,
+				F28BC63EFC28057200000030 /* MenteVivaTests/DifficultyPolicyTests.swift */,
+				67ADC4F8E1EC78290000002D /* MenteVivaTests/JevPlanPolicyTests.swift */,
+			);
+			name = MenteVivaTests;
+			sourceTree = "<group>";
+		};
+		DC57E42946F6E08C00000005 /* MenteViva */ = {
+			isa = PBXGroup;
+			children = (
+				915FB304D5C7D9690000001F /* Games/CategoryFluencyView.swift */,
+				4174FC9AF3B1DBCB0000001B /* Games/CelebrationView.swift */,
+				7571F11C435CE80D0000001A /* Games/ColorClashView.swift */,
+				B13B6166437470950000001A /* Games/MathStreakView.swift */,
+				250E769752DD6A430000001B /* Games/MemoryMatchView.swift */,
+				B4D757F5352AE1A200000019 /* Games/QuickEyesView.swift */,
+				E1F548AF03C8043700000011 /* HistoryView.swift */,
+				C04053E45A48AC460000000E /* HomeView.swift */,
+				65242C715F07923E00000012 /* MenteVivaApp.swift */,
+				AC9E51A3CFE79A4700000018 /* Models/GameSession.swift */,
+				D7B3B616009A42E800000014 /* OnboardingView.swift */,
+				42B3456BD42F17B700000019 /* Services/JevService.swift */,
+				881D5FFD680EE69800000012 /* SettingsView.swift */,
+				1983297D696F1E1B0000000A /* Info.plist */,
+				5791C14BF0160AFA00000009 /* Localizable.xcstrings */,
+				A5DD4286E2AD05560000000F /* Assets.xcassets */,
+				956A7D38BC89506B0000000B /* MenteVivaTests */,
+			);
+			path = MenteViva;
 			sourceTree = "<group>";
 		};
 		E897528800A16D540000000D /* Products */ = {
@@ -65,139 +129,160 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+/* End PBXGroup section */
 
-		DC57E42946F6E08C00000005 /* MenteViva */ = {
-			isa = PBXGroup;
-			children = (
-				915FB304D5C7D9690000001F /* CategoryFluencyView.swift */,
-				4174FC9AF3B1DBCB0000001B /* CelebrationView.swift */,
-				7571F11C435CE80D0000001A /* ColorClashView.swift */,
-				B13B6166437470950000001A /* MathStreakView.swift */,
-				250E769752DD6A430000001B /* MemoryMatchView.swift */,
-				B4D757F5352AE1A200000019 /* QuickEyesView.swift */,
-				E1F548AF03C8043700000011 /* HistoryView.swift */,
-				C04053E45A48AC460000000E /* HomeView.swift */,
-				65242C715F07923E00000012 /* MenteVivaApp.swift */,
-				AC9E51A3CFE79A4700000018 /* GameSession.swift */,
-				D7B3B616009A42E800000014 /* OnboardingView.swift */,
-				42B3456BD42F17B700000019 /* JevService.swift */,
-				881D5FFD680EE69800000012 /* SettingsView.swift */,
-				1983297D696F1E1B0000000A /* Info.plist */,
-				76A988240B655E890000000C /* MenteViva.entitlements */,
-				5791C14BF0160AFA00000009 /* Localizable.xcstrings */,
-				A5DD4286E2AD05560000000F /* Assets.xcassets */,
-				956A7D38BC89506B0000000B /* MenteVivaTests */,
-			);
-			path = MenteViva;
-			sourceTree = "<group>";
-		};
-
-		956A7D38BC89506B0000000B /* MenteVivaTests */ = {
-			isa = PBXGroup;
-			children = (
-				34DE3FBC170271E900000031 /* DailyPlanFallbackTests.swift */,
-				704A57A9A9F6E88000000028 /* DayStampTests.swift */,
-				F28BC63EFC28057200000030 /* DifficultyPolicyTests.swift */,
-				67ADC4F8E1EC78290000002D /* JevPlanPolicyTests.swift */,
-			);
-			name = MenteVivaTests;
-			sourceTree = "<group>";
-		};
-
+/* Begin PBXNativeTarget section */
 		16F3E46051EEE3E800000006 /* MenteViva */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 623D50793F221C220000000A /* Build configuration list for PBXNativeTarget "MenteViva" */;
-			buildPhases = ( 91E3A47599412F5100000007 /* Sources */, E2FAF168207B0A480000000A /* Frameworks */, A93C79C57508885200000009 /* Resources */ );
-			buildRules = ( );
-			dependencies = ( );
+			buildPhases = (
+				91E3A47599412F5100000007 /* Sources */,
+				E2FAF168207B0A480000000A /* Frameworks */,
+				A93C79C57508885200000009 /* Resources */,
+			);
+			buildRules = (
+			);
 			name = MenteViva;
 			productName = MenteViva;
-			productReference = 5D90A9FDEC5CFCA50000000D;
+			productReference = 5D90A9FDEC5CFCA50000000D /* MenteViva.app */;
 			productType = "com.apple.product-type.application";
 		};
-
 		B80E8AC65778C4F10000000C /* MenteVivaTests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 82C49E5B94319B220000000D /* Build configuration list for PBXNativeTarget "MenteVivaTests" */;
-			buildPhases = ( A0C018EE7477228A0000000D /* Sources */, E35AEB91D67BEC3900000010 /* Frameworks */, 7AA358EACD37150D0000000F /* Resources */ );
-			buildRules = ( );
-			dependencies = ( D59A5D46BAA29F3900000009 /* PBXTargetDependency */ );
+			buildPhases = (
+				A0C018EE7477228A0000000D /* Sources */,
+				E35AEB91D67BEC3900000010 /* Frameworks */,
+				7AA358EACD37150D0000000F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D59A5D46BAA29F3900000009 /* PBXTargetDependency */,
+			);
 			name = MenteVivaTests;
 			productName = MenteVivaTests;
-			productReference = A58ADB6BD2BDA9D800000015;
+			productReference = A58ADB6BD2BDA9D800000015 /* MenteVivaTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+/* End PBXNativeTarget section */
 
-		CBB6EFD6363B39180000000B /* PBXContainerItemProxy */ = { isa = PBXContainerItemProxy; containerPortal = 8572920E3537AD1600000004 /* Project object */; proxyType = 1; remoteGlobalIDString = 16F3E46051EEE3E800000006; remoteInfo = MenteViva; };
-		D59A5D46BAA29F3900000009 /* PBXTargetDependency */ = { isa = PBXTargetDependency; target = 16F3E46051EEE3E800000006 /* MenteViva */; targetProxy = CBB6EFD6363B39180000000B; };
-
+/* Begin PBXProject section */
 		8572920E3537AD1600000004 /* Project object */ = {
 			isa = PBXProject;
-			attributes = { BuildIndependentTargetsInParallel = 1; LastSwiftUpdateCheck = 2630; LastUpgradeCheck = 2700; TargetAttributes = { 16F3E46051EEE3E800000006 = { CreatedOnToolsVersion = 16.0; }; B80E8AC65778C4F10000000C = { CreatedOnToolsVersion = 16.0; TestTargetID = 16F3E46051EEE3E800000006; }; }; };
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2630;
+				LastUpgradeCheck = 2700;
+				TargetAttributes = {
+					16F3E46051EEE3E800000006 = {
+						CreatedOnToolsVersion = 16.0;
+					};
+					B80E8AC65778C4F10000000C = {
+						CreatedOnToolsVersion = 16.0;
+						TestTargetID = 16F3E46051EEE3E800000006;
+					};
+				};
+			};
 			buildConfigurationList = E58D6E7C2FA70EB30000000A /* Build configuration list for PBXProject "MenteViva" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
-			knownRegions = ( en, Base, es );
+			knownRegions = (
+				en,
+				Base,
+				es,
+			);
 			mainGroup = 5E7A65D83969B94C00000009;
 			minimizedProjectReferenceProxies = 1;
 			preferredProjectObjectVersion = 90;
 			productRefGroup = E897528800A16D540000000D /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
-			targets = ( 16F3E46051EEE3E800000006 /* MenteViva */, B80E8AC65778C4F10000000C /* MenteVivaTests */ );
+			targets = (
+				16F3E46051EEE3E800000006 /* MenteViva */,
+				B80E8AC65778C4F10000000C /* MenteVivaTests */,
+			);
 		};
+/* End PBXProject section */
 
+/* Begin PBXResourcesBuildPhase section */
+		7AA358EACD37150D0000000F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
 		A93C79C57508885200000009 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = ( 1FBF111C1EE1FE7C0000000F /* Localizable.xcstrings in Resources */, 8E02F7648BCD071800000015 /* Assets.xcassets in Resources */ );
-			runOnlyForDeploymentPostprocessing = 0;
+			files = (
+				1FBF111C1EE1FE7C0000000F /* Localizable.xcstrings in Resources */,
+				8E02F7648BCD071800000015 /* Assets.xcassets in Resources */,
+			);
 		};
+/* End PBXResourcesBuildPhase section */
 
-		E2FAF168207B0A480000000A /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = ( );
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-
+/* Begin PBXSourcesBuildPhase section */
 		91E3A47599412F5100000007 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
-				2526D29DE5FE6C8300000025 /* CategoryFluencyView.swift in Sources */,
-				1DA22A903C3C9B3500000021 /* CelebrationView.swift in Sources */,
-				B59E327BE0BD12A700000020 /* ColorClashView.swift in Sources */,
-				A120B5E94542D41F00000020 /* MathStreakView.swift in Sources */,
-				18180C4157C1561D00000021 /* MemoryMatchView.swift in Sources */,
-				06316652C0C975F40000001F /* QuickEyesView.swift in Sources */,
+				2526D29DE5FE6C8300000025 /* Games/CategoryFluencyView.swift in Sources */,
+				1DA22A903C3C9B3500000021 /* Games/CelebrationView.swift in Sources */,
+				B59E327BE0BD12A700000020 /* Games/ColorClashView.swift in Sources */,
+				A120B5E94542D41F00000020 /* Games/MathStreakView.swift in Sources */,
+				18180C4157C1561D00000021 /* Games/MemoryMatchView.swift in Sources */,
+				06316652C0C975F40000001F /* Games/QuickEyesView.swift in Sources */,
 				EE94290C1D7CE37100000017 /* HistoryView.swift in Sources */,
 				2A7F83F1E2F186E800000014 /* HomeView.swift in Sources */,
 				6866AB30C9E6CF9000000018 /* MenteVivaApp.swift in Sources */,
-				E2080412E5AF86210000001E /* GameSession.swift in Sources */,
+				E2080412E5AF86210000001E /* Models/GameSession.swift in Sources */,
 				83C5727F27BD566A0000001A /* OnboardingView.swift in Sources */,
-				89CAE55D19053AF10000001F /* JevService.swift in Sources */,
+				89CAE55D19053AF10000001F /* Services/JevService.swift in Sources */,
 				F1CAEDFBEAB27E7A00000018 /* SettingsView.swift in Sources */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
-
 		A0C018EE7477228A0000000D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
-				89155436CE7D610300000037 /* DailyPlanFallbackTests.swift in Sources */,
-				35A281A4703D4C320000002E /* DayStampTests.swift in Sources */,
-				C524FB5039855DE400000036 /* DifficultyPolicyTests.swift in Sources */,
-				C7BB50E2D28ADBC300000033 /* JevPlanPolicyTests.swift in Sources */,
+				89155436CE7D610300000037 /* MenteVivaTests/DailyPlanFallbackTests.swift in Sources */,
+				35A281A4703D4C320000002E /* MenteVivaTests/DayStampTests.swift in Sources */,
+				C524FB5039855DE400000036 /* MenteVivaTests/DifficultyPolicyTests.swift in Sources */,
+				C7BB50E2D28ADBC300000033 /* MenteVivaTests/JevPlanPolicyTests.swift in Sources */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
+/* End PBXSourcesBuildPhase section */
 
-		E35AEB91D67BEC3900000010 /* Frameworks */ = { isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = ( ); runOnlyForDeploymentPostprocessing = 0; };
-		7AA358EACD37150D0000000F /* Resources */ = { isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = ( ); runOnlyForDeploymentPostprocessing = 0; };
+/* Begin PBXTargetDependency section */
+		D59A5D46BAA29F3900000009 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 16F3E46051EEE3E800000006 /* MenteViva */;
+			targetProxy = CBB6EFD6363B39180000000B /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
-		8216488D1CA88A370000000E /* Debug */ = {
+/* Begin XCBuildConfiguration section */
+		6F3E02267CD2548100000011 /* Release configuration for PBXNativeTarget "MenteVivaTests" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.igmarin.MenteVivaTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MenteViva.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/MenteViva";
+			};
+			name = Release;
+		};
+		8216488D1CA88A370000000E /* Debug configuration for PBXProject "MenteViva" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -216,26 +301,52 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				STR_CATALOG_GENERATE_SYMBOLS = YES;
-				SWIFT_VERSION = 5.0;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				ENABLE_TESTABILITY = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = "DEBUG=1 $(inherited)";
 				ONLY_ACTIVE_ARCH = YES;
+				STR_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
-		B6CEF8FE43BE350D00000010 /* Release */ = {
+		95F6AA5638906AFB0000000F /* Debug configuration for PBXNativeTarget "MenteVivaTests" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.igmarin.MenteVivaTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MenteViva.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/MenteViva";
+			};
+			name = Debug;
+		};
+		B6CEF8FE43BE350D00000010 /* Release configuration for PBXProject "MenteViva" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -254,6 +365,8 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -262,126 +375,116 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				STR_CATALOG_GENERATE_SYMBOLS = YES;
-				SWIFT_VERSION = 5.0;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_NS_ASSERTIONS = NO;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
-		C26F33331F7298D90000000D /* Debug */ = {
+		C26F33331F7298D90000000D /* Debug configuration for PBXNativeTarget "MenteViva" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				SDKROOT = iphoneos;
-				SWIFT_VERSION = 5.0;
-				ENABLE_PREVIEWS = YES;
-				CODE_SIGN_STYLE = Automatic;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = MenteViva/MenteViva.entitlements;
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = VB42T7NYX2;
+				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MenteViva/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Mente Viva";
-				INFOPLIST_KEY_CloudKitEnabled = YES;
+				INFOPLIST_KEY_CloudKitEnabled = NO;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				MARKETING_VERSION = 0.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.igmarin.MenteViva;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
-		DFC9DE43A2D572770000000F /* Release */ = {
+		DFC9DE43A2D572770000000F /* Release configuration for PBXNativeTarget "MenteViva" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				SDKROOT = iphoneos;
-				SWIFT_VERSION = 5.0;
-				ENABLE_PREVIEWS = YES;
-				CODE_SIGN_STYLE = Automatic;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = MenteViva/MenteViva.entitlements;
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = VB42T7NYX2;
+				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MenteViva/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Mente Viva";
-				INFOPLIST_KEY_CloudKitEnabled = YES;
+				INFOPLIST_KEY_CloudKitEnabled = NO;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				MARKETING_VERSION = 0.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.igmarin.MenteViva;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
-		95F6AA5638906AFB0000000F /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				SDKROOT = iphoneos;
-				SWIFT_VERSION = 5.0;
-				ENABLE_PREVIEWS = YES;
-				CODE_SIGN_STYLE = Automatic;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MenteViva.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/MenteViva";
-				GENERATE_INFOPLIST_FILE = YES;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.igmarin.MenteVivaTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-			};
-			name = Debug;
-		};
-		6F3E02267CD2548100000011 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				SDKROOT = iphoneos;
-				SWIFT_VERSION = 5.0;
-				ENABLE_PREVIEWS = YES;
-				CODE_SIGN_STYLE = Automatic;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MenteViva.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/MenteViva";
-				GENERATE_INFOPLIST_FILE = YES;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.igmarin.MenteVivaTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-			};
-			name = Release;
-		};
+/* End XCBuildConfiguration section */
 
-		E58D6E7C2FA70EB30000000A = { isa = XCConfigurationList; buildConfigurations = ( 8216488D1CA88A370000000E, B6CEF8FE43BE350D00000010 ); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
-		623D50793F221C220000000A = { isa = XCConfigurationList; buildConfigurations = ( C26F33331F7298D90000000D, DFC9DE43A2D572770000000F ); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
-		82C49E5B94319B220000000D = { isa = XCConfigurationList; buildConfigurations = ( 95F6AA5638906AFB0000000F, 6F3E02267CD2548100000011 ); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+/* Begin XCConfigurationList section */
+		623D50793F221C220000000A /* Build configuration list for PBXNativeTarget "MenteViva" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C26F33331F7298D90000000D /* Debug configuration for PBXNativeTarget "MenteViva" */,
+				DFC9DE43A2D572770000000F /* Release configuration for PBXNativeTarget "MenteViva" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		82C49E5B94319B220000000D /* Build configuration list for PBXNativeTarget "MenteVivaTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				95F6AA5638906AFB0000000F /* Debug configuration for PBXNativeTarget "MenteVivaTests" */,
+				6F3E02267CD2548100000011 /* Release configuration for PBXNativeTarget "MenteVivaTests" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		E58D6E7C2FA70EB30000000A /* Build configuration list for PBXProject "MenteViva" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8216488D1CA88A370000000E /* Debug configuration for PBXProject "MenteViva" */,
+				B6CEF8FE43BE350D00000010 /* Release configuration for PBXProject "MenteViva" */,
+			);
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
 	};
 	rootObject = 8572920E3537AD1600000004 /* Project object */;
 }

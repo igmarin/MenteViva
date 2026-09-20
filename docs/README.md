@@ -11,6 +11,7 @@ screen of real content, split it — long docs don't get read.
 | [jev-revisit.md](jev-revisit.md) | Our 5 early decisions vs Jev's judgments | 2026-09-19 |
 | [jev-json/](jev-json/) | Raw Jev request/response archive (audit trail) | Growing |
 | [mvp.md](mvp.md) | MVP definition of done + phase gates | Living |
+| [playtest.md](playtest.md) | How to run a playtest and record it (#6, #33) | Living |
 | [decisions.md](decisions.md) | Every significant decision, with date and reason | Living log |
 | [research-2026-09.md](research-2026-09.md) | Evidence + market scan behind the decisions | Snapshot |
 | [roadmap.md](roadmap.md) | What happens next, in order | Living |
