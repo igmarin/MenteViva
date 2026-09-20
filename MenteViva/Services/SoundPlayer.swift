@@ -3,8 +3,15 @@ import UIKit
 
 /// Synthesized game sounds + haptics — no audio files, no royalties, no fees
 /// (see docs/jev-sounds.md). Sound and haptics share one Settings toggle.
-nonisolated enum Feedback {
-    enum Event { case tap, success, complete, miss }
+@MainActor
+enum Feedback {
+    /// A user interaction that receives synchronized sound and haptic feedback.
+    enum Event {
+        case tap
+        case success
+        case complete
+        case miss
+    }
 
     /// One call for every feedback moment: plays the tone and, on a device that
     /// supports it, a matching haptic. Both are no-ops in the simulator's audio
@@ -34,19 +41,40 @@ nonisolated enum Feedback {
     }
 }
 
-/// Synthesized tones (no audio files). Three soft, low-frequency sounds; a wrong
-/// answer is a short, quiet, low tone, never a buzzer.
-nonisolated enum SoundPlayer {
-    enum Tone { case tap, success, complete, miss }
+/// Creates the app's short, synthesized feedback tones.
+///
+/// No audio files are bundled. Playback is intentionally gentle, respects the
+/// device's silent switch, and shares its setting with haptic feedback.
+@MainActor
+enum SoundPlayer {
+    /// The shared UserDefaults key used by Settings and feedback playback.
+    static let enabledKey = "soundEnabled"
 
-    private static var engine: AVAudioEngine?
-
-    /// Whether sound is currently allowed. The single Settings toggle governs
-    /// both sound and haptics (docs/jev-sounds.md decision 5).
-    static var isEnabled: Bool {
-        UserDefaults.standard.object(forKey: "soundEnabled") as? Bool ?? true
+    /// The available synthesized tones.
+    enum Tone {
+        case tap
+        case success
+        case complete
+        case miss
     }
 
+    private static var engine: AVAudioEngine?
+    private static var playerNode: AVAudioPlayerNode?
+
+    /// Whether sound and haptics are currently allowed.
+    ///
+    /// The setting is shared by the sound and haptic paths, so a player can
+    /// silence all feedback from one place (see `docs/jev-sounds.md`).
+    static var isEnabled: Bool {
+        UserDefaults.standard.object(forKey: enabledKey) as? Bool ?? true
+    }
+
+    /// Plays a tone if feedback is enabled.
+    ///
+    /// Playback is best effort: audio-session setup and engine startup are
+    /// allowed to fail without interrupting the game.
+    ///
+    /// - Parameter tone: The synthesized tone to play.
     static func play(_ tone: Tone) {
         guard isEnabled else { return }
         // .ambient respects the silent switch and mixes with other audio.
@@ -59,22 +87,29 @@ nonisolated enum SoundPlayer {
         }
         guard let engine else { return }
 
-        let player = AVAudioPlayerNode()
-        let format = AVAudioFormat(standardFormatWithSampleRate: 44100, channels: 1)!
-        let buffer = Self.buffer(for: tone, format: format)
-        engine.attach(player)
-        engine.connect(player, to: engine.mainMixerNode, format: format)
-        engine.prepare()
-        try? engine.start()
+        guard let format = AVAudioFormat(standardFormatWithSampleRate: 44100, channels: 1),
+              let buffer = Self.buffer(for: tone, format: format) else { return }
 
-        player.scheduleBuffer(buffer, at: nil, options: .interrupts, completionHandler: {
-            player.stop()
-            engine.detach(player)
-        })
-        player.play()
+        if playerNode == nil {
+            let player = AVAudioPlayerNode()
+            engine.attach(player)
+            engine.connect(player, to: engine.mainMixerNode, format: format)
+            playerNode = player
+        }
+        guard let playerNode else { return }
+
+        engine.prepare()
+        if !engine.isRunning {
+            try? engine.start()
+        }
+
+        // Reuse the node. The .interrupts option stops the previous short tone
+        // without requiring graph mutation from the audio render thread.
+        playerNode.scheduleBuffer(buffer, at: nil, options: .interrupts)
+        playerNode.play()
     }
 
-    private static func buffer(for tone: Tone, format: AVAudioFormat) -> AVAudioPCMBuffer {
+    private static func buffer(for tone: Tone, format: AVAudioFormat) -> AVAudioPCMBuffer? {
         // Concatenate one or more notes into a single scheduled buffer.
         let notes: [(Double, Double, Float)]
         switch tone {
@@ -93,9 +128,9 @@ nonisolated enum SoundPlayer {
         for note in notes { totalDuration += note.1 }
 
         let totalFrames = AVAudioFrameCount(totalDuration * sampleRate)
-        let buffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: totalFrames)!
+        guard let buffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: totalFrames),
+              let channel = buffer.floatChannelData?[0] else { return nil }
         buffer.frameLength = totalFrames
-        let channel = buffer.floatChannelData![0]
 
         var offset = 0
         for note in notes {

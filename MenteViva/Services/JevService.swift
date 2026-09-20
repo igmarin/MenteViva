@@ -66,8 +66,8 @@ actor JevService {
     private let cacheKey = "jev.dailyPlan"
 
     /// Below this confidence a difficulty Score is ignored and yesterday's
-    /// difficulty is kept. Wrong difficulty is the high-stakes error here, so
-    /// the gate sits above the docs' 0.5 "genuinely unsure" floor.
+    /// difficulty is kept. A poor difficulty match is the high-stakes concern
+    /// here, so the gate sits above the docs' 0.5 "genuinely unsure" floor.
     private let difficultyConfidenceThreshold = 0.6
     private let gamesPerDay = 3
 
@@ -244,4 +244,3 @@ nonisolated enum JevAnswer: Decodable {
         }
     }
 }
-

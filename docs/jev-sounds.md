@@ -13,7 +13,7 @@ in `jev-json/006-sounds.*`. Model served: jev-1.13.0.
    removes the licensing question entirely: no audio files, no royalties, no
    fees, no asset pipeline.
 4. **Palette of exactly three** (0.74): success (soft two-note rise),
-   completion (three-note), tap (single soft tick). A wrong answer gets a short
+   completion (three-note), tap (single soft tick). A missed answer gets a short
    low, quiet tone — warm-failure copy extends to audio: no harsh buzz.
 5. **On by default** (0.62) with a single "Sound & haptics" toggle in Settings.
    One switch for both: two controls is one too many for this audience.
@@ -38,7 +38,7 @@ Haptics are the same principle: `UIImpactFeedbackGenerator` / `UINotificationFee
 | Question | Answer |
 |---|---|
 | Quiet how? | Peak amplitude ≈ 0.5 of a system alert; envelope with soft attack/decay |
-| A "wrong" sound? | Yes but kind: low (~180 Hz), short, quiet — not a buzzer |
+| A missed-answer sound? | Yes but kind: low (~180 Hz), short, quiet — not a buzzer |
 | Haptics independent of sound? | No — one toggle governs both; simpler |
 | Does sound block the UI? | Never — played off the main path, fire-and-forget |
 | Silent switch? | Respected — `.ambient` session |

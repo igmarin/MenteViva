@@ -33,7 +33,7 @@ enum AppLanguage: String, CaseIterable, Identifiable {
 struct SettingsView: View {
     @AppStorage("appLanguage") private var appLanguage = AppLanguage.system.rawValue
     @AppStorage("biggerText") private var biggerText = false
-    @AppStorage("soundEnabled") private var soundEnabled = true
+    @AppStorage(SoundPlayer.enabledKey) private var soundEnabled = true
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {

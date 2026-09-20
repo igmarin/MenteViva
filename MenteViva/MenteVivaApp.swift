@@ -17,14 +17,13 @@ struct MenteVivaApp: App {
         let schema = Schema([GameSession.self])
 
         #if LOCAL_ONLY
-        let cloudKitEnabled = false
+        let config = ModelConfiguration(schema: schema)
         #else
-        let cloudKitEnabled = true
+        let config = ModelConfiguration(
+            schema: schema,
+            cloudKitDatabase: .private("iCloud.com.igmarin.MenteViva")
+        )
         #endif
-
-        let config = cloudKitEnabled
-            ? ModelConfiguration(schema: schema, cloudKitDatabase: .private("iCloud.com.igmarin.MenteViva"))
-            : ModelConfiguration(schema: schema)
 
         do {
             return try ModelContainer(for: schema, configurations: [config])
