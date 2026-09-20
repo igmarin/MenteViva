@@ -14,6 +14,7 @@ struct HomeView: View {
     ]
 
     private let columns = [GridItem(.adaptive(minimum: 150), spacing: 16)]
+    @State private var showSettings = false
 
     var body: some View {
         NavigationStack {
@@ -50,6 +51,20 @@ struct HomeView: View {
                 .padding()
             }
             .navigationTitle(String(localized: "app.title"))
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        showSettings = true
+                    } label: {
+                        Label(String(localized: "settings.title"), systemImage: "gearshape")
+                            .font(.title3)
+                    }
+                    .accessibilityHint(String(localized: "settings.open.hint"))
+                }
+            }
+            .sheet(isPresented: $showSettings) {
+                SettingsView()
+            }
         }
     }
 

@@ -5,6 +5,12 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 ## [Unreleased]
 
 ### Added
+- First-run onboarding (#31): one screen — what this is, language choice,
+  one big "Let's play" button. Written for a stranger, not for family.
+- Settings (#32): language (Device/English/Español), bigger text, plain-language
+  privacy summary, version. Reachable from home in one tap. Sound toggle
+  deliberately deferred until sound exists (#26) — a control that does nothing
+  is worse than no control.
 - Home screen personality (#27): warm greeting, large emoji game tiles in a
   grid (>=140pt tall), and the My Week card. Replaces the bare list.
 - App icon + launch screen: warm gradient with two memory cards, generated
