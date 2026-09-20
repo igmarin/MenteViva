@@ -113,6 +113,41 @@ ceiling stays "fun mental exercise".
 segment, pricing lean (one-time $12.99 + Family Sharing, #21) and the
 Jev-as-seasoning architecture all stand.
 
+## 2026-09-20 — No paid Apple Developer Program for now (bootstrapping)
+
+Owner constraint: independent developer, no income from this yet. The $99/year
+Developer Program is postponed deliberately until there's evidence it's worth
+it. Testing happens by connecting devices to Xcode and installing directly.
+
+**What this costs us (hard blocks, no workaround):**
+
+| Capability | Needs paid account |
+|---|---|
+| TestFlight (any external tester) | yes |
+| App Store listing, price, StoreKit | yes |
+| CloudKit sync, `CKShare` family sharing, push | yes (iCloud entitlement) |
+| Non-expiring installs | yes — free-account builds stop launching after 7 days |
+
+**What stays free and is enough for now:**
+
+- Device installs via a free Apple ID (`--local-only` builds; re-sign weekly)
+- Real playtests — as long as the tester is physically with us and the session
+  fits inside the 7-day window (see playtest.md)
+- Cloudflare Workers free tier for the Jev proxy (#13)
+- Privacy policy page (#34) — the repo is private, and GitHub Pages on private
+  repos needs a paid plan, so: tiny public policy repo or Cloudflare Pages
+- Store listing **assets** (#35) — writing copy and screenshots costs nothing;
+  only publishing needs the account
+
+**Buy trigger (write it down so it isn't a feeling):** buy when *either* is true
+— (a) five or more people outside the family have asked for the app and cannot
+be served by in-person installs, or (b) the app is ready to publish and the only
+remaining step is distribution. Not before: no feature we've deferred is worth
+$99 to a pre-revenue project.
+
+**Consequence:** TestFlight and App Store work move to a new milestone that is
+explicitly blocked on this purchase, and the beta plan becomes device-based.
+
 ## Open questions (not yet decided)
 
 - Business model: research leans **one-time $12.99 + Family Sharing**

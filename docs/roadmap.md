@@ -30,12 +30,25 @@ Exit criteria: dad picks it up unprompted, twice in one week (docs/mvp.md G1).
 - ES copy pass with a native speaker for warmth, not just correctness (#12).
 - Device a11y checklist from the audit (issue #5 comments) on real hardware.
 
-## Then — distribution (only when the above feels done)
+## Then — distribution, in two tiers
 
-- Apple Developer Program enrolment → CloudKit container provisioning.
-- Real `CKShare` family sharing (#11) — now verifiable with 2 Apple IDs.
-- Jev proxy deployed to Cloudflare → live daily mix/difficulty (#13 deploy step).
-- TestFlight family beta (#10, 5–10 people, 2 weeks).
+**Tier 1 — free path (now, no paid account):**
+
+- Device installs: `swift tools/generate_project.swift --local-only` → Xcode → ⌘R.
+  Builds expire after 7 days; re-sign from Xcode to renew (#38 runbook).
+- Family + in-person testing on whatever devices we can lay hands on.
+- Jev proxy on Cloudflare's free tier → live daily mix/difficulty (#13 deploy).
+- Privacy policy + support page hosted free (#34).
+- Store listing copy and screenshots written now so publishing is a copy-paste
+  later (#35).
+
+**Tier 2 — blocked on the paid Developer Program ($99/yr, deliberately
+postponed until the trigger in decisions.md 2026-09-20):**
+
+- TestFlight beta (#10) — external testers with no expiry.
+- CloudKit sync + real `CKShare` family sharing (#11).
+- App Store submission, price, StoreKit purchase (#21).
+- Non-expiring installs, more than 3 simultaneous test devices.
 
 ## Later — public release gate
 

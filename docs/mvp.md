@@ -13,11 +13,13 @@ No game #6 before playtest findings (#18).
 | G0 — Playable ✅ | 5 games build + playable, ES/EN | v0.2.0 code on main |
 | G1 — Loved | Dad playtested; top-3 friction fixed; voluntary repeat play ×2/wk | issue #6 notes |
 | G2 — Sound | A11y audit passed; tests green; TDD/BDD rule live | #5, #20 |
-| G3 — Connected | Jev live via proxy (daily mix + difficulty); CloudKit family share + cheers | #13, #11 |
-| G4 — Shippable | Disclaimer copy, ES native review, TestFlight beta ≥5 people ≥2 wks, price set | #12, #10, #21 |
-| G5 — Sellable | Works for strangers: self-serve onboarding, in-app settings, privacy policy + support, store listing EN/ES, price + refund path | #31–#35 |
+| G3 — Connected | Jev live via proxy (daily mix + difficulty) | #13 |
+| G4 — Shippable (free path) | Disclaimer copy, ES native review, **device-based beta** ≥5 people, in-person | #12, #10, #38 |
+| G5 — Sellable (free path) | Works for strangers: onboarding, settings, privacy policy + support, listing assets, device support matrix | #31–#36 |
+| G6 — Publishable | **Blocked: Apple Developer Program.** Store listing live, price, StoreKit, CloudKit/`CKShare` | decisions.md 2026-09-20 |
 
-MVP = G4 passed. **Launch = G5 passed** (commercial intent, 2026-09-20).
+MVP = G4 passed. Sellable = G5. **Publishing (G6) waits on the account
+decision, and nothing before G5 needs it.**
 
 ## Checklist (owner → evidence)
 

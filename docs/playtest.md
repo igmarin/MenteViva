@@ -52,6 +52,23 @@ Top 3 friction:
 Top 3 friction goes into the issue. If a fix is obvious and small, fix it the
 same day; if it needs a design decision, it becomes its own issue.
 
+## Install logistics (free-account builds)
+
+Until the paid Developer Program is bought, every build installed on a device
+**stops launching after 7 days**. That shapes how to run a session:
+
+- **Plan sessions to fit inside a week.** Install, test within a few days, done.
+  Don't promise a tester "keep it and use it for a month".
+- **Re-sign weekly** when the same person is testing long-term: reconnect the
+  device to the Mac and ⌘R again. Two minutes, but it needs the device present.
+- **Bring the device to the Mac** (or the Mac to the device) — free accounts
+  can't invite testers remotely. TestFlight needs the paid account.
+- Free provisioning also caps how many apps/devices can be signed at once, so
+  keep the device list short and remove stale ones in Xcode → Settings →
+  Accounts → Manage Certificates/Devices.
+- **Local-only builds** (`--local-only`) are required: no CloudKit entitlement,
+  so a free Apple ID can provision them. Store data stays on that iPad.
+
 ## What counts as success
 
 - **#6 (dad):** he plays twice in one week without being asked (docs/mvp.md G1).
