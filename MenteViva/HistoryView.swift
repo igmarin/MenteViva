@@ -28,6 +28,28 @@ struct HistoryView: View {
             }
         }
         .navigationTitle(String(localized: "history.title"))
+        .toolbar {
+            if !weekSessions.isEmpty {
+                ToolbarItem(placement: .topBarTrailing) {
+                    ShareLink(item: shareSummary) {
+                        Label(String(localized: "history.share"), systemImage: "square.and.arrow.up")
+                            .font(.title3)
+                    }
+                    .accessibilityHint(String(localized: "history.share.hint"))
+                }
+            }
+        }
+    }
+
+    /// Family-share payload: plain text so it works over any channel (WhatsApp,
+    /// SMS, email) with no account, network, or CloudKit share required.
+    private var shareSummary: String {
+        let lines = weekSessions.map { session -> String in
+            let info = gameInfo(for: session.gameID)
+            return "\(info.emoji) \(info.name) — \(String(format: String(localized: "history.score.format"), session.score))"
+        }
+        let header = String(format: String(localized: "history.summary.count"), weekSessions.count)
+        return ([header] + lines).joined(separator: "\n")
     }
 
     // MARK: - Content

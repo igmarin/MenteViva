@@ -39,6 +39,7 @@
 		1983297D696F1E1B0000000A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5791C14BF0160AFA00000009 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 
+		76A988240B655E890000000C /* MenteViva.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MenteViva.entitlements; sourceTree = "<group>"; };
 		1FBF111C1EE1FE7C0000000F /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 5791C14BF0160AFA00000009; };
 
 		A58ADB6BD2BDA9D800000015 /* MenteVivaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MenteVivaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -58,6 +59,7 @@
 				AC9E51A3CFE79A4700000018 /* GameSession.swift */,
 				42B3456BD42F17B700000019 /* JevService.swift */,
 				1983297D696F1E1B0000000A /* Info.plist */,
+				76A988240B655E890000000C /* MenteViva.entitlements */,
 				5791C14BF0160AFA00000009 /* Localizable.xcstrings */,
 				956A7D38BC89506B0000000B /* MenteVivaTests */,
 			);
@@ -174,6 +176,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
 				ENABLE_PREVIEWS = YES;
+				CODE_SIGN_ENTITLEMENTS = MenteViva/MenteViva.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -199,6 +202,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
 				ENABLE_PREVIEWS = YES;
+				CODE_SIGN_ENTITLEMENTS = MenteViva/MenteViva.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -219,6 +223,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
 				ENABLE_PREVIEWS = YES;
+				CODE_SIGN_ENTITLEMENTS = MenteViva/MenteViva.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -244,6 +249,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
 				ENABLE_PREVIEWS = YES;
+				CODE_SIGN_ENTITLEMENTS = MenteViva/MenteViva.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
