@@ -148,6 +148,20 @@ $99 to a pre-revenue project.
 **Consequence:** TestFlight and App Store work move to a new milestone that is
 explicitly blocked on this purchase, and the beta plan becomes device-based.
 
+## 2026-09-20 — G1a (stability) verified by owner; G1b (engagement) still open
+
+Owner ran the app on the real iPad and reports it "performing great" for
+stability. Recorded as **G1a passed**. Deliberately not recorded as G1 passed:
+the original criterion ("picks it up unprompted, twice in one week") measures
+*whether the games are worth keeping*, and one session cannot show that.
+
+Also split the confusing gate name: G2 was called "Sound" and read as audio
+(#26 is the audio ticket). It is now **G2 — Verified**: tests + accessibility +
+clean build.
+
+Consequence: content work (#18's gate) stays gated on playtest *findings*, not
+on stability, because there are still no findings to act on.
+
 ## Open questions (not yet decided)
 
 - Business model: research leans **one-time $12.99 + Family Sharing**

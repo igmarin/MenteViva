@@ -11,14 +11,20 @@ No game #6 before playtest findings (#18).
 | Gate | Criteria | Proof |
 |---|---|---|
 | G0 — Playable ✅ | 5 games build + playable, ES/EN | v0.2.0 code on main |
-| G1 — Loved | Dad playtested; top-3 friction fixed; voluntary repeat play ×2/wk | issue #6 notes |
-| G2 — Sound | A11y audit passed; tests green; TDD/BDD rule live | #5, #20 |
+| **G1a — Stable ✅** | Runs reliably on a real device; no crashes in normal play | owner-verified 2026-09-20 |
+| G1b — Loved | Played unprompted twice in one week; top-3 friction fixed | #6 (engagement not yet measured) |
+| **G2 — Verified** (was misnamed "Sound") | Tests green + accessibility done + build/warning clean | 33 tests ✓, #5 code ✓, device a11y checklist pending |
 | G3 — Connected | Jev live via proxy (daily mix + difficulty) | #13 |
 | G4 — Shippable (free path) | Disclaimer copy, ES native review, **device-based beta** ≥5 people, in-person | #12, #10, #38 |
 | G5 — Sellable (free path) | Works for strangers: onboarding, settings, privacy policy + support, listing assets, device support matrix | #31–#36 |
 | G6 — Publishable | **Blocked: Apple Developer Program.** Store listing live, price, StoreKit, CloudKit/`CKShare` | decisions.md 2026-09-20 |
 
-MVP = G4 passed. Sellable = G5. **Publishing (G6) waits on the account
+**G1 was split on 2026-09-20:** the owner reported the app "performing great" for
+stability, which is what G1a measures. G1b (does he come back without being
+asked?) needs a week of observation and is not yet measured — that's the part
+that tells us whether the games are worth keeping.
+
+MVP = G1b + G2 + G4. Sellable = G5. **Publishing (G6) waits on the account
 decision, and nothing before G5 needs it.**
 
 ## Checklist (owner → evidence)
