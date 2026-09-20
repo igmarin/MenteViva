@@ -5,13 +5,22 @@ import Foundation
 
 let root = URL(fileURLWithPath: FileManager.default.currentDirectoryPath)
 let appDir = root.appendingPathComponent("MenteViva")
+let testsDir = root.appendingPathComponent("MenteVivaTests")
+let uiTestsDir = root.appendingPathComponent("MenteVivaUITests")
 
-var swiftFiles: [String] = []
-let enumerator = FileManager.default.enumerator(at: appDir, includingPropertiesForKeys: nil)!
-for case let url as URL in enumerator where url.pathExtension == "swift" {
-    swiftFiles.append(url.path.replacingOccurrences(of: appDir.path + "/", with: ""))
+/// All .swift files under `dir`, paths relative to `base`.
+func swiftFiles(under dir: URL, relativeTo base: URL) -> [String] {
+    guard let enumerator = FileManager.default.enumerator(at: dir, includingPropertiesForKeys: nil) else { return [] }
+    var files: [String] = []
+    for case let url as URL in enumerator where url.pathExtension == "swift" {
+        files.append(url.path.replacingOccurrences(of: base.path + "/", with: ""))
+    }
+    return files.sorted()
 }
-swiftFiles.sort()
+
+let appFiles = swiftFiles(under: appDir, relativeTo: appDir)
+let testFiles = swiftFiles(under: testsDir, relativeTo: root)      // "MenteVivaTests/…"
+let uiTestFiles = swiftFiles(under: uiTestsDir, relativeTo: root)  // "MenteVivaUITests/…"
 
 // Stable, deterministic IDs: FNV-1a hash → 24 hex chars.
 func oid(_ s: String) -> String {
@@ -25,14 +34,43 @@ let resID = oid("Resources"), fwID = oid("Frameworks"), pbxID = oid("proj")
 let tgtID = oid("target"), plistID = oid("Info.plist"), catID = oid("xcstrings")
 let catBuildID = oid("xcstrings.build")
 
+// Test-target IDs (salted so they can never collide with app file hashes).
+let testsProductID = oid("MenteVivaTests.xctest"), testsTgtID = oid("tests:target")
+let testsSrcsID = oid("tests:Sources"), testsFwID = oid("tests:Frameworks")
+let testsResID = oid("tests:Resources"), testsGrpID = oid("tests:group")
+let testsDepID = oid("tests:dep"), testsProxyID = oid("tests:proxy")
+let uiProductID = oid("MenteVivaUITests.xctest"), uiTgtID = oid("uitests:target")
+let uiSrcsID = oid("uitests:Sources"), uiFwID = oid("uitests:Frameworks")
+let uiResID = oid("uitests:Resources"), uiGrpID = oid("uitests:group")
+let uiDepID = oid("uitests:dep"), uiProxyID = oid("uitests:proxy")
 var fileRefs = "", buildFiles = "", children = "", phaseFiles = ""
-for f in swiftFiles {
+for f in appFiles {
     let ref = oid(f), bld = oid(f + ".build"), name = URL(fileURLWithPath: f).lastPathComponent
     fileRefs += "\t\t\(ref) /* \(name) */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = \(f); sourceTree = \"<group>\"; };\n"
     buildFiles += "\t\t\(bld) /* \(name) in Sources */ = {isa = PBXBuildFile; fileRef = \(ref); };\n"
     children += "\t\t\t\t\(ref) /* \(name) */,\n"
     phaseFiles += "\t\t\t\t\(bld) /* \(name) in Sources */,\n"
 }
+
+/// File refs / build files / sources-phase entries for a test bundle.
+/// Paths are root-relative, sourceTree SOURCE_ROOT, so nested folders work.
+func testSections(_ files: [String], salt: String) -> (refs: String, builds: String, phase: String, kids: String) {
+    var refs = "", builds = "", phase = "", kids = ""
+    for f in files {
+        let ref = oid(salt + f), bld = oid(salt + f + ".build")
+        let name = URL(fileURLWithPath: f).lastPathComponent
+        refs += "\t\t\(ref) /* \(name) */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = \(f); sourceTree = SOURCE_ROOT; };\n"
+        builds += "\t\t\(bld) /* \(name) in Sources */ = {isa = PBXBuildFile; fileRef = \(ref); };\n"
+        phase += "\t\t\t\t\(bld) /* \(name) in Sources */,\n"
+        kids += "\t\t\t\t\(ref) /* \(name) */,\n"
+    }
+    return (refs, builds, phase, kids)
+}
+
+let tests = testSections(testFiles, salt: "tests:")
+let ui = testSections(uiTestFiles, salt: "uitests:")
+let hasTests = !testFiles.isEmpty
+let hasUITests = !uiTestFiles.isEmpty
 
 var p = """
 // !$*UTF8*$!
@@ -43,56 +81,192 @@ var p = """
 \tobjects = {
 
 """
-p += buildFiles + "\n" + fileRefs
+p += buildFiles + tests.builds + ui.builds + "\n" + fileRefs + tests.refs + ui.refs
 p += "\t\t\(appID) /* MenteViva.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MenteViva.app; sourceTree = BUILT_PRODUCTS_DIR; };\n"
 p += "\t\t\(plistID) /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = \"<group>\"; };\n"
 p += "\t\t\(catID) /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = \"<group>\"; };\n\n"
 p += "\t\t\(catBuildID) /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = \(catID); };\n\n"
-p += "\t\t\(grpID) /* MenteViva */ = {\n\t\t\tisa = PBXGroup;\n\t\t\tchildren = (\n\(children)\t\t\t\t\(plistID) /* Info.plist */,\n\t\t\t\t\(catID) /* Localizable.xcstrings */,\n\t\t\t);\n\t\t\tpath = MenteViva;\n\t\t\tsourceTree = \"<group>\";\n\t\t};\n\n"
+if hasTests {
+    p += "\t\t\(testsProductID) /* MenteVivaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MenteVivaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };\n"
+}
+if hasUITests {
+    p += "\t\t\(uiProductID) /* MenteVivaUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MenteVivaUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };\n"
+}
+p += "\n"
+
+// MARK: Groups
+
+p += "\t\t\(grpID) /* MenteViva */ = {\n\t\t\tisa = PBXGroup;\n\t\t\tchildren = (\n\(children)\t\t\t\t\(plistID) /* Info.plist */,\n\t\t\t\t\(catID) /* Localizable.xcstrings */,\n"
+if hasTests { p += "\t\t\t\t\(testsGrpID) /* MenteVivaTests */,\n" }
+if hasUITests { p += "\t\t\t\t\(uiGrpID) /* MenteVivaUITests */,\n" }
+p += "\t\t\t);\n\t\t\tpath = MenteViva;\n\t\t\tsourceTree = \"<group>\";\n\t\t};\n\n"
+if hasTests {
+    p += "\t\t\(testsGrpID) /* MenteVivaTests */ = {\n\t\t\tisa = PBXGroup;\n\t\t\tchildren = (\n\(tests.kids)\t\t\t);\n\t\t\tname = MenteVivaTests;\n\t\t\tsourceTree = \"<group>\";\n\t\t};\n\n"
+}
+if hasUITests {
+    p += "\t\t\(uiGrpID) /* MenteVivaUITests */ = {\n\t\t\tisa = PBXGroup;\n\t\t\tchildren = (\n\(ui.kids)\t\t\t);\n\t\t\tname = MenteVivaUITests;\n\t\t\tsourceTree = \"<group>\";\n\t\t};\n\n"
+}
+
+// MARK: Targets + dependencies
+
 p += "\t\t\(tgtID) /* MenteViva */ = {\n\t\t\tisa = PBXNativeTarget;\n\t\t\tbuildConfigurationList = \(oid("tgtCfgList")) /* Build configuration list for PBXNativeTarget \"MenteViva\" */;\n\t\t\tbuildPhases = ( \(srcsID) /* Sources */, \(fwID) /* Frameworks */, \(resID) /* Resources */ );\n\t\t\tbuildRules = ( );\n\t\t\tdependencies = ( );\n\t\t\tname = MenteViva;\n\t\t\tproductName = MenteViva;\n\t\t\tproductReference = \(appID);\n\t\t\tproductType = \"com.apple.product-type.application\";\n\t\t};\n\n"
-p += "\t\t\(pbxID) /* Project object */ = {\n\t\t\tisa = PBXProject;\n\t\t\tattributes = { BuildIndependentTargetsInParallel = 1; LastSwiftUpdateCheck = 1600; LastUpgradeCheck = 1600; };\n\t\t\tbuildConfigurationList = \(oid("prjCfgList")) /* Build configuration list for PBXProject \"MenteViva\" */;\n\t\t\tcompatibilityVersion = \"Xcode 14.0\";\n\t\t\tdevelopmentRegion = en;\n\t\t\thasScannedForEncodings = 0;\n\t\t\tknownRegions = ( en, Base, es );\n\t\t\tmainGroup = \(grpID);\n\t\t\tproductRefGroup = \(grpID);\n\t\t\tprojectDirPath = \"\";\n\t\t\tprojectRoot = \"\";\n\t\t\ttargets = ( \(tgtID) /* MenteViva */ );\n\t\t};\n\n"
+if hasTests {
+    p += "\t\t\(testsTgtID) /* MenteVivaTests */ = {\n\t\t\tisa = PBXNativeTarget;\n\t\t\tbuildConfigurationList = \(oid("tests:cfgList")) /* Build configuration list for PBXNativeTarget \"MenteVivaTests\" */;\n\t\t\tbuildPhases = ( \(testsSrcsID) /* Sources */, \(testsFwID) /* Frameworks */, \(testsResID) /* Resources */ );\n\t\t\tbuildRules = ( );\n\t\t\tdependencies = ( \(testsDepID) /* PBXTargetDependency */ );\n\t\t\tname = MenteVivaTests;\n\t\t\tproductName = MenteVivaTests;\n\t\t\tproductReference = \(testsProductID);\n\t\t\tproductType = \"com.apple.product-type.bundle.unit-test\";\n\t\t};\n\n"
+    p += "\t\t\(testsProxyID) /* PBXContainerItemProxy */ = { isa = PBXContainerItemProxy; containerPortal = \(pbxID) /* Project object */; proxyType = 1; remoteGlobalIDString = \(tgtID); remoteInfo = MenteViva; };\n"
+    p += "\t\t\(testsDepID) /* PBXTargetDependency */ = { isa = PBXTargetDependency; target = \(tgtID) /* MenteViva */; targetProxy = \(testsProxyID); };\n\n"
+}
+if hasUITests {
+    p += "\t\t\(uiTgtID) /* MenteVivaUITests */ = {\n\t\t\tisa = PBXNativeTarget;\n\t\t\tbuildConfigurationList = \(oid("uitests:cfgList")) /* Build configuration list for PBXNativeTarget \"MenteVivaUITests\" */;\n\t\t\tbuildPhases = ( \(uiSrcsID) /* Sources */, \(uiFwID) /* Frameworks */, \(uiResID) /* Resources */ );\n\t\t\tbuildRules = ( );\n\t\t\tdependencies = ( \(uiDepID) /* PBXTargetDependency */ );\n\t\t\tname = MenteVivaUITests;\n\t\t\tproductName = MenteVivaUITests;\n\t\t\tproductReference = \(uiProductID);\n\t\t\tproductType = \"com.apple.product-type.bundle.ui-testing\";\n\t\t};\n\n"
+    p += "\t\t\(uiProxyID) /* PBXContainerItemProxy */ = { isa = PBXContainerItemProxy; containerPortal = \(pbxID) /* Project object */; proxyType = 1; remoteGlobalIDString = \(tgtID); remoteInfo = MenteViva; };\n"
+    p += "\t\t\(uiDepID) /* PBXTargetDependency */ = { isa = PBXTargetDependency; target = \(tgtID) /* MenteViva */; targetProxy = \(uiProxyID); };\n\n"
+}
+
+// MARK: Project
+
+var targetAttrs = "\(tgtID) = { CreatedOnToolsVersion = 16.0; };"
+if hasTests { targetAttrs += " \(testsTgtID) = { CreatedOnToolsVersion = 16.0; TestTargetID = \(tgtID); };" }
+if hasUITests { targetAttrs += " \(uiTgtID) = { CreatedOnToolsVersion = 16.0; TestTargetID = \(tgtID); };" }
+var targetsList = "\(tgtID) /* MenteViva */"
+if hasTests { targetsList += ", \(testsTgtID) /* MenteVivaTests */" }
+if hasUITests { targetsList += ", \(uiTgtID) /* MenteVivaUITests */" }
+
+p += "\t\t\(pbxID) /* Project object */ = {\n\t\t\tisa = PBXProject;\n\t\t\tattributes = { BuildIndependentTargetsInParallel = 1; LastSwiftUpdateCheck = 1600; LastUpgradeCheck = 1600; TargetAttributes = { \(targetAttrs) }; };\n\t\t\tbuildConfigurationList = \(oid("prjCfgList")) /* Build configuration list for PBXProject \"MenteViva\" */;\n\t\t\tcompatibilityVersion = \"Xcode 14.0\";\n\t\t\tdevelopmentRegion = en;\n\t\t\thasScannedForEncodings = 0;\n\t\t\tknownRegions = ( en, Base, es );\n\t\t\tmainGroup = \(grpID);\n\t\t\tproductRefGroup = \(grpID);\n\t\t\tprojectDirPath = \"\";\n\t\t\tprojectRoot = \"\";\n\t\t\ttargets = ( \(targetsList) );\n\t\t};\n\n"
+
+
+// MARK: Build phases
+
 p += "\t\t\(resID) /* Resources */ = {\n\t\t\tisa = PBXResourcesBuildPhase;\n\t\t\tbuildActionMask = 2147483647;\n\t\t\tfiles = ( \(catBuildID) /* Localizable.xcstrings in Resources */ );\n\t\t\trunOnlyForDeploymentPostprocessing = 0;\n\t\t};\n\n"
 p += "\t\t\(fwID) /* Frameworks */ = {\n\t\t\tisa = PBXFrameworksBuildPhase;\n\t\t\tbuildActionMask = 2147483647;\n\t\t\tfiles = ( );\n\t\t\trunOnlyForDeploymentPostprocessing = 0;\n\t\t};\n\n"
 p += "\t\t\(srcsID) /* Sources */ = {\n\t\t\tisa = PBXSourcesBuildPhase;\n\t\t\tbuildActionMask = 2147483647;\n\t\t\tfiles = (\n\(phaseFiles)\t\t\t);\n\t\t\trunOnlyForDeploymentPostprocessing = 0;\n\t\t};\n\n"
-func configBlock(_ name: String, _ opt: String, _ target: Bool) -> String {
-    let cfgID = oid(name + (target ? "T" : "P"))
-    var s = "\t\t" + cfgID + " /* " + name + " */ = {\n\t\t\tisa = XCBuildConfiguration;\n\t\t\tbuildSettings = {\n\t\t\t\tALWAYS_SEARCH_USER_PATHS = NO;\n\t\t\t\tSDKROOT = iphoneos;\n\t\t\t\tSWIFT_VERSION = 5.0;\n\t\t\t\tENABLE_PREVIEWS = YES;\n\t\t\t\t" + opt + "\n"
-    if target {
-        s += """
-\t\t\t\tCODE_SIGN_STYLE = Automatic;
-\t\t\t\tCURRENT_PROJECT_VERSION = 1;
-\t\t\t\tGENERATE_INFOPLIST_FILE = YES;
-\t\t\t\tINFOPLIST_FILE = MenteViva/Info.plist;
-\t\t\t\tINFOPLIST_KEY_CFBundleDisplayName = "Mente Viva";
-\t\t\t\tINFOPLIST_KEY_UILaunchScreen_Generation = YES;
-\t\t\t\tIPHONEOS_DEPLOYMENT_TARGET = 17.0;
-\t\t\t\tMARKETING_VERSION = 0.1.0;
-\t\t\t\tPRODUCT_BUNDLE_IDENTIFIER = com.igmarin.MenteViva;
-\t\t\t\tPRODUCT_NAME = "$(TARGET_NAME)";
-\t\t\t\tSUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-\t\t\t\tSWIFT_EMIT_LOC_STRINGS = YES;
-\t\t\t\tTARGETED_DEVICE_FAMILY = "1,2";
+if hasTests {
+    p += "\t\t\(testsSrcsID) /* Sources */ = {\n\t\t\tisa = PBXSourcesBuildPhase;\n\t\t\tbuildActionMask = 2147483647;\n\t\t\tfiles = (\n\(tests.phase)\t\t\t);\n\t\t\trunOnlyForDeploymentPostprocessing = 0;\n\t\t};\n\n"
+    p += "\t\t\(testsFwID) /* Frameworks */ = { isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = ( ); runOnlyForDeploymentPostprocessing = 0; };\n"
+    p += "\t\t\(testsResID) /* Resources */ = { isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = ( ); runOnlyForDeploymentPostprocessing = 0; };\n\n"
+}
+if hasUITests {
+    p += "\t\t\(uiSrcsID) /* Sources */ = {\n\t\t\tisa = PBXSourcesBuildPhase;\n\t\t\tbuildActionMask = 2147483647;\n\t\t\tfiles = (\n\(ui.phase)\t\t\t);\n\t\t\trunOnlyForDeploymentPostprocessing = 0;\n\t\t};\n\n"
+    p += "\t\t\(uiFwID) /* Frameworks */ = { isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = ( ); runOnlyForDeploymentPostprocessing = 0; };\n"
+    p += "\t\t\(uiResID) /* Resources */ = { isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = ( ); runOnlyForDeploymentPostprocessing = 0; };\n\n"
+}
 
-"""
-    }
-    s += "\t\t\t};\n\t\t\tname = " + name + ";\n\t\t};\n\n"
+// MARK: Build configurations
+
+/// One XCBuildConfiguration block. Values are emitted verbatim — quote at call site.
+func configBlock(_ name: String, target: String, opt: String, settings: [(String, String)]) -> String {
+    var s = "\t\t\(oid("cfg:\(target):\(name)")) /* \(name) */ = {\n\t\t\tisa = XCBuildConfiguration;\n\t\t\tbuildSettings = {\n"
+    for (k, v) in settings { s += "\t\t\t\t\(k) = \(v);\n" }
+    s += "\t\t\t\tSWIFT_OPTIMIZATION_LEVEL = \(opt);\n"
+    s += "\t\t\t};\n\t\t\tname = \(name);\n\t\t};\n"
     return s
 }
 
-func configList(_ listID: String, _ target: Bool) -> String {
-    let suffix = target ? "T" : "P"
-    return "\t\t" + listID + " = { isa = XCConfigurationList; buildConfigurations = ( " + oid("Debug" + suffix) + ", " + oid("Release" + suffix) + " ); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };\n\n"
+func configList(_ id: String, _ target: String) -> String {
+    "\t\t\(id) = { isa = XCConfigurationList; buildConfigurations = ( \(oid("cfg:\(target):Debug")), \(oid("cfg:\(target):Release")) ); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };\n"
 }
 
-p += configBlock("Debug", "SWIFT_OPTIMIZATION_LEVEL = \"-Onone\";", false)
-p += configBlock("Release", "SWIFT_OPTIMIZATION_LEVEL = \"-O\";", false)
-p += configBlock("Debug", "SWIFT_OPTIMIZATION_LEVEL = \"-Onone\";", true)
-p += configBlock("Release", "SWIFT_OPTIMIZATION_LEVEL = \"-O\";", true)
-p += configList(oid("prjCfgList"), false)
-p += configList(oid("tgtCfgList"), true)
-p += "\t};\n\trootObject = " + pbxID + " /* Project object */;\n}\n"
+let common: [(String, String)] = [
+    ("ALWAYS_SEARCH_USER_PATHS", "NO"),
+    ("SDKROOT", "iphoneos"),
+    ("SWIFT_VERSION", "5.0"),
+    ("ENABLE_PREVIEWS", "YES"),
+    ("CODE_SIGN_STYLE", "Automatic"),
+    ("IPHONEOS_DEPLOYMENT_TARGET", "17.0"),
+    ("TARGETED_DEVICE_FAMILY", "\"1,2\""),
+]
+
+let appSettings = common + [
+    ("CURRENT_PROJECT_VERSION", "1"),
+    ("ENABLE_TESTABILITY", "YES"),
+    ("GENERATE_INFOPLIST_FILE", "YES"),
+    ("INFOPLIST_FILE", "MenteViva/Info.plist"),
+    ("INFOPLIST_KEY_CFBundleDisplayName", "\"Mente Viva\""),
+    ("INFOPLIST_KEY_UILaunchScreen_Generation", "YES"),
+    ("MARKETING_VERSION", "0.1.0"),
+    ("PRODUCT_BUNDLE_IDENTIFIER", "com.igmarin.MenteViva"),
+    ("PRODUCT_NAME", "\"$(TARGET_NAME)\""),
+    ("SUPPORTED_PLATFORMS", "\"iphoneos iphonesimulator\""),
+    ("SWIFT_EMIT_LOC_STRINGS", "YES"),
+]
+
+let testSettings = common + [
+    ("BUNDLE_LOADER", "\"$(TEST_HOST)\""),
+    ("TEST_HOST", "\"$(BUILT_PRODUCTS_DIR)/MenteViva.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/MenteViva\""),
+    ("GENERATE_INFOPLIST_FILE", "YES"),
+    ("PRODUCT_BUNDLE_IDENTIFIER", "com.igmarin.MenteVivaTests"),
+    ("PRODUCT_NAME", "\"$(TARGET_NAME)\""),
+    ("SWIFT_EMIT_LOC_STRINGS", "NO"),
+]
+
+let uiTestSettings = common + [
+    ("GENERATE_INFOPLIST_FILE", "YES"),
+    ("PRODUCT_BUNDLE_IDENTIFIER", "com.igmarin.MenteVivaUITests"),
+    ("PRODUCT_NAME", "\"$(TARGET_NAME)\""),
+    ("TEST_TARGET_NAME", "MenteViva"),
+    ("SWIFT_EMIT_LOC_STRINGS", "NO"),
+]
+
+for name in ["Debug", "Release"] {
+    let opt = name == "Debug" ? "\"-Onone\"" : "\"-O\""
+    p += configBlock(name, target: "app", opt: opt, settings: appSettings)
+    if hasTests { p += configBlock(name, target: "tests", opt: opt, settings: testSettings) }
+    if hasUITests { p += configBlock(name, target: "uitests", opt: opt, settings: uiTestSettings) }
+}
+p += "\n"
+p += configList(oid("prjCfgList"), "app")
+if hasTests { p += configList(oid("tests:cfgList"), "tests") }
+if hasUITests { p += configList(oid("uitests:cfgList"), "uitests") }
+
+p += "\t};\n\trootObject = \(pbxID) /* Project object */;\n}\n"
+
+// MARK: Write project + shared scheme
 
 let projDir = root.appendingPathComponent("MenteViva.xcodeproj")
 try FileManager.default.createDirectory(at: projDir, withIntermediateDirectories: true)
 try p.write(to: projDir.appendingPathComponent("project.pbxproj"), atomically: true, encoding: .utf8)
-print("Generated MenteViva.xcodeproj with \(swiftFiles.count) source files")
+
+var testables = ""
+func testable(_ id: String, bundle: String, name: String) -> String {
+    "\t\t\t<TestableReference skipped=\"NO\">\n\t\t\t\t<BuildableReference BuildableIdentifier=\"primary\" BlueprintIdentifier=\"\(id)\" BuildableName=\"\(bundle)\" BlueprintName=\"\(name)\" ReferencedContainer=\"container:MenteViva.xcodeproj\"/>\n\t\t\t</TestableReference>\n"
+}
+if hasTests { testables += testable(testsTgtID, bundle: "MenteVivaTests.xctest", name: "MenteVivaTests") }
+if hasUITests { testables += testable(uiTgtID, bundle: "MenteVivaUITests.xctest", name: "MenteVivaUITests") }
+
+let appRef = "<BuildableReference BuildableIdentifier=\"primary\" BlueprintIdentifier=\"\(tgtID)\" BuildableName=\"MenteViva.app\" BlueprintName=\"MenteViva\" ReferencedContainer=\"container:MenteViva.xcodeproj\"/>"
+
+let scheme = """
+<?xml version="1.0" encoding="UTF-8"?>
+<Scheme LastUpgradeVersion="1600" version="1.7">
+   <BuildAction parallelizeBuildables="YES" buildImplicitDependencies="YES">
+      <BuildActionEntries>
+         <BuildActionEntry buildForTesting="YES" buildForRunning="YES" buildForProfiling="YES" buildForArchiving="YES" buildForAnalyzing="YES">
+            \(appRef)
+         </BuildActionEntry>
+      </BuildActionEntries>
+   </BuildAction>
+   <TestAction buildConfiguration="Debug" selectedDebuggerIdentifier="Xcode.DebuggerFoundation.Debugger.LLDB" selectedLauncherIdentifier="Xcode.DebuggerFoundation.Launcher.LLDB" shouldUseLaunchSchemeArgsEnv="YES" shouldAutocreateTestPlan="YES">
+      <Testables>
+\(testables)      </Testables>
+   </TestAction>
+   <LaunchAction buildConfiguration="Debug" selectedDebuggerIdentifier="Xcode.DebuggerFoundation.Debugger.LLDB" selectedLauncherIdentifier="Xcode.DebuggerFoundation.Launcher.LLDB" launchStyle="0" useCustomWorkingDirectory="NO" ignoresPersistentStateOnLaunch="NO" debugDocumentVersioning="YES" debugServiceExtension="internal" allowLocationSimulation="YES">
+      <BuildableProductRunnable runnableDebuggingMode="0">
+         \(appRef)
+      </BuildableProductRunnable>
+   </LaunchAction>
+   <ProfileAction buildConfiguration="Release" shouldUseLaunchSchemeArgsEnv="YES" savedToolIdentifier="" useCustomWorkingDirectory="NO" debugDocumentVersioning="YES">
+      <BuildableProductRunnable runnableDebuggingMode="0">
+         \(appRef)
+      </BuildableProductRunnable>
+   </ProfileAction>
+   <AnalyzeAction buildConfiguration="Debug"/>
+   <ArchiveAction buildConfiguration="Release" revealArchiveInOrganizer="YES"/>
+</Scheme>
+
+"""
+
+let schemeDir = projDir.appendingPathComponent("xcshareddata/xcschemes")
+try FileManager.default.createDirectory(at: schemeDir, withIntermediateDirectories: true)
+try scheme.write(to: schemeDir.appendingPathComponent("MenteViva.xcscheme"), atomically: true, encoding: .utf8)
+
+print("Generated MenteViva.xcodeproj: \(appFiles.count) app files, \(testFiles.count) test files, \(uiTestFiles.count) UI test files")
+
+

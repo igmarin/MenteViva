@@ -10,3 +10,13 @@ Lazy-senior rules. Read before writing code.
 6. **After adding a `.swift` file**, run `swift tools/generate_project.swift` and commit the regenerated pbxproj.
 7. **Jev key hygiene:** never commit keys. Key lives in an untracked local config during beta; server-side proxy before public release.
 8. **Review flow:** PRs to `main`, review checklist in `docs/review-checklist.md` (write it when the first PR exists — YAGNI).
+9. **Tests: TDD for logic, BDD for flows.** New pure logic (scoring, policy,
+   plan composition, adaptivity) is written test-first in `MenteVivaTests/`,
+   with Given/When/Then method names (`testGivenXWhenYThenZ`). User-flow tests
+   (XCUITest, when they exist) read as Given/When/Then steps. Do **not** test
+   SwiftUI layout trivia or Codable wire shapes — the wire contract is pinned by
+   the archived pairs in `docs/jev-json/`. Verify with
+   `xcodebuild test -scheme MenteViva -destination 'platform=iOS Simulator,name=<device>'`
+   (a simulator name alone may not resolve — pass `id=<UDID>` from
+   `xcrun simctl list devices available` when in doubt).
+
