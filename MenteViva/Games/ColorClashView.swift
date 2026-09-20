@@ -58,11 +58,11 @@ struct ColorClashView: View {
         }
     }
 
-    private let totalRounds = 10
+    private static let totalRounds = 10
 
     @State private var word: Ink = .red
     @State private var ink: Ink = .blue
-    @State private var round = 0
+    @State private var progress = RoundProgress(totalRounds: Self.totalRounds)
     @State private var correct = 0
     @State private var startedAt = Date.now
     @State private var showCelebration = false
@@ -99,7 +99,7 @@ struct ColorClashView: View {
                 }
             }
 
-            Text("\(round + 1) / \(totalRounds)")
+            Text("\(progress.displayRound) / \(Self.totalRounds)")
                 .font(.title3)
                 .foregroundStyle(.secondary)
         }
@@ -114,7 +114,7 @@ struct ColorClashView: View {
     }
 
     private func restart() {
-        round = 0
+        progress.reset()
         correct = 0
         deal()
     }
@@ -127,8 +127,7 @@ struct ColorClashView: View {
 
     private func tap(_ candidate: Ink) {
         if candidate == ink { correct += 1 }
-        round += 1
-        if round == totalRounds {
+        if progress.completeRound() {
             finish()
         } else {
             deal()
@@ -139,7 +138,7 @@ struct ColorClashView: View {
         let elapsed = Int(Date.now.timeIntervalSince(startedAt))
         let score = correct * 10
         modelContext.insert(GameSession(gameID: "stroop", score: score,
-                                        rounds: totalRounds, durationSeconds: elapsed))
+                                        rounds: Self.totalRounds, durationSeconds: elapsed))
         finalScore = score
         showCelebration = true
     }

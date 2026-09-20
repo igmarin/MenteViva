@@ -4,6 +4,13 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 
 ## [Unreleased]
 
+### Changed
+- Round bookkeeping extracted into a tested `RoundProgress` type (#30), used by
+  Name the Herd, Color Clash and Quick Eyes. A counter can no longer run past the
+  end of a game: advancing is idempotent, the displayed round is clamped, and 8
+  boundary tests pin the behaviour (zero rounds, single round, over-advance,
+  replay).
+
 ### Fixed
 - **Launch crash on device (local-only builds):** the CloudKit on/off flag was
   passed as `INFOPLIST_KEY_CloudKitEnabled`, which Xcode does not inject (it

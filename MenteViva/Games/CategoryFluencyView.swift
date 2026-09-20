@@ -41,7 +41,7 @@ struct CategoryFluencyView: View {
 
     @State private var rounds: [Category] = []
     @State private var tiles: [Tile] = []
-    @State private var roundIndex = 0
+    @State private var progress = RoundProgress(totalRounds: 3)
     @State private var found = 0
     @State private var totalCorrect = 0
     @State private var startedAt = Date.now
@@ -52,11 +52,10 @@ struct CategoryFluencyView: View {
     private let columns = [GridItem(.adaptive(minimum: 100), spacing: 16)]
 
     /// The round being played, or nil once the session ends. Body reads this
-    /// instead of `rounds[roundIndex]`: `roundIndex` legitimately equals
-    /// `rounds.count` for one render pass after the last round completes, and
-    /// indexing there crashed with "Index out of range".
+    /// instead of indexing `rounds`: a counter that runs one past the end used
+    /// to crash here with "Index out of range" (#30).
     private var currentRound: Category? {
-        rounds.indices.contains(roundIndex) ? rounds[roundIndex] : nil
+        rounds.indices.contains(progress.completedRounds) ? rounds[progress.completedRounds] : nil
     }
 
     var body: some View {
@@ -121,13 +120,14 @@ struct CategoryFluencyView: View {
     }
 
     private func restart() {
-        roundIndex = 0
+        progress.reset()
         totalCorrect = 0
         setup()
     }
 
     private func setup() {
         rounds = Category.allCases.shuffled().prefix(roundsPerSession).map { $0 }
+        progress = RoundProgress(totalRounds: rounds.count)
         startedAt = .now
         dealRound()
     }
@@ -149,8 +149,7 @@ struct CategoryFluencyView: View {
         found += 1
         totalCorrect += 1
         guard found == currentRound?.items.count ?? 0 else { return }
-        roundIndex += 1
-        if roundIndex >= rounds.count {
+        if progress.completeRound() {
             finish()
         } else {
             dealRound()

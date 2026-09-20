@@ -11,7 +11,7 @@ struct QuickEyesView: View {
     @Environment(\.dismiss) private var dismiss
 
     private let emojis = ["🌻", "🐢", "🍎", "🎸", "🌙", "☕️", "🦋", "🍊", "🚗", "⭐", "🐝", "🌵"]
-    private let totalRounds = 12
+    private static let totalRounds = 12
     private let startDisplayTime = 1.2
     private let minDisplayTime = 0.35
     private let shrinkFactor = 0.92
@@ -22,7 +22,7 @@ struct QuickEyesView: View {
     }
 
     @State private var phase: Phase = .showing
-    @State private var round = 1
+    @State private var progress = RoundProgress(totalRounds: Self.totalRounds)
     @State private var target = "🌻"
     @State private var options: [String] = []
     @State private var displayTime = 1.2
@@ -71,7 +71,7 @@ struct QuickEyesView: View {
                 VStack(spacing: 16) {
                     Text(String(localized: "game.common.welldone"))
                         .font(.title)
-                    Text("\(correct) / \(totalRounds)")
+                    Text("\(correct) / \(Self.totalRounds)")
                         .font(.title2)
                 }
             }
@@ -110,10 +110,9 @@ struct QuickEyesView: View {
             // Relax one step after a miss so the next round feels kinder.
             displayTime = min(startDisplayTime, displayTime / shrinkFactor)
         }
-        if round == totalRounds {
+        if progress.completeRound() {
             finish()
         } else {
-            round += 1
             startRound()
         }
     }
@@ -123,7 +122,7 @@ struct QuickEyesView: View {
         let elapsed = Int(Date.now.timeIntervalSince(startedAt))
         let score = correct * 10 + speedBonus
         modelContext.insert(GameSession(gameID: "quick_eyes", score: score,
-                                        rounds: totalRounds, durationSeconds: elapsed))
+                                        rounds: Self.totalRounds, durationSeconds: elapsed))
     }
 }
 
