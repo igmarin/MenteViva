@@ -101,12 +101,14 @@ struct QuickEyesView: View {
         if emoji == target {
             correct += 1
             missedLastRound = false
+            Feedback.play(.success)
             // Speed bonus: up to 5 points, one less per half-second of reaction time.
             let reaction = Date.now.timeIntervalSince(optionsShownAt)
             speedBonus += max(0, 5 - Int(reaction / 0.5))
             displayTime = max(minDisplayTime, displayTime * shrinkFactor)
         } else {
             missedLastRound = true
+            Feedback.play(.miss)
             // Relax one step after a miss so the next round feels kinder.
             displayTime = min(startDisplayTime, displayTime / shrinkFactor)
         }

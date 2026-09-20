@@ -13,7 +13,6 @@ struct CelebrationView: View {
             ConfettiView()
                 .allowsHitTesting(false)
                 .accessibilityHidden(true)
-
             VStack(spacing: 32) {
                 Spacer()
 
@@ -58,6 +57,7 @@ struct CelebrationView: View {
             }
             .padding(24)
         }
+        .onAppear { Feedback.play(.complete) }
     }
 }
 

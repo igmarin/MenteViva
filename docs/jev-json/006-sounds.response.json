@@ -1,0 +1,1 @@
+{"model":"jev-1.13.0","answers":{"positive_net":{"type":"noul","noul":0.83},"soft_low_tones":{"type":"noul","noul":0.87},"custom_vs_system":{"type":"noul","noul":0.75},"fewer_distinct":{"type":"noul","noul":0.74},"opt_in_default":{"type":"noul","noul":0.62},"redundant_cues":{"type":"noul","noul":0.39}},"usage":{"input_tokens":717,"output_tokens":115}}

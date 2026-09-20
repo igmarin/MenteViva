@@ -28,13 +28,12 @@ enum AppLanguage: String, CaseIterable, Identifiable {
     }
 }
 
-/// Settings a stranger can reach alone: language, bigger text, privacy, version.
-///
-/// No sound toggle yet, deliberately: sound doesn't exist until #26, and a
-/// control that does nothing is worse than no control.
+/// Settings a stranger can reach alone: language, sound & haptics, bigger text,
+/// privacy, version.
 struct SettingsView: View {
     @AppStorage("appLanguage") private var appLanguage = AppLanguage.system.rawValue
     @AppStorage("biggerText") private var biggerText = false
+    @AppStorage("soundEnabled") private var soundEnabled = true
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
@@ -54,6 +53,13 @@ struct SettingsView: View {
                 } footer: {
                     Text(String(localized: "settings.language.restart"))
                         .font(.footnote)
+                }
+
+                Section {
+                    Toggle(String(localized: "settings.sound"), isOn: $soundEnabled)
+                        .font(.title3)
+                        .frame(minHeight: 60)
+                        .accessibilityHint(String(localized: "settings.sound.hint"))
                 }
 
                 Section {

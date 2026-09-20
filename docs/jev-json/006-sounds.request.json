@@ -1,0 +1,17 @@
+{
+  "model": "jev-latest",
+  "state": {
+    "audience": "older adults 60+, preventive or mild cognitive decline, some age-related hearing loss",
+    "app": "warm bilingual cognitive mini-games, non-clinical, offline-first, zero third-party dependencies",
+    "constraints": "sounds must be free to use with no licensing fees; haptics available",
+    "events": "correct answer, incorrect answer, round start, game completion"
+  },
+  "questions": {
+    "positive_net": {"type":"noul","instructions":"For this audience, is well-chosen sound a net positive (engagement, feedback clarity) rather than a net negative (confusion, irritation)?","criteria":{"true":"Gentle, meaningful, easy to switch off","false":"Risk of startling or confusing the player"}},
+    "soft_low_tones": {"type":"noul","instructions":"Are short, soft, low-frequency success tones more appropriate than sharp high-pitched beeps for older adults, including those with mild hearing loss?","criteria":{"true":"Lower frequencies carry better for age-related hearing loss","false":"High-pitched alerts are clearer"}},
+    "custom_vs_system": {"type":"noul","instructions":"Should we synthesize warm custom tones rather than use stock iOS system alert sounds?","criteria":{"true":"Custom tones match the warm, non-clinical brand","false":"System sounds are familiar and expected"}},
+    "fewer_distinct": {"type":"noul","instructions":"Should the sound palette stay small (three or fewer distinct sounds) to avoid confusing this audience?","criteria":{"true":"Fewer, consistent sounds are easier to learn","false":"More variety is more engaging"}},
+    "opt_in_default": {"type":"noul","instructions":"Should sound be ON by default with an easy off switch, rather than opt-in?","criteria":{"true":"Feedback helps most players out of the box","false":"Sound should be opt-in to avoid startling"}},
+    "redundant_cues": {"type":"noul","instructions":"Must every sound have a visual and haptic counterpart so nothing relies on sound alone?","criteria":{"true":"Accessibility requires no sound-only feedback","false":"Sound can be the only cue for some events"}}
+  }
+}

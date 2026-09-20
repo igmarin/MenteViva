@@ -126,7 +126,12 @@ struct ColorClashView: View {
     }
 
     private func tap(_ candidate: Ink) {
-        if candidate == ink { correct += 1 }
+        if candidate == ink {
+            correct += 1
+            Feedback.play(.success)
+        } else {
+            Feedback.play(.miss)
+        }
         if progress.completeRound() {
             finish()
         } else {

@@ -21,6 +21,11 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
   compile-time `LOCAL_ONLY` flag drives the choice.
 
 ### Added
+- Sound & haptics (#26): synthesized tones (no audio files, no fees) with a
+  matching haptic — soft low-frequency success, a gentle three-note completion,
+  a quiet low "miss", all behind one "Sound & haptics" Settings toggle, on by
+  default. Design decisions (incl. overriding Jev on cue redundancy) recorded in
+  `docs/jev-sounds.md`; Jev call archived as `jev-json/006-sounds`.
 - First-run onboarding (#31): one screen — what this is, language choice,
   one big "Let's play" button. Written for a stranger, not for family.
 - Settings (#32): language (Device/English/Español), bigger text, plain-language

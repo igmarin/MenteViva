@@ -86,8 +86,10 @@ struct MathStreakView: View {
             streak += 1
             bestStreak = max(bestStreak, streak)
             correct += 1
+            Feedback.play(.success)
         } else {
             streak = 0
+            Feedback.play(.miss)
         }
         question += 1
         if question == totalQuestions {

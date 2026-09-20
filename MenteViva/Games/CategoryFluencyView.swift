@@ -144,10 +144,11 @@ struct CategoryFluencyView: View {
     }
 
     private func tap(_ i: Int) {
-        guard tiles[i].belongs else { return } // decoy taps: no shame, nothing happens
+        guard tiles[i].belongs else { Feedback.play(.miss); return } // decoy: kind, quiet
         tiles[i].isPicked = true
         found += 1
         totalCorrect += 1
+        Feedback.play(.success)
         guard found == currentRound?.items.count ?? 0 else { return }
         if progress.completeRound() {
             finish()

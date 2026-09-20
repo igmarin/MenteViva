@@ -83,8 +83,10 @@ struct MemoryMatchView: View {
             cards[b].isMatched = true
             matched += 1
             flipped = []
+            Feedback.play(.success)
             if matched == emojis.count { finish() }
         } else {
+            Feedback.play(.miss)
             let pair = flipped
             flipped = []
             Task {
