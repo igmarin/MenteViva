@@ -85,3 +85,28 @@ corrected state — and the answer flips (raw pair: `jev-json/007-audience-demen
 Lesson recorded as a rule in docs/question-audit.md: the question and its
 implicit state are the decision; a confident answer to the wrong premise is the
 most expensive failure mode we have.
+
+## 008 — Games re-scored for early dementia — 2026-09-20
+
+Same five games, re-scored against the corrected audience (early dementia,
+errorless/familiarity priority). Raw pair: `jev-json/008-games-dementia.*`.
+Score legend: 0 = deprioritize, 1 = keep, 2 = core.
+
+| Game | Score | Confidence | Verdict |
+|---|---|---|---|
+| Memory Lane (pairs) | 1.76 | .64 | keep, leaning core |
+| Name the Herd (category) | 1.27 | .16 | keep — Jev genuinely unsure (14/44/42) |
+| Color Clash (Stroop) | 0.24 | .65 | deprioritize — error-*inducing* by design |
+| Number Trail (math) | 0.12 | .83 | deprioritize |
+| Quick Eyes (speed) | 0.01 | .98 | deprioritize — timed pressure, worst fit |
+| Next game = reminiscence/familiarity | 0.92 (Noul) | — | strongly indicated |
+
+**Key reconciliation:** the three games Jev deprioritizes for *dad* are exactly
+what a healthy 40-something wants — speed, logic, attention. So nothing is
+deleted: the five games get **allocated to the right person**, which is the
+per-person library (Q2 answer C) made concrete. Dad's library = Memory Lane +
+Name the Herd + a new reminiscence game; the speed/logic/attention games serve
+mom and the owner.
+
+Still gated: any *rebuild* or *new game* waits on dad's playtest (#6, gate #18).
+This is a candidate list, not a work order.

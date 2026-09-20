@@ -1,0 +1,22 @@
+{
+  "model": "jev-latest",
+  "state": {
+    "player": "older adult with early-stage dementia (mild), low-failure errorless design priority, benefits most from familiarity and reminiscence",
+    "evidence": "errorless learning and cognitive stimulation outperform speed drills for early dementia; familiarity-based content drives engagement",
+    "games": {
+      "memory_match": "emoji pair matching",
+      "stroop": "color-word attention / inhibition",
+      "category_fluency": "tap items belonging to a category",
+      "math_streaks": "adaptive arithmetic streaks",
+      "quick_eyes": "shrinking display-time visual discrimination"
+    }
+  },
+  "questions": {
+    "score_memory": {"type":"score","instructions":"How important is memory_match (emoji pair matching) for this player?","criteria":["Deprioritize: low value or high frustration risk for this player","Keep: useful variety, keep as-is","Core: aligns with errorless/familiarity principles"]},
+    "score_stroop": {"type":"score","instructions":"How important is stroop (color-word attention) for this player?","criteria":["Deprioritize: low value or high frustration risk","Keep: useful variety","Core: aligns with errorless/familiarity principles"]},
+    "score_category": {"type":"score","instructions":"How important is category_fluency (tap items in a category) for this player?","criteria":["Deprioritize: low value or high frustration risk","Keep: useful variety","Core: aligns with errorless/familiarity principles"]},
+    "score_math": {"type":"score","instructions":"How important is math_streaks (adaptive arithmetic) for this player?","criteria":["Deprioritize: low value or high frustration risk","Keep: useful variety","Core: aligns with errorless/familiarity principles"]},
+    "score_quick": {"type":"score","instructions":"How important is quick_eyes (shrinking display-time discrimination) for this player?","criteria":["Deprioritize: low value or high frustration risk","Keep: useful variety","Core: aligns with errorless/familiarity principles"]},
+    "add_reminiscence": {"type":"noul","instructions":"Should the NEXT new game be familiarity/reminiscence-based (family photos, familiar objects) rather than another speed or logic drill?","criteria":{"true":"Familiarity drives engagement and meaning for this player","false":"Another cognitive drill would serve better"}}
+  }
+}
