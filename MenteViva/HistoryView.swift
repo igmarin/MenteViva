@@ -46,9 +46,9 @@ struct HistoryView: View {
     private var shareSummary: String {
         let lines = weekSessions.map { session -> String in
             let info = gameInfo(for: session.gameID)
-            return "\(info.emoji) \(info.name) — \(String(format: String(localized: "history.score.format"), session.score))"
+            return "\(info.emoji) \(info.name) — \(String(format: String(localized: "history.score %lld"), session.score))"
         }
-        let header = String(format: String(localized: "history.summary.count"), weekSessions.count)
+        let header = String(format: String(localized: "history.summary %lld"), weekSessions.count)
         return ([header] + lines).joined(separator: "\n")
     }
 
@@ -101,7 +101,7 @@ struct HistoryView: View {
 
     private var emptyState: some View {
         VStack(spacing: 24) {
-            Text("🌻")
+            Text(verbatim: "🌻")
                 .font(.system(size: 80))
                 .accessibilityHidden(true)
             Text("history.empty")

@@ -5,11 +5,12 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 ## [Unreleased]
 
 ### Added
+- Home screen personality (#27): warm greeting, large emoji game tiles in a
+  grid (>=140pt tall), and the My Week card. Replaces the bare list.
 - App icon + launch screen: warm gradient with two memory cards, generated
   reproducibly by `tools/generate_icon.swift` (no design tools, no assets to
   lose). Deliberately not a brain glyph — research §1 caps our positioning at
   "fun mental exercise".
-
 - Accessibility audit fixes (#5, docs/a11y-audit-2026-09.md): Color Clash
   buttons now carry a distinct shape (circle/triangle/square/diamond) so
   color never carries the answer alone; Name the Herd picked tiles get a
