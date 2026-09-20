@@ -31,13 +31,10 @@ jobs:
     - name: Pick an available iPhone simulator
       id: sim
       run: |
-        UDID=$(xcrun simctl list devices available --json \
-          | python3 -c "import json,sys; d=json.load(sys.stdin)['devices']; \
-devs=[x for rt in d.values() for x in rt if x['name'].startswith('iPhone')]; \
-print(devs[0]['udid'] if devs else '')")
-        if [ -z "$UDID" ]; then echo "No iPhone simulator available"; exit 1; fi
-        echo "udid=$UDID" >> "$GITHUB_OUTPUT"
-        echo "Using simulator $UDID"
+        SIM_UDID=$(xcrun simctl list devices available | grep -m1 "iPhone" | grep -oE "[0-9A-F-]{36}")
+        if [ -z "$SIM_UDID" ]; then echo "No iPhone simulator available"; exit 1; fi
+        echo "udid=$SIM_UDID" >> "$GITHUB_OUTPUT"
+        echo "Using simulator $SIM_UDID"
 
     - name: Build
       run: |
