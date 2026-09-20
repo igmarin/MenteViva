@@ -3,11 +3,11 @@ import SwiftData
 
 @main
 struct MenteVivaApp: App {
-    /// CloudKit sync is opt-in at build time (`swift tools/generate_project.swift`
-    /// writes CloudKitEnabled; `--local-only` writes NO). Needed because iCloud
-    /// entitlements require the paid Developer Program — a free Apple ID can't
-    /// provision them, and the playtest must be installable with a free account.
-    /// Local-only mode still keeps everything working: the store is on-device.
+    /// CloudKit sync is a **compile-time** choice. The generator passes
+    /// `LOCAL_ONLY` for `--local-only` builds, because iCloud entitlements need
+    /// the paid Developer Program and enabling CloudKit in a build without the
+    /// entitlement traps inside CloudKit's mirroring setup — an uncatchable
+    /// EXC_BREAKPOINT, not a Swift error we could fall back from.
     init() {
         // Must happen before any view resolves a string, so the stored language
         // choice wins on this launch rather than the next one.
@@ -15,7 +15,12 @@ struct MenteVivaApp: App {
     }
     private let modelContainer: ModelContainer = {
         let schema = Schema([GameSession.self])
-        let cloudKitEnabled = (Bundle.main.object(forInfoDictionaryKey: "CloudKitEnabled") as? String) != "NO"
+
+        #if LOCAL_ONLY
+        let cloudKitEnabled = false
+        #else
+        let cloudKitEnabled = true
+        #endif
 
         let config = cloudKitEnabled
             ? ModelConfiguration(schema: schema, cloudKitDatabase: .private("iCloud.com.igmarin.MenteViva"))
@@ -24,7 +29,7 @@ struct MenteVivaApp: App {
         do {
             return try ModelContainer(for: schema, configurations: [config])
         } catch {
-            // Signed-out iCloud or missing entitlement: never break play.
+            // Store-level failure: never break play.
             do {
                 return try ModelContainer(for: schema, configurations: [ModelConfiguration(schema: schema)])
             } catch {

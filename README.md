@@ -41,7 +41,7 @@ Two build modes, chosen at generation time:
 | **CloudKit** (default) | `swift tools/generate_project.swift` | Simulator, or any device signed with a **paid** Apple Developer account |
 | **Local-only** | `swift tools/generate_project.swift --local-only` | Installing on a real iPhone/iPad with a **free** Apple ID — iCloud entitlements can't be provisioned for free accounts |
 
-Local-only drops the entitlements file and sets `CloudKitEnabled = NO`, so the
+Local-only drops the entitlements file and defines `LOCAL_ONLY` at compile time, so the
 store is on-device only. Everything else behaves identically; session data just
 doesn't sync between devices.
 

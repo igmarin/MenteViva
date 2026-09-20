@@ -247,11 +247,15 @@ let common: [(String, String)] = [
 let appSettings = common + [
     ("ASSETCATALOG_COMPILER_APPICON_NAME", "AppIcon"),
     ("CODE_SIGN_ENTITLEMENTS", "MenteViva/MenteViva.entitlements"),
+    // Compile-time switch for CloudKit. An INFOPLIST_KEY_* flag looked cleaner
+    // but Xcode only injects a known allowlist of keys, so the value silently
+    // vanished and the app enabled CloudKit against its own entitlements —
+    // trapping inside CloudKit's mirroring setup on device (uncaught, EXC_BREAKPOINT).
+    ("SWIFT_ACTIVE_COMPILATION_CONDITIONS", localOnly ? "\"$(inherited) LOCAL_ONLY\"" : "\"$(inherited)\""),
     ("CURRENT_PROJECT_VERSION", "1"),
     ("GENERATE_INFOPLIST_FILE", "YES"),
     ("INFOPLIST_FILE", "MenteViva/Info.plist"),
     ("INFOPLIST_KEY_CFBundleDisplayName", "\"Mente Viva\""),
-    ("INFOPLIST_KEY_CloudKitEnabled", localOnly ? "NO" : "YES"),
     ("INFOPLIST_KEY_UIApplicationSceneManifest_Generation", "YES"),
     ("INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents", "YES"),
     ("INFOPLIST_KEY_UILaunchScreen_Generation", "YES"),

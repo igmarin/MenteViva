@@ -4,6 +4,15 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 
 ## [Unreleased]
 
+### Fixed
+- **Launch crash on device (local-only builds):** the CloudKit on/off flag was
+  passed as `INFOPLIST_KEY_CloudKitEnabled`, which Xcode does not inject (it
+  only handles a known allowlist), so the app read `nil`, assumed CloudKit was
+  on, and trapped inside CloudKit's mirroring setup with no iCloud entitlement —
+  `EXC_BREAKPOINT` in `PFCloudKitContainerProvider`, uncatchable. The simulator
+  tolerates the missing entitlement, which is why local testing missed it. Now a
+  compile-time `LOCAL_ONLY` flag drives the choice.
+
 ### Added
 - First-run onboarding (#31): one screen — what this is, language choice,
   one big "Let's play" button. Written for a stranger, not for family.
