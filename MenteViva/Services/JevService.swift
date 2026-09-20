@@ -10,7 +10,7 @@ import Foundation
 /// (JEV_PROXY_URL in Info.plist) that adds `Authorization: Bearer` server-side
 /// and forwards the body verbatim to https://api.typesafe.ai/v1/systemone.
 
-enum GameID: String, CaseIterable, Codable {
+nonisolated enum GameID: String, CaseIterable, Codable {
     case memoryMatch = "memory_match"
     case stroop = "stroop"
     case categoryFluency = "category_fluency"
@@ -18,7 +18,7 @@ enum GameID: String, CaseIterable, Codable {
     case quickEyes = "quick_eyes"
 }
 
-enum Difficulty: Int, Codable {
+nonisolated enum Difficulty: Int, Codable {
     case easy = 0, medium = 1, hard = 2
 
     init(jevScore: Double) {
@@ -27,7 +27,7 @@ enum Difficulty: Int, Codable {
     }
 }
 
-struct DailyPlan: Codable {
+nonisolated struct DailyPlan: Codable {
     let dayStamp: String              // local "yyyy-MM-dd"; valid only for its day
     let games: [GameID]               // recommended mix, best first
     let difficulty: [GameID: Difficulty]
@@ -43,7 +43,7 @@ struct DailyPlan: Codable {
 
 /// Aggregated, anonymized gameplay stats — the entire state that leaves the device:
 /// counts and ratios only, no identifiers, no dates, English field names.
-struct PlayerStateSummary: Codable {
+nonisolated struct PlayerStateSummary: Codable {
     struct GameStats: Codable {
         let sessionsLast14Days: Int
         let meanAccuracy: Double      // 0...1
@@ -141,7 +141,7 @@ actor JevService {
 
     // MARK: - Policy in code: answers -> plan
 
-    static func makePlan(from answers: [String: JevAnswer],
+    nonisolated static func makePlan(from answers: [String: JevAnswer],
                          current: [GameID: Difficulty],
                          dayStamp: String,
                          gamesPerDay: Int,
@@ -175,7 +175,7 @@ actor JevService {
         }
     }
 
-    static func dayStamp(_ date: Date = .now) -> String {
+    nonisolated static func dayStamp(_ date: Date = .now) -> String {
         let f = DateFormatter()
         f.dateFormat = "yyyy-MM-dd"
         return f.string(from: date)
@@ -184,13 +184,13 @@ actor JevService {
 
 // MARK: - Wire models (mirror https://api.typesafe.ai/v1/systemone)
 
-private struct JevRequest: Encodable {
+nonisolated private struct JevRequest: Encodable {
     let state: PlayerStateSummary   // JSON-object state
     let model: String
     let questions: [String: JevQuestion]
 }
 
-private enum JevQuestion: Encodable {
+nonisolated private enum JevQuestion: Encodable {
     case noul(instructions: String, criteria: [String: String])
     case score(instructions: String, criteria: [String])
 
@@ -211,11 +211,11 @@ private enum JevQuestion: Encodable {
     private enum CodingKeys: String, CodingKey { case type, instructions, criteria }
 }
 
-private struct JevResponse: Decodable {
+nonisolated private struct JevResponse: Decodable {
     let answers: [String: JevAnswer]
 }
 
-enum JevAnswer: Decodable {
+nonisolated enum JevAnswer: Decodable {
     case noul(probability: Double)
     case score(score: Double, confidence: Double)
     case choice(choice: String, confidence: Double)   // unused today; decoded for completeness

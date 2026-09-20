@@ -84,8 +84,9 @@ var p = """
 // !$*UTF8*$!
 {
 \tarchiveVersion = 1;
-\tclasses = { };
-\tobjectVersion = 56;
+\tclasses = {
+\t};
+\tobjectVersion = 90;
 \tobjects = {
 
 """
@@ -150,7 +151,7 @@ var targetsList = "\(tgtID) /* MenteViva */"
 if hasTests { targetsList += ", \(testsTgtID) /* MenteVivaTests */" }
 if hasUITests { targetsList += ", \(uiTgtID) /* MenteVivaUITests */" }
 
-p += "\t\t\(pbxID) /* Project object */ = {\n\t\t\tisa = PBXProject;\n\t\t\tattributes = { BuildIndependentTargetsInParallel = 1; LastSwiftUpdateCheck = 1600; LastUpgradeCheck = 1600; TargetAttributes = { \(targetAttrs) }; };\n\t\t\tbuildConfigurationList = \(oid("prjCfgList")) /* Build configuration list for PBXProject \"MenteViva\" */;\n\t\t\tcompatibilityVersion = \"Xcode 14.0\";\n\t\t\tdevelopmentRegion = en;\n\t\t\thasScannedForEncodings = 0;\n\t\t\tknownRegions = ( en, Base, es );\n\t\t\tmainGroup = \(rootGrpID);\n\t\t\tproductRefGroup = \(productsGrpID) /* Products */;\n\t\t\tprojectDirPath = \"\";\n\t\t\tprojectRoot = \"\";\n\t\t\ttargets = ( \(targetsList) );\n\t\t};\n\n"
+p += "\t\t\(pbxID) /* Project object */ = {\n\t\t\tisa = PBXProject;\n\t\t\tattributes = { BuildIndependentTargetsInParallel = 1; LastSwiftUpdateCheck = 2630; LastUpgradeCheck = 2700; TargetAttributes = { \(targetAttrs) }; };\n\t\t\tbuildConfigurationList = \(oid("prjCfgList")) /* Build configuration list for PBXProject \"MenteViva\" */;\n\t\t\tdevelopmentRegion = en;\n\t\t\thasScannedForEncodings = 0;\n\t\t\tknownRegions = ( en, Base, es );\n\t\t\tmainGroup = \(rootGrpID);\n\t\t\tminimizedProjectReferenceProxies = 1;\n\t\t\tpreferredProjectObjectVersion = 90;\n\t\t\tproductRefGroup = \(productsGrpID) /* Products */;\n\t\t\tprojectDirPath = \"\";\n\t\t\tprojectRoot = \"\";\n\t\t\ttargets = ( \(targetsList) );\n\t\t};\n\n"
 
 
 // MARK: Build phases
@@ -172,20 +173,66 @@ if hasUITests {
 // MARK: Build configurations
 
 /// One XCBuildConfiguration block. Values are emitted verbatim — quote at call site.
-func configBlock(_ name: String, target: String, opt: String, settings: [(String, String)]) -> String {
-    var s = "\t\t\(oid("cfg:\(target):\(name)")) /* \(name) */ = {\n\t\t\tisa = XCBuildConfiguration;\n\t\t\tbuildSettings = {\n"
+func configBlock(_ name: String, owner: String, settings: [(String, String)]) -> String {
+    var s = "\t\t\(oid("cfg:\(owner):\(name)")) /* \(name) */ = {\n\t\t\tisa = XCBuildConfiguration;\n\t\t\tbuildSettings = {\n"
     for (k, v) in settings { s += "\t\t\t\t\(k) = \(v);\n" }
-    s += "\t\t\t\tSWIFT_OPTIMIZATION_LEVEL = \(opt);\n"
     s += "\t\t\t};\n\t\t\tname = \(name);\n\t\t};\n"
     return s
 }
 
-func configList(_ id: String, _ target: String) -> String {
-    "\t\t\(id) = { isa = XCConfigurationList; buildConfigurations = ( \(oid("cfg:\(target):Debug")), \(oid("cfg:\(target):Release")) ); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };\n"
+func configList(_ id: String, _ owner: String) -> String {
+    "\t\t\(id) = { isa = XCConfigurationList; buildConfigurations = ( \(oid("cfg:\(owner):Debug")), \(oid("cfg:\(owner):Release")) ); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };\n"
 }
 
-let common: [(String, String)] = [
+/// Project-level settings. Mirrors the recommended set Xcode 27 puts in a new
+/// project (read from IDEFoundation's app-project prototype, objectVersion 90) —
+/// adopting it is what stops the "Update to recommended settings" prompt.
+let projectCommon: [(String, String)] = [
     ("ALWAYS_SEARCH_USER_PATHS", "NO"),
+    ("ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS", "YES"),
+    ("CLANG_ANALYZER_NONNULL", "YES"),
+    ("CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION", "YES_AGGRESSIVE"),
+    ("CLANG_ENABLE_MODULES", "YES"),
+    ("CLANG_ENABLE_OBJC_ARC", "YES"),
+    ("CLANG_ENABLE_OBJC_WEAK", "YES"),
+    ("CLANG_WARN_BOOL_CONVERSION", "YES"),
+    ("CLANG_WARN_CONSTANT_CONVERSION", "YES"),
+    ("CLANG_WARN_EMPTY_BODY", "YES"),
+    ("CLANG_WARN_ENUM_CONVERSION", "YES"),
+    ("CLANG_WARN_INFINITE_RECURSION", "YES"),
+    ("CLANG_WARN_INT_CONVERSION", "YES"),
+    ("CLANG_WARN_UNREACHABLE_CODE", "YES"),
+    ("COPY_PHASE_STRIP", "NO"),
+    ("DEAD_CODE_STRIPPING", "YES"),
+    ("ENABLE_STRICT_OBJC_MSGSEND", "YES"),
+    ("ENABLE_USER_SCRIPT_SANDBOXING", "YES"),
+    ("GCC_NO_COMMON_BLOCKS", "YES"),
+    ("GCC_WARN_UNINITIALIZED_AUTOS", "YES_AGGRESSIVE"),
+    ("GCC_WARN_UNUSED_FUNCTION", "YES"),
+    ("GCC_WARN_UNUSED_VARIABLE", "YES"),
+    ("LOCALIZATION_PREFERS_STRING_CATALOGS", "YES"),
+    ("STR_CATALOG_GENERATE_SYMBOLS", "YES"),
+    ("SWIFT_VERSION", "5.0"),
+]
+
+let projectDebug = projectCommon + [
+    ("DEBUG_INFORMATION_FORMAT", "dwarf"),
+    ("ENABLE_TESTABILITY", "YES"),
+    ("GCC_OPTIMIZATION_LEVEL", "0"),
+    ("GCC_PREPROCESSOR_DEFINITIONS", "\"DEBUG=1 $(inherited)\""),
+    ("ONLY_ACTIVE_ARCH", "YES"),
+    ("SWIFT_ACTIVE_COMPILATION_CONDITIONS", "\"DEBUG $(inherited)\""),
+    ("SWIFT_OPTIMIZATION_LEVEL", "\"-Onone\""),
+]
+
+let projectRelease = projectCommon + [
+    ("DEBUG_INFORMATION_FORMAT", "\"dwarf-with-dsym\""),
+    ("ENABLE_NS_ASSERTIONS", "NO"),
+    ("SWIFT_COMPILATION_MODE", "wholemodule"),
+    ("SWIFT_OPTIMIZATION_LEVEL", "\"-O\""),
+]
+
+let common: [(String, String)] = [
     ("SDKROOT", "iphoneos"),
     ("SWIFT_VERSION", "5.0"),
     ("ENABLE_PREVIEWS", "YES"),
@@ -197,23 +244,33 @@ let common: [(String, String)] = [
 let appSettings = common + [
     ("CODE_SIGN_ENTITLEMENTS", "MenteViva/MenteViva.entitlements"),
     ("CURRENT_PROJECT_VERSION", "1"),
-    ("ENABLE_TESTABILITY", "YES"),
     ("GENERATE_INFOPLIST_FILE", "YES"),
     ("INFOPLIST_FILE", "MenteViva/Info.plist"),
     ("INFOPLIST_KEY_CFBundleDisplayName", "\"Mente Viva\""),
     ("INFOPLIST_KEY_CloudKitEnabled", localOnly ? "NO" : "YES"),
+    ("INFOPLIST_KEY_UIApplicationSceneManifest_Generation", "YES"),
+    ("INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents", "YES"),
     ("INFOPLIST_KEY_UILaunchScreen_Generation", "YES"),
+    ("INFOPLIST_KEY_UIStatusBarStyle", "UIStatusBarStyleDefault"),
+    ("INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad", "\"UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight\""),
+    ("INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone", "\"UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight\""),
+    ("LD_RUNPATH_SEARCH_PATHS", "\"$(inherited) @executable_path/Frameworks\""),
     ("MARKETING_VERSION", "0.1.0"),
     ("PRODUCT_BUNDLE_IDENTIFIER", "com.igmarin.MenteViva"),
     ("PRODUCT_NAME", "\"$(TARGET_NAME)\""),
+    ("STRING_CATALOG_GENERATE_SYMBOLS", "YES"),
     ("SUPPORTED_PLATFORMS", "\"iphoneos iphonesimulator\""),
+    ("SWIFT_APPROACHABLE_CONCURRENCY", "YES"),
+    ("SWIFT_DEFAULT_ACTOR_ISOLATION", "MainActor"),
     ("SWIFT_EMIT_LOC_STRINGS", "YES"),
+    ("SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY", "YES"),
 ]
 
 let testSettings = common + [
     ("BUNDLE_LOADER", "\"$(TEST_HOST)\""),
     ("TEST_HOST", "\"$(BUILT_PRODUCTS_DIR)/MenteViva.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/MenteViva\""),
     ("GENERATE_INFOPLIST_FILE", "YES"),
+    ("LD_RUNPATH_SEARCH_PATHS", "\"$(inherited) @executable_path/Frameworks @loader_path/Frameworks\""),
     ("PRODUCT_BUNDLE_IDENTIFIER", "com.igmarin.MenteVivaTests"),
     ("PRODUCT_NAME", "\"$(TARGET_NAME)\""),
     ("SWIFT_EMIT_LOC_STRINGS", "NO"),
@@ -227,15 +284,23 @@ let uiTestSettings = common + [
     ("SWIFT_EMIT_LOC_STRINGS", "NO"),
 ]
 
-for name in ["Debug", "Release"] {
-    let opt = name == "Debug" ? "\"-Onone\"" : "\"-O\""
-    p += configBlock(name, target: "app", opt: opt,
-                     settings: localOnly ? appSettings.filter { $0.0 != "CODE_SIGN_ENTITLEMENTS" } : appSettings)
-    if hasTests { p += configBlock(name, target: "tests", opt: opt, settings: testSettings) }
-    if hasUITests { p += configBlock(name, target: "uitests", opt: opt, settings: uiTestSettings) }
+p += configBlock("Debug", owner: "proj", settings: projectDebug)
+p += configBlock("Release", owner: "proj", settings: projectRelease)
+p += configBlock("Debug", owner: "app",
+                 settings: localOnly ? appSettings.filter { $0.0 != "CODE_SIGN_ENTITLEMENTS" } : appSettings)
+p += configBlock("Release", owner: "app",
+                 settings: localOnly ? appSettings.filter { $0.0 != "CODE_SIGN_ENTITLEMENTS" } : appSettings)
+if hasTests {
+    p += configBlock("Debug", owner: "tests", settings: testSettings)
+    p += configBlock("Release", owner: "tests", settings: testSettings)
+}
+if hasUITests {
+    p += configBlock("Debug", owner: "uitests", settings: uiTestSettings)
+    p += configBlock("Release", owner: "uitests", settings: uiTestSettings)
 }
 p += "\n"
-p += configList(oid("prjCfgList"), "app")
+p += configList(oid("prjCfgList"), "proj")
+p += configList(oid("tgtCfgList"), "app")
 if hasTests { p += configList(oid("tests:cfgList"), "tests") }
 if hasUITests { p += configList(oid("uitests:cfgList"), "uitests") }
 
