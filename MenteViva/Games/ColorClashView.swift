@@ -21,19 +21,19 @@ struct ColorClashView: View {
 
         var word: String {
             switch self {
-            case .red: String(localized: "game.colorclash.word.red")
-            case .blue: String(localized: "game.colorclash.word.blue")
-            case .green: String(localized: "game.colorclash.word.green")
-            case .orange: String(localized: "game.colorclash.word.orange")
+            case .red: AppLanguage.localized( "game.colorclash.word.red")
+            case .blue: AppLanguage.localized( "game.colorclash.word.blue")
+            case .green: AppLanguage.localized( "game.colorclash.word.green")
+            case .orange: AppLanguage.localized( "game.colorclash.word.orange")
             }
         }
 
         var label: String {
             switch self {
-            case .red: String(localized: "game.colorclash.color.red")
-            case .blue: String(localized: "game.colorclash.color.blue")
-            case .green: String(localized: "game.colorclash.color.green")
-            case .orange: String(localized: "game.colorclash.color.orange")
+            case .red: AppLanguage.localized( "game.colorclash.color.red")
+            case .blue: AppLanguage.localized( "game.colorclash.color.blue")
+            case .green: AppLanguage.localized( "game.colorclash.color.green")
+            case .orange: AppLanguage.localized( "game.colorclash.color.orange")
             }
         }
 
@@ -50,10 +50,10 @@ struct ColorClashView: View {
 
         var shapeName: String {
             switch self {
-            case .red: String(localized: "game.colorclash.shape.circle")
-            case .blue: String(localized: "game.colorclash.shape.triangle")
-            case .green: String(localized: "game.colorclash.shape.square")
-            case .orange: String(localized: "game.colorclash.shape.diamond")
+            case .red: AppLanguage.localized( "game.colorclash.shape.circle")
+            case .blue: AppLanguage.localized( "game.colorclash.shape.triangle")
+            case .green: AppLanguage.localized( "game.colorclash.shape.square")
+            case .orange: AppLanguage.localized( "game.colorclash.shape.diamond")
             }
         }
     }
@@ -68,9 +68,13 @@ struct ColorClashView: View {
     @State private var showCelebration = false
     @State private var finalScore = 0
 
+    static func score(correct: Int) -> Int {
+        correct * 10
+    }
+
     var body: some View {
         VStack(spacing: 32) {
-            Text(String(localized: "game.colorclash.instruction"))
+            Text(AppLanguage.localized( "game.colorclash.instruction"))
                 .font(.title2)
                 .multilineTextAlignment(.center)
 
@@ -104,7 +108,7 @@ struct ColorClashView: View {
                 .foregroundStyle(.secondary)
         }
         .padding()
-        .navigationTitle(String(localized: "game.colorclash.title"))
+        .navigationTitle(AppLanguage.localized( "game.colorclash.title"))
         .onAppear(perform: deal)
         .fullScreenCover(isPresented: $showCelebration) {
             CelebrationView(score: finalScore,
@@ -120,8 +124,8 @@ struct ColorClashView: View {
     }
 
     private func deal() {
-        word = Ink.allCases.randomElement()!
-        ink = Ink.allCases.randomElement()!
+        word = Ink.allCases.randomElement() ?? .red
+        ink = Ink.allCases.randomElement() ?? .blue
         startedAt = .now
     }
 
@@ -141,8 +145,8 @@ struct ColorClashView: View {
 
     private func finish() {
         let elapsed = Int(Date.now.timeIntervalSince(startedAt))
-        let score = correct * 10
-        modelContext.insert(GameSession(gameID: "stroop", score: score,
+        let score = Self.score(correct: correct)
+        modelContext.insert(GameSession(gameID: .stroop, score: score,
                                         rounds: Self.totalRounds, durationSeconds: elapsed))
         finalScore = score
         showCelebration = true

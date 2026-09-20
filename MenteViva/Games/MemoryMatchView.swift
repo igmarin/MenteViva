@@ -18,6 +18,7 @@ struct MemoryMatchView: View {
     @State private var showCelebration = false
     @State private var finalScore = 0
     @State private var cardPositions: [Int: Int] = [:]
+    @State private var flipBackTask: Task<Void, Never>?
 
     struct Card: Identifiable {
         let id: Int
@@ -26,36 +27,41 @@ struct MemoryMatchView: View {
         var isMatched = false
     }
 
+    static func score(pairCount: Int, moves: Int) -> Int {
+        max(10, pairCount * 20 - moves * 2)
+    }
+
     var body: some View {
         VStack(spacing: 24) {
-            Text(String(localized: "game.memory.instruction"))
+            Text(AppLanguage.localized( "game.memory.instruction"))
                 .font(.title2)
                 .multilineTextAlignment(.center)
 
             LazyVGrid(columns: columns, spacing: 16) {
-                ForEach(cards.indices, id: \.self) { i in
-                    Button { flip(i) } label: {
-                        Text(cards[i].isFaceUp || cards[i].isMatched ? cards[i].emoji : "❓")
+                ForEach(cards) { card in
+                    Button { flip(card.id) } label: {
+                        Text(card.isFaceUp || card.isMatched ? card.emoji : "❓")
                             .font(.system(size: 56))
                             .frame(maxWidth: .infinity, minHeight: 110)
-                            .background(cards[i].isMatched ? .green.opacity(0.2) : .blue.opacity(0.15),
+                            .background(card.isMatched ? .green.opacity(0.2) : .blue.opacity(0.15),
                                         in: .rect(cornerRadius: 16))
                     }
                     .buttonStyle(.plain)
-                    .disabled(cards[i].isFaceUp || cards[i].isMatched)
-                    .accessibilityLabel(cards[i].isFaceUp || cards[i].isMatched
-                                        ? cards[i].emoji
-                                        : String(localized: "game.memory.card.hidden"))
-                    .accessibilityHint(cards[i].isMatched
-                                       ? String(localized: "game.memory.a11y.matched")
-                                       : String(localized: "game.memory.a11y.position \(cardPositions[i] ?? 0) \(cards.count)"))
+                    .disabled(card.isFaceUp || card.isMatched)
+                    .accessibilityLabel(card.isFaceUp || card.isMatched
+                                        ? card.emoji
+                                        : AppLanguage.localized( "game.memory.card.hidden"))
+                    .accessibilityHint(card.isMatched
+                                       ? AppLanguage.localized( "game.memory.a11y.matched")
+                                       : AppLanguage.localized( "game.memory.a11y.position \(cardPositions[card.id] ?? 0) \(cards.count)"))
                 }
             }
             .padding()
         }
         .padding()
-        .navigationTitle(String(localized: "game.memory.title"))
+        .navigationTitle(AppLanguage.localized( "game.memory.title"))
         .onAppear(perform: deal)
+        .onDisappear { flipBackTask?.cancel() }
         .fullScreenCover(isPresented: $showCelebration) {
             CelebrationView(score: finalScore,
                             onPlayAgain: { showCelebration = false; deal() },
@@ -64,6 +70,7 @@ struct MemoryMatchView: View {
     }
 
     private func deal() {
+        flipBackTask?.cancel()
         cards = (emojis + emojis).shuffled().enumerated().map { Card(id: $0, emoji: $1) }
         cardPositions = Dictionary(uniqueKeysWithValues: cards.indices.map { (cards[$0].id, $0 + 1) })
         flipped = []
@@ -72,7 +79,8 @@ struct MemoryMatchView: View {
         startedAt = .now
     }
 
-    private func flip(_ i: Int) {
+    private func flip(_ cardID: Int) {
+        guard let i = cards.firstIndex(where: { $0.id == cardID }) else { return }
         cards[i].isFaceUp = true
         flipped.append(i)
         guard flipped.count == 2 else { return }
@@ -89,8 +97,10 @@ struct MemoryMatchView: View {
             Feedback.play(.miss)
             let pair = flipped
             flipped = []
-            Task {
+            flipBackTask = Task { @MainActor in
                 try? await Task.sleep(for: .seconds(1.2))
+                guard !Task.isCancelled,
+                      pair.allSatisfy({ cards.indices.contains($0) }) else { return }
                 cards[pair[0]].isFaceUp = false
                 cards[pair[1]].isFaceUp = false
             }
@@ -99,8 +109,8 @@ struct MemoryMatchView: View {
 
     private func finish() {
         let elapsed = Int(Date.now.timeIntervalSince(startedAt))
-        let score = max(10, emojis.count * 20 - moves * 2)
-        modelContext.insert(GameSession(gameID: "memory", score: score,
+        let score = Self.score(pairCount: emojis.count, moves: moves)
+        modelContext.insert(GameSession(gameID: .memoryMatch, score: score,
                                         rounds: moves, durationSeconds: elapsed))
         finalScore = score
         showCelebration = true

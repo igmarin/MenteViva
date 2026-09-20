@@ -20,11 +20,15 @@ struct MathStreakView: View {
     @State private var showCelebration = false
     @State private var finalScore = 0
 
+    static func score(correct: Int, bestStreak: Int) -> Int {
+        correct * 10 + bestStreak * 2
+    }
+
     private var answer: Int { a + b }
 
     var body: some View {
         VStack(spacing: 32) {
-            Text(String(localized: "game.math.instruction"))
+            Text(AppLanguage.localized( "game.math.instruction"))
                 .font(.title2)
                 .multilineTextAlignment(.center)
 
@@ -50,7 +54,7 @@ struct MathStreakView: View {
                 .foregroundStyle(.secondary)
         }
         .padding()
-        .navigationTitle(String(localized: "game.math.title"))
+        .navigationTitle(AppLanguage.localized( "game.math.title"))
         .onAppear(perform: deal)
         .fullScreenCover(isPresented: $showCelebration) {
             CelebrationView(score: finalScore,
@@ -101,8 +105,8 @@ struct MathStreakView: View {
 
     private func finish() {
         let elapsed = Int(Date.now.timeIntervalSince(startedAt))
-        let score = correct * 10 + bestStreak * 2
-        modelContext.insert(GameSession(gameID: "math_streaks", score: score,
+        let score = Self.score(correct: correct, bestStreak: bestStreak)
+        modelContext.insert(GameSession(gameID: .mathStreaks, score: score,
                                         rounds: totalQuestions, durationSeconds: elapsed))
         finalScore = score
         showCelebration = true

@@ -70,7 +70,8 @@ final class JevPlanPolicyTests: XCTestCase {
     }
 
     func testGivenLowConfidenceScoreWhenPlanThenCurrentDifficultyKept() {
-        // Wrong difficulty is the high-stakes error; below the floor we keep yesterday's.
+        // A poor difficulty match is the high-stakes concern; below the floor
+        // we keep yesterday's setting.
         let answers: [String: JevAnswer] = [
             "difficulty_stroop": .score(score: 2.0, confidence: 0.59),
         ]
@@ -93,5 +94,13 @@ final class JevPlanPolicyTests: XCTestCase {
 
     func testGivenAnyAnswersWhenPlanThenDayStampIsCarriedThrough() {
         XCTAssertEqual(makePlan([:]).dayStamp, stamp)
+    }
+
+    func testGivenZeroGamesPerDayWhenPlanThenNoGamesAreReturned() {
+        XCTAssertTrue(makePlan([:], gamesPerDay: 0).games.isEmpty)
+    }
+
+    func testGivenNegativeGamesPerDayWhenPlanThenNoGamesAreReturned() {
+        XCTAssertTrue(makePlan([:], gamesPerDay: -1).games.isEmpty)
     }
 }

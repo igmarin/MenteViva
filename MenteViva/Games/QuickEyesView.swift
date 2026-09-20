@@ -31,10 +31,15 @@ struct QuickEyesView: View {
     @State private var missedLastRound = false
     @State private var optionsShownAt = Date.now
     @State private var startedAt = Date.now
+    @State private var revealTask: Task<Void, Never>?
+
+    static func score(correct: Int, speedBonus: Int) -> Int {
+        correct * 10 + speedBonus
+    }
 
     var body: some View {
         VStack(spacing: 24) {
-            Text(String(localized: "game.quickeyes.instruction"))
+            Text(AppLanguage.localized( "game.quickeyes.instruction"))
                 .font(.title2)
                 .multilineTextAlignment(.center)
 
@@ -44,15 +49,15 @@ struct QuickEyesView: View {
             case .showing:
                 Text(target)
                     .font(.system(size: 120))
-                    .accessibilityLabel(String(localized: "game.quickeyes.a11y.showing"))
+                    .accessibilityLabel(AppLanguage.localized( "game.quickeyes.a11y.showing"))
             case .choosing:
                 VStack(spacing: 16) {
                     if missedLastRound {
-                        Text(String(localized: "game.quickeyes.almost"))
+                        Text(AppLanguage.localized( "game.quickeyes.almost"))
                             .font(.title2)
                             .foregroundStyle(.secondary)
                     }
-                    Text(String(localized: "game.quickeyes.prompt"))
+                    Text(AppLanguage.localized( "game.quickeyes.prompt"))
                         .font(.title2)
                     LazyVGrid(columns: columns, spacing: 16) {
                         ForEach(options, id: \.self) { emoji in
@@ -69,7 +74,7 @@ struct QuickEyesView: View {
                 }
             case .done:
                 VStack(spacing: 16) {
-                    Text(String(localized: "game.common.welldone"))
+                    Text(AppLanguage.localized( "game.common.welldone"))
                         .font(.title)
                     Text("\(correct) / \(Self.totalRounds)")
                         .font(.title2)
@@ -79,18 +84,20 @@ struct QuickEyesView: View {
             Spacer()
         }
         .padding()
-        .navigationTitle(String(localized: "game.quickeyes.title"))
+        .navigationTitle(AppLanguage.localized( "game.quickeyes.title"))
         .onAppear(perform: startRound)
+        .onDisappear { revealTask?.cancel() }
     }
 
     private func startRound() {
+        revealTask?.cancel()
         target = emojis.randomElement() ?? "🌻"
         let distractors = emojis.filter { $0 != target }.shuffled().prefix(3)
         options = (distractors + [target]).shuffled()
         phase = .showing
-        Task {
+        revealTask = Task { @MainActor in
             try? await Task.sleep(for: .seconds(displayTime))
-            guard phase == .showing else { return }
+            guard !Task.isCancelled, phase == .showing else { return }
             optionsShownAt = .now
             phase = .choosing
         }
@@ -120,10 +127,12 @@ struct QuickEyesView: View {
     }
 
     private func finish() {
+        revealTask?.cancel()
+        revealTask = nil
         phase = .done
         let elapsed = Int(Date.now.timeIntervalSince(startedAt))
-        let score = correct * 10 + speedBonus
-        modelContext.insert(GameSession(gameID: "quick_eyes", score: score,
+        let score = Self.score(correct: correct, speedBonus: speedBonus)
+        modelContext.insert(GameSession(gameID: .quickEyes, score: score,
                                         rounds: Self.totalRounds, durationSeconds: elapsed))
     }
 }
