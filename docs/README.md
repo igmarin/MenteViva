@@ -16,6 +16,7 @@ screen of real content, split it — long docs don't get read.
 | [device-support.md](device-support.md) | What hardware/OS we claim and what we verified | Living |
 | [decisions.md](decisions.md) | Every significant decision, with date and reason | Living log |
 | [research-2026-09.md](research-2026-09.md) | Evidence + market scan behind the decisions | Snapshot |
+| [question-audit.md](question-audit.md) | The real questions, checked (against wrong questions) | Living |
 | [roadmap.md](roadmap.md) | What happens next, in order | Living |
 | [store-listing.md](store-listing.md) | App Store copy + screenshots (EN/ES), drafted early | Draft |
 

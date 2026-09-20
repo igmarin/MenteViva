@@ -69,3 +69,19 @@ Jev output is evidence, not truth — policy stays with us.
 
 No ticket for monetization: Jev agrees with our lean; the 0.28 freemium
 minority is already covered by the existing "revisit after family beta" trigger.
+
+## 007 — Audience re-asked (corrected state) — 2026-09-20
+
+The original 001 call assumed "healthy preventive 60+". The owner later stated
+the real player has early-stage dementia. Same model, same question shape,
+corrected state — and the answer flips (raw pair: `jev-json/007-audience-dementia.*`).
+
+| Judgment | 001 | 007 |
+|---|---|---|
+| Primary audience | healthy_preventive_60plus | **mci_early_dementia** (0.95, conf 0.94) |
+| Design | — | errorless/familiarity over speed (0.93) |
+| Content | — | familiar/personalized matters (0.88) |
+
+Lesson recorded as a rule in docs/question-audit.md: the question and its
+implicit state are the decision; a confident answer to the wrong premise is the
+most expensive failure mode we have.

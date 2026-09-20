@@ -181,6 +181,38 @@ clean build.
 Consequence: content work (#18's gate) stays gated on playtest *findings*, not
 on stability, because there are still no findings to act on.
 
+## 2026-09-20 — Audience corrected: early dementia, not just "preventive"
+
+The owner clarified the real player has a diagnosis of **early-stage dementia**
+(mild). The earlier "healthy preventive 60+" framing was the *state* we fed the
+model — not the truth — and it produced a confident-but-wrong answer (Jev 001).
+
+Re-asked with the corrected state (Jev 007, archived): primary audience =
+`mci_early_dementia` at 0.95; design should favor **errorless, low-failure,
+familiarity/reminiscence** over speed drills (0.93); familiar/personalized
+content meaningfully beats generic emoji (0.88).
+
+Consequences:
+- **Design target is now early dementia**, not generic prevention. The existing
+  warm, no-fail, big-target design already leans this way — the shift is in
+  *which* games and content matter, not in replacing the whole app.
+- **Evidence improves** for this audience: MCI/early dementia is the
+  best-supported population for cognitive training (research §1), so the app is
+  on firmer ground, not weaker.
+- **Marketing ceiling is unchanged** — and now more important, not less: "fun
+  mental exercise", never treatment/prevention/diagnosis. Targeting an
+  early-dementia audience raises App Store 1.4.1 scrutiny if we *market* to it;
+  we don't. The design can be dementia-friendly without the copy saying so.
+- **Content re-evaluation is queued, not rushed**: re-score the five games for
+  this population (Jev 008) and reconsider personalized/familiar content, but
+  hold *rebuilds* until dad's own playtest (#6) — the app is already warm and
+  no-fail, and the biggest unknown is still what he actually engages with.
+
+This is also the moment the **question audit** (`docs/question-audit.md`) was
+created: every decision must state the question, confirm it's the real one, and
+say how it's answered — because a well-answered wrong question is the most
+expensive bug we have.
+
 ## Open questions (not yet decided)
 
 - Business model: research leans **one-time $12.99 + Family Sharing**
