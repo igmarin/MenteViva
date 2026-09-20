@@ -30,11 +30,23 @@ Design: [docs/jev-integration.md](docs/jev-integration.md).
 Requires Xcode 16+, iOS 17+ target, zero third-party dependencies.
 
 ```sh
-open MenteViva.xcodeproj   # pick a simulator, press ▶︎
+swift tools/generate_project.swift   # regenerate project (CloudKit on)
+open MenteViva.xcodeproj             # pick a simulator, press ▶︎
 ```
 
-After adding a `.swift` file: `swift tools/generate_project.swift` and commit
-the regenerated `project.pbxproj` (see docs/conventions.md §6).
+Two build modes, chosen at generation time:
+
+| Mode | Command | Use when |
+|---|---|---|
+| **CloudKit** (default) | `swift tools/generate_project.swift` | Simulator, or any device signed with a **paid** Apple Developer account |
+| **Local-only** | `swift tools/generate_project.swift --local-only` | Installing on a real iPhone/iPad with a **free** Apple ID — iCloud entitlements can't be provisioned for free accounts |
+
+Local-only drops the entitlements file and sets `CloudKitEnabled = NO`, so the
+store is on-device only. Everything else behaves identically; session data just
+doesn't sync between devices.
+
+After adding a `.swift` file: regenerate and commit the updated
+`project.pbxproj` (see docs/conventions.md §6).
 
 ## Structure
 

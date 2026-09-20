@@ -28,6 +28,11 @@ Instructions for AI agents (and humans in a hurry) working on MenteViva.
 1. Branch from `main`, PR back to `main`.
 2. After adding/removing a `.swift` file: `swift tools/generate_project.swift`
    and commit the regenerated `project.pbxproj`.
+3. **Two build modes.** Default = CloudKit entitlements (simulator, or a device
+   signed with the paid Developer Program). `--local-only` = no entitlements and
+   `CloudKitEnabled = NO`, required to install on a real device with a free
+   Apple ID. Regenerate before switching modes; never commit a local-only
+   `project.pbxproj`.
 3. Verify before committing: build must pass —
    `xcodebuild -project MenteViva.xcodeproj -scheme MenteViva -destination 'generic/platform=iOS Simulator' build`
    Syntax checks (`swiftc -parse`) are NOT verification.

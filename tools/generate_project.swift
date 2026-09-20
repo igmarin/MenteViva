@@ -5,6 +5,12 @@ import Foundation
 
 let root = URL(fileURLWithPath: FileManager.default.currentDirectoryPath)
 let appDir = root.appendingPathComponent("MenteViva")
+
+/// `--local-only`: drop the CloudKit entitlement and disable the CloudKit
+/// container in the app, so a free Apple ID can install on a real device
+/// (iCloud/CloudKit entitlements require the paid Developer Program).
+/// Default (no flag) keeps CloudKit enabled.
+let localOnly = CommandLine.arguments.contains("--local-only")
 let testsDir = root.appendingPathComponent("MenteVivaTests")
 let uiTestsDir = root.appendingPathComponent("MenteVivaUITests")
 
@@ -86,7 +92,9 @@ p += buildFiles + tests.builds + ui.builds + "\n" + fileRefs + tests.refs + ui.r
 p += "\t\t\(appID) /* MenteViva.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MenteViva.app; sourceTree = BUILT_PRODUCTS_DIR; };\n"
 p += "\t\t\(plistID) /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = \"<group>\"; };\n"
 p += "\t\t\(catID) /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = \"<group>\"; };\n\n"
-p += "\t\t\(entID) /* MenteViva.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MenteViva.entitlements; sourceTree = \"<group>\"; };\n"
+if !localOnly {
+    p += "\t\t\(entID) /* MenteViva.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MenteViva.entitlements; sourceTree = \"<group>\"; };\n"
+}
 p += "\t\t\(catBuildID) /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = \(catID); };\n\n"
 if hasTests {
     p += "\t\t\(testsProductID) /* MenteVivaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MenteVivaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };\n"
@@ -98,7 +106,7 @@ p += "\n"
 
 // MARK: Groups
 
-p += "\t\t\(grpID) /* MenteViva */ = {\n\t\t\tisa = PBXGroup;\n\t\t\tchildren = (\n\(children)\t\t\t\t\(plistID) /* Info.plist */,\n\t\t\t\t\(entID) /* MenteViva.entitlements */,\n\t\t\t\t\(catID) /* Localizable.xcstrings */,\n"
+p += "\t\t\(grpID) /* MenteViva */ = {\n\t\t\tisa = PBXGroup;\n\t\t\tchildren = (\n\(children)\t\t\t\t\(plistID) /* Info.plist */,\n" + (localOnly ? "" : "\t\t\t\t\(entID) /* MenteViva.entitlements */,\n") + "\t\t\t\t\(catID) /* Localizable.xcstrings */,\n"
 if hasTests { p += "\t\t\t\t\(testsGrpID) /* MenteVivaTests */,\n" }
 if hasUITests { p += "\t\t\t\t\(uiGrpID) /* MenteVivaUITests */,\n" }
 p += "\t\t\t);\n\t\t\tpath = MenteViva;\n\t\t\tsourceTree = \"<group>\";\n\t\t};\n\n"
@@ -171,18 +179,19 @@ let common: [(String, String)] = [
     ("SDKROOT", "iphoneos"),
     ("SWIFT_VERSION", "5.0"),
     ("ENABLE_PREVIEWS", "YES"),
-    ("CODE_SIGN_ENTITLEMENTS", "MenteViva/MenteViva.entitlements"),
     ("CODE_SIGN_STYLE", "Automatic"),
     ("IPHONEOS_DEPLOYMENT_TARGET", "17.0"),
     ("TARGETED_DEVICE_FAMILY", "\"1,2\""),
 ]
 
 let appSettings = common + [
+    ("CODE_SIGN_ENTITLEMENTS", "MenteViva/MenteViva.entitlements"),
     ("CURRENT_PROJECT_VERSION", "1"),
     ("ENABLE_TESTABILITY", "YES"),
     ("GENERATE_INFOPLIST_FILE", "YES"),
     ("INFOPLIST_FILE", "MenteViva/Info.plist"),
     ("INFOPLIST_KEY_CFBundleDisplayName", "\"Mente Viva\""),
+    ("INFOPLIST_KEY_CloudKitEnabled", localOnly ? "NO" : "YES"),
     ("INFOPLIST_KEY_UILaunchScreen_Generation", "YES"),
     ("MARKETING_VERSION", "0.1.0"),
     ("PRODUCT_BUNDLE_IDENTIFIER", "com.igmarin.MenteViva"),
@@ -210,7 +219,8 @@ let uiTestSettings = common + [
 
 for name in ["Debug", "Release"] {
     let opt = name == "Debug" ? "\"-Onone\"" : "\"-O\""
-    p += configBlock(name, target: "app", opt: opt, settings: appSettings)
+    p += configBlock(name, target: "app", opt: opt,
+                     settings: localOnly ? appSettings.filter { $0.0 != "CODE_SIGN_ENTITLEMENTS" } : appSettings)
     if hasTests { p += configBlock(name, target: "tests", opt: opt, settings: testSettings) }
     if hasUITests { p += configBlock(name, target: "uitests", opt: opt, settings: uiTestSettings) }
 }
