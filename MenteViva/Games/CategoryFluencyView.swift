@@ -46,7 +46,7 @@ struct CategoryFluencyView: View {
     @State private var totalCorrect = 0
     @State private var startedAt = Date.now
     @State private var showCelebration = false
-    @State private var finalScore = 0
+    @State private var finalDetail = ""
     @State private var tilePositions: [Int: Int] = [:]
 
     static func score(totalCorrect: Int) -> Int {
@@ -106,7 +106,7 @@ struct CategoryFluencyView: View {
         .navigationTitle(AppLanguage.localized( "game.category.title"))
         .onAppear(perform: setup)
         .fullScreenCover(isPresented: $showCelebration) {
-            CelebrationView(score: finalScore,
+            CelebrationView(detail: finalDetail,
                             onPlayAgain: { showCelebration = false; restart() },
                             onHome: { showCelebration = false; dismiss() })
         }
@@ -167,7 +167,7 @@ struct CategoryFluencyView: View {
         let score = Self.score(totalCorrect: totalCorrect)
         modelContext.insert(GameSession(gameID: .categoryFluency, score: score,
                                         rounds: roundsPerSession, durationSeconds: elapsed))
-        finalScore = score
+        finalDetail = String(format: AppLanguage.localized( "game.celebration.items %lld"), totalCorrect)
         showCelebration = true
     }
 }

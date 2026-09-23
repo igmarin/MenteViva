@@ -18,7 +18,7 @@ struct QuickEyesView: View {
     private let columns = [GridItem(.flexible()), GridItem(.flexible())]
 
     enum Phase {
-        case showing, choosing, done
+        case showing, choosing
     }
 
     @State private var phase: Phase = .showing
@@ -32,6 +32,8 @@ struct QuickEyesView: View {
     @State private var optionsShownAt = Date.now
     @State private var startedAt = Date.now
     @State private var revealTask: Task<Void, Never>?
+    @State private var showCelebration = false
+    @State private var finalDetail = ""
 
     static func score(correct: Int, speedBonus: Int) -> Int {
         correct * 10 + speedBonus
@@ -72,13 +74,6 @@ struct QuickEyesView: View {
                         }
                     }
                 }
-            case .done:
-                VStack(spacing: 16) {
-                    Text(AppLanguage.localized( "game.common.welldone"))
-                        .font(.title)
-                    Text("\(correct) / \(Self.totalRounds)")
-                        .font(.title2)
-                }
             }
 
             Spacer()
@@ -87,6 +82,22 @@ struct QuickEyesView: View {
         .navigationTitle(AppLanguage.localized( "game.quickeyes.title"))
         .onAppear(perform: startRound)
         .onDisappear { revealTask?.cancel() }
+        // Same celebration as every other game (#45): progress, not points.
+        .fullScreenCover(isPresented: $showCelebration) {
+            CelebrationView(detail: finalDetail,
+                            onPlayAgain: { showCelebration = false; restart() },
+                            onHome: { showCelebration = false; dismiss() })
+        }
+    }
+
+    private func restart() {
+        progress.reset()
+        correct = 0
+        speedBonus = 0
+        displayTime = startDisplayTime
+        missedLastRound = false
+        startedAt = .now
+        startRound()
     }
 
     private func startRound() {
@@ -129,11 +140,13 @@ struct QuickEyesView: View {
     private func finish() {
         revealTask?.cancel()
         revealTask = nil
-        phase = .done
         let elapsed = Int(Date.now.timeIntervalSince(startedAt))
         let score = Self.score(correct: correct, speedBonus: speedBonus)
         modelContext.insert(GameSession(gameID: .quickEyes, score: score,
                                         rounds: Self.totalRounds, durationSeconds: elapsed))
+        finalDetail = String(format: AppLanguage.localized( "game.celebration.spotted %lld %lld"),
+                             correct, Self.totalRounds)
+        showCelebration = true
     }
 }
 

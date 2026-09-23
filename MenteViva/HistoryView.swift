@@ -2,7 +2,7 @@ import SwiftUI
 import SwiftData
 
 /// "My Week": a warm, big-type look back at the last 7 days of play.
-/// One row per session: game emoji, localized game name, score.
+/// One row per session: game emoji, localized game name. No scores (#45).
 struct HistoryView: View {
     @Query(sort: \GameSession.playedAt, order: .reverse)
     private var sessions: [GameSession]
@@ -46,7 +46,7 @@ struct HistoryView: View {
     private var shareSummary: String {
         let lines = weekSessions.map { session -> String in
             let info = gameInfo(for: session.gameID)
-            return "\(info.emoji) \(info.name) — \(String(format: AppLanguage.localized( "history.score %lld"), session.score))"
+            return "\(info.emoji) \(info.name)"
         }
         let header = String(format: AppLanguage.localized( "history.summary %lld"), weekSessions.count)
         return ([header] + lines).joined(separator: "\n")
@@ -90,13 +90,10 @@ struct HistoryView: View {
                 .lineLimit(2)
 
             Spacer(minLength: 8)
-
-            Text("history.score \(session.score)")
-                .font(.title2.weight(.bold))
         }
         .frame(minHeight: 100)
         .accessibilityElement(children: .combine)
-        .accessibilityLabel(Text("history.a11y.session \(info.name) \(session.score)"))
+        .accessibilityLabel(Text("history.a11y.played \(info.name)"))
     }
 
     private var emptyState: some View {

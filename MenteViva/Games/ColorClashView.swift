@@ -66,7 +66,7 @@ struct ColorClashView: View {
     @State private var correct = 0
     @State private var startedAt = Date.now
     @State private var showCelebration = false
-    @State private var finalScore = 0
+    @State private var finalDetail = ""
 
     static func score(correct: Int) -> Int {
         correct * 10
@@ -111,7 +111,7 @@ struct ColorClashView: View {
         .navigationTitle(AppLanguage.localized( "game.colorclash.title"))
         .onAppear(perform: deal)
         .fullScreenCover(isPresented: $showCelebration) {
-            CelebrationView(score: finalScore,
+            CelebrationView(detail: finalDetail,
                             onPlayAgain: { showCelebration = false; restart() },
                             onHome: { showCelebration = false; dismiss() })
         }
@@ -146,9 +146,11 @@ struct ColorClashView: View {
     private func finish() {
         let elapsed = Int(Date.now.timeIntervalSince(startedAt))
         let score = Self.score(correct: correct)
+        // Completion, never a hit count: Color Clash is error-inducing by
+        // design (Stroop), so the warm message celebrates finishing (#45).
         modelContext.insert(GameSession(gameID: .stroop, score: score,
                                         rounds: Self.totalRounds, durationSeconds: elapsed))
-        finalScore = score
+        finalDetail = String(format: AppLanguage.localized( "game.celebration.rounds %lld"), Self.totalRounds)
         showCelebration = true
     }
 }

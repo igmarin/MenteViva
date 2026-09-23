@@ -5,6 +5,13 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 ## [Unreleased]
 
 ### Changed
+- **Scoring → progress (#45):** points no longer appear anywhere in the UI.
+  Every game now ends with the shared celebration showing a warm progress line
+  (pairs found, rounds finished, best streak, items spotted — EN + ES). Quick
+  Eyes gains the celebration screen it never had. "My Week" rows and the family
+  share text show the games played, without point totals. Scores are still
+  stored on `GameSession` as anonymous telemetry for Jev; they are just never
+  displayed.
 - Review pass: game IDs now share one typed source of truth across Jev, Home,
   history, and saved sessions; delayed game tasks cancel when their round ends;
   interactive settings and language controls now use the app's 100pt target

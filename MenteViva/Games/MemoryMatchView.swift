@@ -16,7 +16,7 @@ struct MemoryMatchView: View {
     @State private var moves = 0
     @State private var startedAt = Date.now
     @State private var showCelebration = false
-    @State private var finalScore = 0
+    @State private var finalDetail = ""
     @State private var cardPositions: [Int: Int] = [:]
     @State private var flipBackTask: Task<Void, Never>?
 
@@ -63,7 +63,7 @@ struct MemoryMatchView: View {
         .onAppear(perform: deal)
         .onDisappear { flipBackTask?.cancel() }
         .fullScreenCover(isPresented: $showCelebration) {
-            CelebrationView(score: finalScore,
+            CelebrationView(detail: finalDetail,
                             onPlayAgain: { showCelebration = false; deal() },
                             onHome: { showCelebration = false; dismiss() })
         }
@@ -110,9 +110,11 @@ struct MemoryMatchView: View {
     private func finish() {
         let elapsed = Int(Date.now.timeIntervalSince(startedAt))
         let score = Self.score(pairCount: emojis.count, moves: moves)
+        // Score stays in the model as anonymous telemetry for Jev (#45); the
+        // player sees progress, not points.
         modelContext.insert(GameSession(gameID: .memoryMatch, score: score,
                                         rounds: moves, durationSeconds: elapsed))
-        finalScore = score
+        finalDetail = String(format: AppLanguage.localized( "game.celebration.pairs %lld"), emojis.count)
         showCelebration = true
     }
 }
