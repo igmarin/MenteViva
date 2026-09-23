@@ -110,3 +110,26 @@ mom and the owner.
 
 Still gated: any *rebuild* or *new game* waits on dad's playtest (#6, gate #18).
 This is a candidate list, not a work order.
+
+## 009 — Segment prioritization — 2026-09-22
+
+Owner opened the design to 3 segments (60+, mental-health, wellness) — question
+from question-audit re-litigated with cited market state from
+`docs/research-2026-09-22.md`. Raw pair: `jev-json/009-segment-priority.*`.
+Real question asked: where does *design and copy focus* go (one binary, no code
+forks) — not "which market is biggest."
+
+| Judgment | Result | Verdict |
+|---|---|---|
+| Primary design/copy focus | **older_adults_60plus** — P=1.00, confidence 1.00 (mental-health 0.0, wellness 0.0) | **Agree** — maximal signal, matches dad-first product truth |
+| Sell to the caregiver buyer | **Noul 0.77** | **Agree** — marketing/payflow addresses the adult child; player never sees a pitch |
+| Copy ceiling unchanged under expansion | **Noul 0.86** | **Agree** — wider audience *raises* the value of the wellness line |
+
+Read: the 3-segment expansion resolves to "S1 focus, S2/S3 served as spillover
+of the same product" — exactly what the research said (S2 = regulatory gravity
++ no design freedom; S3 = no edge). Expansion changes the *store listing and
+welcome copy* (who it's for), not the app. Action feeding Track C/D: App Store
+copy and onboarding speak to the adult child ("for someone you love"); in-app
+copy speaks to the player, warm and claim-free. No decision changes; this
+locks the audience question for good — question-audit closeout in Track B
+records it in decisions.md.
