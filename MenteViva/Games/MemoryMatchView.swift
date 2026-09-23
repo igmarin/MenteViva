@@ -3,12 +3,24 @@ import SwiftData
 
 /// Memory Lane: classic pair-matching with big emoji cards.
 /// Difficulty = grid size. Fully offline, fully deterministic.
+/// #43: themed boards rotate each game so visits stop feeling identical;
+/// warmer palette and a checkmark (not just a tint) mark found pairs.
 struct MemoryMatchView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
-    private let emojis = ["🌻", "🐢", "🍎", "🎸", "🌙", "☕️", "🦋", "🍊"]
-    private let columns = [GridItem(.adaptive(minimum: 100), spacing: 16)]
+    /// Four themed sets of 8 pairs. One is drawn per game; emoji carry their
+    /// own VoiceOver names, so themes need no extra strings.
+    private static let themes: [[String]] = [
+        ["🌻", "🐢", "🍎", "🎸", "🌙", "☕️", "🦋", "🍊"],   // garden afternoon
+        ["🐶", "🐱", "🦁", "🐸", "🐘", "🐝", "🦆", "🐢"],   // animal friends
+        ["🍎", "🍌", "🍇", "🍊", "🍓", "🍉", "🍑", "🥝"],   // fruit bowl
+        ["🚗", "🚌", "✈️", "🚀", "🚲", "🚂", "⛵️", "🛵"],   // ways to go
+    ]
+
+    @State private var emojis: [String] = Self.themes[0]
+    private let columns = [GridItem(.adaptive(minimum: 110), spacing: 16)]
 
     @State private var cards: [Card] = []
     @State private var flipped: [Int] = []
@@ -40,11 +52,25 @@ struct MemoryMatchView: View {
             LazyVGrid(columns: columns, spacing: 16) {
                 ForEach(cards) { card in
                     Button { flip(card.id) } label: {
-                        Text(card.isFaceUp || card.isMatched ? card.emoji : "❓")
-                            .font(.system(size: 56))
-                            .frame(maxWidth: .infinity, minHeight: 110)
-                            .background(card.isMatched ? .green.opacity(0.2) : .blue.opacity(0.15),
+                        Text(card.isFaceUp || card.isMatched ? card.emoji : "🌼")
+                            .font(.system(size: 64))
+                            .frame(maxWidth: .infinity, minHeight: 120)
+                            .background(card.isMatched ? .green.opacity(0.2) : .orange.opacity(0.14),
                                         in: .rect(cornerRadius: 16))
+                            // Non-color cue: matched pairs keep a checkmark,
+                            // not just a green tint (WCAG 1.4.1).
+                            .overlay(alignment: .topTrailing) {
+                                if card.isMatched {
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .font(.title2)
+                                        .foregroundStyle(.white, .green)
+                                        .padding(6)
+                                        .accessibilityHidden(true)
+                                }
+                            }
+                            // Gentle bloom on the moment a pair is found.
+                            .scaleEffect(card.isMatched && !reduceMotion ? 1.04 : 1)
+                            .animation(.spring(duration: 0.35), value: card.isMatched)
                     }
                     .buttonStyle(.plain)
                     .disabled(card.isFaceUp || card.isMatched)
@@ -71,6 +97,7 @@ struct MemoryMatchView: View {
 
     private func deal() {
         flipBackTask?.cancel()
+        emojis = Self.themes.randomElement() ?? Self.themes[0]
         cards = (emojis + emojis).shuffled().enumerated().map { Card(id: $0, emoji: $1) }
         cardPositions = Dictionary(uniqueKeysWithValues: cards.indices.map { (cards[$0].id, $0 + 1) })
         flipped = []

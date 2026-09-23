@@ -5,6 +5,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 ## [Unreleased]
 
 ### Changed
+- **Memory Lane warmth pass (#43):** boards now draw from four themed emoji
+  sets (garden, animals, fruit, vehicles) so repeat visits feel fresh; cards
+  are larger with a softer warm palette, found pairs bloom gently and keep a
+  visible checkmark instead of relying on color alone.
 - **Scoring → progress (#45):** points no longer appear anywhere in the UI.
   Every game now ends with the shared celebration showing a warm progress line
   (pairs found, rounds finished, best streak, items spotted — EN + ES). Quick
