@@ -1,0 +1,41 @@
+{
+  "model": "jev-latest",
+  "state": {
+    "product": "MenteViva, iOS cognitive-exercise app: 5 warm-toned games (memory pairs, Stroop, category fluency, adaptive math, visual discrimination), offline-first, EN/ES bilingual, no accounts, no clinical scores. Zero third-party deps, solo developer. Copy ceiling: 'fun mental exercise' — no medical claims ever (FDA general-wellness line; FTC fined Lumosity $2M; App Store 1.4.1).",
+    "product_truth": "Primary player is the owner's dad, early-stage dementia. Jev request 008 ruled allocate-not-delete: familiarity-based games serve dad, other games serve mom/owner. Per-person libraries are the north star. Informal playtest: scoring confusing, games get boring, not visually attractive.",
+    "market_evidence": {
+      "S1_older_adults_60plus": "1.1B people 60+ worldwide (2023) doubling to 2.1B by 2050 (WHO). 52.7M Americans 50+ play video games = 45% of that population (AARP 2023). Incumbents (Lumosity 100M registered, Elevate 50M downloads) are generic, subscription-priced, not dementia-adapted. Our edge: errorless low-failure design, one-time price, EN+ES.",
+      "CH_caregiver_channel": "63M US family caregivers (AARP/NAC 2025). Adult child installs and pays; parent plays. Attach rate unknown.",
+      "S2_mental_health": "~15% of adults 70+ live with a mental disorder (WHO 2026). Mental-health apps market vendor-estimated $17.5B by 2030. Serving them as patients = medical device = FDA; serving them as adjacent wellness users adds no design freedom beyond S1 overlap.",
+      "S3_general_wellness": "Mature crowded category (Calm/Headspace/Lumosity). No differentiation beyond one-time price and bilingual. No primary demand stat found."
+    },
+    "constraints": "Design/copy focus decision only — no code forks, one binary. Warm-failure tone. Zero deps. Engagement of the primary segment is still unproven (G1b gate)."
+  },
+  "questions": {
+    "primary_segment": {
+      "type": "choice",
+      "instructions": "Which segment should MenteViva's DESIGN and COPY primarily optimize for, given one binary and no code forks?",
+      "criteria": {
+        "older_adults_60plus": "Older adults 60+ including early cognitive decline; largest growing demographic, proven 50+ gaming demand, our differentiated edge (errorless design, one-time price, bilingual)",
+        "mental_health_adjacent": "Adults managing mental health; large but overlapping with older adults, adds regulatory gravity, zero incremental design freedom",
+        "general_wellness": "General wellness adults; mature category where we have no edge beyond price and language"
+      }
+    },
+    "sell_to_caregiver": {
+      "type": "noul",
+      "instructions": "Should marketing and purchase flow primarily address the adult-child caregiver (the buyer) rather than the player themselves?",
+      "criteria": {
+        "true": "The 63M-caregiver channel is the realistic purchase path for the primary segment and the buyer already co-uses the app",
+        "false": "Players mostly discover and buy the app themselves; caregiver-first marketing would miss them"
+      }
+    },
+    "copy_ceiling_holds": {
+      "type": "noul",
+      "instructions": "Given expansion to mental-health and wellness segments, should the non-clinical copy ceiling ('fun mental exercise', no claims) remain unchanged?",
+      "criteria": {
+        "true": "Wider audiences raise, not lower, the value of staying clearly on the general-wellness side of FDA/FTC/App Store lines",
+        "false": "Serving mental-health users well requires softening the no-claims ceiling"
+      }
+    }
+  }
+}

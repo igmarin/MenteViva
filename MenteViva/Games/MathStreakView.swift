@@ -18,7 +18,7 @@ struct MathStreakView: View {
     @State private var correct = 0
     @State private var startedAt = Date.now
     @State private var showCelebration = false
-    @State private var finalScore = 0
+    @State private var finalDetail = ""
 
     static func score(correct: Int, bestStreak: Int) -> Int {
         correct * 10 + bestStreak * 2
@@ -57,7 +57,7 @@ struct MathStreakView: View {
         .navigationTitle(AppLanguage.localized( "game.math.title"))
         .onAppear(perform: deal)
         .fullScreenCover(isPresented: $showCelebration) {
-            CelebrationView(score: finalScore,
+            CelebrationView(detail: finalDetail,
                             onPlayAgain: { showCelebration = false; restart() },
                             onHome: { showCelebration = false; dismiss() })
         }
@@ -108,7 +108,10 @@ struct MathStreakView: View {
         let score = Self.score(correct: correct, bestStreak: bestStreak)
         modelContext.insert(GameSession(gameID: .mathStreaks, score: score,
                                         rounds: totalQuestions, durationSeconds: elapsed))
-        finalScore = score
+        // A streak of 2+ is worth naming; below that, celebrate finishing (#45).
+        finalDetail = bestStreak >= 2
+            ? String(format: AppLanguage.localized( "game.celebration.streak %lld"), bestStreak)
+            : String(format: AppLanguage.localized( "game.celebration.questions %lld"), totalQuestions)
         showCelebration = true
     }
 }

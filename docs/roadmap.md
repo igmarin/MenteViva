@@ -26,7 +26,9 @@ Exit criteria: dad picks it up unprompted, twice in one week (docs/mvp.md G1).
 ## Next — polish pass 2
 
 - Session history richness (streaks, "you improved"), portrait/landscape check.
-- Quick Eyes feel check with dad (is the 1.2s → 0.35s shrink curve right?).
+- Scoring → progress redesign (Jev 010 noul 0.79: points confused, progress motivates).
+- Memory Lane engagement + visual warmth (Jev 010: dad's anchor, engagement 0.50).
+- Quick Eyes: untimed errorless redesign replaces the shrink-curve feel check (Jev 010).
 - ES copy pass with a native speaker for warmth, not just correctness (#12).
 - Device a11y checklist from the audit (issue #5 comments) on real hardware.
 
@@ -62,6 +64,7 @@ postponed until the trigger in decisions.md 2026-09-20):**
 
 ## Parking lot (deliberately not planned)
 
-- New user segments (Jev segment-expansion study → v0.4.0 research).
+- ~~New user segments~~ — resolved 2026-09-22 (Jev 009): 60+ leads, mental-health
+  and wellness users are spillover of the same product; no forks, copy ceiling holds.
 - Android, watchOS, clinician dashboard, more games (blocked by #18 gate).
 

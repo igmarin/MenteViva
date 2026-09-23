@@ -1,10 +1,11 @@
 import SwiftUI
 
-/// Shared end-of-game celebration: gentle confetti, warm headline, big score,
-/// and two big actions — play again or go home. Pure SwiftUI, no deps.
-/// Presented as a fullScreenCover by every game on finish.
+/// Shared end-of-game celebration: gentle confetti, warm headline, a kind
+/// progress line (never points), and two big actions — play again or go home.
+/// Pure SwiftUI, no deps. Presented as a fullScreenCover by every game on finish.
+/// #45: numeric scores confused players; progress and completion motivate.
 struct CelebrationView: View {
-    let score: Int
+    let detail: String
     let onPlayAgain: () -> Void
     let onHome: () -> Void
 
@@ -22,14 +23,10 @@ struct CelebrationView: View {
                     .multilineTextAlignment(.center)
                     .accessibilityAddTraits(.isHeader)
 
-                // Fixed size, not a Dynamic Type style — the score is display
-                // type, not body text. At AX5 it clips instead of growing.
-                Text(verbatim: "\(score)")
-                    .font(.system(size: 88, weight: .bold, design: .rounded))
-                    .minimumScaleFactor(0.4)
-                    .lineLimit(1)
-                    .accessibilityLabel(AppLanguage.localized( "game.celebration.score.a11y"))
-                    .accessibilityValue("\(score)")
+                Text(detail)
+                    .font(.title)
+                    .fontWeight(.semibold)
+                    .multilineTextAlignment(.center)
 
                 Spacer()
 
@@ -131,5 +128,5 @@ private struct ConfettiView: View {
 }
 
 #Preview {
-    CelebrationView(score: 120, onPlayAgain: {}, onHome: {})
+    CelebrationView(detail: "You found all 8 pairs!", onPlayAgain: {}, onHome: {})
 }

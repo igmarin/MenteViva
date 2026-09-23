@@ -1,0 +1,1 @@
+{"model":"jev-1.13.0","answers":{"primary_segment":{"type":"choice","choice":"older_adults_60plus","confidence":1.0,"probabilities":{"mental_health_adjacent":0.0,"general_wellness":0.0,"older_adults_60plus":1.0}},"sell_to_caregiver":{"type":"noul","noul":0.77},"copy_ceiling_holds":{"type":"noul","noul":0.86}},"usage":{"input_tokens":1124,"output_tokens":98}}

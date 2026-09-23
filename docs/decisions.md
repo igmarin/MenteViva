@@ -213,6 +213,29 @@ created: every decision must state the question, confirm it's the real one, and
 say how it's answered — because a well-answered wrong question is the most
 expensive bug we have.
 
+## 2026-09-22 — Audience locked: one segment leads, two are spillover
+
+Owner opened the design to three segments (older adults 60+, mental-health,
+general wellness). Researched with citations (`docs/research-2026-09-22.md`)
+and judged by Jev 009 (`jev-json/009-*`, analysis in `jev-revisit.md`):
+
+- **Design and copy optimize for older adults 60+ (incl. early cognitive
+  decline)** — Jev Choice P=1.00, confidence 1.00. This is the dad-first
+  product truth confirmed with market numbers, not a change.
+- **Mental-health and wellness users are spillover, not targets.** They get
+  the same warm, non-clinical product; we never design or market *to* the
+  clinical need. Copy ceiling ("fun mental exercise", no claims) is confirmed
+  unchanged (Noul 0.86) — expansion raises the ceiling's value.
+- **The buyer is the adult child.** Marketing and purchase flow address the
+  caregiver (63M in the US, AARP/NAC 2025); the player never sees a pitch
+  (Noul 0.77). Store listing speaks to the family; in-app copy speaks to the
+  player.
+- **iOS 17 floor confirmed cheap** (research §7: iOS ≤16 = low single digits
+  and shrinking; excluded hardware is 2017-era). Decision stands; #41 closed.
+
+This closes the audience branch of the question audit. Re-litigation requires
+new evidence, not a new mood.
+
 ## Open questions (not yet decided)
 
 - Business model: research leans **one-time $12.99 + Family Sharing**
