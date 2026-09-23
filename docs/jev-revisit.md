@@ -133,3 +133,51 @@ copy and onboarding speak to the adult child ("for someone you love"); in-app
 copy speaks to the player, warm and claim-free. No decision changes; this
 locks the audience question for good — question-audit closeout in Track B
 records it in decisions.md.
+
+## 010 — Game Utility Matrix — 2026-09-22
+
+Six games (5 shipped + reminiscence candidate) × 4 dimensions, scored 0–2 for
+the whole household (dad + mom/owner). Raw pair: `jev-json/010-game-utility-matrix.*`.
+Cell = score/confidence. polish = closeness to the v0.2.0 visual/a11y bar
+(higher = less work).
+
+| Game | evidence | errorless (dad) | engagement | polish |
+|---|---|---|---|---|
+| **Reminiscence (candidate)** | 1.58/.37 | **1.82/.73** | **1.17/.30** | **1.56/.34** |
+| Memory Lane (pairs) | 1.66/.49 | 1.24/.60 | 0.50/.26 | 0.75/.38 |
+| Name the Herd (category) | 0.46/.31 | 0.95/.86 | 0.52/.25 | 0.73/.53 |
+| Quick Eyes (speed) | **1.91/.87** | 0.19/.71 | 0.12/.82 | 0.22/.67 |
+| Color Clash (Stroop) | 0.85/.39 | **0.02/.97** | 0.12/.82 | **0.08/.88** |
+| Number Trail (math) | **0.02/.96** | 0.51/.23 | **0.06/.91** | 0.26/.61 |
+
+Nouls: reminiscence ships licensing-free on family photos **0.74**; drop
+numeric scoring for progress/streaks **0.79**.
+
+Reads:
+
+1. **Reminiscence is the only game that wins on all four axes** — best
+   errorless fit (1.82), best engagement (1.17), cheapest to reach the bar
+   from zero (1.56), and licensing-free (0.74). It is the v0.2.0 build
+   candidate, still gated on dad's playtest per 008.
+2. **Memory Lane is dad's anchor but needs engagement work** (0.50, conf .26):
+   strongest non-candidate evidence+errorless, yet boring and under-polished.
+   Track C target #1: variety of content + visual warmth, not mechanics.
+3. **Color Clash is the matrix's clear loser** — errorless 0.02 at .97
+   confidence, polish 0.08 at .88 (color-only-information risk built into its
+   core mechanic). Candidate for deepest rework or quiet retirement from dad's
+   library; keep only if mom/owner engagement justifies it (Jev says no:
+   0.12).
+4. **Number Trail's evidence case collapses** (0.02, conf .96) and engagement
+   is worst (0.06, conf .91) — the 002 "numeracy weakest domain" signal
+   confirmed from a second angle. Lowest-priority game for any investment.
+5. **Quick Eyes = evidence champion, product liability** (evidence 1.91/.87,
+   everything else <0.25). Its speed domain is worth a *re-design* (untimed,
+   errorless variant) rather than polish of the current mechanic.
+6. **Drop numeric scoring** (0.79): replace points with progress/streaks/
+   celebration across all games — direct Track C work order answering the
+   playtest's "scoring confusing and meaningless."
+
+Track C priority order from this matrix: (1) scoring→progress redesign,
+(2) Memory Lane engagement+visuals, (3) reminiscence game build (post-playtest),
+(4) Quick Eyes untimed redesign, (5) Color Clash/Number Trail decision
+(rework vs retire from dad's library).
