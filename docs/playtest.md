@@ -1,7 +1,9 @@
 # Playtest protocol
 
 For #6 (family playtest) and #33 (non-family seniors). Same method for both —
-the only difference is who is holding the iPad.
+the only difference is who is holding the iPad. For the #6 session itself,
+print [playtest-session-1.md](playtest-session-1.md): it maps each observation
+to the issue it unblocks (#44, #46, #47).
 
 ## The one rule
 
