@@ -5,6 +5,21 @@ Jev judgments against a compact evidence/constraints state. Raw request/response
 pairs: `jev-json/001`–`005`. Smoke test: `jev-json/000`. Model served: jev-1.13.0.
 Jev output is evidence, not truth — policy stays with us.
 
+## Judgment lineage
+
+Each judgment inherits the corrected state of the ones before it — 001's
+confident wrong answer is the root lesson of this file.
+
+```mermaid
+flowchart LR
+    A["001 Audience: healthy 60+, P=0.95 — confident, wrong premise"] -->|"state corrected: early dementia"| B["007 Audience: early dementia 0.95 · errorless design 0.93 · familiar content 0.88"]
+    B --> C["008 Games for dad: allocate not delete · reminiscence next 0.92"]
+    B --> D["009 Segments: 60+ focus P=1.00 · caregiver channel 0.77 · copy ceiling holds 0.86"]
+    C --> E["010 Utility Matrix: reminiscence wins all 4 axes · drop numeric scoring 0.79"]
+    D --> E
+    E --> F["Track C: progress-not-points · Memory Lane engagement · reminiscence build after playtest"]
+```
+
 ## 001 — Audience (`jev-json/001-audience.*`)
 
 | | |

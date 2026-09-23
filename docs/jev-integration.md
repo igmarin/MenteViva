@@ -6,6 +6,27 @@ Jev answers two narrow questions per day; code stays in control of everything el
 Source of truth: https://docs.typesafe.ai/llms.txt (fetched 2025; append `.md` to doc paths).
 Verified against live API 2026-09-19 (model served: `jev-1.13.0`; raw pairs in `jev-json/000`–`005`).
 
+## The daily judgment at a glance
+
+One lazy request per local day; every failure path lands silently on the
+deterministic fallback. The UI never waits on the network.
+
+```mermaid
+flowchart TD
+    A["Game list appears, first time today"] --> B{"Cached plan for today?"}
+    B -->|yes| R["Render plan instantly"]
+    B -->|no| S["Build state: aggregated stats only, composed in English"]
+    S --> E["POST to JEV_PROXY_URL"]
+    E --> P["Cloudflare Worker: adds Bearer key server-side, forwards verbatim"]
+    P --> J["api.typesafe.ai/v1/systemone"]
+    J --> V{"2xx and answers parse?"}
+    V -->|yes| C["Cache by local day — rank in code — difficulty only if confidence ≥ 0.6"]
+    V -->|no| F["Fallback: day-of-year rotation, keep yesterday's difficulty"]
+    U["No proxy URL configured"] --> F
+    C --> R
+    F --> R
+```
+
 ## API contract used
 
 - `POST https://api.typesafe.ai/v1/systemone`
