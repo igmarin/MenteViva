@@ -7,7 +7,8 @@ screen of real content, split it — long docs don't get read.
 |---|---|---|
 | [product-brief.md](product-brief.md) | What are we building, for whom, and why | Current |
 | [conventions.md](conventions.md) | Rules every commit must follow | Current |
-| [jev-integration.md](jev-integration.md) | How Jev/TypeSafe fits (seasoning, not the meal) | Wired, proxy deployed, verified live (2026-09-30) |
+| [jev-integration.md](jev-integration.md) | The on-device daily policy, and how optional Jev/TypeSafe fits | Policy is the default; Jev optional, verified live (2026-09-30) |
+| [decision-model-spike-2026-09-30.md](decision-model-spike-2026-09-30.md) | Nimble and Laya tested as Jev replacements, with numbers | Snapshot |
 | [jev-revisit.md](jev-revisit.md) | Jev judgments 001–010: early decisions, corrected audience, games, segments, utility matrix | Living, to 2026-09-22 |
 | [jev-json/](jev-json/) | Raw Jev request/response archive (audit trail); 011 is the app's real daily request | Growing |
 | [mvp.md](mvp.md) | MVP definition of done + phase gates | Living |
