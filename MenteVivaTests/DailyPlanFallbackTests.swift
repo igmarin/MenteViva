@@ -42,17 +42,13 @@ final class DailyPlanFallbackTests: XCTestCase {
         XCTAssertEqual(plan.dayStamp, "2026-12-31")
     }
 
-    func testGivenDayRotationWhenFallbackThenMixIsARotationOfAllGames() throws {
-        // Rotation semantics: the 3-game mix must be a contiguous slice of a
-        // rotated allCases — it shifts day to day, never shuffles arbitrarily.
-        let date = try XCTUnwrap(Calendar.current.date(from: DateComponents(year: 2026, month: 3, day: 7)))
-        let stamp = JevService.dayStamp(date)
-        let plan = DailyPlan.fallback(current: current, dayStamp: stamp)
-        let offset = (Calendar.current.ordinality(of: .day, in: .year, for: date) ?? 1) - 1
-        let all = GameID.allCases
-        for (index, game) in plan.games.enumerated() {
-            XCTAssertEqual(game, all[(index + offset) % all.count])
-        }
+    func testGivenKnownDaysWhenFallbackThenMixMatchesConcreteRotation() {
+        // Jan 3 = day 3 of the year -> offset 2; Jan 5 -> offset 4 (wraps past the end).
+        // Expected values are written out, not derived from the production formula.
+        let jan3 = DailyPlan.fallback(current: current, dayStamp: "2026-01-03")
+        XCTAssertEqual(jan3.games, [.categoryFluency, .mathStreaks, .quickEyes])
+        let jan5 = DailyPlan.fallback(current: current, dayStamp: "2026-01-05")
+        XCTAssertEqual(jan5.games, [.quickEyes, .memoryMatch, .stroop])
     }
 
     func testGivenDifferentDayStampsWhenFallbackThenRotationsFollowThoseStamps() {

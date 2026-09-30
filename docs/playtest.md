@@ -71,8 +71,14 @@ Until the paid Developer Program is bought, every build installed on a device
 - **Local-only builds are the default**: no CloudKit entitlement,
   so a free Apple ID can provision them. Store data stays on that iPad.
 
+## Results
+
+No session has been recorded in the repo yet (#6 and #33 are open). After each
+session, paste the Record block above into the issue and add a dated section
+here with the top 3 friction.
+
 ## What counts as success
 
-- **#6 (dad):** he plays twice in one week without being asked (docs/mvp.md G1).
+- **#6 (dad):** he plays twice in one week without being asked (docs/mvp.md G1b).
 - **#33 (strangers):** they start a game without help and understand what the
   app is for afterwards.

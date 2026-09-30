@@ -23,43 +23,51 @@ No treatment, no prevention, no diagnosis, no "improves memory" outcome claims.
 
 `brain games,memory game,seniors,senior,mind,spanish,cognitive,puzzle,attention,reaction,bilingual`
 
+## Audience of the listing
+
+The **adult child** reads this page (Jev 009: buyer = caregiver; the player
+never sees a pitch). Speak to them about someone they love. In-app copy speaks
+to the player. Every line must pass statistics-rationale §4 (no outcome, no
+prevention, no "sharpen"). Screenshots avoid Color Clash (lowest Jev scores,
+008/010).
+
 ## Description — English
 
-Short, warm games to keep your mind active — at your own pace, with no pressure.
+Simple, warm games for someone you love — at their own pace, with no pressure.
 
-Mente Viva has five gentle games, each for a different kind of thinking: memory, attention, words, numbers and quick reactions. Big buttons, calm colors, and no timers rushing you. When an answer isn't right, we say "try again" — never "wrong".
+Mente Viva has five gentle games, each a different kind of thinking: memory, attention, words, numbers and quick looks. Big buttons, calm colors, and no countdown clock. When an answer isn't right, it says "try again" — never "wrong". Set it up once, pick the language, and they can play on their own.
 
-• Five games, five ways to stay sharp
+• Five games, five kinds of play
 • English and Spanish — switch anytime
 • Works fully offline — no account, no ads, no tracking
 • Big text and buttons, easy on the eyes
-• Your progress stays on your device
+• Progress stays on the device
 
-Mente Viva is entertainment and mental exercise. It is not a medical device and does not diagnose, treat or prevent any condition. If you have concerns about memory, talk to your doctor.
+Mente Viva is entertainment and mental exercise. It is not a medical device and does not diagnose, treat or prevent any condition. If you have concerns about a loved one's memory, talk to their doctor.
 
 ## Description — Spanish
 
-Juegos cortos y amables para mantener la mente activa — a tu ritmo y sin presión.
+Juegos sencillos y amables para alguien a quien quieres — a su ritmo y sin presión.
 
-Mente Viva tiene cinco juegos suaves, cada uno para un tipo distinto de pensamiento: memoria, atención, palabras, números y reflejos. Botones grandes, colores tranquilos y sin cronómetros que te apuren. Si una respuesta no es correcta, decimos «inténtalo otra vez», nunca «mal».
+Mente Viva tiene cinco juegos suaves, cada uno para un tipo distinto de pensamiento: memoria, atención, palabras, números y miradas rápidas. Botones grandes, colores tranquilos y sin cuenta regresiva. Si una respuesta no es correcta, dice «inténtalo otra vez», nunca «mal». Lo configuras una vez, eliges el idioma y puede jugar solo.
 
-• Cinco juegos, cinco formas de mantenerte activo
+• Cinco juegos, cinco formas de jugar
 • Español e inglés — cambia cuando quieras
 • Funciona sin conexión — sin cuenta, sin anuncios, sin rastreo
 • Texto y botones grandes, fáciles de leer
-• Tu progreso se queda en tu dispositivo
+• El progreso se queda en el dispositivo
 
-Mente Viva es entretenimiento y ejercicio mental. No es un dispositivo médico y no diagnostica, trata ni previene ninguna enfermedad. Si te preocupa tu memoria, consulta a tu médico.
+Mente Viva es entretenimiento y ejercicio mental. No es un dispositivo médico y no diagnostica, trata ni previene ninguna enfermedad. Si te preocupa la memoria de un ser querido, consulta a su médico.
 
 ## Screenshots (5 per locale, captured from a simulator)
 
 | Screen | EN overlay | ES overlay |
 |---|---|---|
-| Home (grid of tiles) | Five games, five ways to stay sharp | Cinco juegos, cinco formas de mantenerte activo |
-| Memory Lane, mid-round | Train your memory, gently | Entrena tu memoria, con calma |
-| Color Clash, mid-round | At your own pace — no timers | A tu ritmo, sin cronómetros |
+| Home (grid of tiles) | Five games, five kinds of play | Cinco juegos, cinco formas de jugar |
+| Memory Lane, mid-round | Find the pairs, gently | Encuentra las parejas, con calma |
+| Name the Herd, mid-round | Name them all, at your pace | Nómbralos todos, a tu ritmo |
 | Celebration screen | Small wins, celebrated warmly | Pequeños logros, celebrados con cariño |
-| My Week | See your week at a glance | Tu semana de un vistazo |
+| My Week | See the week at a glance | La semana de un vistazo |
 
 Capture at the sizes App Store Connect currently requires (historically 6.7"
 iPhone and 12.9" iPad). Localize the overlay text, not just the screenshot.
