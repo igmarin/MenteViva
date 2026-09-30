@@ -10,6 +10,7 @@
 		B59E327BE0BD12A700000020 /* ColorClashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7571F11C435CE80D0000001A; };
 		A120B5E94542D41F00000020 /* MathStreakView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B13B6166437470950000001A; };
 		18180C4157C1561D00000021 /* MemoryMatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 250E769752DD6A430000001B; };
+		3B89FA1FCE6129CF00000019 /* MissCue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86AF3B4C1D5F21E500000013; };
 		06316652C0C975F40000001F /* QuickEyesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D757F5352AE1A200000019; };
 		EE94290C1D7CE37100000017 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F548AF03C8043700000011; };
 		2A7F83F1E2F186E800000014 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C04053E45A48AC460000000E; };
@@ -31,6 +32,7 @@
 		7571F11C435CE80D0000001A /* ColorClashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/ColorClashView.swift; sourceTree = "<group>"; };
 		B13B6166437470950000001A /* MathStreakView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/MathStreakView.swift; sourceTree = "<group>"; };
 		250E769752DD6A430000001B /* MemoryMatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/MemoryMatchView.swift; sourceTree = "<group>"; };
+		86AF3B4C1D5F21E500000013 /* MissCue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/MissCue.swift; sourceTree = "<group>"; };
 		B4D757F5352AE1A200000019 /* QuickEyesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/QuickEyesView.swift; sourceTree = "<group>"; };
 		E1F548AF03C8043700000011 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
 		C04053E45A48AC460000000E /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
@@ -79,6 +81,7 @@
 				7571F11C435CE80D0000001A /* ColorClashView.swift */,
 				B13B6166437470950000001A /* MathStreakView.swift */,
 				250E769752DD6A430000001B /* MemoryMatchView.swift */,
+				86AF3B4C1D5F21E500000013 /* MissCue.swift */,
 				B4D757F5352AE1A200000019 /* QuickEyesView.swift */,
 				E1F548AF03C8043700000011 /* HistoryView.swift */,
 				C04053E45A48AC460000000E /* HomeView.swift */,
@@ -177,6 +180,7 @@
 				B59E327BE0BD12A700000020 /* ColorClashView.swift in Sources */,
 				A120B5E94542D41F00000020 /* MathStreakView.swift in Sources */,
 				18180C4157C1561D00000021 /* MemoryMatchView.swift in Sources */,
+				3B89FA1FCE6129CF00000019 /* MissCue.swift in Sources */,
 				06316652C0C975F40000001F /* QuickEyesView.swift in Sources */,
 				EE94290C1D7CE37100000017 /* HistoryView.swift in Sources */,
 				2A7F83F1E2F186E800000014 /* HomeView.swift in Sources */,

@@ -1216,6 +1216,54 @@
           }
         }
       }
+    },
+    "game.quickeyes.a11y.flash %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Picture shown: %@"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Imagen mostrada: %@"
+          }
+        }
+      }
+    },
+    "game.colorclash.a11y.stimulus %@ %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ink colour: %1$@, shape: %2$@"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Color de la tinta: %1$@, forma: %2$@"
+          }
+        }
+      }
+    },
+    "game.colorclash.a11y.stimulus.hint": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The written word is a decoy. Tap the button with the ink colour."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La palabra escrita es un señuelo. Toca el botón con el color de la tinta."
+          }
+        }
+      }
     }
   },
   "version": "1.0"

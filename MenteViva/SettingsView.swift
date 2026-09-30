@@ -83,9 +83,9 @@ struct SettingsView: View {
                             .frame(maxWidth: .infinity, minHeight: 100)
                             .contentShape(Rectangle())
                             .accessibilityAddTraits(language.rawValue == appLanguage ? [.isSelected] : [])
+                            .accessibilityHint(AppLanguage.localized("settings.language.restart"))
                         }
                     }
-                    .accessibilityHint(AppLanguage.localized("settings.language.restart"))
                 } header: {
                     Text(AppLanguage.localized("settings.language"))
                         .font(.title3)
@@ -127,6 +127,8 @@ struct SettingsView: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button(AppLanguage.localized("settings.done")) { dismiss() }
                         .font(.title3)
+                        .frame(minWidth: 100, minHeight: 100)
+                        .contentShape(Rectangle())
                 }
             }
         }

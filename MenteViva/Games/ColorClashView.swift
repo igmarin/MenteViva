@@ -67,6 +67,11 @@ struct ColorClashView: View {
     @State private var startedAt = Date.now
     @State private var showCelebration = false
     @State private var finalDetail = ""
+    @State private var missed = false
+
+    private var stimulusLabel: String {
+        String(format: AppLanguage.localized("game.colorclash.a11y.stimulus %@ %@"), ink.label, ink.shapeName)
+    }
 
     static func score(correct: Int) -> Int {
         correct * 10
@@ -78,10 +83,20 @@ struct ColorClashView: View {
                 .font(.title2)
                 .multilineTextAlignment(.center)
 
-            Text(word.word)
-                .font(.system(size: 64, weight: .bold))
-                .foregroundStyle(ink.color)
-                .accessibilityHidden(true) // word is a decoy; don't read it
+            // Word is a decoy. VoiceOver hears the INK colour and its shape;
+            // the shape is also drawn so colour-blind players can match it (#64).
+            HStack(spacing: 16) {
+                Text(word.word)
+                    .font(.system(size: 64, weight: .bold))
+                    .foregroundStyle(ink.color)
+                Image(systemName: ink.shape)
+                    .font(.system(size: 40, weight: .bold))
+                    .foregroundStyle(ink.color)
+            }
+            .modifier(MissCue(active: $missed))
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(stimulusLabel)
+            .accessibilityHint(AppLanguage.localized("game.colorclash.a11y.stimulus.hint"))
 
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
                 ForEach(Ink.allCases, id: \.self) { candidate in
@@ -127,6 +142,7 @@ struct ColorClashView: View {
     private func deal() {
         word = Ink.allCases.randomElement() ?? .red
         ink = Ink.allCases.randomElement() ?? .blue
+        AccessibilityNotification.Announcement(stimulusLabel).post()
     }
 
     private func tap(_ candidate: Ink) {
@@ -136,6 +152,7 @@ struct ColorClashView: View {
             Feedback.play(.success)
         } else {
             Feedback.play(.miss)
+            missed = true
         }
         if progress.completeRound() {
             finish()
