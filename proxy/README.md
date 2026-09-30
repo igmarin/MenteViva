@@ -12,9 +12,11 @@ The app falls back to its offline plan on any non-2xx.
 3. `npx wrangler secret put APP_SHARED_SECRET` — paste a long random string
    (`openssl rand -hex 32`).
 4. `npx wrangler deploy` (uses `wrangler.toml`; it holds no secrets).
-5. Set `JEV_PROXY_URL` to `https://menteviva-jev-proxy.<account>.workers.dev/jev`
-   and the same secret as the app's `X-MenteViva-Key` header value, both in the
-   git-ignored xcconfig. (App-side header is a separate change.)
+5. In the app, `cp MenteViva/Config/Local.xcconfig.example MenteViva/Config/Local.xcconfig`
+   (git-ignored) and set `JEV_PROXY_URL` (your `https://menteviva-jev-proxy.<account>.workers.dev/jev`)
+   and `JEV_PROXY_SECRET` (the same `APP_SHARED_SECRET`). xcconfig treats `//`
+   as a comment, so write the URL as `https:/$()/host/jev`. Both flow into
+   Info.plist at build time; empty = Jev off. (App-side header is a separate change.)
 
 Local: put both secrets in `proxy/.dev.vars` (git-ignored), then `npx wrangler dev`.
 

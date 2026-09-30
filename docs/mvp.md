@@ -14,8 +14,8 @@ No game #6 before playtest findings (#18).
 | G0 — Playable ✅ | 5 games build + playable, ES/EN | on main |
 | **G1a — Stable ✅** | Runs reliably on a real device; no crashes in normal play | owner-verified 2026-09-20 |
 | G1b — Loved | Played unprompted twice in one week; top-3 friction fixed | #6 (engagement not yet measured) |
-| **G2 — Verified** (was misnamed "Sound") | Tests green + accessibility done + build/warning clean | 41 test methods (counted 2026-09-29), #5 code ✓, device a11y checklist pending, VoiceOver gaps #64 |
-| G3 — Connected | Jev live via a hardened proxy: client wired into Home, difficulty applied, real payload archived | #59, #60, #62, #63 (#13 closed = worker file only) |
+| **G2 — Verified** (was misnamed "Sound") | Tests green + accessibility done + build/warning clean | 65 tests green on main (2026-09-30), #5 code ✓, VoiceOver changes shipped (#64) but unverified on a device, device a11y checklist pending |
+| G3 — Connected | Jev live via a hardened proxy: client wired into Home, difficulty applied, real payload archived | Wired (#58–#61) and proxy deployed (#63). Open: config plumbing #91, real payload archive #62 |
 | G4 — Shippable (free path) | Disclaimer copy, ES native review, **device-based beta** ≥5 people, in-person | #12, #10, #38 |
 | G5 — Sellable (free path) | Works for strangers: onboarding, settings, privacy policy + support, listing assets, device support matrix | #31–#36 |
 | G6 — Publishable | **Blocked: Apple Developer Program.** Store listing live, price, StoreKit, CloudKit/`CKShare` | decisions.md 2026-09-20 |
