@@ -52,7 +52,7 @@ docs/                 start at docs/README.md
   offline plan.
 - Dad playtest #6 has **not** been run; docs/playtest-session-1.md is the
   sheet. No content gates lift until it does (#18).
-- Live state is in the [milestones](../../milestones), not here.
+- Live state is in the [milestones](https://github.com/igmarin/MenteViva/milestones), not here.
 
 ## Signing
 
@@ -90,7 +90,7 @@ docs/                 start at docs/README.md
    regenerated `project.pbxproj` for drift on PRs and pushes to `main`; still
    run them locally first.
 6. Track work in GitHub issues with the current milestone (see
-   [milestones](../../milestones)). Closed-issue labels mark the release
+   [milestones](https://github.com/igmarin/MenteViva/milestones)). Closed-issue labels mark the release
    (e.g. `v0.1.0`).
 7. Update `CHANGELOG.md` under `[Unreleased]` with any user-visible change.
 
