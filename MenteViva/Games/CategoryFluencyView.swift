@@ -5,7 +5,6 @@ import SwiftData
 /// from a grid of big emoji tiles (3 / 5 / 7 decoys by difficulty). 3 categories per session.
 struct CategoryFluencyView: View {
     @Environment(\.modelContext) private var modelContext
-    @Environment(\.dismiss) private var dismiss
 
     private enum Category: CaseIterable {
         case animals, fruits, colors, vehicles
@@ -94,7 +93,7 @@ struct CategoryFluencyView: View {
                                 // Non-color cue: picked tiles get a visible checkmark,
                                 // not just a green tint (WCAG 1.4.1, conventions.md §4).
                                 .overlay(alignment: .topTrailing) {
-                                    pickedBadge(isPicked: tile.isPicked)
+                                    if tile.isPicked { CheckBadge() }
                                 }
                         }
                         .buttonStyle(.plain)
@@ -112,22 +111,7 @@ struct CategoryFluencyView: View {
         .padding()
         .navigationTitle(AppLanguage.localized("game.category.title"))
         .onAppear(perform: setup)
-        .fullScreenCover(isPresented: $showCelebration) {
-            CelebrationView(detail: finalDetail,
-                            onPlayAgain: { showCelebration = false; restart() },
-                            onHome: { showCelebration = false; dismiss() })
-        }
-    }
-
-    @ViewBuilder
-    private func pickedBadge(isPicked: Bool) -> some View {
-        if isPicked {
-            Image(systemName: "checkmark.circle.fill")
-                .font(.title2)
-                .foregroundStyle(.white, .green) // solid badge, readable on any tile tint
-                .padding(6)
-                .accessibilityHidden(true)
-        }
+        .celebration(isPresented: $showCelebration, detail: finalDetail, onPlayAgain: restart)
     }
 
     private func restart() {

@@ -8,15 +8,11 @@ struct HistoryView: View {
     private var sessions: [GameSession]
 
     private var weekSessions: [GameSession] {
-        let cutoff = Calendar.current.date(byAdding: .day, value: -7, to: .now) ?? .now
-        return sessions.filter { $0.playedAt >= cutoff }
+        DayGrouping.lastWeek(sessions, date: \.playedAt)
     }
 
-    private var groupedDays: [(day: Date, sessions: [GameSession])] {
-        let grouped = Dictionary(grouping: weekSessions) {
-            Calendar.current.startOfDay(for: $0.playedAt)
-        }
-        return grouped.keys.sorted(by: >).map { (day: $0, sessions: grouped[$0] ?? []) }
+    private var groupedDays: [(day: Date, items: [GameSession])] {
+        DayGrouping.byDay(weekSessions, date: \.playedAt)
     }
 
     var body: some View {
@@ -69,7 +65,7 @@ struct HistoryView: View {
 
             ForEach(groupedDays, id: \.day) { group in
                 Section {
-                    ForEach(group.sessions, id: \.persistentModelID) { session in
+                    ForEach(group.items, id: \.persistentModelID) { session in
                         sessionRow(session)
                     }
                 } header: {

@@ -7,7 +7,6 @@ import SwiftData
 /// warmer palette and a checkmark (not just a tint) mark found pairs.
 struct MemoryMatchView: View {
     @Environment(\.modelContext) private var modelContext
-    @Environment(\.dismiss) private var dismiss
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     /// Four themed sets of 8 pairs. One is drawn per game; emoji carry their
@@ -66,13 +65,7 @@ struct MemoryMatchView: View {
                             // Non-color cue: matched pairs keep a checkmark,
                             // not just a green tint (WCAG 1.4.1).
                             .overlay(alignment: .topTrailing) {
-                                if card.isMatched {
-                                    Image(systemName: "checkmark.circle.fill")
-                                        .font(.title2)
-                                        .foregroundStyle(.white, .green)
-                                        .padding(6)
-                                        .accessibilityHidden(true)
-                                }
+                                if card.isMatched { CheckBadge() }
                             }
                             // Gentle bloom on the moment a pair is found.
                             .scaleEffect(card.isMatched && !reduceMotion ? 1.04 : 1)
@@ -95,11 +88,7 @@ struct MemoryMatchView: View {
         .navigationTitle(AppLanguage.localized("game.memory.title"))
         .onAppear(perform: deal)
         .onDisappear { flipBackTask?.cancel() }
-        .fullScreenCover(isPresented: $showCelebration) {
-            CelebrationView(detail: finalDetail,
-                            onPlayAgain: { showCelebration = false; deal() },
-                            onHome: { showCelebration = false; dismiss() })
-        }
+        .celebration(isPresented: $showCelebration, detail: finalDetail, onPlayAgain: deal)
     }
 
     private func deal() {

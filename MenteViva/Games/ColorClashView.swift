@@ -5,7 +5,6 @@ import SwiftData
 /// Tap the INK color. 10 gentle rounds, no timer.
 struct ColorClashView: View {
     @Environment(\.modelContext) private var modelContext
-    @Environment(\.dismiss) private var dismiss
 
     private enum Ink: String, CaseIterable {
         case red, blue, green, orange
@@ -131,11 +130,7 @@ struct ColorClashView: View {
         .padding()
         .navigationTitle(AppLanguage.localized("game.colorclash.title"))
         .onAppear { startedAt = .now; deal() }
-        .fullScreenCover(isPresented: $showCelebration) {
-            CelebrationView(detail: finalDetail,
-                            onPlayAgain: { showCelebration = false; restart() },
-                            onHome: { showCelebration = false; dismiss() })
-        }
+        .celebration(isPresented: $showCelebration, detail: finalDetail, onPlayAgain: restart)
     }
 
     private func restart() {
