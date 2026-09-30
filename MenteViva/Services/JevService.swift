@@ -63,32 +63,10 @@ nonisolated enum Difficulty: Int, Codable {
     }
 }
 
-nonisolated struct DailyPlan: Codable {
+nonisolated struct DailyPlan: Codable, Equatable {
     let dayStamp: String              // local "yyyy-MM-dd"; valid only for its day
     let games: [GameID]               // recommended mix, best first
     let difficulty: [GameID: Difficulty]
-
-    /// Deterministic fallback: day-of-year rotation, current difficulty unchanged.
-    static func fallback(current: [GameID: Difficulty], dayStamp: String) -> DailyPlan {
-        let all = GameID.allCases
-        let offset = dayOfYear(from: dayStamp)
-        let rotated = (0..<all.count).map { all[($0 + offset) % all.count] }
-        return DailyPlan(dayStamp: dayStamp, games: Array(rotated.prefix(3)), difficulty: current)
-    }
-
-    private static func dayOfYear(from stamp: String) -> Int {
-        let parts = stamp.split(separator: "-").compactMap { Int($0) }
-        guard parts.count == 3 else { return 0 }
-
-        var calendar = Calendar.current
-        calendar.timeZone = .current
-        let components = DateComponents(year: parts[0], month: parts[1], day: parts[2])
-        guard let date = calendar.date(from: components),
-              let ordinal = calendar.ordinality(of: .day, in: .year, for: date) else {
-            return 0
-        }
-        return max(ordinal - 1, 0)
-    }
 }
 
 /// Aggregated, anonymized gameplay stats — the entire state that leaves the device:
@@ -144,6 +122,7 @@ actor JevService {
     private nonisolated static let log = Logger(subsystem: "com.igmarin.MenteViva", category: "jev")
     private let cacheKey = "jev.dailyPlan"
     private nonisolated static let difficultyKey = "jev.difficulty"
+    private nonisolated static let changeKey = "jev.difficultyChangedOn"
 
     /// Below this confidence a difficulty Score is ignored and yesterday's
     /// difficulty is kept. A poor difficulty match is the high-stakes concern
@@ -166,8 +145,8 @@ actor JevService {
 
     // MARK: - Public API
 
-    /// Today's plan: cache first, otherwise one Jev request, fallback on any failure.
-    /// The fallback is cached too, so a failing network is tried once per day, and
+    /// Today's plan: cache first, otherwise the on-device DailyPolicy (overridden by Jev when a proxy is set).
+    /// The plan is cached too, so a failing network is tried once per day, and
     /// concurrent callers share one in-flight request.
     func dailyPlan(state: PlayerStateSummary,
                    currentDifficulty: [GameID: Difficulty],
@@ -186,7 +165,9 @@ actor JevService {
     private func fetchPlan(state: PlayerStateSummary,
                            current: [GameID: Difficulty],
                            stamp: String) async -> DailyPlan {
-        var plan = DailyPlan.fallback(current: current, dayStamp: stamp)
+        var plan = DailyPolicy.plan(state: state,
+                                    lastChange: Self.lastDifficultyChange(defaults: defaults),
+                                    dayStamp: stamp)
         if let proxyURL {
             do {
                 let answers = try await ask(state: state, proxyURL: proxyURL)
@@ -196,7 +177,7 @@ actor JevService {
                                      gamesPerDay: gamesPerDay,
                                      confidenceFloor: difficultyConfidenceThreshold)
             } catch {
-                Self.log.info("Jev unavailable, using fallback plan: \(String(describing: error), privacy: .public)")
+                Self.log.info("Jev unavailable, using the on-device plan: \(String(describing: error), privacy: .public)")
             }
         }
         cache(plan)
@@ -275,6 +256,12 @@ actor JevService {
         if let data = try? JSONEncoder().encode(plan) {
             defaults.set(data, forKey: cacheKey)
         }
+        let before = Self.storedDifficulty(defaults: defaults)
+        var changed = Self.lastDifficultyChange(defaults: defaults)
+        for (game, level) in plan.difficulty where before[game] != level { changed[game] = plan.dayStamp }
+        if let data = try? JSONEncoder().encode(Dictionary(uniqueKeysWithValues: changed.map { ($0.key.rawValue, $0.value) })) {
+            defaults.set(data, forKey: Self.changeKey)
+        }
         if let data = try? JSONEncoder().encode(Dictionary(uniqueKeysWithValues: plan.difficulty.map { ($0.key.rawValue, $0.value.rawValue) })) {
             defaults.set(data, forKey: Self.difficultyKey)
         }
@@ -288,6 +275,13 @@ actor JevService {
         return Dictionary(uniqueKeysWithValues: GameID.allCases.map { game in
             (game, raw[game.rawValue].flatMap(Difficulty.init(rawValue:)) ?? .medium)
         })
+    }
+
+    /// Day stamp of each game's last difficulty change; DailyPolicy holds it for a week.
+    nonisolated static func lastDifficultyChange(defaults: UserDefaults = .standard) -> [GameID: String] {
+        let raw = defaults.data(forKey: changeKey)
+            .flatMap { try? JSONDecoder().decode([String: String].self, from: $0) } ?? [:]
+        return Dictionary(uniqueKeysWithValues: raw.compactMap { key, stamp in GameID(rawValue: key).map { ($0, stamp) } })
     }
 
     nonisolated static func dayStamp(_ date: Date = .now) -> String {
