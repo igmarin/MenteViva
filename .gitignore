@@ -10,3 +10,4 @@ xcuserdata/
 # Derived, regenerable
 graphify-out/
 .codegraph/
+proxy/.dev.vars
