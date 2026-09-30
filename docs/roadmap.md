@@ -16,9 +16,9 @@ progress instead of points (#45).
 1. **Dad playtest #1 (#6)** — not run yet. Use `playtest-session-1.md`; watch,
    note 3 friction points. It gates new content (#18) and the reminiscence
    game (#44).
-2. **Finish making Jev real** — wired and deployed; left: xcconfig plumbing so
-   the URL and secret can be set without committing them (#91), then archive the
-   real payload (#62).
+2. **Switch Jev on and watch it** — wired, deployed, configured via
+   `Local.xcconfig` and verified live (#58–#63, #91, #62). Left: run it on the
+   iPad for a few days and compare its picks against the rotation.
 3. **Device check** of the VoiceOver changes and 100pt toolbar targets (#64
    shipped, unverified on hardware).
 4. **Test gaps** — game double-tap flows and History grouping (#65 remainder),
