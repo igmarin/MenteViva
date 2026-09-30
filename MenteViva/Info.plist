@@ -3,8 +3,8 @@
 <plist version="1.0">
 <dict>
 	<key>JEV_PROXY_URL</key>
-	<string></string>
+	<string>$(JEV_PROXY_URL)</string>
 	<key>JEV_PROXY_SECRET</key>
-	<string></string>
+	<string>$(JEV_PROXY_SECRET)</string>
 </dict>
 </plist>

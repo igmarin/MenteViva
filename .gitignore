@@ -11,3 +11,4 @@ xcuserdata/
 graphify-out/
 .codegraph/
 proxy/.dev.vars
+MenteViva/Config/Local.xcconfig

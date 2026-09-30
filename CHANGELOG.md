@@ -5,6 +5,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 ## [Unreleased]
 
 ### Added
+- **Jev config via xcconfig (#91):** `JEV_PROXY_URL` / `JEV_PROXY_SECRET` now
+  come from a git-ignored `MenteViva/Config/Local.xcconfig` (template:
+  `Local.xcconfig.example`) through `Base.xcconfig`; empty = Jev off. URLs need
+  `https:/$()/host` because `//` starts an xcconfig comment.
 - **Weekly summary card (#71):** "My Week" shows days played, games played and
   day streak (no scores), and the existing share button sends that same warm
   text. Built locally from saved sessions; EN + ES.
