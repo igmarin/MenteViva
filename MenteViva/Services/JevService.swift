@@ -80,12 +80,37 @@ nonisolated struct DailyPlan: Codable {
 nonisolated struct PlayerStateSummary: Codable {
     struct GameStats: Codable {
         let sessionsLast14Days: Int
-        let meanAccuracy: Double      // 0...1
+        let meanAccuracy: Double?     // 0...1; omitted when no session recorded accuracy
         let meanRoundsCompleted: Double
         let daysSinceLastPlayed: Int
         let currentDifficulty: Difficulty
     }
     let games: [String: GameStats]    // keyed by GameID.rawValue
+
+    /// Builds the summary from recent sessions: sessions older than 14 days are
+    /// ignored; a game never played in the window reports 0 sessions and 14 days.
+    static func build(from sessions: [GameSession],
+                      difficulty: [GameID: Difficulty],
+                      now: Date = .now,
+                      calendar: Calendar = .current) -> PlayerStateSummary {
+        let window = 14
+        var games: [String: GameStats] = [:]
+        for game in GameID.allCases {
+            let mine = sessions.filter {
+                $0.gameID == game.rawValue
+                    && (calendar.dateComponents([.day], from: $0.playedAt, to: now).day ?? window) < window
+            }
+            let accuracies = mine.compactMap(\.accuracy)
+            let last = mine.map(\.playedAt).max()
+            games[game.rawValue] = GameStats(
+                sessionsLast14Days: mine.count,
+                meanAccuracy: accuracies.isEmpty ? nil : accuracies.reduce(0, +) / Double(accuracies.count),
+                meanRoundsCompleted: mine.isEmpty ? 0 : Double(mine.map(\.rounds).reduce(0, +)) / Double(mine.count),
+                daysSinceLastPlayed: last.flatMap { calendar.dateComponents([.day], from: $0, to: now).day } ?? window,
+                currentDifficulty: difficulty[game] ?? .medium)
+        }
+        return PlayerStateSummary(games: games)
+    }
 }
 
 enum JevServiceError: Error {
@@ -98,6 +123,7 @@ actor JevService {
     private let proxyURL: URL?
     private let session: URLSession
     private let cacheKey = "jev.dailyPlan"
+    private nonisolated static let difficultyKey = "jev.difficulty"
 
     /// Below this confidence a difficulty Score is ignored and yesterday's
     /// difficulty is kept. A poor difficulty match is the high-stakes concern
@@ -208,6 +234,19 @@ actor JevService {
         if let data = try? JSONEncoder().encode(plan) {
             UserDefaults.standard.set(data, forKey: cacheKey)
         }
+        if let data = try? JSONEncoder().encode(Dictionary(uniqueKeysWithValues: plan.difficulty.map { ($0.key.rawValue, $0.value.rawValue) })) {
+            UserDefaults.standard.set(data, forKey: Self.difficultyKey)
+        }
+    }
+
+    /// Last difficulty Jev set per game (medium for a new player). Read by the
+    /// games and by Home; only changes when a new daily plan is cached.
+    nonisolated static func storedDifficulty() -> [GameID: Difficulty] {
+        let raw = UserDefaults.standard.data(forKey: difficultyKey)
+            .flatMap { try? JSONDecoder().decode([String: Int].self, from: $0) } ?? [:]
+        return Dictionary(uniqueKeysWithValues: GameID.allCases.map { game in
+            (game, raw[game.rawValue].flatMap(Difficulty.init(rawValue:)) ?? .medium)
+        })
     }
 
     nonisolated static func dayStamp(_ date: Date = .now) -> String {

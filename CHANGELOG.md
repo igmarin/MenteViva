@@ -21,6 +21,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 - **Jev proxy hardening (#63):** worker now requires a shared-secret header, rate-limits,
   caps body size, validates model/question keys, and returns a warm 502 on upstream failure.
 ### Changed
+- **Today's picks on Home (#59):** three games carry a "Today's pick" star, chosen
+  once a day from recent play (Jev when a proxy is configured, a fixed rotation
+  otherwise). Home never waits for it and the tile order stays put.
 - **Session accuracy (#58):** every game now records how many answers were right
   (`correct`/`attempts`), and `rounds` means the same thing everywhere (Memory Lane
   stores pairs, not moves). Existing history is untouched.

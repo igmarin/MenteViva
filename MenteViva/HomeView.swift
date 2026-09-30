@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftData
 
 /// Home: the one screen dad lands on. Big warm tiles, one per game, no
 /// navigation puzzles. Tiles carry the game emoji so the screen is readable
@@ -6,6 +7,12 @@ import SwiftUI
 struct HomeView: View {
     private let columns = [GridItem(.adaptive(minimum: 150), spacing: 16)]
     @State private var showSettings = false
+    @Environment(\.modelContext) private var modelContext
+    /// Today's mix. Starts as the deterministic fallback so tiles never wait
+    /// on the network; Jev's answer replaces it in place if it arrives.
+    @State private var todaysMix: Set<GameID> = Set(
+        DailyPlan.fallback(current: JevService.storedDifficulty(),
+                           dayStamp: JevService.dayStamp()).games)
 
     var body: some View {
         NavigationStack {
@@ -21,7 +28,8 @@ struct HomeView: View {
                             NavigationLink {
                                 destination(for: game)
                             } label: {
-                                GameTile(emoji: game.emoji, title: AppLanguage.localized( game.title))
+                                GameTile(emoji: game.emoji, title: AppLanguage.localized(game.title),
+                                         isTodaysPick: todaysMix.contains(game))
                             }
                             .buttonStyle(.plain)
                         }
@@ -55,10 +63,21 @@ struct HomeView: View {
                     .accessibilityHint(AppLanguage.localized("settings.open.hint"))
                 }
             }
+            .task { await refreshPlan() }
             .sheet(isPresented: $showSettings) {
                 SettingsView()
             }
         }
+    }
+
+    private func refreshPlan() async {
+        let since = Calendar.current.date(byAdding: .day, value: -14, to: .now) ?? .distantPast
+        let recent = (try? modelContext.fetch(FetchDescriptor<GameSession>(
+            predicate: #Predicate { $0.playedAt >= since }))) ?? []
+        let difficulty = JevService.storedDifficulty()
+        let state = PlayerStateSummary.build(from: recent, difficulty: difficulty)
+        let plan = await JevService.shared.dailyPlan(state: state, currentDifficulty: difficulty)
+        todaysMix = Set(plan.games)
     }
 
     @ViewBuilder
@@ -78,6 +97,7 @@ struct HomeView: View {
 private struct GameTile: View {
     let emoji: String
     let title: String
+    let isTodaysPick: Bool
 
     var body: some View {
         VStack(spacing: 12) {
@@ -89,12 +109,19 @@ private struct GameTile: View {
                 .multilineTextAlignment(.center)
                 .lineLimit(2)
                 .minimumScaleFactor(0.7)
+            // Text + star, not color alone (conventions §4).
+            if isTodaysPick {
+                Label(AppLanguage.localized("home.today.badge"), systemImage: "star.fill")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(.orange)
+            }
         }
         .frame(maxWidth: .infinity, minHeight: 140)
         .padding(12)
-        .background(.blue.opacity(0.12), in: .rect(cornerRadius: 20))
+        .background(.blue.opacity(isTodaysPick ? 0.22 : 0.12), in: .rect(cornerRadius: 20))
         .accessibilityElement(children: .combine)
         .accessibilityLabel(Text(title))
+        .accessibilityValue(Text(isTodaysPick ? AppLanguage.localized("home.today.badge") : ""))
     }
 }
 
