@@ -1328,6 +1328,22 @@
           }
         }
       }
+    },
+    "home.today.badge": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Today's pick"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sugerido de hoy"
+          }
+        }
+      }
     }
   },
   "version": "1.0"
