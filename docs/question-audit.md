@@ -16,12 +16,12 @@ whose `state` is wrong is wrong no matter how confident the output.
 - ✅ Real version: **the player is an older adult with a diagnosis of early
   dementia.** This changes both the evidence and the design bar.
 - How answered: Jev 007 (re-run with the corrected state) + research §1.
-- Consequence: the *evidence* actually improves — MCI/early dementia is the
-  best-supported population for cognitive training, and early-stage dementia
-  benefits from cognitive *stimulation* (not training) with errorless,
-  familiarity-based, reminiscence mechanics. Speed drills and adaptive
-  difficulty matter less; low-failure and familiar content matter more. The
-  five games may need to shift. **Marketing ceiling is unchanged**: still "fun
+- Consequence: the *evidence* does not improve: MCI is the best-supported
+  population for cognitive training, established dementia shows no reliable
+  benefit and early-stage dementia is unclear (research §1). The *design* bar
+  changes: errorless, familiarity-based, reminiscence mechanics; speed drills
+  and adaptive difficulty matter less; low-failure and familiar content matter
+  more. The five games may need to shift. **Marketing ceiling is unchanged**: still "fun
   mental exercise", never treatment/prevention/diagnosis.
 
 ## 2. Devices / OS
