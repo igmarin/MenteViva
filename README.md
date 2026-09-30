@@ -23,8 +23,9 @@ and [GitHub milestones](../../milestones).
 | 👀 Quick Eyes | Processing speed | Shrinking display-time discrimination |
 
 Jev ([TypeSafe](https://typesafe.ai)) is designed to rank the daily mix and
-nudge difficulty — seasoning, not the meal. The client exists; wiring it into
-the app is in progress. Everything works offline without it.
+nudge difficulty — seasoning, not the meal. Home marks today's picks and each
+game reads the daily difficulty; with no proxy configured the app uses its
+offline plan, so everything works without it.
 Design and status: [docs/jev-integration.md](docs/jev-integration.md).
 
 ## Build

@@ -5,15 +5,16 @@ Jev answers two narrow questions per day; code stays in control of everything el
 
 Source of truth: https://docs.typesafe.ai/llms.txt (fetched 2025; append `.md` to doc paths).
 
-## Status (2026-09-29)
+## Status (2026-09-30)
 
 | Piece | State |
 |---|---|
 | `JevService` client + plan policy + unit tests | Done (top-3-of-5 mix, confidence-gated difficulty, day-stamp cache, fallback) |
-| Wired into the running app | **No.** Nothing builds `PlayerStateSummary` or calls `dailyPlan()`; Home shows all 5 games in fixed order. In progress: #58 (record accuracy), #59 (Home wiring), #60 (apply difficulty in games) |
-| Client hardening | Pending #61: one bad answer currently fails the whole decode (see Failure behavior) |
-| Live verification | Ad-hoc calls only (`jev-json/000`–`010`, model `jev-1.13.0`, decision questions with different key names, e.g. `include_math`). The shipped 10-question payload has never been sent live or archived: #62 |
-| Proxy | `proxy/worker.js` exists; hardening and real deploy: #63 |
+| Wired into the running app | **Yes.** Sessions record `correct`/`attempts` (#58); Home builds the 14-day `PlayerStateSummary`, calls `dailyPlan()` lazily and stars today's picks (#59); every game reads the stored difficulty once when it opens (#60) |
+| Client hardening | Done (#61): each answer decodes on its own, the fallback plan is cached for the day, concurrent callers share one request, errors are logged |
+| Proxy | Hardened and deployed (#63): `https://menteviva-jev-proxy.ismael-marin.workers.dev`; verified 2026-09-30 (405/401/404 without the key, 200 with it) |
+| App configuration | `JEV_PROXY_URL` / `JEV_PROXY_SECRET` still ship empty, so the app runs on the offline plan. Reading them from a git-ignored xcconfig: #91 |
+| Live verification of the shipped payload | Not yet. The archived calls (`jev-json/000`–`010`) are decision questions with different key names; the app's 10-question request has never been archived: #62 |
 | Per-game 10-session trend in the state | Not built. State is one 14-day summary per game (below) |
 
 ## The daily judgment at a glance
@@ -105,9 +106,10 @@ no error copy, ever):
 
 1. No network / timeout (10 s) → fallback plan.
 2. Proxy or API error (non-2xx) → fallback plan.
-3. Malformed response → fallback plan. Today the whole `answers` map decodes at once, so
-   one unknown or malformed answer discards the good ones too; per-answer tolerance is #61.
-   Missing keys are handled: a missing Noul sorts last, a missing Score keeps current difficulty.
+3. Malformed response → per-answer fallback: each answer decodes on its own, so one
+   unknown or malformed answer no longer discards the good ones. A missing Noul sorts
+   last, a missing Score keeps current difficulty. The fallback plan is cached for the
+   day (no retry storm); errors are logged, never shown.
 4. Low confidence on a difficulty Score → keep current difficulty.
 5. No proxy URL configured → service is inert; fallback plan always.
 
