@@ -4,6 +4,11 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 
 ## [Unreleased]
 
+### Added
+- **Weekly summary card (#71):** "My Week" shows days played, games played and
+  day streak (no scores), and the existing share button sends that same warm
+  text. Built locally from saved sessions; EN + ES.
+
 ### Accessibility
 - **VoiceOver playability (#64):** Quick Eyes announces the flashed picture (and
   holds it 2.5s while VoiceOver is on); Color Clash reads the ink colour and
