@@ -44,11 +44,12 @@ docs/                 start at docs/README.md
 
 - 5 games shipped (Memory Lane, Color Clash, Name the Herd, Number Trail,
   Quick Eyes); ES/EN complete; local-only build is the default.
-- **Jev is wired in but switched off by config.** Home stars today's picks and
-  games read the daily difficulty (#58–#61). The hardened proxy is deployed
-  (#63), but `JEV_PROXY_URL` / `JEV_PROXY_SECRET` still ship empty, so the app
-  runs on the offline plan until the xcconfig plumbing lands (#91); the real
-  10-question payload is not archived yet (#62).
+- **Jev is wired in and verified live.** Home stars today's picks and games read
+  the daily difficulty (#58–#61); the hardened proxy is deployed (#63) and the
+  real 10-question request/response is archived (`docs/jev-json/011`, #62). The
+  app calls it only when `MenteViva/Config/Local.xcconfig` (git-ignored; copy
+  the `.example`) sets the proxy URL and secret (#91); otherwise it runs on the
+  offline plan.
 - Dad playtest #6 has **not** been run; docs/playtest-session-1.md is the
   sheet. No content gates lift until it does (#18).
 - Live state is in the [milestones](../../milestones), not here.

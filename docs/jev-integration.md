@@ -13,8 +13,8 @@ Source of truth: https://docs.typesafe.ai/llms.txt (fetched 2025; append `.md` t
 | Wired into the running app | **Yes.** Sessions record `correct`/`attempts` (#58); Home builds the 14-day `PlayerStateSummary`, calls `dailyPlan()` lazily and stars today's picks (#59); every game reads the stored difficulty once when it opens (#60) |
 | Client hardening | Done (#61): each answer decodes on its own, the fallback plan is cached for the day, concurrent callers share one request, errors are logged |
 | Proxy | Hardened and deployed (#63): `https://menteviva-jev-proxy.ismael-marin.workers.dev`; verified 2026-09-30 (405/401/404 without the key, 200 with it) |
-| App configuration | `JEV_PROXY_URL` / `JEV_PROXY_SECRET` still ship empty, so the app runs on the offline plan. Reading them from a git-ignored xcconfig: #91 |
-| Live verification of the shipped payload | Not yet. The archived calls (`jev-json/000`–`010`) are decision questions with different key names; the app's 10-question request has never been archived: #62 |
+| App configuration | `JEV_PROXY_URL` / `JEV_PROXY_SECRET` ship empty and are read from a git-ignored `MenteViva/Config/Local.xcconfig` (#91); without it the app runs on the offline plan |
+| Live verification of the shipped payload | Done 2026-09-30 (#62): the app's real 10-question request, captured from `JevService` and sent through the deployed proxy, returned HTTP 200 with all 10 answers (`jev-json/011`, model `jev-1.13.0`, 1272 in / 183 out tokens). Its state is a **sample fixture**, not a real player. Two unit tests replay the pair so wire keys and answer shapes can't drift silently |
 | Per-game 10-session trend in the state | Not built. State is one 14-day summary per game (below) |
 
 ## The daily judgment at a glance
