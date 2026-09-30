@@ -12,10 +12,10 @@ struct CategoryFluencyView: View {
 
         var name: String {
             switch self {
-            case .animals: AppLanguage.localized( "game.category.animals")
-            case .fruits: AppLanguage.localized( "game.category.fruits")
-            case .colors: AppLanguage.localized( "game.category.colors")
-            case .vehicles: AppLanguage.localized( "game.category.vehicles")
+            case .animals: AppLanguage.localized("game.category.animals")
+            case .fruits: AppLanguage.localized("game.category.fruits")
+            case .colors: AppLanguage.localized("game.category.colors")
+            case .vehicles: AppLanguage.localized("game.category.vehicles")
             }
         }
 
@@ -65,7 +65,7 @@ struct CategoryFluencyView: View {
     var body: some View {
         VStack(spacing: 24) {
             if let round = currentRound {
-                Text(AppLanguage.localized( "game.category.instruction"))
+                Text(AppLanguage.localized("game.category.instruction"))
                     .font(.title2)
                     .multilineTextAlignment(.center)
 
@@ -96,14 +96,14 @@ struct CategoryFluencyView: View {
                         .disabled(tile.isPicked)
                         .accessibilityLabel(tile.emoji)
                         .accessibilityHint(tile.isPicked
-                                           ? AppLanguage.localized( "game.category.a11y.picked")
-                                           : AppLanguage.localized( "game.category.a11y.position \(tilePositions[tile.id] ?? 0) \(tiles.count)"))
+                                           ? AppLanguage.localized("game.category.a11y.picked")
+                                           : String(format: AppLanguage.localized("game.category.a11y.position %lld %lld"), tilePositions[tile.id] ?? 0, tiles.count))
                     }
                 }
             }
         }
         .padding()
-        .navigationTitle(AppLanguage.localized( "game.category.title"))
+        .navigationTitle(AppLanguage.localized("game.category.title"))
         .onAppear(perform: setup)
         .fullScreenCover(isPresented: $showCelebration) {
             CelebrationView(detail: finalDetail,
@@ -167,7 +167,7 @@ struct CategoryFluencyView: View {
         let score = Self.score(totalCorrect: totalCorrect)
         modelContext.insert(GameSession(gameID: .categoryFluency, score: score,
                                         rounds: roundsPerSession, durationSeconds: elapsed))
-        finalDetail = String(format: AppLanguage.localized( "game.celebration.items %lld"), totalCorrect)
+        finalDetail = String(format: AppLanguage.localized("game.celebration.items %lld"), totalCorrect)
         showCelebration = true
     }
 }

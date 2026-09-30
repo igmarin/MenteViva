@@ -45,7 +45,7 @@ struct MemoryMatchView: View {
 
     var body: some View {
         VStack(spacing: 24) {
-            Text(AppLanguage.localized( "game.memory.instruction"))
+            Text(AppLanguage.localized("game.memory.instruction"))
                 .font(.title2)
                 .multilineTextAlignment(.center)
 
@@ -76,16 +76,16 @@ struct MemoryMatchView: View {
                     .disabled(card.isFaceUp || card.isMatched)
                     .accessibilityLabel(card.isFaceUp || card.isMatched
                                         ? card.emoji
-                                        : AppLanguage.localized( "game.memory.card.hidden"))
+                                        : AppLanguage.localized("game.memory.card.hidden"))
                     .accessibilityHint(card.isMatched
-                                       ? AppLanguage.localized( "game.memory.a11y.matched")
-                                       : AppLanguage.localized( "game.memory.a11y.position \(cardPositions[card.id] ?? 0) \(cards.count)"))
+                                       ? AppLanguage.localized("game.memory.a11y.matched")
+                                       : String(format: AppLanguage.localized("game.memory.a11y.position %lld %lld"), cardPositions[card.id] ?? 0, cards.count))
                 }
             }
             .padding()
         }
         .padding()
-        .navigationTitle(AppLanguage.localized( "game.memory.title"))
+        .navigationTitle(AppLanguage.localized("game.memory.title"))
         .onAppear(perform: deal)
         .onDisappear { flipBackTask?.cancel() }
         .fullScreenCover(isPresented: $showCelebration) {
@@ -141,7 +141,7 @@ struct MemoryMatchView: View {
         // player sees progress, not points.
         modelContext.insert(GameSession(gameID: .memoryMatch, score: score,
                                         rounds: moves, durationSeconds: elapsed))
-        finalDetail = String(format: AppLanguage.localized( "game.celebration.pairs %lld"), emojis.count)
+        finalDetail = String(format: AppLanguage.localized("game.celebration.pairs %lld"), emojis.count)
         showCelebration = true
     }
 }

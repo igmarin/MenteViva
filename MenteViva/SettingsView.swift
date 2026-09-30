@@ -85,47 +85,47 @@ struct SettingsView: View {
                             .accessibilityAddTraits(language.rawValue == appLanguage ? [.isSelected] : [])
                         }
                     }
-                    .accessibilityHint(AppLanguage.localized( "settings.language.restart"))
+                    .accessibilityHint(AppLanguage.localized("settings.language.restart"))
                 } header: {
-                    Text(AppLanguage.localized( "settings.language"))
+                    Text(AppLanguage.localized("settings.language"))
                         .font(.title3)
                 } footer: {
-                    Text(AppLanguage.localized( "settings.language.restart"))
+                    Text(AppLanguage.localized("settings.language.restart"))
                         .font(.footnote)
                 }
 
                 Section {
-                    Toggle(AppLanguage.localized( "settings.sound"), isOn: $soundEnabled)
+                    Toggle(AppLanguage.localized("settings.sound"), isOn: $soundEnabled)
                         .font(.title3)
                         .frame(minHeight: 100)
-                        .accessibilityHint(AppLanguage.localized( "settings.sound.hint"))
+                        .accessibilityHint(AppLanguage.localized("settings.sound.hint"))
                 }
 
                 Section {
-                    Toggle(AppLanguage.localized( "settings.textsize"), isOn: $biggerText)
+                    Toggle(AppLanguage.localized("settings.textsize"), isOn: $biggerText)
                         .font(.title3)
                         .frame(minHeight: 100)
                 }
 
                 Section {
-                    Text(AppLanguage.localized( "settings.privacy.body"))
+                    Text(AppLanguage.localized("settings.privacy.body"))
                         .font(.body)
                         .accessibilityAddTraits(.isStaticText)
                 } header: {
-                    Text(AppLanguage.localized( "settings.privacy.title"))
+                    Text(AppLanguage.localized("settings.privacy.title"))
                         .font(.title3)
                 }
 
                 Section {
-                    LabeledContent(AppLanguage.localized( "settings.version"),
+                    LabeledContent(AppLanguage.localized("settings.version"),
                                    value: Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "—")
                         .font(.body)
                 }
             }
-            .navigationTitle(AppLanguage.localized( "settings.title"))
+            .navigationTitle(AppLanguage.localized("settings.title"))
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(AppLanguage.localized( "settings.done")) { dismiss() }
+                    Button(AppLanguage.localized("settings.done")) { dismiss() }
                         .font(.title3)
                 }
             }

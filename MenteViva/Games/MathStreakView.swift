@@ -7,12 +7,13 @@ struct MathStreakView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
 
-    private let totalQuestions = 10
+    private static let totalQuestions = 10
+    private var totalQuestions: Int { Self.totalQuestions }
 
     @State private var a = 0
     @State private var b = 0
     @State private var options: [Int] = []
-    @State private var question = 0
+    @State private var progress = RoundProgress(totalRounds: MathStreakView.totalQuestions)
     @State private var streak = 0
     @State private var bestStreak = 0
     @State private var correct = 0
@@ -28,7 +29,7 @@ struct MathStreakView: View {
 
     var body: some View {
         VStack(spacing: 32) {
-            Text(AppLanguage.localized( "game.math.instruction"))
+            Text(AppLanguage.localized("game.math.instruction"))
                 .font(.title2)
                 .multilineTextAlignment(.center)
 
@@ -49,12 +50,12 @@ struct MathStreakView: View {
                 }
             }
 
-            Text("\(question + 1) / \(totalQuestions)")
+            Text("\(progress.displayRound) / \(totalQuestions)")
                 .font(.title3)
                 .foregroundStyle(.secondary)
         }
         .padding()
-        .navigationTitle(AppLanguage.localized( "game.math.title"))
+        .navigationTitle(AppLanguage.localized("game.math.title"))
         .onAppear(perform: deal)
         .fullScreenCover(isPresented: $showCelebration) {
             CelebrationView(detail: finalDetail,
@@ -64,7 +65,7 @@ struct MathStreakView: View {
     }
 
     private func restart() {
-        question = 0
+        progress.reset()
         streak = 0
         bestStreak = 0
         correct = 0
@@ -86,6 +87,7 @@ struct MathStreakView: View {
     }
 
     private func tap(_ option: Int) {
+        guard !progress.isFinished else { return }
         if option == answer {
             streak += 1
             bestStreak = max(bestStreak, streak)
@@ -95,8 +97,7 @@ struct MathStreakView: View {
             streak = 0
             Feedback.play(.miss)
         }
-        question += 1
-        if question == totalQuestions {
+        if progress.completeRound() {
             finish()
         } else {
             deal()
@@ -110,8 +111,8 @@ struct MathStreakView: View {
                                         rounds: totalQuestions, durationSeconds: elapsed))
         // A streak of 2+ is worth naming; below that, celebrate finishing (#45).
         finalDetail = bestStreak >= 2
-            ? String(format: AppLanguage.localized( "game.celebration.streak %lld"), bestStreak)
-            : String(format: AppLanguage.localized( "game.celebration.questions %lld"), totalQuestions)
+            ? String(format: AppLanguage.localized("game.celebration.streak %lld"), bestStreak)
+            : String(format: AppLanguage.localized("game.celebration.questions %lld"), totalQuestions)
         showCelebration = true
     }
 }

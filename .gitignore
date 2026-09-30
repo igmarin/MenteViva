@@ -6,7 +6,7 @@ xcuserdata/
 .DS_Store
 *.ipa
 *.dSYM.zip
-graphify-out/
 
-# Graphify (derived, regenerable)
+# Derived, regenerable
 graphify-out/
+.codegraph/

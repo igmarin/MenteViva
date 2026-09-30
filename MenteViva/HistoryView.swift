@@ -27,15 +27,15 @@ struct HistoryView: View {
                 sessionList
             }
         }
-        .navigationTitle(AppLanguage.localized( "history.title"))
+        .navigationTitle(AppLanguage.localized("history.title"))
         .toolbar {
             if !weekSessions.isEmpty {
                 ToolbarItem(placement: .topBarTrailing) {
                     ShareLink(item: shareSummary) {
-                        Label(AppLanguage.localized( "history.share"), systemImage: "square.and.arrow.up")
+                        Label(AppLanguage.localized("history.share"), systemImage: "square.and.arrow.up")
                             .font(.title3)
                     }
-                    .accessibilityHint(AppLanguage.localized( "history.share.hint"))
+                    .accessibilityHint(AppLanguage.localized("history.share.hint"))
                 }
             }
         }
@@ -48,7 +48,7 @@ struct HistoryView: View {
             let info = gameInfo(for: session.gameID)
             return "\(info.emoji) \(info.name)"
         }
-        let header = String(format: AppLanguage.localized( "history.summary %lld"), weekSessions.count)
+        let header = String(format: AppLanguage.localized("history.summary %lld"), weekSessions.count)
         return ([header] + lines).joined(separator: "\n")
     }
 
@@ -113,10 +113,10 @@ struct HistoryView: View {
 
     private func dayTitle(_ day: Date) -> String {
         if Calendar.current.isDateInToday(day) {
-            return AppLanguage.localized( "history.today")
+            return AppLanguage.localized("history.today")
         }
         if Calendar.current.isDateInYesterday(day) {
-            return AppLanguage.localized( "history.yesterday")
+            return AppLanguage.localized("history.yesterday")
         }
         return day.formatted(.dateTime.weekday(.wide).day().month(.wide))
     }
@@ -124,7 +124,7 @@ struct HistoryView: View {
     private func gameInfo(for gameID: String) -> (emoji: String, name: String) {
         let game = GameID(rawValue: gameID) ?? (gameID == "memory" ? .memoryMatch : nil)
         guard let game else {
-            return ("🎮", AppLanguage.localized( "history.game.unknown"))
+            return ("🎮", AppLanguage.localized("history.game.unknown"))
         }
         return (game.emoji, AppLanguage.localized( game.title))
     }

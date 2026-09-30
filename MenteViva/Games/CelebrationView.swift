@@ -17,7 +17,7 @@ struct CelebrationView: View {
             VStack(spacing: 32) {
                 Spacer()
 
-                Text(AppLanguage.localized( "game.common.welldone"))
+                Text(AppLanguage.localized("game.common.welldone"))
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .multilineTextAlignment(.center)
@@ -32,24 +32,24 @@ struct CelebrationView: View {
 
                 VStack(spacing: 16) {
                     Button(action: onPlayAgain) {
-                        Text(AppLanguage.localized( "game.celebration.playagain"))
+                        Text(AppLanguage.localized("game.celebration.playagain"))
                             .font(.title2)
                             .fontWeight(.semibold)
                             .frame(maxWidth: .infinity, minHeight: 100)
                             .background(.blue.opacity(0.2), in: .rect(cornerRadius: 20))
                     }
                     .buttonStyle(.plain)
-                    .accessibilityLabel(AppLanguage.localized( "game.celebration.playagain"))
+                    .accessibilityLabel(AppLanguage.localized("game.celebration.playagain"))
 
                     Button(action: onHome) {
-                        Text(AppLanguage.localized( "game.celebration.home"))
+                        Text(AppLanguage.localized("game.celebration.home"))
                             .font(.title2)
                             .fontWeight(.semibold)
                             .frame(maxWidth: .infinity, minHeight: 100)
                             .background(.green.opacity(0.2), in: .rect(cornerRadius: 20))
                     }
                     .buttonStyle(.plain)
-                    .accessibilityLabel(AppLanguage.localized( "game.celebration.home"))
+                    .accessibilityLabel(AppLanguage.localized("game.celebration.home"))
                 }
             }
             .padding(24)

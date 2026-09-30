@@ -41,7 +41,7 @@ struct QuickEyesView: View {
 
     var body: some View {
         VStack(spacing: 24) {
-            Text(AppLanguage.localized( "game.quickeyes.instruction"))
+            Text(AppLanguage.localized("game.quickeyes.instruction"))
                 .font(.title2)
                 .multilineTextAlignment(.center)
 
@@ -51,15 +51,15 @@ struct QuickEyesView: View {
             case .showing:
                 Text(target)
                     .font(.system(size: 120))
-                    .accessibilityLabel(AppLanguage.localized( "game.quickeyes.a11y.showing"))
+                    .accessibilityLabel(AppLanguage.localized("game.quickeyes.a11y.showing"))
             case .choosing:
                 VStack(spacing: 16) {
                     if missedLastRound {
-                        Text(AppLanguage.localized( "game.quickeyes.almost"))
+                        Text(AppLanguage.localized("game.quickeyes.almost"))
                             .font(.title2)
                             .foregroundStyle(.secondary)
                     }
-                    Text(AppLanguage.localized( "game.quickeyes.prompt"))
+                    Text(AppLanguage.localized("game.quickeyes.prompt"))
                         .font(.title2)
                     LazyVGrid(columns: columns, spacing: 16) {
                         ForEach(options, id: \.self) { emoji in
@@ -79,7 +79,7 @@ struct QuickEyesView: View {
             Spacer()
         }
         .padding()
-        .navigationTitle(AppLanguage.localized( "game.quickeyes.title"))
+        .navigationTitle(AppLanguage.localized("game.quickeyes.title"))
         .onAppear(perform: startRound)
         .onDisappear { revealTask?.cancel() }
         // Same celebration as every other game (#45): progress, not points.
@@ -115,7 +115,7 @@ struct QuickEyesView: View {
     }
 
     private func choose(_ emoji: String) {
-        guard phase == .choosing else { return }
+        guard phase == .choosing, !progress.isFinished else { return }
         if emoji == target {
             correct += 1
             missedLastRound = false
@@ -144,7 +144,7 @@ struct QuickEyesView: View {
         let score = Self.score(correct: correct, speedBonus: speedBonus)
         modelContext.insert(GameSession(gameID: .quickEyes, score: score,
                                         rounds: Self.totalRounds, durationSeconds: elapsed))
-        finalDetail = String(format: AppLanguage.localized( "game.celebration.spotted %lld %lld"),
+        finalDetail = String(format: AppLanguage.localized("game.celebration.spotted %lld %lld"),
                              correct, Self.totalRounds)
         showCelebration = true
     }
