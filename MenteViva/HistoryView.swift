@@ -44,16 +44,11 @@ struct HistoryView: View {
         }
     }
 
+    private var summary: WeeklySummary { WeeklySummary(playedAt: sessions.map(\.playedAt)) }
+
     /// Family-share payload: plain text so it works over any channel (WhatsApp,
     /// SMS, email) with no account, network, or CloudKit share required.
-    private var shareSummary: String {
-        let lines = weekSessions.map { session -> String in
-            let info = gameInfo(for: session.gameID)
-            return "\(info.emoji) \(info.name)"
-        }
-        let header = String(format: AppLanguage.localized("history.summary %lld"), weekSessions.count)
-        return ([header] + lines).joined(separator: "\n")
-    }
+    private var shareSummary: String { summary.text }
 
     // MARK: - Content
 
@@ -66,6 +61,10 @@ struct HistoryView: View {
                     .frame(maxWidth: .infinity)
                     .listRowBackground(Color.clear)
                     .accessibilityAddTraits(.isHeader)
+                Text(summary.text)
+                    .font(.title3)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.vertical, 8)
             }
 
             ForEach(groupedDays, id: \.day) { group in

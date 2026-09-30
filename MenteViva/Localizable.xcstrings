@@ -1264,6 +1264,70 @@
           }
         }
       }
+    },
+    "history.share.title": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🌻 My week with MenteViva"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🌻 Mi semana con MenteViva"
+          }
+        }
+      }
+    },
+    "history.share.days %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "📅 Days played: %lld"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "📅 Días que jugué: %lld"
+          }
+        }
+      }
+    },
+    "history.share.games %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🎮 Games played: %lld"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🎮 Juegos jugados: %lld"
+          }
+        }
+      }
+    },
+    "history.share.streak %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🌟 Days in a row: %lld"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🌟 Días seguidos: %lld"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

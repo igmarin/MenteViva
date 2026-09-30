@@ -20,12 +20,14 @@
 		83C5727F27BD566A0000001A /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7B3B616009A42E800000014; };
 		89CAE55D19053AF10000001F /* JevService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42B3456BD42F17B700000019; };
 		8C75A9CE4133529700000020 /* SoundPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B94116EB608F25D0000001A; };
+		D9207C4B070633A000000022 /* WeeklySummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DCDF59CF4AC6AE0000001C; };
 		F1CAEDFBEAB27E7A00000018 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881D5FFD680EE69800000012; };
 		89155436CE7D610300000037 /* DailyPlanFallbackTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34DE3FBC170271E900000031; };
 		35A281A4703D4C320000002E /* DayStampTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 704A57A9A9F6E88000000028; };
 		C524FB5039855DE400000036 /* DifficultyPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F28BC63EFC28057200000030; };
 		C7BB50E2D28ADBC300000033 /* JevPlanPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67ADC4F8E1EC78290000002D; };
 		F3781E2CF00E20FA00000033 /* RoundProgressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690FA2BE3DFB9D180000002D; };
+		0EEED9F3112B457400000033 /* WeeklySummaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2CB27B32AF72D220000002D; };
 
 		915FB304D5C7D9690000001F /* CategoryFluencyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/CategoryFluencyView.swift; sourceTree = "<group>"; };
 		4174FC9AF3B1DBCB0000001B /* CelebrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/CelebrationView.swift; sourceTree = "<group>"; };
@@ -42,12 +44,14 @@
 		D7B3B616009A42E800000014 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		42B3456BD42F17B700000019 /* JevService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/JevService.swift; sourceTree = "<group>"; };
 		6B94116EB608F25D0000001A /* SoundPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/SoundPlayer.swift; sourceTree = "<group>"; };
+		E5DCDF59CF4AC6AE0000001C /* WeeklySummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/WeeklySummary.swift; sourceTree = "<group>"; };
 		881D5FFD680EE69800000012 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		34DE3FBC170271E900000031 /* DailyPlanFallbackTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/DailyPlanFallbackTests.swift; sourceTree = SOURCE_ROOT; };
 		704A57A9A9F6E88000000028 /* DayStampTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/DayStampTests.swift; sourceTree = SOURCE_ROOT; };
 		F28BC63EFC28057200000030 /* DifficultyPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/DifficultyPolicyTests.swift; sourceTree = SOURCE_ROOT; };
 		67ADC4F8E1EC78290000002D /* JevPlanPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/JevPlanPolicyTests.swift; sourceTree = SOURCE_ROOT; };
 		690FA2BE3DFB9D180000002D /* RoundProgressTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/RoundProgressTests.swift; sourceTree = SOURCE_ROOT; };
+		A2CB27B32AF72D220000002D /* WeeklySummaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/WeeklySummaryTests.swift; sourceTree = SOURCE_ROOT; };
 		5D90A9FDEC5CFCA50000000D /* MenteViva.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MenteViva.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1983297D696F1E1B0000000A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5791C14BF0160AFA00000009 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
@@ -91,6 +95,7 @@
 				D7B3B616009A42E800000014 /* OnboardingView.swift */,
 				42B3456BD42F17B700000019 /* JevService.swift */,
 				6B94116EB608F25D0000001A /* SoundPlayer.swift */,
+				E5DCDF59CF4AC6AE0000001C /* WeeklySummary.swift */,
 				881D5FFD680EE69800000012 /* SettingsView.swift */,
 				1983297D696F1E1B0000000A /* Info.plist */,
 				5791C14BF0160AFA00000009 /* Localizable.xcstrings */,
@@ -109,6 +114,7 @@
 				F28BC63EFC28057200000030 /* DifficultyPolicyTests.swift */,
 				67ADC4F8E1EC78290000002D /* JevPlanPolicyTests.swift */,
 				690FA2BE3DFB9D180000002D /* RoundProgressTests.swift */,
+				A2CB27B32AF72D220000002D /* WeeklySummaryTests.swift */,
 			);
 			name = MenteVivaTests;
 			sourceTree = "<group>";
@@ -190,6 +196,7 @@
 				83C5727F27BD566A0000001A /* OnboardingView.swift in Sources */,
 				89CAE55D19053AF10000001F /* JevService.swift in Sources */,
 				8C75A9CE4133529700000020 /* SoundPlayer.swift in Sources */,
+				D9207C4B070633A000000022 /* WeeklySummary.swift in Sources */,
 				F1CAEDFBEAB27E7A00000018 /* SettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -204,6 +211,7 @@
 				C524FB5039855DE400000036 /* DifficultyPolicyTests.swift in Sources */,
 				C7BB50E2D28ADBC300000033 /* JevPlanPolicyTests.swift in Sources */,
 				F3781E2CF00E20FA00000033 /* RoundProgressTests.swift in Sources */,
+				0EEED9F3112B457400000033 /* WeeklySummaryTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
