@@ -7,9 +7,9 @@ screen of real content, split it — long docs don't get read.
 |---|---|---|
 | [product-brief.md](product-brief.md) | What are we building, for whom, and why | Current |
 | [conventions.md](conventions.md) | Rules every commit must follow | Current |
-| [jev-integration.md](jev-integration.md) | How Jev/TypeSafe fits (seasoning, not the meal) | Client built; app wiring in progress |
+| [jev-integration.md](jev-integration.md) | How Jev/TypeSafe fits (seasoning, not the meal) | Wired, proxy deployed, verified live (2026-09-30) |
 | [jev-revisit.md](jev-revisit.md) | Jev judgments 001–010: early decisions, corrected audience, games, segments, utility matrix | Living, to 2026-09-22 |
-| [jev-json/](jev-json/) | Raw Jev request/response archive (audit trail) | Growing |
+| [jev-json/](jev-json/) | Raw Jev request/response archive (audit trail); 011 is the app's real daily request | Growing |
 | [mvp.md](mvp.md) | MVP definition of done + phase gates | Living |
 | [playtest.md](playtest.md) | How to run a playtest and record it (#6, #33) | Living |
 | [playtest-session-1.md](playtest-session-1.md) | Printable session sheet for dad's playtest (#6) — findings map to #44/#46/#47 | Current |

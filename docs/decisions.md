@@ -205,7 +205,7 @@ cheers). Reasons: SwiftData in iOS 17 exposes no CKShare API (it would need
 Core Data interop or a parallel CloudKit record zone), and it cannot be
 honestly verified without an Apple Developer Program container and two Apple
 IDs on real devices. Revisit when the developer account is set up and the
-TestFlight beta (#10) is running.
+the device-based beta (#10) is running (TestFlight follows the paid account).
 
 ## 2026-09-19 — Number Trail role defined (#17 closed)
 

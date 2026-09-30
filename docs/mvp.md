@@ -14,7 +14,7 @@ No game #6 before playtest findings (#18).
 | G0 — Playable ✅ | 5 games build + playable, ES/EN | on main |
 | **G1a — Stable ✅** | Runs reliably on a real device; no crashes in normal play | owner-verified 2026-09-20 |
 | G1b — Loved | Played unprompted twice in one week; top-3 friction fixed | #6 (engagement not yet measured) |
-| **G2 — Verified** (was misnamed "Sound") | Tests green + accessibility done + build/warning clean | 65 tests green on main (2026-09-30), #5 code ✓, VoiceOver changes shipped (#64) but unverified on a device, device a11y checklist pending |
+| **G2 — Verified** (was misnamed "Sound") | Tests green + accessibility done + build/warning clean | 71 tests green on main (2026-09-30), #5 code ✓, VoiceOver check passed on the iPad (#64, 2026-09-30), rest of the device a11y checklist pending |
 | G3 — Connected | Jev live via a hardened proxy: client wired into Home, difficulty applied, real payload archived | Wired (#58–#61), proxy deployed (#63), config via xcconfig (#91), real payload archived (#62). Only a device run with `Local.xcconfig` set remains |
 | G4 — Shippable (free path) | Disclaimer copy, ES native review, **device-based beta** ≥5 people, in-person | #12, #10, #38 |
 | G5 — Sellable (free path) | Works for strangers: onboarding, settings, privacy policy + support, listing assets, device support matrix | #31–#36 |
@@ -33,8 +33,8 @@ decision, and nothing before G5 needs it.**
 - [ ] 5 games playtested on real iPad → #6 notes
 - [ ] Playtest friction top-3 fixed → linked PRs
 - [ ] Accessibility audit vs conventions §4 → #5 report
-- [ ] Test backfill + TDD/BDD rule → #20, green `xcodebuild test`
-- [ ] Jev proxy live, key server-side → #63, first real dashboard traffic
+- [x] Test backfill + TDD/BDD rule → #20, green `xcodebuild test` (71 tests)
+- [x] Jev proxy live, key server-side → #63 (deployed and verified 2026-09-30; real payload `jev-json/011`)
 - [ ] Family share + preset cheers → #11 (v0.4.0, needs the paid account; not MVP), tested with 2 Apple IDs
 - [ ] Medical-disclaimer copy in-app + store listing → research §5.1 wording
 - [ ] ES review by native speaker 65+ → #12 sign-off (packet: es-review-packet.md)

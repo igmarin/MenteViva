@@ -19,10 +19,8 @@ progress instead of points (#45).
 2. **Switch Jev on and watch it** — wired, deployed, configured via
    `Local.xcconfig` and verified live (#58–#63, #91, #62). Left: run it on the
    iPad for a few days and compare its picks against the rotation.
-3. **Device check** of the VoiceOver changes and 100pt toolbar targets (#64
-   shipped, unverified on hardware).
-4. **Test gaps** — game double-tap flows and History grouping (#65 remainder),
-   game plumbing dedupe (#57) if it deletes code.
+3. **Done 2026-09-30:** VoiceOver and 100pt-target check on the iPad (#64),
+   History/day-grouping tests and plumbing dedupe (#65, #57).
 
 Also open in this milestone, after the playtest: Quick Eyes untimed redesign
 (#46), Color Clash / Number Trail decision (#47).
@@ -42,7 +40,7 @@ Exit criteria: dad picks it up unprompted, twice in one week (docs/mvp.md G1b).
 - Device installs: `swift tools/generate_project.swift` → Xcode → ⌘R (local-only is the default).
   Builds expire after 7 days; re-sign from Xcode to renew (#38 runbook).
 - Family + in-person testing on whatever devices we can lay hands on.
-- Jev proxy on Cloudflare's free tier → live daily mix/difficulty (hardening and deploy: #63).
+- Jev proxy on Cloudflare's free tier → live daily mix/difficulty (deployed and verified 2026-09-30, #63).
 - Privacy policy + support page hosted free (#34).
 - Store listing copy and screenshots written now so publishing is a copy-paste
   later (#35).
