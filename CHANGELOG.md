@@ -20,6 +20,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 ### Fixed
 - **Jev proxy hardening (#63):** worker now requires a shared-secret header, rate-limits,
   caps body size, validates model/question keys, and returns a warm 502 on upstream failure.
+### Fixed
 - **Round-end bugs (#53, #54, #55):** an extra tap after the last round no longer
   records a second session (Color Clash, Quick Eyes, Number Trail); Color Clash
   now records whole-session time; Number Trail uses the shared round counter.
