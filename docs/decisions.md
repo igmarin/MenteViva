@@ -103,9 +103,10 @@ Consequences:
 - **Design target is now early dementia**, not generic prevention. The existing
   warm, no-fail, big-target design already leans this way — the shift is in
   *which* games and content matter, not in replacing the whole app.
-- **Evidence improves** for this audience: MCI/early dementia is the
-  best-supported population for cognitive training (research §1), so the app is
-  on firmer ground, not weaker.
+- **Evidence is mixed, not better:** MCI is the best-supported population for
+  cognitive training, but evidence for established dementia is weak and for
+  early-stage dementia unclear (research §1). We design for this player as a
+  kindness, not on an efficacy claim.
 - **Marketing ceiling is unchanged** — and now more important, not less: "fun
   mental exercise", never treatment/prevention/diagnosis. Targeting an
   early-dementia audience raises App Store 1.4.1 scrutiny if we *market* to it;
@@ -280,8 +281,8 @@ Revisit when: playtest data shows one game dominates or gets abandoned.
 
 > **Superseded by** 2026-09-20 "Audience corrected: early dementia" and 2026-09-22 "Audience locked". Current audience: older adults 60+ including early cognitive decline; the adult child is the buyer. Kept for the record.
 
-Decided with the grill interview: dad is "mostly fine, we want to slow decline
-and keep him sharp." We are **not** building for diagnosed cognitive impairment
+Decided with the grill interview: dad is "mostly fine, we want to keep him
+engaged." We are **not** building for diagnosed cognitive impairment
 in v1 — that raises the design bar (simplification, caregiver supervision) and
 the regulatory bar (closer to medical claims) at the same time.
 

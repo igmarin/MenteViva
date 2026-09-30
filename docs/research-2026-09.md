@@ -1,6 +1,6 @@
 # MenteViva Research — 2026-09
 
-Terse, cited, decision-oriented. Every claim has a URL; unverifiable items are marked [UNVERIFIED]. App Store data scanned 2026-09 (US storefront).
+Internal research, not marketing: nothing here may reach a user as a claim (copy ceiling: "fun mental exercise"; see statistics-rationale.md §4). Terse, cited, decision-oriented. Every claim has a URL; unverifiable items are marked [UNVERIFIED]. App Store data scanned 2026-09 (US storefront).
 
 ## 1. AUDIENCE
 
@@ -10,12 +10,13 @@ Terse, cited, decision-oriented. Every claim has a URL; unverifiable items are m
 |---|---|---|
 | Healthy older adults | Small near-transfer gains on trained tasks; far transfer to daily life weak/unproven. Overall CCT effect small (g≈0.22) in meta-analysis of 51 studies. | https://pmc.ncbi.nlm.nih.gov/articles/PMC4236015/ |
 | MCI | Small–moderate improvements across domains; best-supported target population for CCT. | https://pubmed.ncbi.nlm.nih.gov/27838936/ |
-| Dementia | No reliable benefit; do not target. | https://pubmed.ncbi.nlm.nih.gov/27838936/ |
+| Established dementia | No reliable benefit shown in the same meta-analysis; evidence base is thin. | https://pubmed.ncbi.nlm.nih.gov/27838936/ |
+| Early-stage (mild) dementia | Unclear: the evidence sits between the MCI and dementia rows and is not established for computer games. We design for this player (errorless, familiar, calm) as a kindness, not on an efficacy claim, and the product stays "fun mental exercise". | (no direct source; see rows above) |
 | General public (younger) | Not MenteViva's market; evidence is for 60+. | https://journals.sagepub.com/doi/10.1177/1529100616661983 |
 
 **Transfer to daily life — the big studies:**
 
-- **ACTIVE (N=2,802, 10-yr follow-up):** speed-of-processing arm cut dementia incidence 29% (22.7% vs 28.8% control), dose-dependent; memory and reasoning arms showed no dementia benefit. Strongest single result in the field. https://pmc.ncbi.nlm.nih.gov/articles/PMC5700828/
+- **ACTIVE (N=2,802, 10-yr follow-up):** speed-of-processing arm was followed by lower dementia incidence (22.7% vs 28.8% control, a 29% relative difference), dose-dependent; memory and reasoning arms showed no dementia benefit. Strongest single result in the field. https://pmc.ncbi.nlm.nih.gov/articles/PMC5700828/
 - **2014 Stanford/Max Planck consensus (70 scientists):** "no compelling scientific evidence" brain games improve everyday cognition or prevent decline; ads exploiting seniors' anxieties called out. This is the scientific mainstream. https://longevity.stanford.edu/a-consensus-on-the-brain-training-industry-from-the-scientific-community/
 - **2019 GCBH/AARP "Engage Your Brain" report:** novel, challenging, socially embedded activities > repetitive brain games; games fine as one ingredient. [UNVERIFIED direct report URL; org: https://www.globalcouncilonbrainhealth.org/]
 - **FINGER (n=1,260, ages 60–77, 2 yr):** multidomain (diet+exercise+cognitive training+vascular) improved cognition vs control (NTB z-score +0.022/yr, p=0.030) — supports bundling games with lifestyle framing, not games-alone claims. https://doi.org/10.1016/S0140-6736(15)60461-5
@@ -73,11 +74,11 @@ Paradigms are public-domain *science*; specific commercial implementations and c
 
 **One-time vs subscription for MenteViva (indie, seniors, Family Sharing):**
 
-- One-time ($9.99–14.99): seniors/caregivers distrust subscriptions (FTC-vintage wariness), Family Sharing makes one purchase cover the whole family — strong fit for the "adult child buys for parent" channel. Zero churn revenue though; updates must be funded by new sales.
+- One-time (we chose $12.99): seniors/caregivers distrust subscriptions (FTC-vintage wariness), Family Sharing makes one purchase cover the whole family — strong fit for the "adult child buys for parent" channel. Zero churn revenue though; updates must be funded by new sales.
 - Subscription funds ongoing content, but seniors have lowest subscription tolerance of any demographic and care facilities avoid auto-renewing app purchases entirely. [UNVERIFIED — no public survey found]
-- Compromise used by adjacent indie apps: cheap annual ($19.99–29.99) + generous free tier (daily 3 games free forever). Converts the engaged, doesn't alienate the casual.
+- Alternative not chosen, used by adjacent indie apps: cheap annual ($19.99–29.99) + generous free tier (daily 3 games free forever). Converts the engaged, doesn't alienate the casual.
 - One-time also dodges Guideline 3.1.1 subscription fatigue risk in review and simplifies refunds/disputes.
-- **DECISION-LEAN:** launch one-time $12.99 w/ Family Sharing; revisit annual sub only if content cadence justifies it.
+- **DECIDED for beta (decisions.md 2026-09-19, #21):** one-time $12.99 with Family Sharing; revisit annual sub only with beta conversion data.
 
 ## 5. PRE-RELEASE CONSIDERATIONS CHECKLIST
 
