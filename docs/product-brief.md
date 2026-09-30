@@ -1,45 +1,45 @@
 # Product Brief — Mente Viva
 
+Current truth as of 2026-09-29. History and reasons: `decisions.md`.
+
 ## What it is
 
-Warm, bilingual (ES/EN) cognitive mini-games for older adults. Four-to-five
-short games, one per cognitive domain, big targets, no fail shame.
+Warm, bilingual (ES/EN) mental-exercise games for older adults. Five short
+games, big targets, no fail shame. Sold to families, played by a parent.
 
 ## Who it's for
 
-**Primary: older adults, 60+, preventive / mild cognitive stage.** Motivated
-people who want to stay sharp, or whose family wants to help them do it.
-Deliberately *not* diagnosed cognitive impairment: that population has the best
-evidence for cognitive training but raises the design and regulatory bar at the
-same time (research §1).
+**Player: older adults 60+, including early cognitive decline.** Dad is the
+design floor: errorless, familiar, calm. Mom and the owner are equal floors
+(healthy 60+, healthy 40+); per-person game libraries are the north star,
+per-device today (decisions 2026-09-20, 2026-09-22). Mental-health and general
+wellness users are spillover of the same product, never a target.
 
-**Secondary: the family buyer.** Adult children who find the app, decide it's
-good, and set it up for a parent. They hold the wallet and the patience for
-onboarding — the *player* holds neither.
+**Buyer: the adult child.** They find the app, install it and pay. Store
+listing and purchase flow speak to them ("for someone you love"); in-app copy
+speaks to the player and never pitches (Jev 009).
 
-**Not in v1** (see docs/mvp.md): general-public/younger "brain training"
-audience, clinical populations, care facilities, kids.
+**Not in v1:** clinical use, care facilities, kids, younger "brain training".
 
-## The two modes we must design for
+## Commercial intent
 
-This started as an app for one dad. It is now an app **strangers will install
-without us in the room** — the difference drives real requirements:
+The goal is to sell this to families like ours. A stranger must be able to
+install it with nobody explaining it: self-serve onboarding, in-app settings
+(language, sound, bigger text), privacy policy, support contact, EN + ES store
+assets, one-time $12.99 with Family Sharing (decided for beta, #21).
+Publishing waits on the paid Developer Program (decisions 2026-09-20).
 
-| Family mode (v0: how it began) | Stranger mode (v1: what we ship) |
-|---|---|
-| We explain it to dad in person | First run must explain itself; no tutorial by phone |
-| We fix things when they break | Settings dad can reach himself; nothing needs our intervention |
-| We know his language and pace | Language auto-detected, both shipped equally, neither an afterthought |
-| Scores stay in the family | Privacy policy, no tracking, no ads — trust is the product |
-| Free, built out of love | A price, an App Store listing, refunds, support contact |
+**Marketing ceiling: "fun mental exercise".** Never memory-loss reversal,
+prevention, treatment or screening (research §1; `statistics-rationale.md` §4).
 
 ## Design pillars
 
-1. **Easy above all** — one-tap start, huge touch targets (≥100pt), no
-   pressure timers, no fail shame. Words: "try again", never "wrong".
-2. **Bilingual from birth** — every string in `Localizable.xcstrings`, EN + ES,
-   shipped equally. Spanish is a market advantage, not a translation.
-3. **Evidence-informed games** — one game per cognitive domain:
+1. **Easy above all** — one-tap start, large targets (≥60pt floor, 100pt aim),
+   no fail shame. Words: "try again", never "wrong". Quick Eyes has a short
+   display time by design; the untimed redesign is #46.
+2. **Bilingual from birth** — every string in `Localizable.xcstrings`, EN + ES.
+3. **Games, one per cognitive domain:**
+
    | Game | Domain | Mechanic |
    |---|---|---|
    | 🧩 Memory Lane | Episodic memory | Emoji pair matching |
@@ -47,43 +47,33 @@ without us in the room** — the difference drives real requirements:
    | 🐾 Name the Herd | Verbal fluency | Category recall from big tiles |
    | 🔢 Number Trail | Processing + numeracy | Simple adaptive math streaks |
    | 👀 Quick Eyes | Processing speed | Shrinking display-time discrimination |
-4. **Visually warm** — big cards, soft colours, celebration on completion.
-   Never clinical: no brains, no charts, no medical iconography.
-5. **Works offline, always** — solo devices, bad facility wifi, no forced
-   login, no account. Sync is a bonus, never a requirement.
+
+   Color Clash and Number Trail are under review (#47). A reminiscence game
+   (family photos) is the next build candidate, gated on the playtest (#44).
+4. **Progress, not points** — every game ends on a warm celebration with a
+   progress line; no scores are shown (#45).
+5. **Visually warm** — big cards, soft colours. Never clinical: no brains,
+   charts or medical iconography.
+6. **Works offline, always** — no account, no forced login. Sync is a bonus.
 
 ## Where Jev fits (decided: seasoning, not the meal)
 
-- Games are deterministic and fully offline. Code judges right/wrong, never the
-  model.
-- Jev (online only): (a) ranks today's game mix from recent play history,
-  (b) nudges per-game difficulty. Once per day, one request, archived in
-  `docs/jev-json/`.
-- The API key never ships in the binary: `proxy/worker.js` holds it server-side.
-- Fallback: deterministic rotation when Jev is unreachable. **The app must
-  never degrade without network.**
+- Games are deterministic and offline. Code judges right/wrong, never the model.
+- Jev (online only) ranks today's mix and nudges per-game difficulty: one
+  request a day, with a silent deterministic fallback. Design and status:
+  `jev-integration.md`. **Runtime wiring is in progress**, not shipped.
+- The API key never ships in the binary; `proxy/worker.js` holds it.
 
-## Commercial intent (why the requirements got stricter)
+## Data and sharing
 
-The goal is to sell this — to families like ours, not to a mass market. That
-means v1 needs the boring parts: self-serve onboarding, a privacy policy, a
-support contact, App Store listing assets in both languages, honest marketing
-copy, and a price.
-
-**Marketing ceiling: "fun mental exercise".** Never memory-loss reversal,
-dementia prevention, MCI treatment, or clinical screening — FTC precedent
-(Lumosity, $2M) and FDA general-wellness rules both bite here (research §1).
+- Default build is **local-only**: sessions live on the device, no CloudKit
+  entitlement, works with a free Apple ID.
+- CloudKit mirroring and real `CKShare` family sharing are **deferred**: they
+  need the paid program (#11, v0.4.0). Family sharing today is the native text
+  share of the week's games.
 
 ## Non-goals for v1
 
-- No accounts, no leaderboards, no clinical scores, no medical claims.
-- No caregiver remote management, no multi-profile households.
-- No third language, no Android, no watch.
-
-## Sharing
-
-Phase 1 (shipped): on-device CloudKit mirroring + a native text share of the
-week's games. Phase 2 (post-launch): real `CKShare` invite/accept with preset
-cheers — blocked on SwiftData's missing CKShare API and on paid-account
-provisioning (issue #11).
-
+No accounts, leaderboards, clinical scores or medical claims. No caregiver
+remote management or multi-profile households yet. No third language (#40),
+Android or watch.

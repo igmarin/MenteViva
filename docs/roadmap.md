@@ -3,34 +3,37 @@
 Ordered. Finish one before starting the next. Dates are added when work
 starts, not before — no fantasy deadlines.
 
-**Owner decision (2026-09-19): polish before distribution.** TestFlight (#10)
+**Owner decision (2026-09-19): polish before distribution.** TestFlight
 and any paid-developer-account work wait until the app feels right in dad's
 hands. Beta is a *distribution* step, not a QA step.
 
-## Now — make it feel finished (G1)
+## Now — v0.2.0 Polish + Speed (G1b, G2)
 
-The app works; it doesn't yet feel like a finished product. Polish list:
+Shipped and off this list: app icon and launch screen, home screen (#27), sound
+and haptics (#26), first-run onboarding (#31), Memory Lane warmth (#43),
+progress instead of points (#45).
 
-1. **App icon + launch screen** — currently the default placeholder. A real
-   icon is the single biggest "is this a real app?" signal.
-2. **Home screen personality** — warm greeting, big tiles with per-game emoji,
-   "Play again" affordance instead of a plain List.
-3. **Dad playtest #1** (#6) — the gate Jev insists on (P=0.99). Watch, note
-   3 friction points, fix them.
-4. **Sound + haptics** — gentle success chime, soft tap feedback (optional,
-   off by default if he finds them noisy).
-5. **Empty/first-run state** — does a brand-new user know what to tap?
+1. **Dad playtest #1 (#6)** — not run yet. Use `playtest-session-1.md`; watch,
+   note 3 friction points. It gates new content (#18) and the reminiscence
+   game (#44).
+2. **Make Jev real** — the client exists but is not wired: record accuracy
+   (#58), wire the daily plan into Home (#59), apply difficulty in games (#60),
+   tolerant decode (#61), archive the real payload (#62).
+3. **Harden the proxy (#63)** before any deploy.
+4. **Accessibility gaps** — Color Clash and Quick Eyes with VoiceOver, toolbar
+   targets (#64).
+5. **CI on PRs + tests (#65)**, game plumbing dedupe (#57), generator fixes (#66).
 
-Exit criteria: dad picks it up unprompted, twice in one week (docs/mvp.md G1).
+Also open in this milestone, after the playtest: Quick Eyes untimed redesign
+(#46), Color Clash / Number Trail decision (#47).
+
+Exit criteria: dad picks it up unprompted, twice in one week (docs/mvp.md G1b).
 
 ## Next — polish pass 2
 
 - Session history richness (streaks, "you improved"), portrait/landscape check.
-- Scoring → progress redesign (Jev 010 noul 0.79: points confused, progress motivates).
-- Memory Lane engagement + visual warmth (Jev 010: dad's anchor, engagement 0.50).
-- Quick Eyes: untimed errorless redesign replaces the shrink-curve feel check (Jev 010).
 - ES copy pass with a native speaker for warmth, not just correctness (#12).
-- Device a11y checklist from the audit (issue #5 comments) on real hardware.
+- Device a11y checklist from the audit (`a11y-audit-2026-09.md`) on real hardware.
 
 ## Then — distribution, in two tiers
 
@@ -39,7 +42,7 @@ Exit criteria: dad picks it up unprompted, twice in one week (docs/mvp.md G1).
 - Device installs: `swift tools/generate_project.swift` → Xcode → ⌘R (local-only is the default).
   Builds expire after 7 days; re-sign from Xcode to renew (#38 runbook).
 - Family + in-person testing on whatever devices we can lay hands on.
-- Jev proxy on Cloudflare's free tier → live daily mix/difficulty (#13 deploy).
+- Jev proxy on Cloudflare's free tier → live daily mix/difficulty (hardening and deploy: #63).
 - Privacy policy + support page hosted free (#34).
 - Store listing copy and screenshots written now so publishing is a copy-paste
   later (#35).
@@ -47,8 +50,8 @@ Exit criteria: dad picks it up unprompted, twice in one week (docs/mvp.md G1).
 **Tier 2 — blocked on the paid Developer Program ($99/yr, deliberately
 postponed until the trigger in decisions.md 2026-09-20):**
 
-- TestFlight beta (#10) — external testers with no expiry.
-- CloudKit sync + real `CKShare` family sharing (#11).
+- TestFlight beta — external testers with no expiry (the device-based beta, #10, comes first).
+- CloudKit sync + real `CKShare` family sharing (#11, v0.4.0).
 - App Store submission, price, StoreKit purchase (#21).
 - Non-expiring installs, more than 3 simultaneous test devices.
 
@@ -66,5 +69,5 @@ postponed until the trigger in decisions.md 2026-09-20):**
 
 - ~~New user segments~~ — resolved 2026-09-22 (Jev 009): 60+ leads, mental-health
   and wellness users are spillover of the same product; no forks, copy ceiling holds.
-- Android, watchOS, clinician dashboard, more games (blocked by #18 gate).
+- Android, watchOS, clinician dashboard, more games (blocked by #18 gate; reminiscence #44 is the first candidate).
 

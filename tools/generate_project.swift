@@ -3,8 +3,22 @@
 // Re-run after adding source files: swift tools/generate_project.swift
 import Foundation
 
-let root = URL(fileURLWithPath: FileManager.default.currentDirectoryPath)
+/// Fail with one clear line instead of a raw trace.
+func die(_ message: String) -> Never {
+    FileHandle.standardError.write(Data("generate_project: \(message)\n".utf8))
+    exit(1)
+}
+
+// Resolve the repo root from this script's location (tools/ -> repo root), not
+// from the cwd, so running it from anywhere gives the same output.
+let scriptPath = CommandLine.arguments.first { $0.hasSuffix("generate_project.swift") }
+    ?? "tools/generate_project.swift"
+let root = URL(fileURLWithPath: scriptPath).standardizedFileURL
+    .deletingLastPathComponent().deletingLastPathComponent()
 let appDir = root.appendingPathComponent("MenteViva")
+guard FileManager.default.fileExists(atPath: appDir.path) else {
+    die("no MenteViva/ source folder at \(root.path). Run it as: swift tools/generate_project.swift")
+}
 
 /// CloudKit is **off by default** until the paid Developer Program is bought
 /// (decisions.md 2026-09-20). A CloudKit-enabled build without the iCloud
@@ -21,10 +35,10 @@ let localOnly = !cloudKit
 /// Ismael Marin Cabrera (Personal Team) — free provisioning, so installs on a
 /// device expire 7 days after signing. Verified against the installed
 /// provisioning profile for com.igmarin.MenteViva (TeamIdentifier VB42T7NYX2).
-/// Change this one line when the paid team replaces it.
-let developmentTeam = "VB42T7NYX2"
+/// Override without editing: MENTEVIVA_TEAM=XXXXXXXXXX swift tools/generate_project.swift
+/// (or change the default when the paid team replaces it).
+let developmentTeam = ProcessInfo.processInfo.environment["MENTEVIVA_TEAM"] ?? "VB42T7NYX2"
 let testsDir = root.appendingPathComponent("MenteVivaTests")
-let uiTestsDir = root.appendingPathComponent("MenteVivaUITests")
 
 /// All .swift files under `dir`, paths relative to `base`.
 func swiftFiles(under dir: URL, relativeTo base: URL) -> [String] {
@@ -38,7 +52,6 @@ func swiftFiles(under dir: URL, relativeTo base: URL) -> [String] {
 
 let appFiles = swiftFiles(under: appDir, relativeTo: appDir)
 let testFiles = swiftFiles(under: testsDir, relativeTo: root)      // "MenteVivaTests/…"
-let uiTestFiles = swiftFiles(under: uiTestsDir, relativeTo: root)  // "MenteVivaUITests/…"
 
 // Stable, deterministic IDs: FNV-1a hash → 24 hex chars.
 func oid(_ s: String) -> String {
@@ -60,10 +73,6 @@ let testsProductID = oid("MenteVivaTests.xctest"), testsTgtID = oid("tests:targe
 let testsSrcsID = oid("tests:Sources"), testsFwID = oid("tests:Frameworks")
 let testsResID = oid("tests:Resources"), testsGrpID = oid("tests:group")
 let testsDepID = oid("tests:dep"), testsProxyID = oid("tests:proxy")
-let uiProductID = oid("MenteVivaUITests.xctest"), uiTgtID = oid("uitests:target")
-let uiSrcsID = oid("uitests:Sources"), uiFwID = oid("uitests:Frameworks")
-let uiResID = oid("uitests:Resources"), uiGrpID = oid("uitests:group")
-let uiDepID = oid("uitests:dep"), uiProxyID = oid("uitests:proxy")
 var fileRefs = "", buildFiles = "", children = "", phaseFiles = ""
 for f in appFiles {
     let ref = oid(f), bld = oid(f + ".build"), name = URL(fileURLWithPath: f).lastPathComponent
@@ -89,9 +98,7 @@ func testSections(_ files: [String], salt: String) -> (refs: String, builds: Str
 }
 
 let tests = testSections(testFiles, salt: "tests:")
-let ui = testSections(uiTestFiles, salt: "uitests:")
 let hasTests = !testFiles.isEmpty
-let hasUITests = !uiTestFiles.isEmpty
 
 var p = """
 // !$*UTF8*$!
@@ -103,7 +110,7 @@ var p = """
 \tobjects = {
 
 """
-p += buildFiles + tests.builds + ui.builds + "\n" + fileRefs + tests.refs + ui.refs
+p += buildFiles + tests.builds + "\n" + fileRefs + tests.refs
 p += "\t\t\(appID) /* MenteViva.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MenteViva.app; sourceTree = BUILT_PRODUCTS_DIR; };\n"
 p += "\t\t\(plistID) /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = \"<group>\"; };\n"
 p += "\t\t\(catID) /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = \"<group>\"; };\n\n"
@@ -116,9 +123,6 @@ p += "\t\t\(assetsBuildID) /* Assets.xcassets in Resources */ = {isa = PBXBuildF
 if hasTests {
     p += "\t\t\(testsProductID) /* MenteVivaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MenteVivaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };\n"
 }
-if hasUITests {
-    p += "\t\t\(uiProductID) /* MenteVivaUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MenteVivaUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };\n"
-}
 p += "\n"
 
 // MARK: Groups
@@ -128,19 +132,14 @@ p += "\n"
 // GUI reports a "file format integrity issue" even though xcodebuild parses fine.
 var productsChildren = "\t\t\t\t\(appID) /* MenteViva.app */,\n"
 if hasTests { productsChildren += "\t\t\t\t\(testsProductID) /* MenteVivaTests.xctest */,\n" }
-if hasUITests { productsChildren += "\t\t\t\t\(uiProductID) /* MenteVivaUITests.xctest */,\n" }
 p += "\t\t\(rootGrpID) = {\n\t\t\tisa = PBXGroup;\n\t\t\tchildren = ( \(grpID) /* MenteViva */, \(productsGrpID) /* Products */ );\n\t\t\tsourceTree = \"<group>\";\n\t\t};\n"
 p += "\t\t\(productsGrpID) /* Products */ = {\n\t\t\tisa = PBXGroup;\n\t\t\tchildren = (\n\(productsChildren)\t\t\t);\n\t\t\tname = Products;\n\t\t\tsourceTree = \"<group>\";\n\t\t};\n\n"
 
 p += "\t\t\(grpID) /* MenteViva */ = {\n\t\t\tisa = PBXGroup;\n\t\t\tchildren = (\n\(children)\t\t\t\t\(plistID) /* Info.plist */,\n" + (localOnly ? "" : "\t\t\t\t\(entID) /* MenteViva.entitlements */,\n") + "\t\t\t\t\(catID) /* Localizable.xcstrings */,\n\t\t\t\t\(assetsID) /* Assets.xcassets */,\n"
 if hasTests { p += "\t\t\t\t\(testsGrpID) /* MenteVivaTests */,\n" }
-if hasUITests { p += "\t\t\t\t\(uiGrpID) /* MenteVivaUITests */,\n" }
 p += "\t\t\t);\n\t\t\tpath = MenteViva;\n\t\t\tsourceTree = \"<group>\";\n\t\t};\n\n"
 if hasTests {
     p += "\t\t\(testsGrpID) /* MenteVivaTests */ = {\n\t\t\tisa = PBXGroup;\n\t\t\tchildren = (\n\(tests.kids)\t\t\t);\n\t\t\tname = MenteVivaTests;\n\t\t\tsourceTree = \"<group>\";\n\t\t};\n\n"
-}
-if hasUITests {
-    p += "\t\t\(uiGrpID) /* MenteVivaUITests */ = {\n\t\t\tisa = PBXGroup;\n\t\t\tchildren = (\n\(ui.kids)\t\t\t);\n\t\t\tname = MenteVivaUITests;\n\t\t\tsourceTree = \"<group>\";\n\t\t};\n\n"
 }
 
 // MARK: Targets + dependencies
@@ -151,20 +150,13 @@ if hasTests {
     p += "\t\t\(testsProxyID) /* PBXContainerItemProxy */ = { isa = PBXContainerItemProxy; containerPortal = \(pbxID) /* Project object */; proxyType = 1; remoteGlobalIDString = \(tgtID); remoteInfo = MenteViva; };\n"
     p += "\t\t\(testsDepID) /* PBXTargetDependency */ = { isa = PBXTargetDependency; target = \(tgtID) /* MenteViva */; targetProxy = \(testsProxyID); };\n\n"
 }
-if hasUITests {
-    p += "\t\t\(uiTgtID) /* MenteVivaUITests */ = {\n\t\t\tisa = PBXNativeTarget;\n\t\t\tbuildConfigurationList = \(oid("uitests:cfgList")) /* Build configuration list for PBXNativeTarget \"MenteVivaUITests\" */;\n\t\t\tbuildPhases = ( \(uiSrcsID) /* Sources */, \(uiFwID) /* Frameworks */, \(uiResID) /* Resources */ );\n\t\t\tbuildRules = ( );\n\t\t\tdependencies = ( \(uiDepID) /* PBXTargetDependency */ );\n\t\t\tname = MenteVivaUITests;\n\t\t\tproductName = MenteVivaUITests;\n\t\t\tproductReference = \(uiProductID);\n\t\t\tproductType = \"com.apple.product-type.bundle.ui-testing\";\n\t\t};\n\n"
-    p += "\t\t\(uiProxyID) /* PBXContainerItemProxy */ = { isa = PBXContainerItemProxy; containerPortal = \(pbxID) /* Project object */; proxyType = 1; remoteGlobalIDString = \(tgtID); remoteInfo = MenteViva; };\n"
-    p += "\t\t\(uiDepID) /* PBXTargetDependency */ = { isa = PBXTargetDependency; target = \(tgtID) /* MenteViva */; targetProxy = \(uiProxyID); };\n\n"
-}
 
 // MARK: Project
 
 var targetAttrs = "\(tgtID) = { CreatedOnToolsVersion = 16.0; };"
 if hasTests { targetAttrs += " \(testsTgtID) = { CreatedOnToolsVersion = 16.0; TestTargetID = \(tgtID); };" }
-if hasUITests { targetAttrs += " \(uiTgtID) = { CreatedOnToolsVersion = 16.0; TestTargetID = \(tgtID); };" }
 var targetsList = "\(tgtID) /* MenteViva */"
 if hasTests { targetsList += ", \(testsTgtID) /* MenteVivaTests */" }
-if hasUITests { targetsList += ", \(uiTgtID) /* MenteVivaUITests */" }
 
 p += "\t\t\(pbxID) /* Project object */ = {\n\t\t\tisa = PBXProject;\n\t\t\tattributes = { BuildIndependentTargetsInParallel = 1; LastSwiftUpdateCheck = 2630; LastUpgradeCheck = 2700; TargetAttributes = { \(targetAttrs) }; };\n\t\t\tbuildConfigurationList = \(oid("prjCfgList")) /* Build configuration list for PBXProject \"MenteViva\" */;\n\t\t\tdevelopmentRegion = en;\n\t\t\thasScannedForEncodings = 0;\n\t\t\tknownRegions = ( en, Base, es );\n\t\t\tmainGroup = \(rootGrpID);\n\t\t\tminimizedProjectReferenceProxies = 1;\n\t\t\tpreferredProjectObjectVersion = 90;\n\t\t\tproductRefGroup = \(productsGrpID) /* Products */;\n\t\t\tprojectDirPath = \"\";\n\t\t\tprojectRoot = \"\";\n\t\t\ttargets = ( \(targetsList) );\n\t\t};\n\n"
 
@@ -178,11 +170,6 @@ if hasTests {
     p += "\t\t\(testsSrcsID) /* Sources */ = {\n\t\t\tisa = PBXSourcesBuildPhase;\n\t\t\tbuildActionMask = 2147483647;\n\t\t\tfiles = (\n\(tests.phase)\t\t\t);\n\t\t\trunOnlyForDeploymentPostprocessing = 0;\n\t\t};\n\n"
     p += "\t\t\(testsFwID) /* Frameworks */ = { isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = ( ); runOnlyForDeploymentPostprocessing = 0; };\n"
     p += "\t\t\(testsResID) /* Resources */ = { isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = ( ); runOnlyForDeploymentPostprocessing = 0; };\n\n"
-}
-if hasUITests {
-    p += "\t\t\(uiSrcsID) /* Sources */ = {\n\t\t\tisa = PBXSourcesBuildPhase;\n\t\t\tbuildActionMask = 2147483647;\n\t\t\tfiles = (\n\(ui.phase)\t\t\t);\n\t\t\trunOnlyForDeploymentPostprocessing = 0;\n\t\t};\n\n"
-    p += "\t\t\(uiFwID) /* Frameworks */ = { isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = ( ); runOnlyForDeploymentPostprocessing = 0; };\n"
-    p += "\t\t\(uiResID) /* Resources */ = { isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = ( ); runOnlyForDeploymentPostprocessing = 0; };\n\n"
 }
 
 // MARK: Build configurations
@@ -297,14 +284,6 @@ let testSettings = common + [
     ("SWIFT_EMIT_LOC_STRINGS", "NO"),
 ]
 
-let uiTestSettings = common + [
-    ("GENERATE_INFOPLIST_FILE", "YES"),
-    ("PRODUCT_BUNDLE_IDENTIFIER", "com.igmarin.MenteVivaUITests"),
-    ("PRODUCT_NAME", "\"$(TARGET_NAME)\""),
-    ("TEST_TARGET_NAME", "MenteViva"),
-    ("SWIFT_EMIT_LOC_STRINGS", "NO"),
-]
-
 p += configBlock("Debug", owner: "proj", settings: projectDebug)
 p += configBlock("Release", owner: "proj", settings: projectRelease)
 p += configBlock("Debug", owner: "app",
@@ -315,30 +294,30 @@ if hasTests {
     p += configBlock("Debug", owner: "tests", settings: testSettings)
     p += configBlock("Release", owner: "tests", settings: testSettings)
 }
-if hasUITests {
-    p += configBlock("Debug", owner: "uitests", settings: uiTestSettings)
-    p += configBlock("Release", owner: "uitests", settings: uiTestSettings)
-}
 p += "\n"
 p += configList(oid("prjCfgList"), "proj")
 p += configList(oid("tgtCfgList"), "app")
 if hasTests { p += configList(oid("tests:cfgList"), "tests") }
-if hasUITests { p += configList(oid("uitests:cfgList"), "uitests") }
 
 p += "\t};\n\trootObject = \(pbxID) /* Project object */;\n}\n"
 
 // MARK: Write project + shared scheme
 
 let projDir = root.appendingPathComponent("MenteViva.xcodeproj")
-try FileManager.default.createDirectory(at: projDir, withIntermediateDirectories: true)
-try p.write(to: projDir.appendingPathComponent("project.pbxproj"), atomically: true, encoding: .utf8)
+/// Runs a filesystem step; on failure prints what failed instead of a trace.
+func attempt(_ what: String, _ body: () throws -> Void) {
+    do { try body() } catch { die("could not \(what): \(error.localizedDescription)") }
+}
+attempt("write project.pbxproj") {
+    try FileManager.default.createDirectory(at: projDir, withIntermediateDirectories: true)
+    try p.write(to: projDir.appendingPathComponent("project.pbxproj"), atomically: true, encoding: .utf8)
+}
 
 var testables = ""
 func testable(_ id: String, bundle: String, name: String) -> String {
     "\t\t\t<TestableReference skipped=\"NO\">\n\t\t\t\t<BuildableReference BuildableIdentifier=\"primary\" BlueprintIdentifier=\"\(id)\" BuildableName=\"\(bundle)\" BlueprintName=\"\(name)\" ReferencedContainer=\"container:MenteViva.xcodeproj\"/>\n\t\t\t</TestableReference>\n"
 }
 if hasTests { testables += testable(testsTgtID, bundle: "MenteVivaTests.xctest", name: "MenteVivaTests") }
-if hasUITests { testables += testable(uiTgtID, bundle: "MenteVivaUITests.xctest", name: "MenteVivaUITests") }
 
 let appRef = "<BuildableReference BuildableIdentifier=\"primary\" BlueprintIdentifier=\"\(tgtID)\" BuildableName=\"MenteViva.app\" BlueprintName=\"MenteViva\" ReferencedContainer=\"container:MenteViva.xcodeproj\"/>"
 
@@ -373,20 +352,20 @@ let scheme = """
 """
 
 let schemeDir = projDir.appendingPathComponent("xcshareddata/xcschemes")
-try FileManager.default.createDirectory(at: schemeDir, withIntermediateDirectories: true)
+attempt("create the scheme folder") { try FileManager.default.createDirectory(at: schemeDir, withIntermediateDirectories: true) }
 // Write the scheme only if absent: Xcode owns and reformats it from here on, and
 // regenerating over it causes churn (formatting/LastUpgradeVersion) with no
 // semantic value. Target IDs are deterministic, so a committed scheme stays valid.
 let schemeFile = schemeDir.appendingPathComponent("MenteViva.xcscheme")
 if !FileManager.default.fileExists(atPath: schemeFile.path) {
-    try scheme.write(to: schemeFile, atomically: true, encoding: .utf8)
+    attempt("write the scheme") { try scheme.write(to: schemeFile, atomically: true, encoding: .utf8) }
 }
 
-// Xcode expects the project's embedded workspace file. Without it (and with
-// stale xcuserdata around) the GUI reports a "file format integrity issue"
-// even though xcodebuild parses the project fine.
+// Xcode expects the project's embedded workspace file. Without it the GUI
+// reports a "file format integrity issue" even though xcodebuild parses fine.
+// xcuserdata is left alone (per-user, gitignored); close Xcode before regenerating.
 let wsDir = projDir.appendingPathComponent("project.xcworkspace")
-try FileManager.default.createDirectory(at: wsDir, withIntermediateDirectories: true)
+attempt("create the workspace folder") { try FileManager.default.createDirectory(at: wsDir, withIntermediateDirectories: true) }
 let workspaceData = """
 <?xml version="1.0" encoding="UTF-8"?>
 <Workspace
@@ -397,18 +376,7 @@ let workspaceData = """
 </Workspace>
 
 """
-try workspaceData.write(to: wsDir.appendingPathComponent("contents.xcworkspacedata"), atomically: true, encoding: .utf8)
+attempt("write the workspace file") { try workspaceData.write(to: wsDir.appendingPathComponent("contents.xcworkspacedata"), atomically: true, encoding: .utf8) }
 
-// Drop stale per-user state: both the project and the embedded workspace store
-// caches of the previous generation's scheme/target IDs, which makes Xcode
-// complain that a project changed underneath it.
-for stale in [
-    projDir.appendingPathComponent("xcuserdata"),
-    wsDir.appendingPathComponent("xcuserdata"),
-] {
-    try? FileManager.default.removeItem(at: stale)
-}
-
-print("Generated MenteViva.xcodeproj: \(appFiles.count) app files, \(testFiles.count) test files, \(uiTestFiles.count) UI test files\(cloudKit ? " [cloudkit]" : " [local-only]")")
-
+print("Generated MenteViva.xcodeproj: \(appFiles.count) app files, \(testFiles.count) test files\(cloudKit ? " [cloudkit]" : " [local-only]")")
 

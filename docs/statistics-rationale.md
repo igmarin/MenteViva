@@ -16,8 +16,9 @@ suggestion: **"fun mental exercise / stay engaged."**
 The mainstream anchor stays the **2014 Stanford/Max Planck consensus** (70
 scientists): *no compelling evidence* brain games improve everyday cognition
 or prevent decline. Population nuance: MCI is the best-supported target;
-established dementia shows no reliable benefit — one more reason our design
-serves early-stage players without ever *claiming* to treat them.
+for established dementia the evidence shows no reliable benefit and for
+early-stage dementia it is unclear. So our design serves early-stage players
+(errorless, familiar) without ever *claiming* an effect on them.
 
 ## 2. How to read g≈0.22 honestly
 

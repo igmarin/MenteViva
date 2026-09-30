@@ -5,12 +5,13 @@
 # We use xcodebuild against the generated project instead.
 #
 # Cost warning: macOS runners bill at a much higher rate than Linux and this is a
-# private repo. Triggers are push-to-main + manual only; drop the push trigger if
-# the minutes matter more than the signal.
+# private repo. Triggers are pull_request + push-to-main + manual; drop the
+# pull_request trigger if the minutes matter more than the signal.
 
 name: Build and test
 
 on:
+  pull_request:
   push:
     branches: [ "main" ]
   workflow_dispatch:
@@ -27,6 +28,13 @@ jobs:
 
     - name: Regenerate project
       run: swift tools/generate_project.swift
+
+    - name: Fail if the committed project drifted from the generator
+      run: |
+        git diff --exit-code -- MenteViva.xcodeproj || {
+          echo "::error::MenteViva.xcodeproj is stale. Run 'swift tools/generate_project.swift' and commit."
+          exit 1
+        }
 
     - name: Pick an available iPhone simulator
       id: sim
