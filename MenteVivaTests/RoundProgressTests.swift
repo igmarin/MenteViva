@@ -92,3 +92,22 @@ final class GameScoringTests: XCTestCase {
         XCTAssertEqual(QuickEyesView.score(correct: 9, speedBonus: 12), 102)
     }
 }
+
+final class GameSessionAccuracyTests: XCTestCase {
+    func testGivenCorrectAndAttemptsWhenAccuracyThenRatio() {
+        let s = GameSession(gameID: .stroop, score: 0, rounds: 10, durationSeconds: 5,
+                            correct: 7, attempts: 10)
+        XCTAssertEqual(s.accuracy ?? -1, 0.7, accuracy: 0.0001)
+    }
+
+    func testGivenLegacySessionWithoutAttemptsWhenAccuracyThenNil() {
+        let s = GameSession(gameID: .memoryMatch, score: 0, rounds: 8, durationSeconds: 5)
+        XCTAssertNil(s.accuracy)
+    }
+
+    func testGivenMemoryPairsAndMovesWhenAccuracyThenPairsOverMoves() {
+        let s = GameSession(gameID: .memoryMatch, score: 0, rounds: 8, durationSeconds: 5,
+                            correct: 8, attempts: 16)
+        XCTAssertEqual(s.accuracy ?? -1, 0.5, accuracy: 0.0001)
+    }
+}
