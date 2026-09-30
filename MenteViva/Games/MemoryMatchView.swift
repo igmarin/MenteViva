@@ -2,7 +2,7 @@ import SwiftUI
 import SwiftData
 
 /// Memory Lane: classic pair-matching with big emoji cards.
-/// Difficulty = grid size. Fully offline, fully deterministic.
+/// Difficulty = grid size (6 / 8 / 10 pairs). Fully offline, fully deterministic.
 /// #43: themed boards rotate each game so visits stop feeling identical;
 /// warmer palette and a checkmark (not just a tint) mark found pairs.
 struct MemoryMatchView: View {
@@ -13,13 +13,14 @@ struct MemoryMatchView: View {
     /// Four themed sets of 8 pairs. One is drawn per game; emoji carry their
     /// own VoiceOver names, so themes need no extra strings.
     private static let themes: [[String]] = [
-        ["🌻", "🐢", "🍎", "🎸", "🌙", "☕️", "🦋", "🍊"],   // garden afternoon
-        ["🐶", "🐱", "🦁", "🐸", "🐘", "🐝", "🦆", "🐢"],   // animal friends
-        ["🍎", "🍌", "🍇", "🍊", "🍓", "🍉", "🍑", "🥝"],   // fruit bowl
-        ["🚗", "🚌", "✈️", "🚀", "🚲", "🚂", "⛵️", "🛵"],   // ways to go
+        ["🌻", "🐢", "🍎", "🎸", "🌙", "☕️", "🦋", "🍊", "🌷", "🐞"],   // garden afternoon
+        ["🐶", "🐱", "🦁", "🐸", "🐘", "🐝", "🦆", "🐢", "🐰", "🐧"],   // animal friends
+        ["🍎", "🍌", "🍇", "🍊", "🍓", "🍉", "🍑", "🥝", "🍍", "🍒"],   // fruit bowl
+        ["🚗", "🚌", "✈️", "🚀", "🚲", "🚂", "⛵️", "🛵", "🚁", "🚜"],   // ways to go
     ]
 
-    @State private var emojis: [String] = Self.themes[0]
+    @State private var difficulty = Difficulty.stored(.memoryMatch)
+    @State private var emojis: [String] = Array(Self.themes[0].prefix(8))
     private let columns = [GridItem(.adaptive(minimum: 110), spacing: 16)]
 
     @State private var cards: [Card] = []
@@ -39,6 +40,10 @@ struct MemoryMatchView: View {
         var isMatched = false
     }
 
+    static func pairCount(for difficulty: Difficulty) -> Int {
+        difficulty.pick(6, 8, 10)
+    }
+
     static func score(pairCount: Int, moves: Int) -> Int {
         max(10, pairCount * 20 - moves * 2)
     }
@@ -49,6 +54,7 @@ struct MemoryMatchView: View {
                 .font(.title2)
                 .multilineTextAlignment(.center)
 
+            ScrollView {
             LazyVGrid(columns: columns, spacing: 16) {
                 ForEach(cards) { card in
                     Button { flip(card.id) } label: {
@@ -83,6 +89,7 @@ struct MemoryMatchView: View {
                 }
             }
             .padding()
+            }
         }
         .padding()
         .navigationTitle(AppLanguage.localized("game.memory.title"))
@@ -97,7 +104,8 @@ struct MemoryMatchView: View {
 
     private func deal() {
         flipBackTask?.cancel()
-        emojis = Self.themes.randomElement() ?? Self.themes[0]
+        emojis = Array((Self.themes.randomElement() ?? Self.themes[0])
+            .prefix(Self.pairCount(for: difficulty)))
         cards = (emojis + emojis).shuffled().enumerated().map { Card(id: $0, emoji: $1) }
         cardPositions = Dictionary(uniqueKeysWithValues: cards.indices.map { (cards[$0].id, $0 + 1) })
         flipped = []

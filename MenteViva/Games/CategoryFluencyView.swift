@@ -2,7 +2,7 @@ import SwiftUI
 import SwiftData
 
 /// Name the Herd: pick the 7 items that belong to the shown category
-/// from a grid of 12 big emoji tiles (5 decoys). 3 categories per session.
+/// from a grid of big emoji tiles (3 / 5 / 7 decoys by difficulty). 3 categories per session.
 struct CategoryFluencyView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
@@ -30,7 +30,10 @@ struct CategoryFluencyView: View {
     }
 
     private let roundsPerSession = 3
-    private let decoyCount = 5
+    static func decoyCount(for difficulty: Difficulty) -> Int {
+        difficulty.pick(3, 5, 7)
+    }
+    @State private var difficulty = Difficulty.stored(.categoryFluency)
 
     struct Tile: Identifiable {
         let id: Int
@@ -144,7 +147,7 @@ struct CategoryFluencyView: View {
     private func dealRound() {
         guard let category = currentRound else { return }
         let decoys = Category.allCases.filter { $0 != category }
-            .flatMap(\.items).shuffled().prefix(decoyCount)
+            .flatMap(\.items).shuffled().prefix(Self.decoyCount(for: difficulty))
         let mixed = category.items.map { (emoji: $0, belongs: true) }
             + decoys.map { (emoji: $0, belongs: false) }
         tiles = mixed.shuffled().enumerated().map { Tile(id: $0, emoji: $1.emoji, belongs: $1.belongs) }

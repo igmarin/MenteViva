@@ -45,6 +45,21 @@ nonisolated enum Difficulty: Int, Codable {
         let clamped = min(max(jevScore, 0), 2)
         self = Difficulty(rawValue: Int(clamped.rounded())) ?? .medium
     }
+
+    /// Today's difficulty for a game: medium until Jev has said otherwise. Games
+    /// read it once when they open, so it never shifts under the player mid-game.
+    static func stored(_ game: GameID) -> Difficulty {
+        JevService.storedDifficulty()[game] ?? .medium
+    }
+
+    /// Picks the easy/medium/hard value of a per-game knob.
+    func pick<T>(_ easy: T, _ medium: T, _ hard: T) -> T {
+        switch self {
+        case .easy: easy
+        case .medium: medium
+        case .hard: hard
+        }
+    }
 }
 
 nonisolated struct DailyPlan: Codable {

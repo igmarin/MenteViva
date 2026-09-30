@@ -12,8 +12,12 @@ struct QuickEyesView: View {
 
     private let emojis = ["🌻", "🐢", "🍎", "🎸", "🌙", "☕️", "🦋", "🍊", "🚗", "⭐", "🐝", "🌵"]
     private static let totalRounds = 12
-    private let startDisplayTime = 1.2
-    private let minDisplayTime = 0.35
+    /// Flash length in seconds: where it starts and the floor it shrinks to.
+    static func displayTimes(for difficulty: Difficulty) -> (start: Double, floor: Double) {
+        difficulty.pick((1.6, 0.8), (1.2, 0.35), (1.0, 0.25))
+    }
+    private var startDisplayTime: Double { Self.displayTimes(for: difficulty).start }
+    private var minDisplayTime: Double { Self.displayTimes(for: difficulty).floor }
     private static let voiceOverHold = 2.5
     private let shrinkFactor = 0.92
     private let columns = [GridItem(.flexible()), GridItem(.flexible())]
@@ -22,11 +26,12 @@ struct QuickEyesView: View {
         case showing, choosing
     }
 
+    @State private var difficulty = Difficulty.stored(.quickEyes)
     @State private var phase: Phase = .showing
     @State private var progress = RoundProgress(totalRounds: Self.totalRounds)
     @State private var target = "🌻"
     @State private var options: [String] = []
-    @State private var displayTime = 1.2
+    @State private var displayTime = QuickEyesView.displayTimes(for: Difficulty.stored(.quickEyes)).start
     @State private var correct = 0
     @State private var speedBonus = 0
     @State private var missedLastRound = false
