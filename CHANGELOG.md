@@ -4,6 +4,13 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 
 ## [Unreleased]
 
+### Fixed
+- **Round-end bugs (#53, #54, #55):** an extra tap after the last round no longer
+  records a second session (Color Clash, Quick Eyes, Number Trail); Color Clash
+  now records whole-session time; Number Trail uses the shared round counter.
+- **VoiceOver position hints (#56):** Memory Lane and Name the Herd position
+  hints now resolve through the string catalog; orphan strings removed.
+
 ### Changed
 - **Memory Lane warmth pass (#43):** boards now draw from four themed emoji
   sets (garden, animals, fruit, vehicles) so repeat visits feel fresh; cards

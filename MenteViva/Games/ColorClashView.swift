@@ -21,19 +21,19 @@ struct ColorClashView: View {
 
         var word: String {
             switch self {
-            case .red: AppLanguage.localized( "game.colorclash.word.red")
-            case .blue: AppLanguage.localized( "game.colorclash.word.blue")
-            case .green: AppLanguage.localized( "game.colorclash.word.green")
-            case .orange: AppLanguage.localized( "game.colorclash.word.orange")
+            case .red: AppLanguage.localized("game.colorclash.word.red")
+            case .blue: AppLanguage.localized("game.colorclash.word.blue")
+            case .green: AppLanguage.localized("game.colorclash.word.green")
+            case .orange: AppLanguage.localized("game.colorclash.word.orange")
             }
         }
 
         var label: String {
             switch self {
-            case .red: AppLanguage.localized( "game.colorclash.color.red")
-            case .blue: AppLanguage.localized( "game.colorclash.color.blue")
-            case .green: AppLanguage.localized( "game.colorclash.color.green")
-            case .orange: AppLanguage.localized( "game.colorclash.color.orange")
+            case .red: AppLanguage.localized("game.colorclash.color.red")
+            case .blue: AppLanguage.localized("game.colorclash.color.blue")
+            case .green: AppLanguage.localized("game.colorclash.color.green")
+            case .orange: AppLanguage.localized("game.colorclash.color.orange")
             }
         }
 
@@ -50,10 +50,10 @@ struct ColorClashView: View {
 
         var shapeName: String {
             switch self {
-            case .red: AppLanguage.localized( "game.colorclash.shape.circle")
-            case .blue: AppLanguage.localized( "game.colorclash.shape.triangle")
-            case .green: AppLanguage.localized( "game.colorclash.shape.square")
-            case .orange: AppLanguage.localized( "game.colorclash.shape.diamond")
+            case .red: AppLanguage.localized("game.colorclash.shape.circle")
+            case .blue: AppLanguage.localized("game.colorclash.shape.triangle")
+            case .green: AppLanguage.localized("game.colorclash.shape.square")
+            case .orange: AppLanguage.localized("game.colorclash.shape.diamond")
             }
         }
     }
@@ -74,7 +74,7 @@ struct ColorClashView: View {
 
     var body: some View {
         VStack(spacing: 32) {
-            Text(AppLanguage.localized( "game.colorclash.instruction"))
+            Text(AppLanguage.localized("game.colorclash.instruction"))
                 .font(.title2)
                 .multilineTextAlignment(.center)
 
@@ -108,8 +108,8 @@ struct ColorClashView: View {
                 .foregroundStyle(.secondary)
         }
         .padding()
-        .navigationTitle(AppLanguage.localized( "game.colorclash.title"))
-        .onAppear(perform: deal)
+        .navigationTitle(AppLanguage.localized("game.colorclash.title"))
+        .onAppear { startedAt = .now; deal() }
         .fullScreenCover(isPresented: $showCelebration) {
             CelebrationView(detail: finalDetail,
                             onPlayAgain: { showCelebration = false; restart() },
@@ -120,16 +120,17 @@ struct ColorClashView: View {
     private func restart() {
         progress.reset()
         correct = 0
+        startedAt = .now
         deal()
     }
 
     private func deal() {
         word = Ink.allCases.randomElement() ?? .red
         ink = Ink.allCases.randomElement() ?? .blue
-        startedAt = .now
     }
 
     private func tap(_ candidate: Ink) {
+        guard !progress.isFinished else { return }
         if candidate == ink {
             correct += 1
             Feedback.play(.success)
@@ -150,7 +151,7 @@ struct ColorClashView: View {
         // design (Stroop), so the warm message celebrates finishing (#45).
         modelContext.insert(GameSession(gameID: .stroop, score: score,
                                         rounds: Self.totalRounds, durationSeconds: elapsed))
-        finalDetail = String(format: AppLanguage.localized( "game.celebration.rounds %lld"), Self.totalRounds)
+        finalDetail = String(format: AppLanguage.localized("game.celebration.rounds %lld"), Self.totalRounds)
         showCelebration = true
     }
 }

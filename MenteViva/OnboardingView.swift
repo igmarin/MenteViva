@@ -17,17 +17,17 @@ struct OnboardingView: View {
                 .font(.system(size: 88))
                 .accessibilityHidden(true)
 
-            Text(AppLanguage.localized( "app.title"))
+            Text(AppLanguage.localized("app.title"))
                 .font(.largeTitle.weight(.bold))
 
             VStack(spacing: 12) {
-                line(AppLanguage.localized( "onboarding.line1"))
-                line(AppLanguage.localized( "onboarding.line2"))
-                line(AppLanguage.localized( "onboarding.line3"))
+                line(AppLanguage.localized("onboarding.line1"))
+                line(AppLanguage.localized("onboarding.line2"))
+                line(AppLanguage.localized("onboarding.line3"))
             }
             .padding(.horizontal, 8)
 
-            Text(AppLanguage.localized( "onboarding.disclaimer"))
+            Text(AppLanguage.localized("onboarding.disclaimer"))
                 .font(.footnote)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
@@ -39,13 +39,13 @@ struct OnboardingView: View {
             Button {
                 hasSeenOnboarding = true
             } label: {
-                Text(AppLanguage.localized( "onboarding.start"))
+                Text(AppLanguage.localized("onboarding.start"))
                     .font(.title2.weight(.semibold))
                     .frame(maxWidth: .infinity, minHeight: 100)
                     .background(.blue.opacity(0.15), in: .rect(cornerRadius: 20))
             }
             .buttonStyle(.plain)
-            .accessibilityHint(AppLanguage.localized( "onboarding.start.hint"))
+            .accessibilityHint(AppLanguage.localized("onboarding.start.hint"))
         }
         .padding(24)
     }

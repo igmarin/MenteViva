@@ -929,38 +929,6 @@
         }
       }
     },
-    "language.restart.notice": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Close and reopen the app to see the change.\nCierra y vuelve a abrir la app para ver el cambio."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Close and reopen the app to see the change.\nCierra y vuelve a abrir la app para ver el cambio."
-          }
-        }
-      }
-    },
-    "language.restart.title": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Language / Idioma"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Idioma / Language"
-          }
-        }
-      }
-    },
     "onboarding.disclaimer": {
       "localizations": {
         "en": {

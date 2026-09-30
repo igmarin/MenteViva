@@ -11,7 +11,7 @@ struct HomeView: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
-                    Text(AppLanguage.localized( "home.greeting"))
+                    Text(AppLanguage.localized("home.greeting"))
                         .font(.title2)
                         .foregroundStyle(.secondary)
                         .padding(.horizontal, 4)
@@ -30,26 +30,26 @@ struct HomeView: View {
                     NavigationLink {
                         HistoryView()
                     } label: {
-                        Label(AppLanguage.localized( "history.title"), systemImage: "calendar")
+                        Label(AppLanguage.localized("history.title"), systemImage: "calendar")
                             .font(.title3.weight(.semibold))
                             .frame(maxWidth: .infinity, minHeight: 100)
                             .background(.blue.opacity(0.12), in: .rect(cornerRadius: 16))
                     }
                     .buttonStyle(.plain)
-                    .accessibilityHint(AppLanguage.localized( "home.week.hint"))
+                    .accessibilityHint(AppLanguage.localized("home.week.hint"))
                 }
                 .padding()
             }
-            .navigationTitle(AppLanguage.localized( "app.title"))
+            .navigationTitle(AppLanguage.localized("app.title"))
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         showSettings = true
                     } label: {
-                        Label(AppLanguage.localized( "settings.title"), systemImage: "gearshape")
+                        Label(AppLanguage.localized("settings.title"), systemImage: "gearshape")
                             .font(.title3)
                     }
-                    .accessibilityHint(AppLanguage.localized( "settings.open.hint"))
+                    .accessibilityHint(AppLanguage.localized("settings.open.hint"))
                 }
             }
             .sheet(isPresented: $showSettings) {
