@@ -53,5 +53,7 @@ hosting]**. We answer in English or Spanish.
   `Services/JevService.swift` is the entire outgoing payload (counts/ratios,
   no identifiers, no dates); `proxyURL == nil` ⇒ zero network calls; SwiftData
   store is app-local; no third-party dependencies exist in the project.
-- Hosting: a GitHub Pages file from this repo is enough. Then link it in-app
-  (Settings) and in App Store Connect — that closes #34.
+- Hosting: the repo is private and GitHub Pages on private repos needs a paid
+  plan, so use a tiny public policy repo or Cloudflare Pages (decisions
+  2026-09-20). Then link it in-app (Settings) and in App Store Connect — that
+  closes #34.

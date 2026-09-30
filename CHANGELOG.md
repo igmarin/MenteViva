@@ -10,6 +10,13 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
   now records whole-session time; Number Trail uses the shared round counter.
 - **VoiceOver position hints (#56):** Memory Lane and Name the Herd position
   hints now resolve through the string catalog; orphan strings removed.
+- **Launch crash on device (local-only builds):** the CloudKit on/off flag was
+  passed as `INFOPLIST_KEY_CloudKitEnabled`, which Xcode does not inject (it
+  only handles a known allowlist), so the app read `nil`, assumed CloudKit was
+  on, and trapped inside CloudKit's mirroring setup with no iCloud entitlement —
+  `EXC_BREAKPOINT` in `PFCloudKitContainerProvider`, uncatchable. The simulator
+  tolerates the missing entitlement, which is why local testing missed it. Now a
+  compile-time `LOCAL_ONLY` flag drives the choice.
 
 ### Changed
 - **Memory Lane warmth pass (#43):** boards now draw from four themed emoji
@@ -35,15 +42,6 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
   boundary tests pin the behaviour (zero rounds, single round, over-advance,
   replay).
 
-### Fixed
-- **Launch crash on device (local-only builds):** the CloudKit on/off flag was
-  passed as `INFOPLIST_KEY_CloudKitEnabled`, which Xcode does not inject (it
-  only handles a known allowlist), so the app read `nil`, assumed CloudKit was
-  on, and trapped inside CloudKit's mirroring setup with no iCloud entitlement —
-  `EXC_BREAKPOINT` in `PFCloudKitContainerProvider`, uncatchable. The simulator
-  tolerates the missing entitlement, which is why local testing missed it. Now a
-  compile-time `LOCAL_ONLY` flag drives the choice.
-
 ### Added
 - Sound & haptics (#26): synthesized tones (no audio files, no fees) with a
   matching haptic — soft low-frequency success, a gentle three-note completion,
@@ -53,9 +51,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 - First-run onboarding (#31): one screen — what this is, language choice,
   one big "Let's play" button. Written for a stranger, not for family.
 - Settings (#32): language (Device/English/Español), bigger text, plain-language
-  privacy summary, version. Reachable from home in one tap. Sound toggle
-  deliberately deferred until sound exists (#26) — a control that does nothing
-  is worse than no control.
+  privacy summary, version. Reachable from home in one tap. The sound
+  toggle followed with sound & haptics (#26).
 - Home screen personality (#27): warm greeting, large emoji game tiles in a
   grid (>=140pt tall), and the My Week card. Replaces the bare list.
 - App icon + launch screen: warm gradient with two memory cards, generated
@@ -72,8 +69,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
   display time (1.2 s → 0.35 s floor, relaxes after a miss), then the player
   picks it among four big buttons. 12 rounds, no countdown timer. ES/EN copy.
 - Shared end-of-game celebration screen (#8): gentle pure-SwiftUI confetti,
-  warm "Well done! 🎉" headline, big session score, and ≥100pt
-  "Play again / Home" buttons. All four games present it on finish
+  warm "Well done! 🎉" headline, a progress line (the score was replaced by
+  progress in #45), and ≥100pt "Play again / Home" buttons. All games present it on finish
   (fullScreenCover); Reduced Motion shows static confetti.
 - "My Week" session history (#9): last 7 days grouped by day, big rows with
   game emoji + score, warm weekly summary line, gentle empty state.
@@ -86,9 +83,10 @@ First playable. Built in one session with agent teammates.
 - Four games: Memory Lane (pairs), Color Clash (Stroop), Name the Herd
   (category fluency), Number Trail (adaptive math).
 - ES/EN localization for every user-facing string (25 keys).
-- Jev/TypeSafe service: daily game-mix ranking + difficulty nudge,
-  once per day, silent deterministic fallback when offline.
-  Key never on device — proxy contract documented.
+- Jev/TypeSafe client: daily game-mix ranking + difficulty nudge policy,
+  once per day, silent deterministic fallback when offline. Not yet wired
+  into the app's screens (tracked in #59). Key never on device — proxy
+  contract documented.
 - Docs system: product brief, conventions, decision log, cited research
   (audience evidence, domain ranking, licensing table, App Store pricing),
   roadmap.
