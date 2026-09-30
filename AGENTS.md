@@ -37,16 +37,18 @@ MenteVivaTests/       unit tests (Given/When/Then names)
 proxy/worker.js       Cloudflare Worker that holds the Jev key
 tools/                generate_project.swift (the only way to edit the Xcode project)
 docs/                 start at docs/README.md
-.github/workflows/    swift.yml: build + test on push to main and manual runs
+.github/workflows/    swift.yml: build + test on PRs, push to main, manual
 ```
 
 ## Current status
 
 - 5 games shipped (Memory Lane, Color Clash, Name the Herd, Number Trail,
   Quick Eyes); ES/EN complete; local-only build is the default.
-- **Jev is not wired into the running app yet.** `JevService` and its tests
-  exist; Home does not call it. Runtime wiring is in progress in parallel PRs
-  (issues #58–#61); the proxy is being hardened in #63.
+- **Jev is wired in but switched off by config.** Home stars today's picks and
+  games read the daily difficulty (#58–#61). The hardened proxy is deployed
+  (#63), but `JEV_PROXY_URL` / `JEV_PROXY_SECRET` still ship empty, so the app
+  runs on the offline plan until the xcconfig plumbing lands (#91); the real
+  10-question payload is not archived yet (#62).
 - Dad playtest #6 has **not** been run; docs/playtest-session-1.md is the
   sheet. No content gates lift until it does (#18).
 - Live state is in the [milestones](../../milestones), not here.
@@ -83,8 +85,9 @@ docs/                 start at docs/README.md
 5. Verify before committing: build must pass —
    `xcodebuild -project MenteViva.xcodeproj -scheme MenteViva -destination 'generic/platform=iOS Simulator' build`
    and tests must pass (conventions §9). Syntax checks (`swiftc -parse`) are
-   NOT verification. CI (`swift.yml`) repeats build + test on push to `main`
-   and manual runs only, not on PRs, so run them locally.
+   NOT verification. CI (`swift.yml`) repeats build + test and checks the
+   regenerated `project.pbxproj` for drift on PRs and pushes to `main`; still
+   run them locally first.
 6. Track work in GitHub issues with the current milestone (see
    [milestones](../../milestones)). Closed-issue labels mark the release
    (e.g. `v0.1.0`).

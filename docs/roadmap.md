@@ -16,13 +16,13 @@ progress instead of points (#45).
 1. **Dad playtest #1 (#6)** — not run yet. Use `playtest-session-1.md`; watch,
    note 3 friction points. It gates new content (#18) and the reminiscence
    game (#44).
-2. **Make Jev real** — the client exists but is not wired: record accuracy
-   (#58), wire the daily plan into Home (#59), apply difficulty in games (#60),
-   tolerant decode (#61), archive the real payload (#62).
-3. **Harden the proxy (#63)** before any deploy.
-4. **Accessibility gaps** — Color Clash and Quick Eyes with VoiceOver, toolbar
-   targets (#64).
-5. **CI on PRs + tests (#65)**, game plumbing dedupe (#57), generator fixes (#66).
+2. **Finish making Jev real** — wired and deployed; left: xcconfig plumbing so
+   the URL and secret can be set without committing them (#91), then archive the
+   real payload (#62).
+3. **Device check** of the VoiceOver changes and 100pt toolbar targets (#64
+   shipped, unverified on hardware).
+4. **Test gaps** — game double-tap flows and History grouping (#65 remainder),
+   game plumbing dedupe (#57) if it deletes code.
 
 Also open in this milestone, after the playtest: Quick Eyes untimed redesign
 (#46), Color Clash / Number Trail decision (#47).
