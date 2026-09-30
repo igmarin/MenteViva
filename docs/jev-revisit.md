@@ -31,7 +31,7 @@ flowchart LR
 
 ## 002 — Game domains (`jev-json/002-game-domains.*`)
 
-| Domain | Score (0=skip, 1=variety, 2=pillar) | Confidence | Verdict vs our 4 games |
+| Domain | Score (0=skip, 1=variety, 2=pillar) | Confidence | Verdict vs our 4 games at the time (Quick Eyes since added) |
 |---|---|---|---|
 | processing_speed | **1.93** | 0.89 | **Tension** — we don't cover it |
 | working_memory | 1.79 | 0.69 | Agree (covered by Memory Lane) |

@@ -7,8 +7,8 @@ screen of real content, split it — long docs don't get read.
 |---|---|---|
 | [product-brief.md](product-brief.md) | What are we building, for whom, and why | Current |
 | [conventions.md](conventions.md) | Rules every commit must follow | Current |
-| [jev-integration.md](jev-integration.md) | How Jev/TypeSafe fits (seasoning, not the meal) | Verified live |
-| [jev-revisit.md](jev-revisit.md) | Our 5 early decisions vs Jev's judgments | 2026-09-19 |
+| [jev-integration.md](jev-integration.md) | How Jev/TypeSafe fits (seasoning, not the meal) | Client built; app wiring in progress |
+| [jev-revisit.md](jev-revisit.md) | Jev judgments 001–010: early decisions, corrected audience, games, segments, utility matrix | Living, to 2026-09-22 |
 | [jev-json/](jev-json/) | Raw Jev request/response archive (audit trail) | Growing |
 | [mvp.md](mvp.md) | MVP definition of done + phase gates | Living |
 | [playtest.md](playtest.md) | How to run a playtest and record it (#6, #33) | Living |
@@ -17,6 +17,11 @@ screen of real content, split it — long docs don't get read.
 | [device-support.md](device-support.md) | What hardware/OS we claim and what we verified | Living |
 | [decisions.md](decisions.md) | Every significant decision, with date and reason | Living log |
 | [research-2026-09.md](research-2026-09.md) | Evidence + market scan behind the decisions | Snapshot |
+| [research-2026-09-22.md](research-2026-09-22.md) | Market and segment numbers (60+, caregivers, iOS floor) | Snapshot |
+| [statistics-rationale.md](statistics-rationale.md) | What our numbers support, and what copy may say | Current |
+| [jev-sounds.md](jev-sounds.md) | Sound and haptics design choices | Current |
+| [a11y-audit-2026-09.md](a11y-audit-2026-09.md) | Accessibility audit vs conventions §4, with addendum | Snapshot + addendum |
+| [es-review-packet.md](es-review-packet.md) | Spanish strings for the native-speaker review (#12) | Current |
 | [question-audit.md](question-audit.md) | The real questions, checked (against wrong questions) | Living |
 | [roadmap.md](roadmap.md) | What happens next, in order | Living |
 | [store-listing.md](store-listing.md) | App Store copy + screenshots (EN/ES), drafted early | Draft |

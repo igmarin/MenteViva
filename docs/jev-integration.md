@@ -1,10 +1,20 @@
 # Jev integration — MenteViva
 
-Jev is **seasoning, not the meal**. All four games are 100% deterministic and work offline.
+Jev is **seasoning, not the meal**. All five games are 100% deterministic and work offline.
 Jev answers two narrow questions per day; code stays in control of everything else.
 
 Source of truth: https://docs.typesafe.ai/llms.txt (fetched 2025; append `.md` to doc paths).
-Verified against live API 2026-09-19 (model served: `jev-1.13.0`; raw pairs in `jev-json/000`–`005`).
+
+## Status (2026-09-29)
+
+| Piece | State |
+|---|---|
+| `JevService` client + plan policy + unit tests | Done (top-3-of-5 mix, confidence-gated difficulty, day-stamp cache, fallback) |
+| Wired into the running app | **No.** Nothing builds `PlayerStateSummary` or calls `dailyPlan()`; Home shows all 5 games in fixed order. In progress: #58 (record accuracy), #59 (Home wiring), #60 (apply difficulty in games) |
+| Client hardening | Pending #61: one bad answer currently fails the whole decode (see Failure behavior) |
+| Live verification | Ad-hoc calls only (`jev-json/000`–`010`, model `jev-1.13.0`, decision questions with different key names, e.g. `include_math`). The shipped 10-question payload has never been sent live or archived: #62 |
+| Proxy | `proxy/worker.js` exists; hardening and real deploy: #63 |
+| Per-game 10-session trend in the state | Not built. State is one 14-day summary per game (below) |
 
 ## The daily judgment at a glance
 
@@ -33,7 +43,7 @@ flowchart TD
 - Header: `Authorization: Bearer <TYPESAFE_AI_KEY>`
 - Body: `{ "state": <string|object>, "model": "jev-latest", "questions": { "<key>": {...} } }`
 - One request can mix Choice / Score / Noul questions; all see the same state and are
-  evaluated independently. We send **one request per day** with 8 questions.
+  evaluated independently. We send **one request per day** with 10 questions (5 games × 2).
 - Answers (verified live): `choice` → `{type, choice, probabilities, confidence}`;
   `score` → `{type, score (float, e.g. 1.93), legend (object keyed by level),
   probabilities (object keyed by level), confidence}`;
@@ -44,29 +54,31 @@ flowchart TD
 - `confidence` (0..1) is derived from the probability distribution's shape; it's a
   separate axis from the answer itself. Gate actions on it.
 
-## Judgment 1 — daily game mix (4 × Noul)
+## Judgment 1 — daily game mix (5 × Noul)
 
-- **Primitive:** four Noul questions, one per game
-  (`include_memory_match`, `include_stroop`, `include_category_fluency`, `include_math_streaks`).
+- **Primitive:** five Noul questions, one per game, keyed `include_<GameID.rawValue>`:
+  `include_memory_match`, `include_stroop`, `include_category_fluency`,
+  `include_math_streaks`, `include_quick_eyes`.
 - **Instructions:** "Should <game> be included in today's recommended mix for this player?"
   with `criteria.true/false` pinning what "should" means (variety, recency, engagement).
-- **State:** compact JSON object: per game → sessions in last 14 days, mean accuracy,
-  mean rounds completed, days since last played. No dates, no names, no identifiers.
-- **Why Noul and not Choice:** the mix is multi-select (2–3 of 4 games). A single Choice
+- **State:** compact JSON object keyed by game: `sessionsLast14Days`, `meanAccuracy`,
+  `meanRoundsCompleted`, `daysSinceLastPlayed`, `currentDifficulty`. No dates, no names,
+  no identifiers. `meanAccuracy` cannot be derived yet: sessions store no accuracy (#58).
+- **Why Noul and not Choice:** the mix is multi-select (3 of 5 games). A single Choice
   forces one winner; independent Nouls give a per-game probability we rank in code.
-- **Policy in code:** sort games by `noul` descending, take top 3. This guarantees a
+- **Policy in code:** sort games by `noul` descending, take the top 3 of 5. This guarantees a
   non-empty mix even if every probability is low — the model ranks, code decides.
 - **Fallback:** deterministic rotation — day-of-year offset over the game list, top 3.
 
-## Judgment 2 — per-game difficulty (4 × Score)
+## Judgment 2 — per-game difficulty (5 × Score)
 
-- **Primitive:** four Score questions, one per game, three levels.
+- **Primitive:** five Score questions, one per game, keyed `difficulty_<GameID.rawValue>`, three levels.
 - **Levels (criteria, ordered):**
   0 = "Easy — player is struggling or accuracy dropped recently; reduce cognitive load"
   1 = "Medium — player is steady; maintain current challenge"
   2 = "Hard — player consistently succeeds quickly; increase challenge"
-- **State:** same session summary object, restricted to that game's last 10 sessions
-  (accuracy trend + duration per round). Reused from the same daily request state.
+- **State:** the same 14-day summary as Judgment 1. A per-game last-10-session trend was
+  planned and is **not built**.
 - **Mapping:** `score` is a float; code rounds to the nearest level (0.49 → easy,
   1.5 → hard). `score` outside [0, 2] is clamped.
 - **Confidence gate:** apply the new difficulty only when `confidence ≥ 0.6`.
@@ -78,7 +90,7 @@ flowchart TD
 ## Timing — when judgments fire
 
 Once per local day, lazily, on first appearance of the game list. Both judgments ride in
-**one HTTP request** (4 Nouls + 4 Scores against one state object). The result is cached
+**one HTTP request** (5 Nouls + 5 Scores against one state object). The result is cached
 in `UserDefaults` with the local day stamp; a cached plan for today is reused without a
 network call. Nothing blocks the UI — the home screen renders the cached/default plan
 immediately and updates in place if Jev answers.
@@ -93,14 +105,15 @@ no error copy, ever):
 
 1. No network / timeout (10 s) → fallback plan.
 2. Proxy or API error (non-2xx) → fallback plan.
-3. Malformed response / missing answers → per-question fallback (a half-good response
-   still contributes its good answers).
+3. Malformed response → fallback plan. Today the whole `answers` map decodes at once, so
+   one unknown or malformed answer discards the good ones too; per-answer tolerance is #61.
+   Missing keys are handled: a missing Noul sorts last, a missing Score keeps current difficulty.
 4. Low confidence on a difficulty Score → keep current difficulty.
 5. No proxy URL configured → service is inert; fallback plan always.
 
 ## Cost / latency
 
-- 1 request/day/user, ~8 questions, state ≈ 300–500 input tokens, answers ≈ 50–100
+- 1 request/day/user, ~10 questions, state ≈ 300–500 input tokens, answers ≈ 50–100
   output tokens. Negligible cost; Jev is a small fast model, typical latency < 1 s,
   off the critical path anyway (cached plan renders first).
 - ES/EN note: state is always composed in English (Jev's primary training language;
@@ -120,7 +133,7 @@ An iOS app cannot hold `TYPESAFE_AI_KEY` safely (extractable from the binary —
 convention 7: server-side proxy before public release). `JevService` therefore posts the
 identical request body to a **configurable proxy URL** (`JEV_PROXY_URL` in Info.plist /
 xcconfig; unset → offline fallback). Reference implementation: `proxy/worker.js`
-(~20-line Cloudflare Worker; deploy guide in `proxy/README.md`):
+(small Cloudflare Worker; deploy guide in `proxy/README.md`; hardening tracked in #63):
 
 ```
 POST /jev  →  forward body to https://api.typesafe.ai/v1/systemone
@@ -128,6 +141,7 @@ POST /jev  →  forward body to https://api.typesafe.ai/v1/systemone
               return response verbatim
 ```
 
-No request rewriting, no logging of bodies, rejects anything but `POST /jev`. The app
+No request rewriting, no body logging, rejects anything but `POST /jev`. It has no
+caller auth, rate limit or size cap yet, so it must not be deployed as-is (#63). The app
 code does not change when the proxy goes live — only the config value does. During
 local beta, run the same worker locally (`npx wrangler dev`, key from the environment).

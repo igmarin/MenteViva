@@ -9,7 +9,7 @@ the generator, so Xcode never asks.
 ## Install (or re-install) on a device
 
 ```sh
-cd /Users/igmarin/Developer/Personal/Projects/MenteViva
+cd <path-to-your-MenteViva-checkout>
 swift tools/generate_project.swift               # local-only is the default
 open MenteViva.xcodeproj
 ```
@@ -34,8 +34,8 @@ xcrun devicectl device install app --device "$DEV" \
 
 ## The 7-day expiry
 
-A free-account build **stops launching 7 days after it was signed**. Verified
-once: built 2026-09-20, profile `com.igmarin.MenteViva` expires 2026-09-27.
+A free-account build **stops launching 7 days after it was signed**. Re-sign
+the day before any playtest rather than trusting an old install.
 
 - Renewal = repeat the install steps with the device connected. Two minutes.
 - The app's data (sessions, settings) survives renewal.
