@@ -48,6 +48,9 @@ struct HomeView: View {
                     } label: {
                         Label(AppLanguage.localized("settings.title"), systemImage: "gearshape")
                             .font(.title3)
+                            .labelStyle(.iconOnly)
+                            .frame(minWidth: 100, minHeight: 100)
+                            .contentShape(Rectangle())
                     }
                     .accessibilityHint(AppLanguage.localized("settings.open.hint"))
                 }

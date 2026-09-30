@@ -4,6 +4,14 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 
 ## [Unreleased]
 
+### Accessibility
+- **VoiceOver playability (#64):** Quick Eyes announces the flashed picture (and
+  holds it 2.5s while VoiceOver is on); Color Clash reads the ink colour and
+  shape, and draws the shape beside the word for colour-blind players; wrong
+  picks in Name the Herd, Number Trail and Color Clash show a gentle amber
+  outline (no text); gear, share and Done buttons have 100pt hit areas; the
+  language-row hint is on each button. EN + ES.
+
 ### Fixed
 - **Round-end bugs (#53, #54, #55):** an extra tap after the last round no longer
   records a second session (Color Clash, Quick Eyes, Number Trail); Color Clash

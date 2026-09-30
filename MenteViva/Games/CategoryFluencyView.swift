@@ -48,6 +48,7 @@ struct CategoryFluencyView: View {
     @State private var showCelebration = false
     @State private var finalDetail = ""
     @State private var tilePositions: [Int: Int] = [:]
+    @State private var missedTile: Int?
 
     static func score(totalCorrect: Int) -> Int {
         totalCorrect * 10
@@ -93,6 +94,8 @@ struct CategoryFluencyView: View {
                                 }
                         }
                         .buttonStyle(.plain)
+                        .modifier(MissCue(active: Binding(get: { missedTile == tile.id },
+                                                          set: { if !$0 { missedTile = nil } })))
                         .disabled(tile.isPicked)
                         .accessibilityLabel(tile.emoji)
                         .accessibilityHint(tile.isPicked
@@ -149,7 +152,7 @@ struct CategoryFluencyView: View {
 
     private func tap(_ tileID: Int) {
         guard let i = tiles.firstIndex(where: { $0.id == tileID }) else { return }
-        guard tiles[i].belongs else { Feedback.play(.miss); return } // decoy: kind, quiet
+        guard tiles[i].belongs else { Feedback.play(.miss); missedTile = tileID; return } // decoy: kind, quiet
         tiles[i].isPicked = true
         found += 1
         totalCorrect += 1

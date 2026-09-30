@@ -34,6 +34,9 @@ struct HistoryView: View {
                     ShareLink(item: shareSummary) {
                         Label(AppLanguage.localized("history.share"), systemImage: "square.and.arrow.up")
                             .font(.title3)
+                            .labelStyle(.iconOnly)
+                            .frame(minWidth: 100, minHeight: 100)
+                            .contentShape(Rectangle())
                     }
                     .accessibilityHint(AppLanguage.localized("history.share.hint"))
                 }

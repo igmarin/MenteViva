@@ -20,6 +20,7 @@ struct MathStreakView: View {
     @State private var startedAt = Date.now
     @State private var showCelebration = false
     @State private var finalDetail = ""
+    @State private var missed = false
 
     static func score(correct: Int, bestStreak: Int) -> Int {
         correct * 10 + bestStreak * 2
@@ -36,6 +37,7 @@ struct MathStreakView: View {
             Text("\(a) + \(b)")
                 .font(.system(size: 72, weight: .bold))
                 .accessibilityLabel("\(a) + \(b)")
+                .modifier(MissCue(active: $missed))
 
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
                 ForEach(options, id: \.self) { option in
@@ -96,6 +98,7 @@ struct MathStreakView: View {
         } else {
             streak = 0
             Feedback.play(.miss)
+            missed = true
         }
         if progress.completeRound() {
             finish()

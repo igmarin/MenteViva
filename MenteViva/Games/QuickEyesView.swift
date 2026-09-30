@@ -14,6 +14,7 @@ struct QuickEyesView: View {
     private static let totalRounds = 12
     private let startDisplayTime = 1.2
     private let minDisplayTime = 0.35
+    private static let voiceOverHold = 2.5
     private let shrinkFactor = 0.92
     private let columns = [GridItem(.flexible()), GridItem(.flexible())]
 
@@ -51,7 +52,7 @@ struct QuickEyesView: View {
             case .showing:
                 Text(target)
                     .font(.system(size: 120))
-                    .accessibilityLabel(AppLanguage.localized("game.quickeyes.a11y.showing"))
+                    .accessibilityLabel(String(format: AppLanguage.localized("game.quickeyes.a11y.flash %@"), target))
             case .choosing:
                 VStack(spacing: 16) {
                     if missedLastRound {
@@ -106,8 +107,12 @@ struct QuickEyesView: View {
         let distractors = emojis.filter { $0 != target }.shuffled().prefix(3)
         options = (distractors + [target]).shuffled()
         phase = .showing
+        // VoiceOver needs time to speak the picture; hold it longer (#64).
+        let hold = UIAccessibility.isVoiceOverRunning ? max(displayTime, Self.voiceOverHold) : displayTime
+        AccessibilityNotification.Announcement(
+            String(format: AppLanguage.localized("game.quickeyes.a11y.flash %@"), target)).post()
         revealTask = Task { @MainActor in
-            try? await Task.sleep(for: .seconds(displayTime))
+            try? await Task.sleep(for: .seconds(hold))
             guard !Task.isCancelled, phase == .showing else { return }
             optionsShownAt = .now
             phase = .choosing
