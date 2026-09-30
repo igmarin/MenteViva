@@ -24,6 +24,7 @@
 		F1CAEDFBEAB27E7A00000018 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881D5FFD680EE69800000012; };
 		89155436CE7D610300000037 /* DailyPlanFallbackTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34DE3FBC170271E900000031; };
 		35A281A4703D4C320000002E /* DayStampTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 704A57A9A9F6E88000000028; };
+		13FA9F9D70716C6800000037 /* DifficultyMappingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70A793986C53BDC600000031; };
 		C524FB5039855DE400000036 /* DifficultyPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F28BC63EFC28057200000030; };
 		C7BB50E2D28ADBC300000033 /* JevPlanPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67ADC4F8E1EC78290000002D; };
 		2E81FDB867FC926B00000038 /* PlayerStateSummaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9231182AE986A100000032; };
@@ -49,6 +50,7 @@
 		881D5FFD680EE69800000012 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		34DE3FBC170271E900000031 /* DailyPlanFallbackTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/DailyPlanFallbackTests.swift; sourceTree = SOURCE_ROOT; };
 		704A57A9A9F6E88000000028 /* DayStampTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/DayStampTests.swift; sourceTree = SOURCE_ROOT; };
+		70A793986C53BDC600000031 /* DifficultyMappingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/DifficultyMappingTests.swift; sourceTree = SOURCE_ROOT; };
 		F28BC63EFC28057200000030 /* DifficultyPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/DifficultyPolicyTests.swift; sourceTree = SOURCE_ROOT; };
 		67ADC4F8E1EC78290000002D /* JevPlanPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/JevPlanPolicyTests.swift; sourceTree = SOURCE_ROOT; };
 		7D9231182AE986A100000032 /* PlayerStateSummaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/PlayerStateSummaryTests.swift; sourceTree = SOURCE_ROOT; };
@@ -113,6 +115,7 @@
 			children = (
 				34DE3FBC170271E900000031 /* DailyPlanFallbackTests.swift */,
 				704A57A9A9F6E88000000028 /* DayStampTests.swift */,
+				70A793986C53BDC600000031 /* DifficultyMappingTests.swift */,
 				F28BC63EFC28057200000030 /* DifficultyPolicyTests.swift */,
 				67ADC4F8E1EC78290000002D /* JevPlanPolicyTests.swift */,
 				7D9231182AE986A100000032 /* PlayerStateSummaryTests.swift */,
@@ -211,6 +214,7 @@
 			files = (
 				89155436CE7D610300000037 /* DailyPlanFallbackTests.swift in Sources */,
 				35A281A4703D4C320000002E /* DayStampTests.swift in Sources */,
+				13FA9F9D70716C6800000037 /* DifficultyMappingTests.swift in Sources */,
 				C524FB5039855DE400000036 /* DifficultyPolicyTests.swift in Sources */,
 				C7BB50E2D28ADBC300000033 /* JevPlanPolicyTests.swift in Sources */,
 				2E81FDB867FC926B00000038 /* PlayerStateSummaryTests.swift in Sources */,

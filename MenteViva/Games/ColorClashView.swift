@@ -60,6 +60,12 @@ struct ColorClashView: View {
 
     private static let totalRounds = 10
 
+    /// Chance the word already matches its ink: easy is mostly matching, hard never.
+    static func matchingChance(for difficulty: Difficulty) -> Double {
+        difficulty.pick(0.7, 0.25, 0)
+    }
+
+    @State private var difficulty = Difficulty.stored(.stroop)
     @State private var word: Ink = .red
     @State private var ink: Ink = .blue
     @State private var progress = RoundProgress(totalRounds: Self.totalRounds)
@@ -140,8 +146,9 @@ struct ColorClashView: View {
     }
 
     private func deal() {
-        word = Ink.allCases.randomElement() ?? .red
         ink = Ink.allCases.randomElement() ?? .blue
+        let matches = Double.random(in: 0..<1) < Self.matchingChance(for: difficulty)
+        word = matches ? ink : (Ink.allCases.filter { $0 != ink }.randomElement() ?? .red)
         AccessibilityNotification.Announcement(stimulusLabel).post()
     }
 

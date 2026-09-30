@@ -10,6 +10,7 @@ struct MathStreakView: View {
     private static let totalQuestions = 10
     private var totalQuestions: Int { Self.totalQuestions }
 
+    @State private var difficulty = Difficulty.stored(.mathStreaks)
     @State private var a = 0
     @State private var b = 0
     @State private var options: [Int] = []
@@ -21,6 +22,13 @@ struct MathStreakView: View {
     @State private var showCelebration = false
     @State private var finalDetail = ""
     @State private var missed = false
+
+    /// Easy stays in small sums, hard starts bigger; medium is the original curve.
+    static func maxSum(streak: Int, difficulty: Difficulty) -> Int {
+        let start = difficulty.pick(10, 10, 20)
+        let cap = difficulty.pick(20, 50, 50)
+        return min(start + streak * 5, cap)
+    }
 
     static func score(correct: Int, bestStreak: Int) -> Int {
         correct * 10 + bestStreak * 2
@@ -76,7 +84,7 @@ struct MathStreakView: View {
     }
 
     private func deal() {
-        let maxSum = min(10 + streak * 5, 50) // grow gently with the streak
+        let maxSum = Self.maxSum(streak: streak, difficulty: difficulty) // grows gently with the streak
         a = Int.random(in: 1...(maxSum - 1))
         b = Int.random(in: 1...(maxSum - a))
         var pool = Set([answer])

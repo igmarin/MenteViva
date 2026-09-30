@@ -21,6 +21,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 - **Jev proxy hardening (#63):** worker now requires a shared-secret header, rate-limits,
   caps body size, validates model/question keys, and returns a warm 502 on upstream failure.
 ### Changed
+- **Difficulty applied in games (#60):** Memory Lane (6/8/10 pairs), Number Trail
+  (sum range), Quick Eyes (flash time), Color Clash (how often the word matches)
+  and Name the Herd (decoys) follow the daily difficulty. New players and Jev-less
+  installs stay on medium, which is the game as it was.
 - **Today's picks on Home (#59):** three games carry a "Today's pick" star, chosen
   once a day from recent play (Jev when a proxy is configured, a fixed rotation
   otherwise). Home never waits for it and the tile order stays put.
