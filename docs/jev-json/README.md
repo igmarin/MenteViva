@@ -21,3 +21,10 @@ Saved state must stay **anonymized aggregates** per `docs/jev-integration.md`
 §Privacy: game IDs, session counts, accuracy ratios, round counts, "days since
 played". No names, ages, exact dates, device identifiers, free text, or health
 claims — in request files or anywhere else in this archive.
+
+## 011 — the app's real daily request
+
+`011-daily-plan.request.json` is the exact body `JevService` builds (captured
+from the code through a stubbed `URLSession`, not retyped). Its `state` is a
+**sample fixture** with made-up numbers, not a real player. The response is the
+live answer via the deployed proxy. `JevServiceTests` replays the pair.

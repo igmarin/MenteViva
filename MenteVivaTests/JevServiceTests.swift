@@ -103,4 +103,41 @@ final class JevServiceTests: XCTestCase {
         _ = await service().dailyPlan(state: state, currentDifficulty: medium)
         XCTAssertNil(StubURLProtocol.requests.last?.value(forHTTPHeaderField: "X-MenteViva-Key"))
     }
+
+    // MARK: - Archived live pair (docs/jev-json/011): pins the real wire contract
+
+    private func archived(_ name: String) throws -> Data {
+        let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
+        return try Data(contentsOf: root.appendingPathComponent("docs/jev-json/\(name)"))
+    }
+
+    func testGivenArchivedLiveResponseWhenPlanThenMixAndDifficultyMatchJevsAnswers() async throws {
+        let response = try archived("011-daily-plan.response.json")
+        StubURLProtocol.handler = { _ in (200, response) }
+        let plan = await service().dailyPlan(state: state, currentDifficulty: medium)
+        // Noul: quick_eyes .75, category_fluency .73, memory_match .63 lead the ranking.
+        XCTAssertEqual(plan.games, [.quickEyes, .categoryFluency, .memoryMatch])
+        XCTAssertEqual(plan.difficulty[.stroop], .easy)        // 0.07 @ 0.89
+        XCTAssertEqual(plan.difficulty[.mathStreaks], .easy)   // 0.18 @ 0.73
+        XCTAssertEqual(plan.difficulty[.categoryFluency], .medium)
+        XCTAssertEqual(plan.difficulty[.memoryMatch], .medium)
+        XCTAssertEqual(plan.difficulty[.quickEyes], .medium)   // 0.70 @ 0.52 is under the 0.6 gate
+    }
+
+    func testGivenAppRequestWhenSentThenQuestionKeysMatchArchivedLiveRequest() async throws {
+        let archivedRequest = try JSONSerialization.jsonObject(with: archived("011-daily-plan.request.json")) as? [String: Any]
+        let archivedKeys = Set((archivedRequest?["questions"] as? [String: Any] ?? [:]).keys)
+        StubURLProtocol.handler = { _ in (200, Data("{\"answers\":{}}".utf8)) }
+        _ = await service().dailyPlan(state: state, currentDifficulty: medium)
+        let req = try XCTUnwrap(StubURLProtocol.requests.first)
+        let body = try XCTUnwrap(req.httpBody ?? req.httpBodyStream.map { s -> Data in
+            s.open(); defer { s.close() }
+            var d = Data(); var buf = [UInt8](repeating: 0, count: 4096)
+            while s.hasBytesAvailable { let n = s.read(&buf, maxLength: 4096); if n <= 0 { break }; d.append(buf, count: n) }
+            return d })
+        let sent = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        XCTAssertEqual(Set((sent?["questions"] as? [String: Any] ?? [:]).keys), archivedKeys)
+        XCTAssertEqual(archivedKeys.count, 10)
+        XCTAssertEqual(sent?["model"] as? String, "jev-latest")
+    }
 }
