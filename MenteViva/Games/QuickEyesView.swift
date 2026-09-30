@@ -148,7 +148,8 @@ struct QuickEyesView: View {
         let elapsed = Int(Date.now.timeIntervalSince(startedAt))
         let score = Self.score(correct: correct, speedBonus: speedBonus)
         modelContext.insert(GameSession(gameID: .quickEyes, score: score,
-                                        rounds: Self.totalRounds, durationSeconds: elapsed))
+                                        rounds: Self.totalRounds, durationSeconds: elapsed,
+                                        correct: correct, attempts: Self.totalRounds))
         finalDetail = String(format: AppLanguage.localized("game.celebration.spotted %lld %lld"),
                              correct, Self.totalRounds)
         showCelebration = true

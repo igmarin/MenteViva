@@ -167,7 +167,8 @@ struct ColorClashView: View {
         // Completion, never a hit count: Color Clash is error-inducing by
         // design (Stroop), so the warm message celebrates finishing (#45).
         modelContext.insert(GameSession(gameID: .stroop, score: score,
-                                        rounds: Self.totalRounds, durationSeconds: elapsed))
+                                        rounds: Self.totalRounds, durationSeconds: elapsed,
+                                        correct: correct, attempts: Self.totalRounds))
         finalDetail = String(format: AppLanguage.localized("game.celebration.rounds %lld"), Self.totalRounds)
         showCelebration = true
     }

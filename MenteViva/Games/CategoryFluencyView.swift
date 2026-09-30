@@ -44,6 +44,7 @@ struct CategoryFluencyView: View {
     @State private var progress = RoundProgress(totalRounds: 3)
     @State private var found = 0
     @State private var totalCorrect = 0
+    @State private var totalPicks = 0
     @State private var startedAt = Date.now
     @State private var showCelebration = false
     @State private var finalDetail = ""
@@ -129,6 +130,7 @@ struct CategoryFluencyView: View {
     private func restart() {
         progress.reset()
         totalCorrect = 0
+        totalPicks = 0
         setup()
     }
 
@@ -151,7 +153,9 @@ struct CategoryFluencyView: View {
     }
 
     private func tap(_ tileID: Int) {
-        guard let i = tiles.firstIndex(where: { $0.id == tileID }) else { return }
+        guard let i = tiles.firstIndex(where: { $0.id == tileID }),
+              !tiles[i].isPicked else { return }
+        totalPicks += 1
         guard tiles[i].belongs else { Feedback.play(.miss); missedTile = tileID; return } // decoy: kind, quiet
         tiles[i].isPicked = true
         found += 1
@@ -169,7 +173,8 @@ struct CategoryFluencyView: View {
         let elapsed = Int(Date.now.timeIntervalSince(startedAt))
         let score = Self.score(totalCorrect: totalCorrect)
         modelContext.insert(GameSession(gameID: .categoryFluency, score: score,
-                                        rounds: roundsPerSession, durationSeconds: elapsed))
+                                        rounds: roundsPerSession, durationSeconds: elapsed,
+                                        correct: totalCorrect, attempts: totalPicks))
         finalDetail = String(format: AppLanguage.localized("game.celebration.items %lld"), totalCorrect)
         showCelebration = true
     }
