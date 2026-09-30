@@ -16,9 +16,9 @@ progress instead of points (#45).
 1. **Dad playtest #1 (#6)** — not run yet. Use `playtest-session-1.md`; watch,
    note 3 friction points. It gates new content (#18) and the reminiscence
    game (#44).
-2. **Switch Jev on and watch it** — wired, deployed, configured via
-   `Local.xcconfig` and verified live (#58–#63, #91, #62). Left: run it on the
-   iPad for a few days and compare its picks against the rotation.
+2. **Watch the daily picks** — decided on the device by `DailyPolicy` (#101);
+   Jev is an optional override (wired, deployed, verified live). Left: play a few
+   days on the iPad and re-tune the game weights after playtest #6 and #47.
 3. **Done 2026-09-30:** VoiceOver and 100pt-target check on the iPad (#64),
    History/day-grouping tests and plumbing dedupe (#65, #57).
 

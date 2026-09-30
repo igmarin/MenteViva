@@ -22,10 +22,10 @@ and [GitHub milestones](https://github.com/igmarin/MenteViva/milestones).
 | 🔢 Number Trail | Processing + numeracy | Adaptive math streaks |
 | 👀 Quick Eyes | Processing speed | Shrinking display-time discrimination |
 
-Jev ([TypeSafe](https://typesafe.ai)) is designed to rank the daily mix and
-nudge difficulty — seasoning, not the meal. Home marks today's picks and each
-game reads the daily difficulty; with no proxy configured the app uses its
-offline plan, so everything works without it.
+Home marks today's picks and each game reads the daily difficulty. Both are
+decided by a small rule policy on the device (no network, no cost). Jev
+([TypeSafe](https://typesafe.ai)) is an optional override when a proxy is
+configured, so everything works without it.
 Design and status: [docs/jev-integration.md](docs/jev-integration.md).
 
 ## Build
@@ -60,7 +60,7 @@ MenteViva/
   HomeView.swift          # game picker
   Models/                 # SwiftData: GameSession, RoundProgress
   Games/                  # one file per game; MemoryMatchView is the reference
-  Services/               # JevService (TypeSafe client, offline fallback), SoundPlayer
+  Services/               # DailyPolicy (on-device plan), JevService (optional TypeSafe client), SoundPlayer
 proxy/worker.js           # Cloudflare Worker holding the Jev key
 docs/                     # product & design docs — start at docs/README.md
 tools/generate_project.swift

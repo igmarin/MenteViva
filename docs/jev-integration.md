@@ -1,17 +1,36 @@
 # Jev integration — MenteViva
 
+**Decided 2026-09-30 (#101):** the daily plan (today's picks and each game's difficulty) is
+decided by rules **on the device**: `DailyPolicy`, no model, no network, no key, no cost. Jev
+is an **optional override**: it runs only when `JEV_PROXY_URL` is configured, and everything
+below describes that optional path. Why, and which alternatives were tested:
+[decision-model-spike-2026-09-30.md](decision-model-spike-2026-09-30.md).
+
 Jev is **seasoning, not the meal**. All five games are 100% deterministic and work offline.
-Jev answers two narrow questions per day; code stays in control of everything else.
+When enabled, Jev answers two narrow questions per day; code stays in control of everything else.
 
 Source of truth: https://docs.typesafe.ai/llms.txt (fetched 2025; append `.md` to doc paths).
+
+## Default: the on-device policy (`DailyPolicy`)
+
+- **Mix:** each game scores `value × (0.5 + 0.5 × min(daysSinceLastPlayed, 7)/7)`; top 3.
+  `value` is the Jev 008/010 utility matrix: Memory Lane 1.0, Quick Eyes 0.8, Name the Herd 0.7,
+  Color Clash 0.3, Number Trail 0.3. So the two low-value games never reach the top 3 (the star
+  means "best for today", not a schedule); revisit after playtest #6 and decision #47.
+- **Difficulty (errorless-first):** one level at a time. Easier when accuracy < 0.65 (≥ 1 session);
+  harder at ≥ 0.90 with ≥ 3 sessions; otherwise unchanged. After any change it **holds 7 days**
+  (the 14-day accuracy window would otherwise trigger another step the next morning).
+- Pure function of `PlayerStateSummary`; tested in `DailyPolicyTests`, including the real
+  archived payload (same top-3 set as Jev).
 
 ## Status (2026-09-30)
 
 | Piece | State |
 |---|---|
-| `JevService` client + plan policy + unit tests | Done (top-3-of-5 mix, confidence-gated difficulty, day-stamp cache, fallback) |
+| On-device `DailyPolicy` (default) | Done (#101): plans the mix and difficulty with no network; Home fills in the stars locally |
+| `JevService` client + plan policy + unit tests (optional Jev path) | Done (top-3-of-5 mix, confidence-gated difficulty, day-stamp cache) |
 | Wired into the running app | **Yes.** Sessions record `correct`/`attempts` (#58); Home builds the 14-day `PlayerStateSummary`, calls `dailyPlan()` lazily and stars today's picks (#59); every game reads the stored difficulty once when it opens (#60) |
-| Client hardening | Done (#61): each answer decodes on its own, the fallback plan is cached for the day, concurrent callers share one request, errors are logged |
+| Client hardening | Done (#61): each answer decodes on its own, the plan is cached for the day, concurrent callers share one request, errors are logged |
 | Proxy | Hardened and deployed (#63): `https://menteviva-jev-proxy.ismael-marin.workers.dev`; verified 2026-09-30 (405/401/404 without the key, 200 with it) |
 | App configuration | `JEV_PROXY_URL` / `JEV_PROXY_SECRET` ship empty and are read from a git-ignored `MenteViva/Config/Local.xcconfig` (#91); without it the app runs on the offline plan |
 | Live verification of the shipped payload | Done 2026-09-30 (#62): the app's real 10-question request, captured from `JevService` and sent through the deployed proxy, returned HTTP 200 with all 10 answers (`jev-json/011`, model `jev-1.13.0`, 1272 in / 183 out tokens). Its state is a **sample fixture**, not a real player. Two unit tests replay the pair so wire keys and answer shapes can't drift silently |
@@ -19,8 +38,8 @@ Source of truth: https://docs.typesafe.ai/llms.txt (fetched 2025; append `.md` t
 
 ## The daily judgment at a glance
 
-One lazy request per local day; every failure path lands silently on the
-deterministic fallback. The UI never waits on the network.
+With Jev enabled: one lazy request per local day; every failure path lands silently on the
+on-device plan. The UI never waits on the network. (Without a proxy URL there is no request.)
 
 ```mermaid
 flowchart TD
@@ -32,7 +51,7 @@ flowchart TD
     P --> J["api.typesafe.ai/v1/systemone"]
     J --> V{"2xx and answers parse?"}
     V -->|yes| C["Cache by local day — rank in code — difficulty only if confidence ≥ 0.6"]
-    V -->|no| F["Fallback: day-of-year rotation, keep yesterday's difficulty"]
+    V -->|no| F["On-device DailyPolicy plan"]
     U["No proxy URL configured"] --> F
     C --> R
     F --> R
@@ -69,7 +88,7 @@ flowchart TD
   forces one winner; independent Nouls give a per-game probability we rank in code.
 - **Policy in code:** sort games by `noul` descending, take the top 3 of 5. This guarantees a
   non-empty mix even if every probability is low — the model ranks, code decides.
-- **Fallback:** deterministic rotation — day-of-year offset over the game list, top 3.
+- **Fallback:** the on-device `DailyPolicy` mix.
 
 ## Judgment 2 — per-game difficulty (5 × Score)
 
@@ -86,7 +105,7 @@ flowchart TD
   Wrong difficulty is the high-stakes error for this audience (frustration → abandonment),
   so the threshold sits above the docs' 0.5 "genuinely unsure" floor. Below threshold:
   keep yesterday's difficulty. Initial difficulty for a new player is always **medium**.
-- **Fallback:** keep current stored difficulty.
+- **Fallback:** the on-device `DailyPolicy` difficulty (same one-level, 7-day-hold rules).
 
 ## Timing — when judgments fire
 
@@ -101,17 +120,17 @@ and per-session calls multiply cost 4–6× for no benefit at this granularity.
 
 ## Offline / failure behavior
 
-Every failure path degrades to the deterministic fallback, silently (convention 5 —
+Every failure path degrades to the on-device plan, silently (convention 5 —
 no error copy, ever):
 
-1. No network / timeout (10 s) → fallback plan.
-2. Proxy or API error (non-2xx) → fallback plan.
+1. No network / timeout (10 s) → on-device plan.
+2. Proxy or API error (non-2xx) → on-device plan.
 3. Malformed response → per-answer fallback: each answer decodes on its own, so one
    unknown or malformed answer no longer discards the good ones. A missing Noul sorts
-   last, a missing Score keeps current difficulty. The fallback plan is cached for the
+   last, a missing Score keeps current difficulty. The on-device plan is cached for the
    day (no retry storm); errors are logged, never shown.
 4. Low confidence on a difficulty Score → keep current difficulty.
-5. No proxy URL configured → service is inert; fallback plan always.
+5. No proxy URL configured (the default) → no request is ever made; the on-device plan always.
 
 ## Cost / latency
 
@@ -147,3 +166,14 @@ No request rewriting, no body logging, rejects anything but `POST /jev`. It has 
 caller auth, rate limit or size cap yet, so it must not be deployed as-is (#63). The app
 code does not change when the proxy goes live — only the config value does. During
 local beta, run the same worker locally (`npx wrangler dev`, key from the environment).
+
+## Other decision models (evaluated 2026-09-30)
+
+Open Jev-style models exist and speak the same `/v1/systemone` API. Nimble (Bespoke Labs, 9B,
+Apache-2.0 weights) runs behind Ollama 0.35; Laya (~0.4B) behind Rapid-MLX's `system-one`. Both
+were run on our real payload and 12 synthetic players; neither replaced Jev for the app (hosting
+cost, memory, and answers that disagree with Jev or ignore the player's data). Full numbers:
+[decision-model-spike-2026-09-30.md](decision-model-spike-2026-09-30.md). If a model is ever
+self-hosted, the proxy's upstream URL/model would be the only change (#102); note the 0.6
+confidence gate above was tuned on Jev and must be re-tuned (Nimble's difficulty confidences were
+0.18–0.47).

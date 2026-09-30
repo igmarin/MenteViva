@@ -31,7 +31,7 @@ MenteViva/            app (SwiftUI + SwiftData)
   HomeView, OnboardingView, SettingsView, HistoryView
   Games/              one file per game (5) + CelebrationView
   Models/             GameSession, RoundProgress
-  Services/           JevService (client + policy), SoundPlayer
+  Services/           DailyPolicy (on-device plan), JevService (optional client), SoundPlayer
   Localizable.xcstrings  every string, EN + ES
 MenteVivaTests/       unit tests (Given/When/Then names)
 proxy/worker.js       Cloudflare Worker that holds the Jev key
@@ -44,12 +44,11 @@ docs/                 start at docs/README.md
 
 - 5 games shipped (Memory Lane, Color Clash, Name the Herd, Number Trail,
   Quick Eyes); ES/EN complete; local-only build is the default.
-- **Jev is wired in and verified live.** Home stars today's picks and games read
-  the daily difficulty (#58–#61); the hardened proxy is deployed (#63) and the
-  real 10-question request/response is archived (`docs/jev-json/011`, #62). The
-  app calls it only when `MenteViva/Config/Local.xcconfig` (git-ignored; copy
-  the `.example`) sets the proxy URL and secret (#91); otherwise it runs on the
-  offline plan.
+- **Daily picks and difficulty are decided on the device** (`DailyPolicy`, #101): no model,
+  no network, no cost. Jev is an optional override, wired and verified live (proxy deployed #63,
+  payload archived `docs/jev-json/011`), used only when `MenteViva/Config/Local.xcconfig`
+  (git-ignored; copy the `.example`) sets the proxy URL and secret (#91). Open-model
+  alternatives were tested and rejected for the app: `docs/decision-model-spike-2026-09-30.md`.
 - Dad playtest #6 has **not** been run; docs/playtest-session-1.md is the
   sheet. No content gates lift until it does (#18).
 - Live state is in the [milestones](https://github.com/igmarin/MenteViva/milestones), not here.
@@ -119,8 +118,8 @@ docs/                 start at docs/README.md
 - One file per game in `MenteViva/Games/`; copy `MemoryMatchView.swift`'s
   shape (View + @State + `modelContext.insert(GameSession(...))` on finish).
   No game engine, no base classes, no protocol ceremony.
-- Jev judgments live in `Services/JevService.swift`; policy stays in code,
-  never in the model. See docs/jev-integration.md.
+- The daily plan is `Services/DailyPolicy.swift` (pure, tested). Jev judgments, when enabled, live
+  in `Services/JevService.swift`; policy stays in code, never in the model. See docs/jev-integration.md.
 
 ## When unsure
 

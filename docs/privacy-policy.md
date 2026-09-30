@@ -17,9 +17,9 @@ how rounds went, how long they took) are stored only on your iPhone or iPad,
 in the app's private storage. We never see them. They are not synced anywhere.
 Deleting the app deletes them completely.
 
-**What leaves the device: normally, nothing.** The app works fully offline.
-There is one optional feature — a daily game suggestion — that, *only if it is
-turned on in a given build*, sends a small summary to our suggestion service:
+**What leaves the device: normally, nothing.** The app works fully offline, and
+its daily game suggestion is worked out on your device. There is one optional
+variant of that suggestion that, *only if it is turned on in a given build*, sends a small summary to our suggestion service:
 counts and averages only (for example "played 4 sessions this fortnight,
 average accuracy 0.8"), per game. It contains no name, no device ID, no dates,
 no location — nothing that identifies you. The summary goes through our proxy
@@ -53,14 +53,14 @@ hosting]**. We answer in English or Spanish.
   `Services/JevService.swift` is the entire outgoing payload (counts/ratios,
   no identifiers, no dates); `proxyURL == nil` ⇒ zero network calls; SwiftData
   store is app-local; no third-party dependencies exist in the project.
-- **Before any build ships with Jev on:** the proxy rate-limits by client IP
-  (`proxy/worker.js`), so Cloudflare sees the device IP on each daily request
-  even though we store nothing and the payload has no identifiers. Decide with
-  Apple's App Privacy definitions whether the label stays **Data Not Collected**,
-  and add one plain sentence about the IP to the published text above.
-  In-app `settings.privacy.body` already says "only anonymous totals leave"; the
-  payload also carries each game's current difficulty and days since last play
-  (numbers, not dates).
+- **Default builds (Jev off, #101):** today's picks are computed on the device and the app makes
+  no network request, so **Data Not Collected** holds with no caveats.
+- **Before any build turns the optional Jev backend on:** the proxy rate-limits by client IP
+  (`proxy/worker.js`), so Cloudflare sees the device IP on each daily request even though we store
+  nothing and the payload has no identifiers. Decide with Apple's App Privacy definitions whether
+  the label still holds, and add one plain sentence about the IP to the published text above.
+  In-app `settings.privacy.body` already says "only anonymous totals leave"; the payload also
+  carries each game's current difficulty and days since last play (numbers, not dates).
 - Hosting: the repo is private and GitHub Pages on private repos needs a paid
   plan, so use a tiny public policy repo or Cloudflare Pages (decisions
   2026-09-20). Then link it in-app (Settings) and in App Store Connect — that

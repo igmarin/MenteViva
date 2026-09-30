@@ -2,6 +2,31 @@
 
 Newest first. Format: date — decision — why — what would make us revisit.
 
+## 2026-09-30 — Daily picks and difficulty are decided by rules on the device, not a hosted model
+
+**Question:** how should the app choose today's games and difficulty without ongoing charges?
+Checked with the owner (goal: avoid charges; the buyer and player never see a model).
+
+**Decision:** `DailyPolicy` (#101) is the default: a pure function, no model, no network, no key.
+Jev stays as an optional override behind the proxy; the classifier/decision tooling keeps using
+TypeSafe Jev (#103, owner: keep).
+
+**Evidence** (details: [decision-model-spike-2026-09-30.md](decision-model-spike-2026-09-30.md)):
+- The questions have no ground truth, and on the one real payload a 25-line rule picked the same
+  top-3 set as Jev and matched its difficulty on 4/5 games.
+- Nimble 9B (free weights) needs ~9 GB RAM: the 16 GB dev Mac swapped heavily, cold start 15.5 s
+  (app timeout 10 s), and its answers differed from Jev (1/5 difficulty decisions, 1/3 mix picks).
+- Laya ~0.4B is fast (0.58 s) but did not react to the player's data (same picks for "struggling"
+  and "thriving", difficulty confidence ≈ uniform).
+- Hosting any of them for free means an always-on machine; hosted GPUs bring the charges back.
+
+**Side effects:** the app makes no network request by default, so the App Privacy label stays
+"Data Not Collected" without caveats; the Cloudflare/IP note in privacy-policy.md applies only if
+the optional backend is ever enabled.
+
+Revisit when: real play data shows a model's picks beat the rules, or a cheap always-on host exists
+(then #102). The value weights are a judgment from Jev 008/010; re-tune after playtest #6 and #47.
+
 ## 2026-09-22 — Jev 010 game utility matrix: what it decided
 
 Six games (5 shipped + reminiscence candidate) × evidence, errorless fit,
@@ -259,6 +284,8 @@ Revisit when: we outgrow per-record sharing or need cross-platform family
 members (Android in the family → real backend).
 
 ## 2026-09-19 — Offline-first; Jev is seasoning
+
+> **Updated 2026-09-30:** the daily mix and difficulty are now decided by the on-device `DailyPolicy` (#101), not Jev with a rotation fallback; Jev is an optional override. See the 2026-09-30 entry.
 
 Games are 100% deterministic and playable without network. Jev ranks the
 daily mix and nudges difficulty, once per day, with silent fallback to
