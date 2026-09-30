@@ -4,5 +4,7 @@
 <dict>
 	<key>JEV_PROXY_URL</key>
 	<string></string>
+	<key>JEV_PROXY_SECRET</key>
+	<string></string>
 </dict>
 </plist>

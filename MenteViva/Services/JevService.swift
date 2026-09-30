@@ -1,4 +1,5 @@
 import Foundation
+import os
 
 /// Minimal TypeSafe/Jev client for MenteViva. See docs/jev-integration.md.
 ///
@@ -136,7 +137,11 @@ actor JevService {
     static let shared = JevService()
 
     private let proxyURL: URL?
+    private let proxySecret: String
     private let session: URLSession
+    private let defaults: UserDefaults
+    private var inFlight: Task<DailyPlan, Never>?
+    private nonisolated static let log = Logger(subsystem: "com.igmarin.MenteViva", category: "jev")
     private let cacheKey = "jev.dailyPlan"
     private nonisolated static let difficultyKey = "jev.difficulty"
 
@@ -150,34 +155,52 @@ actor JevService {
             .flatMap { $0 as? String }
             .flatMap { $0.isEmpty ? nil : $0 }
             .flatMap(URL.init(string:)),
-         session: URLSession = .shared) {
+         proxySecret: String = Bundle.main.infoDictionary?["JEV_PROXY_SECRET"] as? String ?? "",
+         session: URLSession = .shared,
+         defaults: UserDefaults = .standard) {
         self.proxyURL = proxyURL
+        self.proxySecret = proxySecret
         self.session = session
+        self.defaults = defaults
     }
 
     // MARK: - Public API
 
     /// Today's plan: cache first, otherwise one Jev request, fallback on any failure.
+    /// The fallback is cached too, so a failing network is tried once per day, and
+    /// concurrent callers share one in-flight request.
     func dailyPlan(state: PlayerStateSummary,
-                   currentDifficulty: [GameID: Difficulty]) async -> DailyPlan {
-        let stamp = Self.dayStamp()
+                   currentDifficulty: [GameID: Difficulty],
+                   now: Date = .now) async -> DailyPlan {
+        let stamp = Self.dayStamp(now)
         if let cached = cachedPlan(), cached.dayStamp == stamp { return cached }
+        if let inFlight { return await inFlight.value }
 
-        let fallback = DailyPlan.fallback(current: currentDifficulty, dayStamp: stamp)
-        guard let proxyURL else { return fallback }
+        let task = Task { await self.fetchPlan(state: state, current: currentDifficulty, stamp: stamp) }
+        inFlight = task
+        let plan = await task.value
+        inFlight = nil
+        return plan
+    }
 
-        do {
-            let answers = try await ask(state: state, proxyURL: proxyURL)
-            let plan = Self.makePlan(from: answers,
-                                     current: currentDifficulty,
+    private func fetchPlan(state: PlayerStateSummary,
+                           current: [GameID: Difficulty],
+                           stamp: String) async -> DailyPlan {
+        var plan = DailyPlan.fallback(current: current, dayStamp: stamp)
+        if let proxyURL {
+            do {
+                let answers = try await ask(state: state, proxyURL: proxyURL)
+                plan = Self.makePlan(from: answers,
+                                     current: current,
                                      dayStamp: stamp,
                                      gamesPerDay: gamesPerDay,
                                      confidenceFloor: difficultyConfidenceThreshold)
-            cache(plan)
-            return plan
-        } catch {
-            return fallback
+            } catch {
+                Self.log.info("Jev unavailable, using fallback plan: \(String(describing: error), privacy: .public)")
+            }
         }
+        cache(plan)
+        return plan
     }
 
     // MARK: - Jev request (one call, 8 questions: 4 Noul + 4 Score)
@@ -204,6 +227,9 @@ actor JevService {
         var urlRequest = URLRequest(url: proxyURL, timeoutInterval: 10)
         urlRequest.httpMethod = "POST"
         urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        if !proxySecret.isEmpty {
+            urlRequest.setValue(proxySecret, forHTTPHeaderField: "X-MenteViva-Key")
+        }
         urlRequest.httpBody = try JSONEncoder().encode(body)
 
         let (data, response) = try await session.data(for: urlRequest)
@@ -241,23 +267,23 @@ actor JevService {
     // MARK: - Cache (UserDefaults, per local day)
 
     private func cachedPlan() -> DailyPlan? {
-        UserDefaults.standard.data(forKey: cacheKey)
+        defaults.data(forKey: cacheKey)
             .flatMap { try? JSONDecoder().decode(DailyPlan.self, from: $0) }
     }
 
     private func cache(_ plan: DailyPlan) {
         if let data = try? JSONEncoder().encode(plan) {
-            UserDefaults.standard.set(data, forKey: cacheKey)
+            defaults.set(data, forKey: cacheKey)
         }
         if let data = try? JSONEncoder().encode(Dictionary(uniqueKeysWithValues: plan.difficulty.map { ($0.key.rawValue, $0.value.rawValue) })) {
-            UserDefaults.standard.set(data, forKey: Self.difficultyKey)
+            defaults.set(data, forKey: Self.difficultyKey)
         }
     }
 
     /// Last difficulty Jev set per game (medium for a new player). Read by the
     /// games and by Home; only changes when a new daily plan is cached.
-    nonisolated static func storedDifficulty() -> [GameID: Difficulty] {
-        let raw = UserDefaults.standard.data(forKey: difficultyKey)
+    nonisolated static func storedDifficulty(defaults: UserDefaults = .standard) -> [GameID: Difficulty] {
+        let raw = defaults.data(forKey: difficultyKey)
             .flatMap { try? JSONDecoder().decode([String: Int].self, from: $0) } ?? [:]
         return Dictionary(uniqueKeysWithValues: GameID.allCases.map { game in
             (game, raw[game.rawValue].flatMap(Difficulty.init(rawValue:)) ?? .medium)
@@ -305,6 +331,20 @@ nonisolated private enum JevQuestion: Encodable {
 
 nonisolated private struct JevResponse: Decodable {
     let answers: [String: JevAnswer]
+
+    /// One answer we cannot read (unknown type, missing field) is dropped, not
+    /// fatal: the rest still count and the missing one falls back per question.
+    private struct Lossy: Decodable {
+        let value: JevAnswer?
+        init(from decoder: Decoder) throws { value = try? JevAnswer(from: decoder) }
+    }
+
+    private enum CodingKeys: String, CodingKey { case answers }
+
+    init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        answers = try c.decode([String: Lossy].self, forKey: .answers).compactMapValues(\.value)
+    }
 }
 
 nonisolated enum JevAnswer: Decodable {

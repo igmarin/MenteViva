@@ -33,6 +33,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
   stores pairs, not moves). Existing history is untouched.
 
 ### Fixed
+- **Jev client (#61):** one unreadable answer no longer discards the rest, the
+  fallback plan is remembered for the day (no retry storm while offline), and
+  simultaneous requests share one call. Optional `JEV_PROXY_SECRET` is sent as
+  `X-MenteViva-Key` when set.
 - **Round-end bugs (#53, #54, #55):** an extra tap after the last round no longer
   records a second session (Color Clash, Quick Eyes, Number Trail); Color Clash
   now records whole-session time; Number Trail uses the shared round counter.
