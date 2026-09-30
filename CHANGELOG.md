@@ -4,6 +4,14 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 
 ## [Unreleased]
 
+### Changed
+- **Daily picks decided on the device (#101):** "Today's pick" and each game's
+  difficulty now come from a small built-in policy (most worthwhile games first,
+  nudged toward ones you haven't played lately; difficulty eases after low
+  accuracy, rises only after steady success, one level at a time, then holds a
+  week). No network, no account, no cost. Jev remains an optional override when
+  a proxy is configured.
+
 ### Added
 - **Jev config via xcconfig (#91):** `JEV_PROXY_URL` / `JEV_PROXY_SECRET` now
   come from a git-ignored `MenteViva/Config/Local.xcconfig` (template:

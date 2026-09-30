@@ -18,11 +18,12 @@
 		E2080412E5AF86210000001E /* GameSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC9E51A3CFE79A4700000018; };
 		687971ABE147369000000020 /* RoundProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F149BAD8E63313E0000001A; };
 		83C5727F27BD566A0000001A /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7B3B616009A42E800000014; };
+		30ECA8CB22C0601E00000020 /* DailyPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABA89EC2CAC17B0C0000001A; };
 		89CAE55D19053AF10000001F /* JevService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42B3456BD42F17B700000019; };
 		8C75A9CE4133529700000020 /* SoundPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B94116EB608F25D0000001A; };
 		D9207C4B070633A000000022 /* WeeklySummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DCDF59CF4AC6AE0000001C; };
 		F1CAEDFBEAB27E7A00000018 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881D5FFD680EE69800000012; };
-		89155436CE7D610300000037 /* DailyPlanFallbackTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34DE3FBC170271E900000031; };
+		D251CDE1271D51A600000031 /* DailyPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A13B966464CCDD440000002B; };
 		30AC8D27570BF6EA00000031 /* DayGroupingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B2C1FA22781E7680000002B; };
 		35A281A4703D4C320000002E /* DayStampTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 704A57A9A9F6E88000000028; };
 		13FA9F9D70716C6800000037 /* DifficultyMappingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70A793986C53BDC600000031; };
@@ -46,11 +47,12 @@
 		AC9E51A3CFE79A4700000018 /* GameSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models/GameSession.swift; sourceTree = "<group>"; };
 		1F149BAD8E63313E0000001A /* RoundProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models/RoundProgress.swift; sourceTree = "<group>"; };
 		D7B3B616009A42E800000014 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		ABA89EC2CAC17B0C0000001A /* DailyPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/DailyPolicy.swift; sourceTree = "<group>"; };
 		42B3456BD42F17B700000019 /* JevService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/JevService.swift; sourceTree = "<group>"; };
 		6B94116EB608F25D0000001A /* SoundPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/SoundPlayer.swift; sourceTree = "<group>"; };
 		E5DCDF59CF4AC6AE0000001C /* WeeklySummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/WeeklySummary.swift; sourceTree = "<group>"; };
 		881D5FFD680EE69800000012 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
-		34DE3FBC170271E900000031 /* DailyPlanFallbackTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/DailyPlanFallbackTests.swift; sourceTree = SOURCE_ROOT; };
+		A13B966464CCDD440000002B /* DailyPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/DailyPolicyTests.swift; sourceTree = SOURCE_ROOT; };
 		8B2C1FA22781E7680000002B /* DayGroupingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/DayGroupingTests.swift; sourceTree = SOURCE_ROOT; };
 		704A57A9A9F6E88000000028 /* DayStampTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/DayStampTests.swift; sourceTree = SOURCE_ROOT; };
 		70A793986C53BDC600000031 /* DifficultyMappingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/DifficultyMappingTests.swift; sourceTree = SOURCE_ROOT; };
@@ -102,6 +104,7 @@
 				AC9E51A3CFE79A4700000018 /* GameSession.swift */,
 				1F149BAD8E63313E0000001A /* RoundProgress.swift */,
 				D7B3B616009A42E800000014 /* OnboardingView.swift */,
+				ABA89EC2CAC17B0C0000001A /* DailyPolicy.swift */,
 				42B3456BD42F17B700000019 /* JevService.swift */,
 				6B94116EB608F25D0000001A /* SoundPlayer.swift */,
 				E5DCDF59CF4AC6AE0000001C /* WeeklySummary.swift */,
@@ -119,7 +122,7 @@
 		956A7D38BC89506B0000000B /* MenteVivaTests */ = {
 			isa = PBXGroup;
 			children = (
-				34DE3FBC170271E900000031 /* DailyPlanFallbackTests.swift */,
+				A13B966464CCDD440000002B /* DailyPolicyTests.swift */,
 				8B2C1FA22781E7680000002B /* DayGroupingTests.swift */,
 				704A57A9A9F6E88000000028 /* DayStampTests.swift */,
 				70A793986C53BDC600000031 /* DifficultyMappingTests.swift */,
@@ -208,6 +211,7 @@
 				E2080412E5AF86210000001E /* GameSession.swift in Sources */,
 				687971ABE147369000000020 /* RoundProgress.swift in Sources */,
 				83C5727F27BD566A0000001A /* OnboardingView.swift in Sources */,
+				30ECA8CB22C0601E00000020 /* DailyPolicy.swift in Sources */,
 				89CAE55D19053AF10000001F /* JevService.swift in Sources */,
 				8C75A9CE4133529700000020 /* SoundPlayer.swift in Sources */,
 				D9207C4B070633A000000022 /* WeeklySummary.swift in Sources */,
@@ -220,7 +224,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				89155436CE7D610300000037 /* DailyPlanFallbackTests.swift in Sources */,
+				D251CDE1271D51A600000031 /* DailyPolicyTests.swift in Sources */,
 				30AC8D27570BF6EA00000031 /* DayGroupingTests.swift in Sources */,
 				35A281A4703D4C320000002E /* DayStampTests.swift in Sources */,
 				13FA9F9D70716C6800000037 /* DifficultyMappingTests.swift in Sources */,

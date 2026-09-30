@@ -141,3 +141,30 @@ final class JevServiceTests: XCTestCase {
         XCTAssertEqual(sent?["model"] as? String, "jev-latest")
     }
 }
+
+/// With no proxy the service is pure on-device policy (#101): no request, hold recorded.
+final class JevServiceOnDeviceTests: XCTestCase {
+    func testGivenNoProxyWhenPlanThenPolicyPlanNoRequestAndChangeRecorded() async {
+        let defaults = UserDefaults(suiteName: "JevServiceOnDeviceTests")!
+        defaults.removePersistentDomain(forName: "JevServiceOnDeviceTests")
+        StubURLProtocol.requests = []
+        let config = URLSessionConfiguration.ephemeral
+        config.protocolClasses = [StubURLProtocol.self]
+        let service = JevService(proxyURL: nil, proxySecret: "",
+                                 session: URLSession(configuration: config), defaults: defaults)
+        let struggling = PlayerStateSummary.GameStats(sessionsLast14Days: 2, meanAccuracy: 0.4,
+            meanRoundsCompleted: 10, daysSinceLastPlayed: 1, currentDifficulty: .medium)
+        let state = PlayerStateSummary(games: [GameID.stroop.rawValue: struggling])
+        let medium = Dictionary(uniqueKeysWithValues: GameID.allCases.map { ($0, Difficulty.medium) })
+
+        let plan = await service.dailyPlan(state: state, currentDifficulty: medium,
+                                           now: Date(timeIntervalSince1970: 1_790_000_000))
+
+        XCTAssertEqual(plan.difficulty[.stroop], .easy)
+        XCTAssertEqual(plan, DailyPolicy.plan(state: state, dayStamp: plan.dayStamp))
+        XCTAssertTrue(StubURLProtocol.requests.isEmpty, "no proxy URL means no network request")
+        XCTAssertEqual(JevService.storedDifficulty(defaults: defaults)[.stroop], .easy)
+        XCTAssertEqual(JevService.lastDifficultyChange(defaults: defaults)[.stroop], plan.dayStamp)
+        XCTAssertNil(JevService.lastDifficultyChange(defaults: defaults)[.memoryMatch])
+    }
+}

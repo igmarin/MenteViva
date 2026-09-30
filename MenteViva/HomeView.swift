@@ -8,11 +8,9 @@ struct HomeView: View {
     private let columns = [GridItem(.adaptive(minimum: 150), spacing: 16)]
     @State private var showSettings = false
     @Environment(\.modelContext) private var modelContext
-    /// Today's mix. Starts as the deterministic fallback so tiles never wait
-    /// on the network; Jev's answer replaces it in place if it arrives.
-    @State private var todaysMix: Set<GameID> = Set(
-        DailyPlan.fallback(current: JevService.storedDifficulty(),
-                           dayStamp: JevService.dayStamp()).games)
+    /// Today's picks. Empty until the on-device policy has run (a local
+    /// fetch, so effectively instant); nothing on this screen waits on the network.
+    @State private var todaysMix: Set<GameID> = []
 
     var body: some View {
         NavigationStack {
