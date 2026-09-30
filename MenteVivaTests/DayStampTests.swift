@@ -5,21 +5,20 @@ import XCTest
 /// Its format is a contract between dailyPlan() and the UserDefaults cache.
 final class DayStampTests: XCTestCase {
 
+    /// Noon on the given local day: dayStamp formats in the device's timezone,
+    /// so building dates at noon keeps the expected stamp independent of it
+    /// (no midnight/DST-boundary drift on any runner or device).
+    private func localNoon(_ year: Int, _ month: Int, _ day: Int) throws -> Date {
+        try XCTUnwrap(Calendar.current.date(from: DateComponents(year: year, month: month, day: day, hour: 12)))
+    }
+
     func testGivenKnownDateWhenStampedThenFormatIsYearMonthDay() throws {
-        var components = DateComponents()
-        components.year = 2026
-        components.month = 3
-        components.day = 7
-        let date = try XCTUnwrap(Calendar.current.date(from: components))
+        let date = try localNoon(2026, 3, 7)
         XCTAssertEqual(JevService.dayStamp(date), "2026-03-07")
     }
 
     func testGivenSingleDigitMonthAndDayWhenStampedThenZeroPadded() throws {
-        var components = DateComponents()
-        components.year = 2026
-        components.month = 1
-        components.day = 5
-        let date = try XCTUnwrap(Calendar.current.date(from: components))
+        let date = try localNoon(2026, 1, 5)
         XCTAssertEqual(JevService.dayStamp(date), "2026-01-05")
     }
 
@@ -31,8 +30,8 @@ final class DayStampTests: XCTestCase {
     }
 
     func testGivenTwoDatesOnDifferentDaysWhenStampedThenStampsDiffer() throws {
-        let day1 = try XCTUnwrap(Calendar.current.date(from: DateComponents(year: 2026, month: 6, day: 1)))
-        let day2 = try XCTUnwrap(Calendar.current.date(from: DateComponents(year: 2026, month: 6, day: 2)))
+        let day1 = try localNoon(2026, 6, 1)
+        let day2 = try localNoon(2026, 6, 2)
         XCTAssertNotEqual(JevService.dayStamp(day1), JevService.dayStamp(day2))
     }
 }
