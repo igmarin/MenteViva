@@ -13,3 +13,4 @@ graphify-out/
 proxy/.dev.vars
 proxy/.env
 MenteViva/Config/Local.xcconfig
+node_modules/
