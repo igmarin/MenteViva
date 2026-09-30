@@ -127,6 +127,41 @@ private struct ConfettiView: View {
     }
 }
 
+extension View {
+    /// The shared end-of-session screen (#45): progress, never points.
+    func celebration(isPresented: Binding<Bool>, detail: String,
+                     onPlayAgain: @escaping () -> Void) -> some View {
+        modifier(CelebrationCover(isPresented: isPresented, detail: detail, onPlayAgain: onPlayAgain))
+    }
+}
+
+private struct CelebrationCover: ViewModifier {
+    @Environment(\.dismiss) private var dismiss
+    @Binding var isPresented: Bool
+    let detail: String
+    let onPlayAgain: () -> Void
+
+    func body(content: Content) -> some View {
+        content.fullScreenCover(isPresented: $isPresented) {
+            CelebrationView(detail: detail,
+                            onPlayAgain: { isPresented = false; onPlayAgain() },
+                            onHome: { isPresented = false; dismiss() })
+        }
+    }
+}
+
+/// Non-color cue for found/picked tiles: a solid checkmark, readable on any tint
+/// (WCAG 1.4.1, conventions.md §4).
+struct CheckBadge: View {
+    var body: some View {
+        Image(systemName: "checkmark.circle.fill")
+            .font(.title2)
+            .foregroundStyle(.white, .green)
+            .padding(6)
+            .accessibilityHidden(true)
+    }
+}
+
 #Preview {
     CelebrationView(detail: "You found all 8 pairs!", onPlayAgain: {}, onHome: {})
 }

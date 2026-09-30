@@ -8,7 +8,6 @@ import SwiftData
 /// No visible countdown timer; the shrinking display time is the challenge.
 struct QuickEyesView: View {
     @Environment(\.modelContext) private var modelContext
-    @Environment(\.dismiss) private var dismiss
 
     private let emojis = ["🌻", "🐢", "🍎", "🎸", "🌙", "☕️", "🦋", "🍊", "🚗", "⭐", "🐝", "🌵"]
     private static let totalRounds = 12
@@ -89,11 +88,7 @@ struct QuickEyesView: View {
         .onAppear(perform: startRound)
         .onDisappear { revealTask?.cancel() }
         // Same celebration as every other game (#45): progress, not points.
-        .fullScreenCover(isPresented: $showCelebration) {
-            CelebrationView(detail: finalDetail,
-                            onPlayAgain: { showCelebration = false; restart() },
-                            onHome: { showCelebration = false; dismiss() })
-        }
+        .celebration(isPresented: $showCelebration, detail: finalDetail, onPlayAgain: restart)
     }
 
     private func restart() {

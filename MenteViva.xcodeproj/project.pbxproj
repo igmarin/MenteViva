@@ -23,6 +23,7 @@
 		D9207C4B070633A000000022 /* WeeklySummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DCDF59CF4AC6AE0000001C; };
 		F1CAEDFBEAB27E7A00000018 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881D5FFD680EE69800000012; };
 		89155436CE7D610300000037 /* DailyPlanFallbackTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34DE3FBC170271E900000031; };
+		30AC8D27570BF6EA00000031 /* DayGroupingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B2C1FA22781E7680000002B; };
 		35A281A4703D4C320000002E /* DayStampTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 704A57A9A9F6E88000000028; };
 		13FA9F9D70716C6800000037 /* DifficultyMappingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70A793986C53BDC600000031; };
 		C524FB5039855DE400000036 /* DifficultyPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F28BC63EFC28057200000030; };
@@ -50,6 +51,7 @@
 		E5DCDF59CF4AC6AE0000001C /* WeeklySummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/WeeklySummary.swift; sourceTree = "<group>"; };
 		881D5FFD680EE69800000012 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		34DE3FBC170271E900000031 /* DailyPlanFallbackTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/DailyPlanFallbackTests.swift; sourceTree = SOURCE_ROOT; };
+		8B2C1FA22781E7680000002B /* DayGroupingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/DayGroupingTests.swift; sourceTree = SOURCE_ROOT; };
 		704A57A9A9F6E88000000028 /* DayStampTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/DayStampTests.swift; sourceTree = SOURCE_ROOT; };
 		70A793986C53BDC600000031 /* DifficultyMappingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/DifficultyMappingTests.swift; sourceTree = SOURCE_ROOT; };
 		F28BC63EFC28057200000030 /* DifficultyPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/DifficultyPolicyTests.swift; sourceTree = SOURCE_ROOT; };
@@ -118,6 +120,7 @@
 			isa = PBXGroup;
 			children = (
 				34DE3FBC170271E900000031 /* DailyPlanFallbackTests.swift */,
+				8B2C1FA22781E7680000002B /* DayGroupingTests.swift */,
 				704A57A9A9F6E88000000028 /* DayStampTests.swift */,
 				70A793986C53BDC600000031 /* DifficultyMappingTests.swift */,
 				F28BC63EFC28057200000030 /* DifficultyPolicyTests.swift */,
@@ -218,6 +221,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				89155436CE7D610300000037 /* DailyPlanFallbackTests.swift in Sources */,
+				30AC8D27570BF6EA00000031 /* DayGroupingTests.swift in Sources */,
 				35A281A4703D4C320000002E /* DayStampTests.swift in Sources */,
 				13FA9F9D70716C6800000037 /* DifficultyMappingTests.swift in Sources */,
 				C524FB5039855DE400000036 /* DifficultyPolicyTests.swift in Sources */,

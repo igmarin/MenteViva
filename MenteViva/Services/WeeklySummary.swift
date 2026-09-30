@@ -39,3 +39,19 @@ struct WeeklySummary: Equatable {
         return lines.joined(separator: "\n")
     }
 }
+
+/// Day grouping shared by My Week and its tests: the last 7 days of items,
+/// grouped by calendar day, newest day first.
+enum DayGrouping {
+    static func lastWeek<T>(_ items: [T], date: (T) -> Date,
+                            now: Date = .now, calendar: Calendar = .current) -> [T] {
+        let cutoff = calendar.date(byAdding: .day, value: -7, to: now) ?? now
+        return items.filter { date($0) >= cutoff }
+    }
+
+    static func byDay<T>(_ items: [T], date: (T) -> Date,
+                         calendar: Calendar = .current) -> [(day: Date, items: [T])] {
+        let grouped = Dictionary(grouping: items) { calendar.startOfDay(for: date($0)) }
+        return grouped.keys.sorted(by: >).map { (day: $0, items: grouped[$0] ?? []) }
+    }
+}

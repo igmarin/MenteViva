@@ -5,7 +5,6 @@ import SwiftData
 /// with the streak. 4 big answer buttons, 10 questions, no timer.
 struct MathStreakView: View {
     @Environment(\.modelContext) private var modelContext
-    @Environment(\.dismiss) private var dismiss
 
     private static let totalQuestions = 10
     private var totalQuestions: Int { Self.totalQuestions }
@@ -67,11 +66,7 @@ struct MathStreakView: View {
         .padding()
         .navigationTitle(AppLanguage.localized("game.math.title"))
         .onAppear(perform: deal)
-        .fullScreenCover(isPresented: $showCelebration) {
-            CelebrationView(detail: finalDetail,
-                            onPlayAgain: { showCelebration = false; restart() },
-                            onHome: { showCelebration = false; dismiss() })
-        }
+        .celebration(isPresented: $showCelebration, detail: finalDetail, onPlayAgain: restart)
     }
 
     private func restart() {
