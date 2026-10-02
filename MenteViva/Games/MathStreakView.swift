@@ -9,6 +9,10 @@ struct MathStreakView: View {
     private static let totalQuestions = 10
     private var totalQuestions: Int { Self.totalQuestions }
 
+    // Numbers follow the device text size (#117); emoji elsewhere stay fixed.
+    @ScaledMetric(relativeTo: .largeTitle) private var sumSize: CGFloat = 72
+    @ScaledMetric(relativeTo: .title) private var answerSize: CGFloat = 44
+
     @State private var difficulty = Difficulty.stored(.mathStreaks)
     @State private var a = 0
     @State private var b = 0
@@ -42,7 +46,9 @@ struct MathStreakView: View {
                 .multilineTextAlignment(.center)
 
             Text("\(a) + \(b)")
-                .font(.system(size: 72, weight: .bold))
+                .font(.system(size: sumSize, weight: .bold))
+                .lineLimit(1)
+                .minimumScaleFactor(0.5)
                 .accessibilityLabel("\(a) + \(b)")
                 .modifier(MissCue(active: $missed))
 
@@ -50,7 +56,9 @@ struct MathStreakView: View {
                 ForEach(options, id: \.self) { option in
                     Button { tap(option) } label: {
                         Text(verbatim: "\(option)")
-                            .font(.system(size: 44, weight: .semibold))
+                            .font(.system(size: answerSize, weight: .semibold))
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.5)
                             .frame(maxWidth: .infinity, minHeight: 110)
                             .background(.blue.opacity(0.15), in: .rect(cornerRadius: 16))
                     }
@@ -64,6 +72,7 @@ struct MathStreakView: View {
                 .foregroundStyle(.secondary)
         }
         .padding()
+        .fitOrScroll()
         .navigationTitle(AppLanguage.localized("game.math.title"))
         .onAppear(perform: deal)
         .celebration(isPresented: $showCelebration, detail: finalDetail, onPlayAgain: restart)

@@ -60,9 +60,9 @@ private struct RootView: View {
                 OnboardingView()
             }
         }
-        // Only ever bumps text up: forcing a size when the toggle is off would
-        // shrink the app for someone using the system's largest setting.
-        .dynamicTypeSize(biggerText ? .xxxLarge : .large)
+        // A range, never a fixed size (#117): off follows the device's text
+        // setting; on raises the floor to xxxLarge but keeps larger system sizes.
+        .dynamicTypeSize(biggerText ? .xxxLarge ... .accessibility5 : .xSmall ... .accessibility5)
         .environment(\.locale, AppLanguage.locale(for: appLanguage))
     }
 }

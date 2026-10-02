@@ -109,6 +109,7 @@ struct CategoryFluencyView: View {
             }
         }
         .padding()
+        .fitOrScroll()
         .navigationTitle(AppLanguage.localized("game.category.title"))
         .onAppear(perform: setup)
         .celebration(isPresented: $showCelebration, detail: finalDetail, onPlayAgain: restart)

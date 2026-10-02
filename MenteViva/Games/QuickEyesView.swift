@@ -8,6 +8,7 @@ import SwiftData
 /// No visible countdown timer; the shrinking display time is the challenge.
 struct QuickEyesView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.dynamicTypeSize) private var typeSize
 
     private let emojis = ["🌻", "🐢", "🍎", "🎸", "🌙", "☕️", "🦋", "🍊", "🚗", "⭐", "🐝", "🌵"]
     private static let totalRounds = 12
@@ -46,9 +47,13 @@ struct QuickEyesView: View {
 
     var body: some View {
         VStack(spacing: 24) {
-            Text(AppLanguage.localized("game.quickeyes.instruction"))
-                .font(.title2)
-                .multilineTextAlignment(.center)
+            // At accessibility text sizes the long instruction would push the
+            // choices off screen; while choosing, the short prompt is enough (#117).
+            if phase == .showing || !typeSize.isAccessibilitySize {
+                Text(AppLanguage.localized("game.quickeyes.instruction"))
+                    .font(.title2)
+                    .multilineTextAlignment(.center)
+            }
 
             Spacer()
 
@@ -84,6 +89,7 @@ struct QuickEyesView: View {
             Spacer()
         }
         .padding()
+        .fitOrScroll()
         .navigationTitle(AppLanguage.localized("game.quickeyes.title"))
         .onAppear(perform: startRound)
         .onDisappear { revealTask?.cancel() }

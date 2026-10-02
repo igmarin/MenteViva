@@ -4,6 +4,16 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 
 ## [Unreleased]
 
+### Accessibility
+- **Follows the device text size (#117):** the app used to lock text at the
+  default size, ignoring the iPad/iPhone setting. Now it follows it, and Bigger
+  text raises the minimum instead of fixing one size. Number Trail's numbers
+  and Color Clash's word grow with it. At the largest sizes Home tiles widen
+  (one column on iPhone, two on iPad) so names never break mid-word, a game
+  screen scrolls only if it can't fit (no instruction is cut short), and Quick
+  Eyes shows only its short prompt while choosing so the four pictures stay on
+  screen.
+
 ### Added
 - **Weekly progression (#107):** My Week now has a "Your games this week" line
   per game, warm words and an icon only (moved up a level, or steady), never a
