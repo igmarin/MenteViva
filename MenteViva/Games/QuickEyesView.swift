@@ -85,6 +85,8 @@ struct QuickEyesView: View {
             }
 
             Spacer()
+
+            RoundCounter(progress: progress)
         }
         .padding()
         .fitOrScroll()
