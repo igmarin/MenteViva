@@ -4,6 +4,15 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 
 ## [Unreleased]
 
+### Added
+- **Weekly progression (#107):** My Week now has a "Your games this week" line
+  per game, warm words and an icon only (moved up a level, or steady), never a
+  number or a down arrow. Settings → **For family** shows the numbers: games and
+  % right this week vs the week before, the level each game is set to, level
+  and accuracy trends (declines included, worded kindly), and a share button
+  that sends them as text. Each session now records the difficulty it was
+  played at. EN + ES.
+
 ### Fixed
 - **Finished games missing from My Week (#106):** every game now saves its
   session the moment it ends instead of waiting for SwiftData's autosave, so an

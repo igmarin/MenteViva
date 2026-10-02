@@ -52,7 +52,7 @@ enum AppLanguage: String, CaseIterable, Identifiable {
 }
 
 /// Settings a stranger can reach alone: language, sound & haptics, bigger text,
-/// privacy, version.
+/// the family screen (#107), privacy, version.
 struct SettingsView: View {
     @AppStorage("appLanguage") private var appLanguage = AppLanguage.system.rawValue
     @AppStorage("biggerText") private var biggerText = false
@@ -105,6 +105,17 @@ struct SettingsView: View {
                     Toggle(AppLanguage.localized("settings.textsize"), isOn: $biggerText)
                         .font(.title3)
                         .frame(minHeight: 100)
+                }
+
+                Section {
+                    NavigationLink {
+                        FamilyView()
+                    } label: {
+                        Label(AppLanguage.localized("family.title"), systemImage: "person.2.fill")
+                            .font(.title3)
+                            .frame(maxWidth: .infinity, minHeight: 100, alignment: .leading)
+                    }
+                    .accessibilityHint(AppLanguage.localized("family.open.hint"))
                 }
 
                 Section {

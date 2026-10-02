@@ -115,7 +115,8 @@ struct MathStreakView: View {
         let score = Self.score(correct: correct, bestStreak: bestStreak)
         modelContext.record(GameSession(gameID: .mathStreaks, score: score,
                                         rounds: totalQuestions, durationSeconds: elapsed,
-                                        correct: correct, attempts: totalQuestions))
+                                        correct: correct, attempts: totalQuestions,
+                                        difficulty: difficulty))
         // A streak of 2+ is worth naming; below that, celebrate finishing (#45).
         finalDetail = bestStreak >= 2
             ? String(format: AppLanguage.localized("game.celebration.streak %lld"), bestStreak)

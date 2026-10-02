@@ -5,6 +5,7 @@
 	};
 	objectVersion = 90;
 	objects = {
+		424941BBC892698300000016 /* FamilyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2D43BA12C23BE6900000010; };
 		2526D29DE5FE6C8300000025 /* CategoryFluencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 915FB304D5C7D9690000001F; };
 		1DA22A903C3C9B3500000021 /* CelebrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4174FC9AF3B1DBCB0000001B; };
 		B59E327BE0BD12A700000020 /* ColorClashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7571F11C435CE80D0000001A; };
@@ -35,6 +36,7 @@
 		F3781E2CF00E20FA00000033 /* RoundProgressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690FA2BE3DFB9D180000002D; };
 		0EEED9F3112B457400000033 /* WeeklySummaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2CB27B32AF72D220000002D; };
 
+		F2D43BA12C23BE6900000010 /* FamilyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FamilyView.swift; sourceTree = "<group>"; };
 		915FB304D5C7D9690000001F /* CategoryFluencyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/CategoryFluencyView.swift; sourceTree = "<group>"; };
 		4174FC9AF3B1DBCB0000001B /* CelebrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/CelebrationView.swift; sourceTree = "<group>"; };
 		7571F11C435CE80D0000001A /* ColorClashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/ColorClashView.swift; sourceTree = "<group>"; };
@@ -93,6 +95,7 @@
 		DC57E42946F6E08C00000005 /* MenteViva */ = {
 			isa = PBXGroup;
 			children = (
+				F2D43BA12C23BE6900000010 /* FamilyView.swift */,
 				915FB304D5C7D9690000001F /* CategoryFluencyView.swift */,
 				4174FC9AF3B1DBCB0000001B /* CelebrationView.swift */,
 				7571F11C435CE80D0000001A /* ColorClashView.swift */,
@@ -201,6 +204,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				424941BBC892698300000016 /* FamilyView.swift in Sources */,
 				2526D29DE5FE6C8300000025 /* CategoryFluencyView.swift in Sources */,
 				1DA22A903C3C9B3500000021 /* CelebrationView.swift in Sources */,
 				B59E327BE0BD12A700000020 /* ColorClashView.swift in Sources */,

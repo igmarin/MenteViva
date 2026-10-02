@@ -161,7 +161,8 @@ struct CategoryFluencyView: View {
         let score = Self.score(totalCorrect: totalCorrect)
         modelContext.record(GameSession(gameID: .categoryFluency, score: score,
                                         rounds: roundsPerSession, durationSeconds: elapsed,
-                                        correct: totalCorrect, attempts: totalPicks))
+                                        correct: totalCorrect, attempts: totalPicks,
+                                        difficulty: difficulty))
         finalDetail = String(format: AppLanguage.localized("game.celebration.items %lld"), totalCorrect)
         showCelebration = true
     }
