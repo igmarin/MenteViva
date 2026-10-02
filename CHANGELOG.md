@@ -14,6 +14,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
   time this week" / "Jugaste 1 vez", instead of "1 games" / "1 times".
 
 ### Accessibility
+- **"Today's pick" is readable (#118):** the badge was light orange on a light
+  blue tile (1.8:1); it is now a deep orange in light mode (over 4.5:1) and
+  stays system orange in dark mode. A test checks both.
 - **Follows the device text size (#117):** the app used to lock text at the
   default size, ignoring the iPad/iPhone setting. Now it follows it, and Bigger
   text raises the minimum instead of fixing one size. Number Trail's numbers

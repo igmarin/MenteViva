@@ -117,7 +117,7 @@ private struct GameTile: View {
             if isTodaysPick {
                 Label(AppLanguage.localized("home.today.badge"), systemImage: "star.fill")
                     .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(.orange)
+                    .foregroundStyle(Color.todaysPick)
             }
         }
         .frame(maxWidth: .infinity, minHeight: 140)
@@ -127,6 +127,15 @@ private struct GameTile: View {
         .accessibilityLabel(Text(title))
         .accessibilityValue(Text(isTodaysPick ? AppLanguage.localized("home.today.badge") : ""))
     }
+}
+
+extension Color {
+    /// "Today's pick" badge: a deep orange in light mode, system orange in
+    /// dark mode, so the text stays readable on its tile (#118, WCAG AA 4.5:1;
+    /// plain orange was 1.65:1 in light mode). ContrastTests checks both.
+    static let todaysPick = Color(UIColor { traits in
+        traits.userInterfaceStyle == .dark ? .systemOrange : UIColor(red: 0.55, green: 0.27, blue: 0, alpha: 1)
+    })
 }
 
 #Preview {
