@@ -9,6 +9,13 @@ enum MemoryPhotos {
 
     enum AddError: Error { case notAnImage, albumFull }
 
+    /// What happened when several photos were added at once (#120).
+    struct AddResult: Equatable {
+        var added = 0
+        var unreadable = 0
+        var overLimit = 0
+    }
+
     static var folder: URL {
         URL.applicationSupportDirectory.appendingPathComponent("MemoryPhotos", isDirectory: true)
     }
@@ -38,6 +45,24 @@ enum MemoryPhotos {
         guard let jpeg = small.jpegData(compressionQuality: 0.8) else { throw AddError.notAnImage }
         try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
         try jpeg.write(to: folder.appendingPathComponent("\(UUID().uuidString).jpg"))
+    }
+
+    /// Adds each photo in order; one that can't be used never stops the rest.
+    /// `nil` is a photo the picker couldn't hand over.
+    static func add(_ photos: [Data?], to folder: URL = folder) -> AddResult {
+        var result = AddResult()
+        for data in photos {
+            guard let data else { result.unreadable += 1; continue }
+            do {
+                try add(data, to: folder)
+                result.added += 1
+            } catch AddError.albumFull {
+                result.overLimit += 1
+            } catch {
+                result.unreadable += 1
+            }
+        }
+        return result
     }
 
     static func remove(_ url: URL) {
