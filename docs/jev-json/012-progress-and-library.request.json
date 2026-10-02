@@ -1,0 +1,95 @@
+{
+  "model": "jev-latest",
+  "state": {
+    "product": "MenteViva, iOS cognitive-exercise app for older adults. Warm, no-fail, big-target design, EN+ES, offline, zero third-party dependencies, solo developer on a free Apple account (no cloud sync, no TestFlight). Copy ceiling: 'fun mental exercise', no medical claims. Daily picks and difficulty are decided on the device by rules: easy/medium/hard per game, step down below 65% accuracy, step up at 90%+ over 3+ sessions, at most one step per 7 days.",
+    "player": "Primary player: the owner's father, early-stage dementia, plays alone on his own iPad. Caregiver and buyer: the adult child, who visits and receives a weekly share text.",
+    "games": "Memory Lane (emoji pair matching, 6/8/10 pairs), Name the Herd (pick the items of a category), Quick Eyes (an item flashes, find it among 4), Color Clash (Stroop), Number Trail (arithmetic streaks). Points were removed from the UI after players found them confusing; sessions store accuracy, rounds and duration.",
+    "playtest_findings": "Structured family playtest: Memory Lane, Name the Herd and Quick Eyes held his attention; Color Clash and Number Trail fell flat. The one major concern: Memory Lane looks childish ('it is a game, but he is not a child'): cartoon emoji, and at 8-10 pairs the cards are too small and need scrolling. Some finished sessions do not appear in the weekly history (a save bug, being fixed). The owner wants results and, above all, progression tracked across weeks. Family photos already exist on his iPad.",
+    "owner_decisions": "The player sees progression as warm words plus an icon, never numbers and never a down arrow. The caregiver sees real numbers in an open Family section in Settings and in a richer weekly share text. The caregiver can set each game's difficulty (Auto by default, or pin Easy/Medium/Hard) and hide games per device; Color Clash and Number Trail will be hidden from his library with the code kept. Auto-difficulty keeps weekly steps.",
+    "candidate_games": "reminiscence_photos: look at one of his own photos with gentle prompts, no wrong answer. sayings_completion: finish a familiar saying or proverb from 3 big choices (EN/ES). everyday_sequencing: put 3-4 picture steps of a familiar routine in order (making coffee). spot_the_difference: two near-identical calm scenes, tap the change, hints after a pause."
+  },
+  "questions": {
+    "build_order": {
+      "type": "choice",
+      "instructions": "After the save bug is fixed, which workstream should be built first?",
+      "criteria": {
+        "progress_tracking": "Weekly progression: warm per-game line for the player, real numbers and trend for the caregiver, richer share text",
+        "family_settings": "Family section: per-game difficulty (Auto or pinned) and hide/show games per device",
+        "memory_lane_adult_refresh": "Make Memory Lane look adult: no scrolling, larger cards, calmer styling",
+        "photo_content": "Bring his own family photos into the app"
+      }
+    },
+    "familiar_content_first": {
+      "type": "choice",
+      "instructions": "What is the best first way to bring his own family photos into the app?",
+      "criteria": {
+        "photo_memory_lane": "His photos become Memory Lane card faces: reuses the game he already plays, directly fixes the childish look, smallest build",
+        "reminiscence_game": "A separate errorless photo-reminiscence game: one photo at a time with gentle prompts, no matching",
+        "both_photo_lane_first": "Photo card faces in Memory Lane now, the separate reminiscence game next"
+      }
+    },
+    "memory_lane_adult_fix": {
+      "type": "choice",
+      "instructions": "When no family photos are chosen, how should Memory Lane stop looking childish?",
+      "criteria": {
+        "adult_restyle_emoji": "Keep emoji but restyle for adults: at most 8 pairs on a grid that fits the screen with no scrolling, larger cards, calm refined palette, a real card back",
+        "bundled_real_images": "Ship a bundled set of real photographs of everyday objects (needs licensed or self-made images)",
+        "line_icons": "Replace emoji with Apple's built-in monochrome line icons on large cards"
+      }
+    },
+    "progress_signal": {
+      "type": "choice",
+      "instructions": "Which single signal best represents a game's progression week over week for this player, driving both the warm player line and the caregiver trend?",
+      "criteria": {
+        "accuracy_trend": "Mean accuracy this week versus the previous week",
+        "difficulty_level": "The difficulty level the rules have reached for the game",
+        "consistency": "Days played and sessions finished",
+        "speed_trend": "Median time to finish a session"
+      }
+    },
+    "show_decline_to_caregiver": {
+      "type": "noul",
+      "instructions": "Should the caregiver view show a game's downward trend explicitly (for example 'accuracy lower than last week')?",
+      "criteria": {
+        "true": "The caregiver needs honest data to adjust difficulty and notice change; the player never sees it",
+        "false": "Week-to-week dips are noise for one player and invite a medical reading the app must not make"
+      }
+    },
+    "add_games_now": {
+      "type": "noul",
+      "instructions": "Should new games be added now, rather than first deepening the 3 games that worked (save fix, progress, Memory Lane look, photos)?",
+      "criteria": {
+        "true": "Three visible games are too thin; the earlier boredom finding needs variety soon",
+        "false": "Fix saving, progress and Memory Lane first; each new game multiplies polish and translation work"
+      }
+    },
+    "quick_eyes_keep": {
+      "type": "noul",
+      "instructions": "Quick Eyes held his attention in the playtest. Should it ship as is, deferring the planned untimed redesign?",
+      "criteria": {
+        "true": "Observed engagement beats the matrix prediction; redesign only if frustration appears",
+        "false": "The timed flash still conflicts with errorless design for early dementia; redesign anyway"
+      }
+    },
+    "fit_reminiscence_photos": {
+      "type": "score",
+      "instructions": "Score reminiscence_photos as the next new game for this player: errorless fit, familiarity, adult dignity, engagement, and buildability by a solo developer with zero dependencies.",
+      "criteria": ["0 = poor next game", "1 = reasonable", "2 = excellent next game"]
+    },
+    "fit_sayings_completion": {
+      "type": "score",
+      "instructions": "Score sayings_completion as the next new game for this player: errorless fit, familiarity, adult dignity, engagement, and buildability by a solo developer with zero dependencies.",
+      "criteria": ["0 = poor next game", "1 = reasonable", "2 = excellent next game"]
+    },
+    "fit_everyday_sequencing": {
+      "type": "score",
+      "instructions": "Score everyday_sequencing as the next new game for this player: errorless fit, familiarity, adult dignity, engagement, and buildability by a solo developer with zero dependencies.",
+      "criteria": ["0 = poor next game", "1 = reasonable", "2 = excellent next game"]
+    },
+    "fit_spot_the_difference": {
+      "type": "score",
+      "instructions": "Score spot_the_difference as the next new game for this player: errorless fit, familiarity, adult dignity, engagement, and buildability by a solo developer with zero dependencies.",
+      "criteria": ["0 = poor next game", "1 = reasonable", "2 = excellent next game"]
+    }
+  }
+}

@@ -28,6 +28,7 @@
 		35A281A4703D4C320000002E /* DayStampTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 704A57A9A9F6E88000000028; };
 		13FA9F9D70716C6800000037 /* DifficultyMappingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70A793986C53BDC600000031; };
 		C524FB5039855DE400000036 /* DifficultyPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F28BC63EFC28057200000030; };
+		1C320C298D4269F400000036 /* GameSessionStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE35901B6A0B75A200000030; };
 		C7BB50E2D28ADBC300000033 /* JevPlanPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67ADC4F8E1EC78290000002D; };
 		B5C4C1B6398F812500000030 /* JevServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 858C839C80DBBF1B0000002A; };
 		2E81FDB867FC926B00000038 /* PlayerStateSummaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9231182AE986A100000032; };
@@ -57,6 +58,7 @@
 		704A57A9A9F6E88000000028 /* DayStampTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/DayStampTests.swift; sourceTree = SOURCE_ROOT; };
 		70A793986C53BDC600000031 /* DifficultyMappingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/DifficultyMappingTests.swift; sourceTree = SOURCE_ROOT; };
 		F28BC63EFC28057200000030 /* DifficultyPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/DifficultyPolicyTests.swift; sourceTree = SOURCE_ROOT; };
+		DE35901B6A0B75A200000030 /* GameSessionStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/GameSessionStoreTests.swift; sourceTree = SOURCE_ROOT; };
 		67ADC4F8E1EC78290000002D /* JevPlanPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/JevPlanPolicyTests.swift; sourceTree = SOURCE_ROOT; };
 		858C839C80DBBF1B0000002A /* JevServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/JevServiceTests.swift; sourceTree = SOURCE_ROOT; };
 		7D9231182AE986A100000032 /* PlayerStateSummaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/PlayerStateSummaryTests.swift; sourceTree = SOURCE_ROOT; };
@@ -127,6 +129,7 @@
 				704A57A9A9F6E88000000028 /* DayStampTests.swift */,
 				70A793986C53BDC600000031 /* DifficultyMappingTests.swift */,
 				F28BC63EFC28057200000030 /* DifficultyPolicyTests.swift */,
+				DE35901B6A0B75A200000030 /* GameSessionStoreTests.swift */,
 				67ADC4F8E1EC78290000002D /* JevPlanPolicyTests.swift */,
 				858C839C80DBBF1B0000002A /* JevServiceTests.swift */,
 				7D9231182AE986A100000032 /* PlayerStateSummaryTests.swift */,
@@ -229,6 +232,7 @@
 				35A281A4703D4C320000002E /* DayStampTests.swift in Sources */,
 				13FA9F9D70716C6800000037 /* DifficultyMappingTests.swift in Sources */,
 				C524FB5039855DE400000036 /* DifficultyPolicyTests.swift in Sources */,
+				1C320C298D4269F400000036 /* GameSessionStoreTests.swift in Sources */,
 				C7BB50E2D28ADBC300000033 /* JevPlanPolicyTests.swift in Sources */,
 				B5C4C1B6398F812500000030 /* JevServiceTests.swift in Sources */,
 				2E81FDB867FC926B00000038 /* PlayerStateSummaryTests.swift in Sources */,

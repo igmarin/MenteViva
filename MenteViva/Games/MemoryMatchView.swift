@@ -136,7 +136,7 @@ struct MemoryMatchView: View {
         let score = Self.score(pairCount: emojis.count, moves: moves)
         // Score stays in the model as anonymous telemetry for Jev (#45); the
         // player sees progress, not points.
-        modelContext.insert(GameSession(gameID: .memoryMatch, score: score,
+        modelContext.record(GameSession(gameID: .memoryMatch, score: score,
                                         rounds: emojis.count, durationSeconds: elapsed,
                                         correct: emojis.count, attempts: moves))
         finalDetail = String(format: AppLanguage.localized("game.celebration.pairs %lld"), emojis.count)

@@ -196,3 +196,38 @@ Track C priority order from this matrix: (1) scoring→progress redesign,
 (2) Memory Lane engagement+visuals, (3) reminiscence game build (post-playtest),
 (4) Quick Eyes untimed redesign, (5) Color Clash/Number Trail decision
 (rework vs retire from dad's library).
+
+## 012 — Progress, library and next games — 2026-10-01
+
+Asked after the structured family playtest (#6): Memory Lane, Name the Herd and
+Quick Eyes held the player's attention; Color Clash and Number Trail fell flat;
+Memory Lane looks childish (cartoon emoji, scrolling boards at 8–10 pairs);
+some finished sessions were missing from My Week. The state also carried the
+owner's decisions taken before the call (warm player view, caregiver numbers,
+manual difficulty, hide games per device). Raw pair: `jev-json/012-progress-and-library.*`.
+
+| Question | Jev | Confidence |
+|---|---|---|
+| Build first, after the save fix | **progress_tracking** 0.80 (Memory Lane refresh 0.17) | .74 |
+| First way to bring in family photos | **photo_memory_lane** 0.80 (separate game 0.13) | .70 |
+| Memory Lane without photos | **adult_restyle_emoji** 0.68 (line icons 0.28) | .52 |
+| Progression signal | **difficulty_level** 0.79 (accuracy 0.19) | .72 |
+| Show declines to the caregiver | yes, **0.70** | — |
+| Add new games now | no, **0.26** | — |
+| Ship Quick Eyes as is | unsure, **0.40** | — |
+| Next game fit (0–2) | reminiscence **1.87**, sayings 1.83, sequencing 1.80, spot-the-difference 1.37 | .81 / .74 / .70 / .34 |
+
+Reads:
+
+1. **Progress before content.** Jev and the owner agree: fix saving, then show
+   progression, then the Memory Lane look, then photos. No new games yet.
+2. **Level reached is the progression signal**, accuracy the secondary one.
+   Accuracy alone drops whenever the rules raise the difficulty, so it would
+   read as decline exactly when the player improves.
+3. **Photos go into Memory Lane first**: the game he already plays, and the
+   most direct fix for "he's not a child". The separate reminiscence game stays
+   the top-ranked *new* game for later.
+4. **The emoji restyle is a weak call** (conf .52); the owner checks a
+   screenshot before it ships.
+5. **Quick Eyes is a coin flip** (0.40): observed engagement wins for now; #46
+   stays open for frustration evidence.

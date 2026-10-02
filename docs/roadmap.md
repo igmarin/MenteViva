@@ -13,17 +13,18 @@ Shipped and off this list: app icon and launch screen, home screen (#27), sound
 and haptics (#26), first-run onboarding (#31), Memory Lane warmth (#43),
 progress instead of points (#45).
 
-1. **Dad playtest #1 (#6)** — not run yet. Use `playtest-session-1.md`; watch,
-   note 3 friction points. It gates new content (#18) and the reminiscence
-   game (#44).
-2. **Watch the daily picks** — decided on the device by `DailyPolicy` (#101);
-   Jev is an optional override (wired, deployed, verified live). Left: play a few
-   days on the iPad and re-tune the game weights after playtest #6 and #47.
-3. **Done 2026-09-30:** VoiceOver and 100pt-target check on the iPad (#64),
+1. **Dad playtest #1 (#6)** — ran; findings on #6, decisions in `decisions.md` 2026-10-01
+   (Jev 012). Color Clash / Number Trail retired from dad's library (#47, closed).
+2. **Built from the playtest, in order (one PR each):** finished games always saved (#106),
+   weekly progression for dad and the family (#107), Family settings — manual difficulty and
+   hide games (#108), adult Memory Lane (#109), Memory Lane with his own photos (#110).
+3. **Watch the daily picks** — decided on the device by `DailyPolicy` (#101); Jev is an
+   optional override. Re-tune the game weights once the family screen shows a few weeks.
+4. **Done 2026-09-30:** VoiceOver and 100pt-target check on the iPad (#64),
    History/day-grouping tests and plumbing dedupe (#65, #57).
 
-Also open in this milestone, after the playtest: Quick Eyes untimed redesign
-(#46), Color Clash / Number Trail decision (#47).
+Still open, waiting for evidence: Quick Eyes untimed redesign (#46). New games stay
+deferred (#18; ranking in `jev-revisit.md` §012).
 
 Exit criteria: dad picks it up unprompted, twice in one week (docs/mvp.md G1b).
 

@@ -49,8 +49,9 @@ docs/                 start at docs/README.md
   payload archived `docs/jev-json/011`), used only when `MenteViva/Config/Local.xcconfig`
   (git-ignored; copy the `.example`) sets the proxy URL and secret (#91). Open-model
   alternatives were tested and rejected for the app: `docs/decision-model-spike-2026-09-30.md`.
-- Dad playtest #6 has **not** been run; docs/playtest-session-1.md is the
-  sheet. No content gates lift until it does (#18).
+- Dad playtest #6 ran (findings on #6). Work from it, in order: #106 save fix, #107 weekly
+  progression, #108 Family settings, #109 adult Memory Lane, #110 photo cards
+  (docs/decisions.md 2026-10-01, Jev 012). New games stay deferred (#18).
 - Live state is in the [milestones](https://github.com/igmarin/MenteViva/milestones), not here.
 
 ## Signing
