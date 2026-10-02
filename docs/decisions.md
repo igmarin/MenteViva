@@ -2,6 +2,30 @@
 
 Newest first. Format: date — decision — why — what would make us revisit.
 
+## 2026-10-01 — Playtest #6 outcome: progress first, Family settings, adult Memory Lane, no new games yet
+
+**Question:** after the structured playtest, what do we build next, and how is progress tracked?
+Grilled with the owner; evidence: Jev 012 (`jev-json/012-*`, analysis in `jev-revisit.md` §012).
+
+| Topic | Decision | Jev 012 |
+|---|---|---|
+| Order | Save fix → progress → Family settings → adult Memory Lane → photo Memory Lane, one PR each | progress first 0.80 |
+| Progression signal | Difficulty level reached; accuracy secondary | level 0.79 |
+| Player view | Warm words + icon in My Week; no numbers, never a down arrow | owner |
+| Caregiver view | Open "For family" screen in Settings (no lock) with real numbers and a share button | show declines 0.70 |
+| Manual difficulty | Per game: Auto (default) / Easy / Medium / Hard; a pin freezes that game, Auto resumes from the pinned level | owner |
+| #47 | Hide/show per game on the device, code kept; Color Clash and Number Trail hidden on dad's iPad | owner |
+| Memory Lane | 4/6/8 pairs on a board that fits the screen, adult restyle, emoji as fallback | emoji 0.68 (conf .52) |
+| Photos | His own photos become Memory Lane cards (system photo picker, stays on device) | 0.80 |
+| Auto pace | Unchanged: one step per 7 days | owner |
+| New games | Not yet; ranking kept: reminiscence 1.87 › sayings 1.83 › sequencing 1.80 › spot-the-difference 1.37 | add now 0.26 |
+| Quick Eyes | Ships as is; #46 stays open | 0.40 |
+
+The #18 gate's data has landed; new games stay deferred by this decision, not by the gate.
+Points stay hidden from the player (#45); the caregiver screen is where numbers live.
+
+Revisit when: the caregiver numbers show a game abandoned for two weeks, or the owner's own game ideas are scored (Jev 013).
+
 ## 2026-09-30 — Daily picks and difficulty are decided by rules on the device, not a hosted model
 
 **Question:** how should the app choose today's games and difficulty without ongoing charges?

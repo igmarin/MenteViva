@@ -159,7 +159,7 @@ struct CategoryFluencyView: View {
     private func finish() {
         let elapsed = Int(Date.now.timeIntervalSince(startedAt))
         let score = Self.score(totalCorrect: totalCorrect)
-        modelContext.insert(GameSession(gameID: .categoryFluency, score: score,
+        modelContext.record(GameSession(gameID: .categoryFluency, score: score,
                                         rounds: roundsPerSession, durationSeconds: elapsed,
                                         correct: totalCorrect, attempts: totalPicks))
         finalDetail = String(format: AppLanguage.localized("game.celebration.items %lld"), totalCorrect)

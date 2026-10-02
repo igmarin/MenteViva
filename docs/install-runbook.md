@@ -38,7 +38,11 @@ A free-account build **stops launching 7 days after it was signed**. Re-sign
 the day before any playtest rather than trusting an old install.
 
 - Renewal = repeat the install steps with the device connected. Two minutes.
-- The app's data (sessions, settings) survives renewal.
+- The app's data (sessions, settings) survives renewal. **Deleting the app does
+  not:** it erases My Week and all progress (#106). Never delete to "fix" an
+  expired install — renew it.
+- Renewal stops the running app. Since #106 every finished game is saved the
+  moment it ends, so a renewal right after a game loses nothing.
 - The app icon stays on the home screen but taps do nothing until renewed; the
   iOS error is "Unable to Verify App".
 
@@ -46,7 +50,7 @@ the day before any playtest rather than trusting an old install.
 
 | Symptom | Fix |
 |---|---|
-| "Maximum number of apps for free development profiles has been reached" | Delete unused apps installed from Xcode on that device; each device allows 3 at a time |
+| "Maximum number of apps for free development profiles has been reached" | Delete *other* unused apps installed from Xcode on that device (each device allows 3 at a time) — not MenteViva, which would erase its history |
 | "The device is not registered" / provisioning fails | Xcode → Settings → Accounts → select the team → **Manage Certificates / Download Manual Profiles**; then ⌘R again |
 | Bundle ID taken by another team | Change `PRODUCT_BUNDLE_IDENTIFIER` in `tools/generate_project.swift` to something unique |
 | Build installs but immediately closes | Check `~/Library/Logs/DiagnosticReports/` for the crash log, or Xcode → Window → Devices → View Device Logs |

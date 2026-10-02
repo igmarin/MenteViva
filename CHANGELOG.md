@@ -4,6 +4,12 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 
 ## [Unreleased]
 
+### Fixed
+- **Finished games missing from My Week (#106):** every game now saves its
+  session the moment it ends instead of waiting for SwiftData's autosave, so an
+  Xcode renewal or iOS closing the app right after a game no longer loses it.
+  Docs warn that deleting the app erases My Week.
+
 ### Changed
 - **Daily picks decided on the device (#101):** "Today's pick" and each game's
   difficulty now come from a small built-in policy (most worthwhile games first,

@@ -17,6 +17,8 @@ let him keep struggling a little — or hand him the device fresh later.
 - Real iPad, real lighting, volume at his normal level.
 - App freshly installed: **onboarding shows on first launch only.** If he's
   already passed it, delete and reinstall to see his genuine first reaction.
+  **Deleting the app erases My Week and all progress** (#106) — only do it
+  before his first real week, never mid-way through.
 - You sit beside, not across. Phone away.
 
 ## Watch for (in order of what we most need to know)

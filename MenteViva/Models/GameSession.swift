@@ -1,5 +1,6 @@
 import Foundation
 import SwiftData
+import OSLog
 
 /// CloudKit mirroring audit: no unique constraints, no relationships, and
 /// every property has a default — satisfies SwiftData + CloudKit constraints.
@@ -34,5 +35,20 @@ final class GameSession {
         self.correct = correct
         self.attempts = attempts
         self.playedAt = .now
+    }
+}
+
+extension ModelContext {
+    /// Inserts and saves at once (#106): a finished game must survive the app
+    /// being closed before SwiftData's periodic autosave runs. A failed save is
+    /// logged, never shown — play is never interrupted.
+    func record(_ session: GameSession) {
+        insert(session)
+        do {
+            try save()
+        } catch {
+            Logger(subsystem: "com.igmarin.MenteViva", category: "store")
+                .error("Could not save session: \(String(describing: error), privacy: .public)")
+        }
     }
 }
