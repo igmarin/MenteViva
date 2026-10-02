@@ -20,6 +20,14 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
   Per device. Resolves #47: Color Clash and Number Trail can be hidden, code
   kept. EN + ES.
 
+
+### Changed
+- **Memory Lane looks grown-up (#109):** boards of 4 / 6 / 8 pairs (was 6 / 8 /
+  10) laid out to fit the screen on iPad and iPhone, with no scrolling and full
+  rows; grown-up themes (kitchen table, garden, travels, music and home);
+  paper-like cards with a calm slate back instead of the flower emoji. Found
+  pairs keep the checkmark.
+
 ### Fixed
 - **Finished games missing from My Week (#106):** every game now saves its
   session the moment it ends instead of waiting for SwiftData's autosave, so an
