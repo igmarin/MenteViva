@@ -47,10 +47,12 @@ nonisolated enum Difficulty: Int, Codable {
         self = Difficulty(rawValue: Int(clamped.rounded())) ?? .medium
     }
 
-    /// Today's difficulty for a game: medium until Jev has said otherwise. Games
-    /// read it once when they open, so it never shifts under the player mid-game.
-    static func stored(_ game: GameID) -> Difficulty {
-        JevService.storedDifficulty()[game] ?? .medium
+    /// Today's difficulty for a game: the family's pin if set (#108), else the
+    /// rules' level, medium for a new player. Games read it once when they open,
+    /// so it never shifts under the player mid-game.
+    static func stored(_ game: GameID, defaults: UserDefaults = .standard) -> Difficulty {
+        FamilySettings.pinned(defaults: defaults)[game]
+            ?? JevService.storedDifficulty(defaults: defaults)[game] ?? .medium
     }
 
     /// Picks the easy/medium/hard value of a per-game knob.
@@ -165,9 +167,11 @@ actor JevService {
     private func fetchPlan(state: PlayerStateSummary,
                            current: [GameID: Difficulty],
                            stamp: String) async -> DailyPlan {
+        let pinned = FamilySettings.pinned(defaults: defaults)
+        let hidden = FamilySettings.hidden(defaults: defaults)
         var plan = DailyPolicy.plan(state: state,
                                     lastChange: Self.lastDifficultyChange(defaults: defaults),
-                                    dayStamp: stamp)
+                                    dayStamp: stamp, pinned: pinned, hidden: hidden)
         if let proxyURL {
             do {
                 let answers = try await ask(state: state, proxyURL: proxyURL)
@@ -175,7 +179,8 @@ actor JevService {
                                      current: current,
                                      dayStamp: stamp,
                                      gamesPerDay: gamesPerDay,
-                                     confidenceFloor: difficultyConfidenceThreshold)
+                                     confidenceFloor: difficultyConfidenceThreshold,
+                                     pinned: pinned, hidden: hidden)
             } catch {
                 Self.log.info("Jev unavailable, using the on-device plan: \(String(describing: error), privacy: .public)")
             }
@@ -227,10 +232,13 @@ actor JevService {
                          current: [GameID: Difficulty],
                          dayStamp: String,
                          gamesPerDay: Int,
-                         confidenceFloor: Double) -> DailyPlan {
-        // Mix: rank by P(include). Missing answers sort last; prefix() keeps the
-        // mix non-empty even if every probability is low.
-        let ranked = GameID.allCases.sorted {
+                         confidenceFloor: Double,
+                         pinned: [GameID: Difficulty] = [:],
+                         hidden: Set<GameID> = []) -> DailyPlan {
+        // Mix: rank by P(include), hidden games never ranked (#108). Missing
+        // answers sort last; prefix() keeps the mix non-empty even if every
+        // probability is low.
+        let ranked = GameID.allCases.filter { !hidden.contains($0) }.sorted {
             (answers["include_\($0.rawValue)"]?.noul ?? -1) > (answers["include_\($1.rawValue)"]?.noul ?? -1)
         }
         // Difficulty: apply only confident scores; otherwise keep current.
@@ -241,6 +249,7 @@ actor JevService {
                 difficulty[game] = Difficulty(jevScore: score)
             }
         }
+        difficulty.merge(pinned) { _, pin in pin }
         let count = min(max(gamesPerDay, 0), ranked.count)
         return DailyPlan(dayStamp: dayStamp, games: Array(ranked.prefix(count)), difficulty: difficulty)
     }

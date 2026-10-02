@@ -1,11 +1,12 @@
 import SwiftUI
 import SwiftData
 
-/// "For family" (#107): the numbers behind My Week, for the adult child.
-/// Open on purpose (owner decision 2026-10-01): no lock, nothing here can break
-/// play. Each game played in the last 14 days: this week against the week
-/// before, the level the next game will use, and plain trend words — declines
-/// included (Jev 012), worded kindly and never as a medical reading.
+/// "For family" (#107, #108): the numbers behind My Week and the per-game
+/// choices, for the adult child. Open on purpose (owner decision 2026-10-01):
+/// no lock, nothing here can break play. Everything covers this device only.
+/// Each game played in the last 14 days: this week against the week before,
+/// the level the next game will use, and plain trend words — declines included
+/// (Jev 012), worded kindly and never as a medical reading.
 struct FamilyView: View {
     @Query(sort: \GameSession.playedAt, order: .reverse)
     private var sessions: [GameSession]
@@ -17,6 +18,23 @@ struct FamilyView: View {
             Section {
                 Text(AppLanguage.localized("family.intro"))
                     .font(.body)
+            }
+
+            Section {
+                ForEach(GameID.allCases, id: \.self) { game in
+                    NavigationLink {
+                        FamilyGameView(game: game)
+                    } label: {
+                        FamilyGameRow(game: game)
+                    }
+                    .accessibilityHint(AppLanguage.localized("family.game.hint"))
+                }
+            } header: {
+                Text(AppLanguage.localized("family.games.header"))
+                    .font(.title3.weight(.semibold))
+            } footer: {
+                Text(AppLanguage.localized("family.games.footer"))
+                    .font(.footnote)
             }
 
             if progress.isEmpty {
@@ -55,7 +73,7 @@ struct FamilyView: View {
     private func lines(for p: GameProgress) -> [String] {
         var lines = [String(format: AppLanguage.localized("family.level %@ %@"),
                             AppLanguage.localized(Difficulty.stored(p.game).title),
-                            AppLanguage.localized("family.auto")),
+                            AppLanguage.localized(FamilySettings.pinned()[p.game] == nil ? "family.auto" : "family.pinned")),
                      week("family.week.this %lld", p.sessions, p.accuracy),
                      week("family.week.last %lld", p.previousSessions, p.previousAccuracy)]
         if let from = p.previousLevel, let to = p.level, let trend = p.levelTrend, trend != .steady {
@@ -80,6 +98,108 @@ struct FamilyView: View {
         ([AppLanguage.localized("family.share.title")] + progress.map { p in
             "\(p.game.emoji) \(AppLanguage.localized(p.game.title))\n" + lines(for: p).joined(separator: "\n")
         }).joined(separator: "\n\n")
+    }
+}
+
+/// One game in the family list: name, then its level and whether it shows.
+private struct FamilyGameRow: View {
+    let game: GameID
+    @AppStorage private var pin: Int
+    @AppStorage(FamilySettings.hiddenKey) private var hiddenGames = ""
+
+    init(game: GameID) {
+        self.game = game
+        _pin = AppStorage(wrappedValue: FamilySettings.auto, FamilySettings.pinKey(game))
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(verbatim: "\(game.emoji) \(AppLanguage.localized(game.title))")
+                .font(.title3.weight(.semibold))
+            Text(status)
+                .font(.body)
+                .foregroundStyle(.secondary)
+        }
+        .frame(maxWidth: .infinity, minHeight: 100, alignment: .leading)
+        .accessibilityElement(children: .combine)
+    }
+
+    private var status: String {
+        if FamilySettings.hidden(from: hiddenGames).contains(game) {
+            return AppLanguage.localized("family.hidden")
+        }
+        let level = Difficulty(rawValue: pin) ?? Difficulty.stored(game)
+        return String(format: AppLanguage.localized("family.level %@ %@"),
+                      AppLanguage.localized(level.title),
+                      AppLanguage.localized(pin == FamilySettings.auto ? "family.auto" : "family.pinned"))
+    }
+}
+
+/// One game's choices: show it on Home, and Automatic or a fixed level.
+/// 100pt rows with a checkmark, same pattern as the language picker.
+private struct FamilyGameView: View {
+    let game: GameID
+    @AppStorage private var pin: Int
+    @AppStorage(FamilySettings.hiddenKey) private var hiddenGames = ""
+
+    init(game: GameID) {
+        self.game = game
+        _pin = AppStorage(wrappedValue: FamilySettings.auto, FamilySettings.pinKey(game))
+    }
+
+    private var hidden: Set<GameID> { FamilySettings.hidden(from: hiddenGames) }
+    /// The last game on Home can't be hidden: the app must always have one to play.
+    private var isLastVisible: Bool { !hidden.contains(game) && hidden.count == GameID.allCases.count - 1 }
+
+    var body: some View {
+        List {
+            Section {
+                Toggle(AppLanguage.localized("family.show"), isOn: Binding(
+                    get: { !hidden.contains(game) },
+                    set: { show in
+                        var games = hidden
+                        if show { games.remove(game) } else { games.insert(game) }
+                        hiddenGames = FamilySettings.csv(games)
+                    }))
+                    .font(.title3)
+                    .frame(minHeight: 100)
+                    .disabled(isLastVisible)
+            } footer: {
+                if isLastVisible {
+                    Text(AppLanguage.localized("family.show.last")).font(.footnote)
+                }
+            }
+
+            Section {
+                choice(FamilySettings.auto, AppLanguage.localized("family.difficulty.auto"))
+                ForEach([Difficulty.easy, .medium, .hard], id: \.self) { level in
+                    choice(level.rawValue, AppLanguage.localized(level.title))
+                }
+            } header: {
+                Text(AppLanguage.localized("family.difficulty")).font(.title3)
+            } footer: {
+                Text(AppLanguage.localized("family.difficulty.footer")).font(.footnote)
+            }
+        }
+        .navigationTitle(Text(verbatim: "\(game.emoji) \(AppLanguage.localized(game.title))"))
+    }
+
+    private func choice(_ value: Int, _ label: String) -> some View {
+        Button {
+            pin = value
+        } label: {
+            HStack {
+                Text(label).font(.title3)
+                Spacer()
+                if pin == value {
+                    Image(systemName: "checkmark").accessibilityHidden(true)
+                }
+            }
+            .frame(maxWidth: .infinity, minHeight: 100, alignment: .leading)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityAddTraits(pin == value ? [.isSelected] : [])
     }
 }
 
