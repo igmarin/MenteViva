@@ -6,8 +6,11 @@ import SwiftUI
 /// Claim ceiling is deliberate (research §1, App Store 1.4.1): "keep your mind
 /// active", never treatment, prevention or diagnosis.
 struct OnboardingView: View {
-    @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding = false
-    @AppStorage("appLanguage") private var appLanguage = AppLanguage.system.rawValue
+    /// UserDefaults key: true once the first-run screen has been passed.
+    static let seenKey = "hasSeenOnboarding"
+
+    @AppStorage(OnboardingView.seenKey) private var hasSeenOnboarding = false
+    @AppStorage(AppLanguage.storageKey) private var appLanguage = AppLanguage.system.rawValue
 
     var body: some View {
         VStack(spacing: 28) {

@@ -76,10 +76,8 @@ struct QuickEyesView: View {
                             Button { choose(emoji) } label: {
                                 Text(emoji)
                                     .font(.system(size: 56))
-                                    .frame(maxWidth: .infinity, minHeight: 110)
-                                    .background(.blue.opacity(0.15), in: .rect(cornerRadius: 16))
                             }
-                            .buttonStyle(.plain)
+                            .buttonStyle(AnswerTileStyle())
                             .accessibilityLabel(emoji)
                         }
                     }

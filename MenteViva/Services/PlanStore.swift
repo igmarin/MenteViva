@@ -50,11 +50,22 @@ nonisolated enum PlanStore {
 
     /// Local calendar day as "yyyy-MM-dd": a plan is valid only for its day.
     static func dayStamp(_ date: Date = .now) -> String {
+        stampFormat().string(from: date)
+    }
+
+    /// The day a stamp names, or nil when it isn't one.
+    static func day(fromStamp stamp: String) -> Date? {
+        stampFormat().date(from: stamp)
+    }
+
+    /// The one definition of the stamp format (#122). Made per call:
+    /// DateFormatter isn't Sendable, and this runs a few times a day.
+    private static func stampFormat() -> DateFormatter {
         let f = DateFormatter()
         f.calendar = Calendar.current
         f.locale = Locale(identifier: "en_US_POSIX")
         f.timeZone = .current
         f.dateFormat = "yyyy-MM-dd"
-        return f.string(from: date)
+        return f
     }
 }

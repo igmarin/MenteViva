@@ -17,17 +17,8 @@ enum Feedback {
     /// supports it, a matching haptic. Both are no-ops in the simulator's audio
     /// path or when the toggle is off. Nothing here ever blocks the UI.
     static func play(_ event: Event) {
-        SoundPlayer.play(tone(for: event))
+        SoundPlayer.play(event)
         haptic(for: event)
-    }
-
-    private static func tone(for event: Event) -> SoundPlayer.Tone {
-        switch event {
-        case .tap: .tap
-        case .success: .success
-        case .complete: .complete
-        case .miss: .miss
-        }
     }
 
     private static func haptic(for event: Event) {
@@ -50,14 +41,6 @@ enum SoundPlayer {
     /// The shared UserDefaults key used by Settings and feedback playback.
     static let enabledKey = "soundEnabled"
 
-    /// The available synthesized tones.
-    enum Tone {
-        case tap
-        case success
-        case complete
-        case miss
-    }
-
     private static var engine: AVAudioEngine?
     private static var playerNode: AVAudioPlayerNode?
 
@@ -69,13 +52,13 @@ enum SoundPlayer {
         UserDefaults.standard.object(forKey: enabledKey) as? Bool ?? true
     }
 
-    /// Plays a tone if feedback is enabled.
+    /// Plays the event's tone if feedback is enabled.
     ///
     /// Playback is best effort: audio-session setup and engine startup are
     /// allowed to fail without interrupting the game.
     ///
-    /// - Parameter tone: The synthesized tone to play.
-    static func play(_ tone: Tone) {
+    /// - Parameter event: The moment whose tone to play.
+    static func play(_ event: Feedback.Event) {
         guard isEnabled else { return }
         // .ambient respects the silent switch and mixes with other audio.
         let session = AVAudioSession.sharedInstance()
@@ -88,7 +71,7 @@ enum SoundPlayer {
         guard let engine else { return }
 
         guard let format = AVAudioFormat(standardFormatWithSampleRate: 44100, channels: 1),
-              let buffer = Self.buffer(for: tone, format: format) else { return }
+              let buffer = Self.buffer(for: event, format: format) else { return }
 
         if playerNode == nil {
             let player = AVAudioPlayerNode()
@@ -109,10 +92,10 @@ enum SoundPlayer {
         playerNode.play()
     }
 
-    private static func buffer(for tone: Tone, format: AVAudioFormat) -> AVAudioPCMBuffer? {
+    private static func buffer(for event: Feedback.Event, format: AVAudioFormat) -> AVAudioPCMBuffer? {
         // Concatenate one or more notes into a single scheduled buffer.
         let notes: [(Double, Double, Float)]
-        switch tone {
+        switch event {
         case .tap:
             notes = [(440, 0.10, 0.35)]
         case .success:

@@ -12,7 +12,7 @@ struct MenteVivaApp: App {
     init() {
         // Must happen before any view resolves a string, so the stored language
         // choice wins on this launch rather than the next one.
-        AppLanguage.apply(UserDefaults.standard.string(forKey: "appLanguage") ?? AppLanguage.system.rawValue)
+        AppLanguage.apply(UserDefaults.standard.string(forKey: AppLanguage.storageKey) ?? AppLanguage.system.rawValue)
     }
     private let modelContainer: ModelContainer = {
         let schema = Schema([GameSession.self])
@@ -55,9 +55,9 @@ struct MenteVivaApp: App {
 /// Decides what a launch shows: onboarding for a stranger, the games for
 /// someone who's been here before. Also applies the bigger-text choice.
 private struct RootView: View {
-    @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding = false
-    @AppStorage("appLanguage") private var appLanguage = AppLanguage.system.rawValue
-    @AppStorage("biggerText") private var biggerText = false
+    @AppStorage(OnboardingView.seenKey) private var hasSeenOnboarding = false
+    @AppStorage(AppLanguage.storageKey) private var appLanguage = AppLanguage.system.rawValue
+    @AppStorage(SettingsView.biggerTextKey) private var biggerText = false
 
     var body: some View {
         Group {

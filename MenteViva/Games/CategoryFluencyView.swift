@@ -87,16 +87,14 @@ struct CategoryFluencyView: View {
                         Button { tap(tile.id) } label: {
                             Text(tile.emoji)
                                 .font(.system(size: 52))
-                                .frame(maxWidth: .infinity, minHeight: 100)
-                                .background(tile.isPicked ? .green.opacity(0.25) : .blue.opacity(0.15),
-                                            in: .rect(cornerRadius: 16))
-                                // Non-color cue: picked tiles get a visible checkmark,
-                                // not just a green tint (WCAG 1.4.1, conventions.md §4).
-                                .overlay(alignment: .topTrailing) {
-                                    if tile.isPicked { CheckBadge() }
-                                }
                         }
-                        .buttonStyle(.plain)
+                        .buttonStyle(AnswerTileStyle(tint: tile.isPicked ? .green.opacity(0.25) : .blue.opacity(0.15),
+                                                     minHeight: 100))
+                        // Non-color cue: picked tiles get a visible checkmark,
+                        // not just a green tint (WCAG 1.4.1, conventions.md §4).
+                        .overlay(alignment: .topTrailing) {
+                            if tile.isPicked { CheckBadge() }
+                        }
                         .modifier(MissCue(active: Binding(get: { missedTile == tile.id },
                                                           set: { if !$0 { missedTile = nil } })))
                         .disabled(tile.isPicked)
