@@ -2,6 +2,8 @@ import Foundation
 import os
 
 /// Minimal TypeSafe/Jev client for MenteViva. See docs/jev-integration.md.
+/// Also hands out today's plan: DailyPolicy's, overridden by Jev only when a
+/// proxy is set, saved once per day in PlanStore.
 ///
 /// Jev is seasoning: it ranks today's game mix and nudges per-game difficulty.
 /// Everything degrades to deterministic fallbacks — no network, no proxy, bad
@@ -10,104 +12,6 @@ import os
 /// The API key never lives on device. Requests go to a tiny proxy
 /// (JEV_PROXY_URL in Info.plist) that adds `Authorization: Bearer` server-side
 /// and forwards the body verbatim to https://api.typesafe.ai/v1/systemone.
-
-nonisolated enum GameID: String, CaseIterable, Codable {
-    case memoryMatch = "memory_match"
-    case stroop = "stroop"
-    case categoryFluency = "category_fluency"
-    case mathStreaks = "math_streaks"
-    case quickEyes = "quick_eyes"
-
-    var emoji: String {
-        switch self {
-        case .memoryMatch: "🧩"
-        case .stroop: "🎨"
-        case .categoryFluency: "🐾"
-        case .mathStreaks: "🔢"
-        case .quickEyes: "👀"
-        }
-    }
-
-    var title: String.LocalizationValue {
-        switch self {
-        case .memoryMatch: "game.memory.title"
-        case .stroop: "game.colorclash.title"
-        case .categoryFluency: "game.category.title"
-        case .mathStreaks: "game.math.title"
-        case .quickEyes: "game.quickeyes.title"
-        }
-    }
-}
-
-nonisolated enum Difficulty: Int, Codable {
-    case easy = 0, medium = 1, hard = 2
-
-    init(jevScore: Double) {
-        let clamped = min(max(jevScore, 0), 2)
-        self = Difficulty(rawValue: Int(clamped.rounded())) ?? .medium
-    }
-
-    /// Today's difficulty for a game: the family's pin if set (#108), else the
-    /// rules' level, medium for a new player. Games read it once when they open,
-    /// so it never shifts under the player mid-game.
-    static func stored(_ game: GameID, defaults: UserDefaults = .standard) -> Difficulty {
-        FamilySettings.pinned(defaults: defaults)[game]
-            ?? JevService.storedDifficulty(defaults: defaults)[game] ?? .medium
-    }
-
-    /// Picks the easy/medium/hard value of a per-game knob.
-    func pick<T>(_ easy: T, _ medium: T, _ hard: T) -> T {
-        switch self {
-        case .easy: easy
-        case .medium: medium
-        case .hard: hard
-        }
-    }
-}
-
-nonisolated struct DailyPlan: Codable, Equatable {
-    let dayStamp: String              // local "yyyy-MM-dd"; valid only for its day
-    let games: [GameID]               // recommended mix, best first
-    let difficulty: [GameID: Difficulty]
-}
-
-/// Aggregated, anonymized gameplay stats — the entire state that leaves the device:
-/// counts and ratios only, no identifiers, no dates, English field names.
-nonisolated struct PlayerStateSummary: Codable {
-    struct GameStats: Codable {
-        let sessionsLast14Days: Int
-        let meanAccuracy: Double?     // 0...1; omitted when no session recorded accuracy
-        let meanRoundsCompleted: Double
-        let daysSinceLastPlayed: Int
-        let currentDifficulty: Difficulty
-    }
-    let games: [String: GameStats]    // keyed by GameID.rawValue
-
-    /// Builds the summary from recent sessions: sessions older than 14 days are
-    /// ignored; a game never played in the window reports 0 sessions and 14 days.
-    static func build(from sessions: [GameSession],
-                      difficulty: [GameID: Difficulty],
-                      now: Date = .now,
-                      calendar: Calendar = .current) -> PlayerStateSummary {
-        let window = 14
-        var games: [String: GameStats] = [:]
-        for game in GameID.allCases {
-            let mine = sessions.filter {
-                $0.gameID == game.rawValue
-                    && (calendar.dateComponents([.day], from: $0.playedAt, to: now).day ?? window) < window
-            }
-            let accuracies = mine.compactMap(\.accuracy)
-            let last = mine.map(\.playedAt).max()
-            games[game.rawValue] = GameStats(
-                sessionsLast14Days: mine.count,
-                meanAccuracy: accuracies.isEmpty ? nil : accuracies.reduce(0, +) / Double(accuracies.count),
-                meanRoundsCompleted: mine.isEmpty ? 0 : Double(mine.map(\.rounds).reduce(0, +)) / Double(mine.count),
-                daysSinceLastPlayed: last.flatMap { calendar.dateComponents([.day], from: $0, to: now).day } ?? window,
-                currentDifficulty: difficulty[game] ?? .medium)
-        }
-        return PlayerStateSummary(games: games)
-    }
-}
 
 enum JevServiceError: Error {
     case badResponse(Int)
@@ -122,9 +26,6 @@ actor JevService {
     private let defaults: UserDefaults
     private var inFlight: Task<DailyPlan, Never>?
     private nonisolated static let log = Logger(subsystem: "com.igmarin.MenteViva", category: "jev")
-    private let cacheKey = "jev.dailyPlan"
-    private nonisolated static let difficultyKey = "jev.difficulty"
-    private nonisolated static let changeKey = "jev.difficultyChangedOn"
 
     /// Below this confidence a difficulty Score is ignored and yesterday's
     /// difficulty is kept. A poor difficulty match is the high-stakes concern
@@ -153,8 +54,8 @@ actor JevService {
     func dailyPlan(state: PlayerStateSummary,
                    currentDifficulty: [GameID: Difficulty],
                    now: Date = .now) async -> DailyPlan {
-        let stamp = Self.dayStamp(now)
-        if let cached = cachedPlan(), cached.dayStamp == stamp { return cached }
+        let stamp = PlanStore.dayStamp(now)
+        if let cached = PlanStore.cachedPlan(defaults: defaults), cached.dayStamp == stamp { return cached }
         if let inFlight { return await inFlight.value }
 
         let task = Task { await self.fetchPlan(state: state, current: currentDifficulty, stamp: stamp) }
@@ -170,7 +71,7 @@ actor JevService {
         let pinned = FamilySettings.pinned(defaults: defaults)
         let hidden = FamilySettings.hidden(defaults: defaults)
         var plan = DailyPolicy.plan(state: state,
-                                    lastChange: Self.lastDifficultyChange(defaults: defaults),
+                                    lastChange: PlanStore.lastDifficultyChange(defaults: defaults),
                                     dayStamp: stamp, pinned: pinned, hidden: hidden)
         if let proxyURL {
             do {
@@ -185,7 +86,7 @@ actor JevService {
                 Self.log.info("Jev unavailable, using the on-device plan: \(String(describing: error), privacy: .public)")
             }
         }
-        cache(plan)
+        PlanStore.cache(plan, defaults: defaults)
         return plan
     }
 
@@ -252,54 +153,6 @@ actor JevService {
         difficulty.merge(pinned) { _, pin in pin }
         let count = min(max(gamesPerDay, 0), ranked.count)
         return DailyPlan(dayStamp: dayStamp, games: Array(ranked.prefix(count)), difficulty: difficulty)
-    }
-
-    // MARK: - Cache (UserDefaults, per local day)
-
-    private func cachedPlan() -> DailyPlan? {
-        defaults.data(forKey: cacheKey)
-            .flatMap { try? JSONDecoder().decode(DailyPlan.self, from: $0) }
-    }
-
-    private func cache(_ plan: DailyPlan) {
-        if let data = try? JSONEncoder().encode(plan) {
-            defaults.set(data, forKey: cacheKey)
-        }
-        let before = Self.storedDifficulty(defaults: defaults)
-        var changed = Self.lastDifficultyChange(defaults: defaults)
-        for (game, level) in plan.difficulty where before[game] != level { changed[game] = plan.dayStamp }
-        if let data = try? JSONEncoder().encode(Dictionary(uniqueKeysWithValues: changed.map { ($0.key.rawValue, $0.value) })) {
-            defaults.set(data, forKey: Self.changeKey)
-        }
-        if let data = try? JSONEncoder().encode(Dictionary(uniqueKeysWithValues: plan.difficulty.map { ($0.key.rawValue, $0.value.rawValue) })) {
-            defaults.set(data, forKey: Self.difficultyKey)
-        }
-    }
-
-    /// Last difficulty Jev set per game (medium for a new player). Read by the
-    /// games and by Home; only changes when a new daily plan is cached.
-    nonisolated static func storedDifficulty(defaults: UserDefaults = .standard) -> [GameID: Difficulty] {
-        let raw = defaults.data(forKey: difficultyKey)
-            .flatMap { try? JSONDecoder().decode([String: Int].self, from: $0) } ?? [:]
-        return Dictionary(uniqueKeysWithValues: GameID.allCases.map { game in
-            (game, raw[game.rawValue].flatMap(Difficulty.init(rawValue:)) ?? .medium)
-        })
-    }
-
-    /// Day stamp of each game's last difficulty change; DailyPolicy holds it for a week.
-    nonisolated static func lastDifficultyChange(defaults: UserDefaults = .standard) -> [GameID: String] {
-        let raw = defaults.data(forKey: changeKey)
-            .flatMap { try? JSONDecoder().decode([String: String].self, from: $0) } ?? [:]
-        return Dictionary(uniqueKeysWithValues: raw.compactMap { key, stamp in GameID(rawValue: key).map { ($0, stamp) } })
-    }
-
-    nonisolated static func dayStamp(_ date: Date = .now) -> String {
-        let f = DateFormatter()
-        f.calendar = Calendar.current
-        f.locale = Locale(identifier: "en_US_POSIX")
-        f.timeZone = .current
-        f.dateFormat = "yyyy-MM-dd"
-        return f.string(from: date)
     }
 }
 

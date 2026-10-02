@@ -79,7 +79,7 @@ struct HomeView: View {
         let since = Calendar.current.date(byAdding: .day, value: -14, to: .now) ?? .distantPast
         let recent = (try? modelContext.fetch(FetchDescriptor<GameSession>(
             predicate: #Predicate { $0.playedAt >= since }))) ?? []
-        let difficulty = JevService.storedDifficulty()
+        let difficulty = PlanStore.storedDifficulty()
         let state = PlayerStateSummary.build(from: recent, difficulty: difficulty)
         let plan = await JevService.shared.dailyPlan(state: state, currentDifficulty: difficulty)
         todaysMix = Set(plan.games)

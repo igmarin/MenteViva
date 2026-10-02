@@ -17,13 +17,18 @@
 		EE94290C1D7CE37100000017 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F548AF03C8043700000011; };
 		2A7F83F1E2F186E800000014 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C04053E45A48AC460000000E; };
 		6866AB30C9E6CF9000000018 /* MenteVivaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65242C715F07923E00000012; };
+		F5A23ED42097E53E0000001D /* Difficulty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96D388A3F583BE2C00000017; };
+		3E677824EE408ED400000019 /* GameID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16FEBD7D2C9C2C8200000013; };
 		E2080412E5AF86210000001E /* GameSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC9E51A3CFE79A4700000018; };
 		687971ABE147369000000020 /* RoundProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F149BAD8E63313E0000001A; };
 		83C5727F27BD566A0000001A /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7B3B616009A42E800000014; };
+		CF167B18375C83D400000020 /* AppLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 935C3DAA5B7FC9820000001A; };
 		30ECA8CB22C0601E00000020 /* DailyPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABA89EC2CAC17B0C0000001A; };
 		5BDF348CC430543800000023 /* FamilySettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D5B4260F3371760000001D; };
 		89CAE55D19053AF10000001F /* JevService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42B3456BD42F17B700000019; };
 		1D8B162B0DC9013B00000021 /* MemoryPhotos.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A47663ED0263910000001B; };
+		275EC605D5ED04650000001E /* PlanStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3931AC8D4E8A85DB00000018; };
+		45C157ABD39C164F00000027 /* PlayerStateSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9EBAADE3EF5726500000021; };
 		8C75A9CE4133529700000020 /* SoundPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B94116EB608F25D0000001A; };
 		D9207C4B070633A000000022 /* WeeklySummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DCDF59CF4AC6AE0000001C; };
 		F1CAEDFBEAB27E7A00000018 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881D5FFD680EE69800000012; };
@@ -54,13 +59,18 @@
 		E1F548AF03C8043700000011 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
 		C04053E45A48AC460000000E /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		65242C715F07923E00000012 /* MenteVivaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaApp.swift; sourceTree = "<group>"; };
+		96D388A3F583BE2C00000017 /* Difficulty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models/Difficulty.swift; sourceTree = "<group>"; };
+		16FEBD7D2C9C2C8200000013 /* GameID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models/GameID.swift; sourceTree = "<group>"; };
 		AC9E51A3CFE79A4700000018 /* GameSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models/GameSession.swift; sourceTree = "<group>"; };
 		1F149BAD8E63313E0000001A /* RoundProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models/RoundProgress.swift; sourceTree = "<group>"; };
 		D7B3B616009A42E800000014 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		935C3DAA5B7FC9820000001A /* AppLanguage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/AppLanguage.swift; sourceTree = "<group>"; };
 		ABA89EC2CAC17B0C0000001A /* DailyPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/DailyPolicy.swift; sourceTree = "<group>"; };
 		74D5B4260F3371760000001D /* FamilySettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/FamilySettings.swift; sourceTree = "<group>"; };
 		42B3456BD42F17B700000019 /* JevService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/JevService.swift; sourceTree = "<group>"; };
 		D5A47663ED0263910000001B /* MemoryPhotos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/MemoryPhotos.swift; sourceTree = "<group>"; };
+		3931AC8D4E8A85DB00000018 /* PlanStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/PlanStore.swift; sourceTree = "<group>"; };
+		D9EBAADE3EF5726500000021 /* PlayerStateSummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/PlayerStateSummary.swift; sourceTree = "<group>"; };
 		6B94116EB608F25D0000001A /* SoundPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/SoundPlayer.swift; sourceTree = "<group>"; };
 		E5DCDF59CF4AC6AE0000001C /* WeeklySummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/WeeklySummary.swift; sourceTree = "<group>"; };
 		881D5FFD680EE69800000012 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -119,13 +129,18 @@
 				E1F548AF03C8043700000011 /* HistoryView.swift */,
 				C04053E45A48AC460000000E /* HomeView.swift */,
 				65242C715F07923E00000012 /* MenteVivaApp.swift */,
+				96D388A3F583BE2C00000017 /* Difficulty.swift */,
+				16FEBD7D2C9C2C8200000013 /* GameID.swift */,
 				AC9E51A3CFE79A4700000018 /* GameSession.swift */,
 				1F149BAD8E63313E0000001A /* RoundProgress.swift */,
 				D7B3B616009A42E800000014 /* OnboardingView.swift */,
+				935C3DAA5B7FC9820000001A /* AppLanguage.swift */,
 				ABA89EC2CAC17B0C0000001A /* DailyPolicy.swift */,
 				74D5B4260F3371760000001D /* FamilySettings.swift */,
 				42B3456BD42F17B700000019 /* JevService.swift */,
 				D5A47663ED0263910000001B /* MemoryPhotos.swift */,
+				3931AC8D4E8A85DB00000018 /* PlanStore.swift */,
+				D9EBAADE3EF5726500000021 /* PlayerStateSummary.swift */,
 				6B94116EB608F25D0000001A /* SoundPlayer.swift */,
 				E5DCDF59CF4AC6AE0000001C /* WeeklySummary.swift */,
 				881D5FFD680EE69800000012 /* SettingsView.swift */,
@@ -234,13 +249,18 @@
 				EE94290C1D7CE37100000017 /* HistoryView.swift in Sources */,
 				2A7F83F1E2F186E800000014 /* HomeView.swift in Sources */,
 				6866AB30C9E6CF9000000018 /* MenteVivaApp.swift in Sources */,
+				F5A23ED42097E53E0000001D /* Difficulty.swift in Sources */,
+				3E677824EE408ED400000019 /* GameID.swift in Sources */,
 				E2080412E5AF86210000001E /* GameSession.swift in Sources */,
 				687971ABE147369000000020 /* RoundProgress.swift in Sources */,
 				83C5727F27BD566A0000001A /* OnboardingView.swift in Sources */,
+				CF167B18375C83D400000020 /* AppLanguage.swift in Sources */,
 				30ECA8CB22C0601E00000020 /* DailyPolicy.swift in Sources */,
 				5BDF348CC430543800000023 /* FamilySettings.swift in Sources */,
 				89CAE55D19053AF10000001F /* JevService.swift in Sources */,
 				1D8B162B0DC9013B00000021 /* MemoryPhotos.swift in Sources */,
+				275EC605D5ED04650000001E /* PlanStore.swift in Sources */,
+				45C157ABD39C164F00000027 /* PlayerStateSummary.swift in Sources */,
 				8C75A9CE4133529700000020 /* SoundPlayer.swift in Sources */,
 				D9207C4B070633A000000022 /* WeeklySummary.swift in Sources */,
 				F1CAEDFBEAB27E7A00000018 /* SettingsView.swift in Sources */,
