@@ -3,6 +3,8 @@ import SwiftData
 
 /// "My Week": a warm, big-type look back at the last 7 days of play.
 /// One row per session: game emoji, localized game name. No scores (#45).
+/// One warm progress line per game played (#107): words and an icon, never a
+/// number and never a down arrow — the numbers live in the family screen.
 struct HistoryView: View {
     @Query(sort: \GameSession.playedAt, order: .reverse)
     private var sessions: [GameSession]
@@ -40,6 +42,10 @@ struct HistoryView: View {
         }
     }
 
+    private var progress: [GameProgress] {
+        GameProgress.weekly(sessions).filter { $0.sessions > 0 }
+    }
+
     private var summary: WeeklySummary { WeeklySummary(playedAt: sessions.map(\.playedAt)) }
 
     /// Family-share payload: plain text so it works over any channel (WhatsApp,
@@ -63,6 +69,13 @@ struct HistoryView: View {
                     .padding(.vertical, 8)
             }
 
+            Section {
+                ForEach(progress, id: \.game) { progressRow($0) }
+            } header: {
+                Text(AppLanguage.localized("history.progress.header"))
+                    .font(.title3.weight(.semibold))
+            }
+
             ForEach(groupedDays, id: \.day) { group in
                 Section {
                     ForEach(group.items, id: \.persistentModelID) { session in
@@ -77,7 +90,7 @@ struct HistoryView: View {
     }
 
     private func sessionRow(_ session: GameSession) -> some View {
-        let info = gameInfo(for: session.gameID)
+        let info = gameInfo(for: session)
         return HStack(spacing: 16) {
             Text(info.emoji)
                 .font(.system(size: 44))
@@ -92,6 +105,23 @@ struct HistoryView: View {
         .frame(minHeight: 100)
         .accessibilityElement(children: .combine)
         .accessibilityLabel(Text("history.a11y.played \(info.name)"))
+    }
+
+    /// Level up gets the up arrow; everything else, including an easier week,
+    /// reads as steady. Icon plus text, never color alone.
+    private func progressRow(_ p: GameProgress) -> some View {
+        let name = AppLanguage.localized(p.game.title)
+        let movedUp = p.levelTrend == .up
+        return Label {
+            Text(String(format: AppLanguage.localized(movedUp ? "history.progress.up %@" : "history.progress.steady %@"), name))
+                .font(.title3)
+        } icon: {
+            Image(systemName: movedUp ? "arrow.up.circle.fill" : "arrow.right.circle.fill")
+                .font(.title2)
+                .foregroundStyle(movedUp ? .green : .blue)
+        }
+        .padding(.vertical, 8)
+        .accessibilityElement(children: .combine)
     }
 
     private var emptyState: some View {
@@ -119,9 +149,8 @@ struct HistoryView: View {
         return day.formatted(.dateTime.weekday(.wide).day().month(.wide))
     }
 
-    private func gameInfo(for gameID: String) -> (emoji: String, name: String) {
-        let game = GameID(rawValue: gameID) ?? (gameID == "memory" ? .memoryMatch : nil)
-        guard let game else {
+    private func gameInfo(for session: GameSession) -> (emoji: String, name: String) {
+        guard let game = session.game else {
             return ("🎮", AppLanguage.localized("history.game.unknown"))
         }
         return (game.emoji, AppLanguage.localized( game.title))

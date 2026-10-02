@@ -138,7 +138,8 @@ struct MemoryMatchView: View {
         // player sees progress, not points.
         modelContext.record(GameSession(gameID: .memoryMatch, score: score,
                                         rounds: emojis.count, durationSeconds: elapsed,
-                                        correct: emojis.count, attempts: moves))
+                                        correct: emojis.count, attempts: moves,
+                                        difficulty: difficulty))
         finalDetail = String(format: AppLanguage.localized("game.celebration.pairs %lld"), emojis.count)
         showCelebration = true
     }

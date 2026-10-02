@@ -20,20 +20,30 @@ final class GameSession {
     var correct: Int = 0
     var attempts: Int = 0
     var playedAt: Date = Date.now
+    /// Difficulty the game was played at (#107); -1 for sessions saved before
+    /// it was recorded, which never count toward a level trend.
+    var difficulty: Int = -1
 
     /// 0...1, or nil when the session predates accuracy tracking.
     var accuracy: Double? {
         attempts > 0 ? min(Double(correct) / Double(attempts), 1) : nil
     }
 
+    /// nil for legacy sessions without a recorded difficulty.
+    var level: Difficulty? { Difficulty(rawValue: difficulty) }
+
+    /// The game this session belongs to; "memory" is Memory Lane's pre-#57 ID.
+    var game: GameID? { GameID(rawValue: gameID) ?? (gameID == "memory" ? .memoryMatch : nil) }
+
     init(gameID: GameID, score: Int, rounds: Int, durationSeconds: Int,
-         correct: Int = 0, attempts: Int = 0) {
+         correct: Int = 0, attempts: Int = 0, difficulty: Difficulty? = nil) {
         self.gameID = gameID.rawValue
         self.score = score
         self.rounds = rounds
         self.durationSeconds = durationSeconds
         self.correct = correct
         self.attempts = attempts
+        self.difficulty = difficulty?.rawValue ?? -1
         self.playedAt = .now
     }
 }

@@ -40,6 +40,63 @@ struct WeeklySummary: Equatable {
     }
 }
 
+/// One game's week against the week before (#107). Level reached is the
+/// progression signal, accuracy the secondary one (Jev 012). The player sees
+/// only warm words built from this; the family screen sees the numbers.
+struct GameProgress: Equatable {
+    enum Trend: Equatable { case up, steady, down }
+
+    let game: GameID
+    let sessions: Int
+    let previousSessions: Int
+    let accuracy: Double?
+    let previousAccuracy: Double?
+    let level: Difficulty?
+    let previousLevel: Difficulty?
+
+    /// Accuracy moves smaller than this read as "about the same".
+    static let accuracyNoise = 0.05
+
+    var levelTrend: Trend? {
+        guard let level, let previousLevel else { return nil }
+        return level.rawValue > previousLevel.rawValue ? .up
+            : level.rawValue < previousLevel.rawValue ? .down : .steady
+    }
+
+    var accuracyTrend: Trend? {
+        guard let accuracy, let previousAccuracy else { return nil }
+        let change = accuracy - previousAccuracy
+        return change > Self.accuracyNoise ? .up : change < -Self.accuracyNoise ? .down : .steady
+    }
+
+    /// Games played in the last 14 days, in `GameID.allCases` order.
+    static func weekly(_ sessions: [GameSession], now: Date = .now,
+                       calendar: Calendar = .current) -> [GameProgress] {
+        let weekAgo = calendar.date(byAdding: .day, value: -7, to: now) ?? now
+        let thisWeek = DayGrouping.lastWeek(sessions, date: \.playedAt, now: now, calendar: calendar)
+            .filter { $0.playedAt <= now }
+        let lastWeek = DayGrouping.lastWeek(sessions, date: \.playedAt, now: weekAgo, calendar: calendar)
+            .filter { $0.playedAt < weekAgo }
+        return GameID.allCases.compactMap { game in
+            let mine = thisWeek.filter { $0.game == game }
+            let before = lastWeek.filter { $0.game == game }
+            guard !mine.isEmpty || !before.isEmpty else { return nil }
+            return GameProgress(game: game, sessions: mine.count, previousSessions: before.count,
+                                accuracy: meanAccuracy(mine), previousAccuracy: meanAccuracy(before),
+                                level: latestLevel(mine), previousLevel: latestLevel(before))
+        }
+    }
+
+    private static func meanAccuracy(_ sessions: [GameSession]) -> Double? {
+        let values = sessions.compactMap(\.accuracy)
+        return values.isEmpty ? nil : values.reduce(0, +) / Double(values.count)
+    }
+
+    private static func latestLevel(_ sessions: [GameSession]) -> Difficulty? {
+        sessions.filter { $0.level != nil }.max { $0.playedAt < $1.playedAt }?.level
+    }
+}
+
 /// Day grouping shared by My Week and its tests: the last 7 days of items,
 /// grouped by calendar day, newest day first.
 enum DayGrouping {

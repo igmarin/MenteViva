@@ -170,7 +170,8 @@ struct ColorClashView: View {
         // design (Stroop), so the warm message celebrates finishing (#45).
         modelContext.record(GameSession(gameID: .stroop, score: score,
                                         rounds: Self.totalRounds, durationSeconds: elapsed,
-                                        correct: correct, attempts: Self.totalRounds))
+                                        correct: correct, attempts: Self.totalRounds,
+                                        difficulty: difficulty))
         finalDetail = String(format: AppLanguage.localized("game.celebration.rounds %lld"), Self.totalRounds)
         showCelebration = true
     }
