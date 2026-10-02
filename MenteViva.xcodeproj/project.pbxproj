@@ -22,6 +22,7 @@
 		30ECA8CB22C0601E00000020 /* DailyPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABA89EC2CAC17B0C0000001A; };
 		5BDF348CC430543800000023 /* FamilySettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D5B4260F3371760000001D; };
 		89CAE55D19053AF10000001F /* JevService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42B3456BD42F17B700000019; };
+		1D8B162B0DC9013B00000021 /* MemoryPhotos.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A47663ED0263910000001B; };
 		8C75A9CE4133529700000020 /* SoundPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B94116EB608F25D0000001A; };
 		D9207C4B070633A000000022 /* WeeklySummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DCDF59CF4AC6AE0000001C; };
 		F1CAEDFBEAB27E7A00000018 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881D5FFD680EE69800000012; };
@@ -34,6 +35,7 @@
 		1C320C298D4269F400000036 /* GameSessionStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE35901B6A0B75A200000030; };
 		C7BB50E2D28ADBC300000033 /* JevPlanPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67ADC4F8E1EC78290000002D; };
 		B5C4C1B6398F812500000030 /* JevServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 858C839C80DBBF1B0000002A; };
+		19A5511F2D9320B700000032 /* MemoryPhotosTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982802FDA721007D0000002C; };
 		2E81FDB867FC926B00000038 /* PlayerStateSummaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9231182AE986A100000032; };
 		F3781E2CF00E20FA00000033 /* RoundProgressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690FA2BE3DFB9D180000002D; };
 		0EEED9F3112B457400000033 /* WeeklySummaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2CB27B32AF72D220000002D; };
@@ -55,6 +57,7 @@
 		ABA89EC2CAC17B0C0000001A /* DailyPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/DailyPolicy.swift; sourceTree = "<group>"; };
 		74D5B4260F3371760000001D /* FamilySettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/FamilySettings.swift; sourceTree = "<group>"; };
 		42B3456BD42F17B700000019 /* JevService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/JevService.swift; sourceTree = "<group>"; };
+		D5A47663ED0263910000001B /* MemoryPhotos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/MemoryPhotos.swift; sourceTree = "<group>"; };
 		6B94116EB608F25D0000001A /* SoundPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/SoundPlayer.swift; sourceTree = "<group>"; };
 		E5DCDF59CF4AC6AE0000001C /* WeeklySummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/WeeklySummary.swift; sourceTree = "<group>"; };
 		881D5FFD680EE69800000012 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -67,6 +70,7 @@
 		DE35901B6A0B75A200000030 /* GameSessionStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/GameSessionStoreTests.swift; sourceTree = SOURCE_ROOT; };
 		67ADC4F8E1EC78290000002D /* JevPlanPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/JevPlanPolicyTests.swift; sourceTree = SOURCE_ROOT; };
 		858C839C80DBBF1B0000002A /* JevServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/JevServiceTests.swift; sourceTree = SOURCE_ROOT; };
+		982802FDA721007D0000002C /* MemoryPhotosTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/MemoryPhotosTests.swift; sourceTree = SOURCE_ROOT; };
 		7D9231182AE986A100000032 /* PlayerStateSummaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/PlayerStateSummaryTests.swift; sourceTree = SOURCE_ROOT; };
 		690FA2BE3DFB9D180000002D /* RoundProgressTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/RoundProgressTests.swift; sourceTree = SOURCE_ROOT; };
 		A2CB27B32AF72D220000002D /* WeeklySummaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/WeeklySummaryTests.swift; sourceTree = SOURCE_ROOT; };
@@ -116,6 +120,7 @@
 				ABA89EC2CAC17B0C0000001A /* DailyPolicy.swift */,
 				74D5B4260F3371760000001D /* FamilySettings.swift */,
 				42B3456BD42F17B700000019 /* JevService.swift */,
+				D5A47663ED0263910000001B /* MemoryPhotos.swift */,
 				6B94116EB608F25D0000001A /* SoundPlayer.swift */,
 				E5DCDF59CF4AC6AE0000001C /* WeeklySummary.swift */,
 				881D5FFD680EE69800000012 /* SettingsView.swift */,
@@ -141,6 +146,7 @@
 				DE35901B6A0B75A200000030 /* GameSessionStoreTests.swift */,
 				67ADC4F8E1EC78290000002D /* JevPlanPolicyTests.swift */,
 				858C839C80DBBF1B0000002A /* JevServiceTests.swift */,
+				982802FDA721007D0000002C /* MemoryPhotosTests.swift */,
 				7D9231182AE986A100000032 /* PlayerStateSummaryTests.swift */,
 				690FA2BE3DFB9D180000002D /* RoundProgressTests.swift */,
 				A2CB27B32AF72D220000002D /* WeeklySummaryTests.swift */,
@@ -227,6 +233,7 @@
 				30ECA8CB22C0601E00000020 /* DailyPolicy.swift in Sources */,
 				5BDF348CC430543800000023 /* FamilySettings.swift in Sources */,
 				89CAE55D19053AF10000001F /* JevService.swift in Sources */,
+				1D8B162B0DC9013B00000021 /* MemoryPhotos.swift in Sources */,
 				8C75A9CE4133529700000020 /* SoundPlayer.swift in Sources */,
 				D9207C4B070633A000000022 /* WeeklySummary.swift in Sources */,
 				F1CAEDFBEAB27E7A00000018 /* SettingsView.swift in Sources */,
@@ -247,6 +254,7 @@
 				1C320C298D4269F400000036 /* GameSessionStoreTests.swift in Sources */,
 				C7BB50E2D28ADBC300000033 /* JevPlanPolicyTests.swift in Sources */,
 				B5C4C1B6398F812500000030 /* JevServiceTests.swift in Sources */,
+				19A5511F2D9320B700000032 /* MemoryPhotosTests.swift in Sources */,
 				2E81FDB867FC926B00000038 /* PlayerStateSummaryTests.swift in Sources */,
 				F3781E2CF00E20FA00000033 /* RoundProgressTests.swift in Sources */,
 				0EEED9F3112B457400000033 /* WeeklySummaryTests.swift in Sources */,

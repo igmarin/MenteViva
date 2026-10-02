@@ -7,7 +7,7 @@ Spanish translation lands when hosted (docs/README rule 5).
 ---
 
 **Mente Viva — Privacy Policy**
-Last updated: 2026-09-22
+Last updated: 2026-10-01
 
 **The short version:** Mente Viva collects nothing about you. No account, no
 name, no email, no ads, no tracking. Your games stay on your device.
@@ -16,6 +16,12 @@ name, no email, no ads, no tracking. Your games stay on your device.
 how rounds went, how long they took) are stored only on your iPhone or iPad,
 in the app's private storage. We never see them. They are not synced anywhere.
 Deleting the app deletes them completely.
+
+**Photos for Memory Lane.** If you add photos for Memory Lane, you pick them
+with Apple's photo picker, which gives the app only the photos you choose — no
+access to the rest of your library. The app keeps a small copy of each in its
+private storage on this device, never uploads or shares them, and deletes the
+copy when you tap Remove (or delete the app).
 
 **What leaves the device: normally, nothing.** The app works fully offline, and
 its daily game suggestion is worked out on your device. There is one optional

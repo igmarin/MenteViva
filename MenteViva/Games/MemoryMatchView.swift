@@ -7,6 +7,8 @@ import SwiftData
 /// #109: "a game, but he's not a child" — grown-up themes, paper-like cards, a
 /// calm card back, and a board sized to the screen (iPad and iPhone) so every
 /// card is visible without scrolling. Found pairs keep a checkmark, not just a tint.
+/// #110: family photos added in For family become cards first; the theme's
+/// emoji fill whatever pairs the photos don't cover.
 struct MemoryMatchView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -24,7 +26,9 @@ struct MemoryMatchView: View {
     private static let cardBack = Color(red: 0.20, green: 0.34, blue: 0.42)
 
     @State private var difficulty = Difficulty.stored(.memoryMatch)
-    @State private var emojis: [String] = Array(Self.themes[0].prefix(6))
+    @State private var faces: [Face] = []
+    /// Decoded once per deal so flipping never re-reads the disk.
+    @State private var photoImages: [URL: UIImage] = [:]
 
     @State private var cards: [Card] = []
     @State private var flipped: [Int] = []
@@ -36,11 +40,23 @@ struct MemoryMatchView: View {
     @State private var cardPositions: [Int: Int] = [:]
     @State private var flipBackTask: Task<Void, Never>?
 
+    enum Face: Hashable {
+        case emoji(String)
+        case photo(URL)
+    }
+
     struct Card: Identifiable {
         let id: Int
-        let emoji: String
+        let face: Face
         var isFaceUp = false
         var isMatched = false
+    }
+
+    /// The board's pairs: photos first (already shuffled by the caller), then
+    /// the theme's emoji for any pairs the photos don't cover.
+    static func faces(photos: [URL], theme: [String], pairs: Int) -> [Face] {
+        let fromPhotos = photos.prefix(pairs).map(Face.photo)
+        return fromPhotos + theme.prefix(pairs - fromPhotos.count).map(Face.emoji)
     }
 
     static func pairCount(for difficulty: Difficulty) -> Int {
@@ -86,7 +102,7 @@ struct MemoryMatchView: View {
                         Button { flip(card.id) } label: { face(card, size: fit.card) }
                             .buttonStyle(.plain)
                             .accessibilityLabel(card.isFaceUp || card.isMatched
-                                                ? card.emoji
+                                                ? label(card.face)
                                                 : AppLanguage.localized("game.memory.card.hidden"))
                             .accessibilityHint(card.isMatched
                                                ? AppLanguage.localized("game.memory.a11y.matched")
@@ -114,10 +130,16 @@ struct MemoryMatchView: View {
                 .shadow(color: .black.opacity(0.15), radius: 4, y: 2)
             RoundedRectangle(cornerRadius: 18)
                 .strokeBorder(.black.opacity(shown ? 0.12 : 0), lineWidth: 1)
-            if shown {
-                Text(card.emoji)
+            if shown, case .photo(let url) = card.face, let image = photoImages[url] {
+                Image(uiImage: image)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: size.width - 10, height: size.height - 10)
+                    .clipShape(RoundedRectangle(cornerRadius: 14))
+            } else if shown, case .emoji(let emoji) = card.face {
+                Text(emoji)
                     .font(.system(size: min(size.width, size.height) * 0.5))
-            } else {
+            } else if !shown {
                 Image(systemName: "leaf.fill")
                     .font(.system(size: min(size.width, size.height) * 0.22))
                     .foregroundStyle(.white.opacity(0.35))
@@ -135,14 +157,29 @@ struct MemoryMatchView: View {
 
     private func deal() {
         flipBackTask?.cancel()
-        emojis = Array((Self.themes.randomElement() ?? Self.themes[0])
-            .prefix(Self.pairCount(for: difficulty)))
-        cards = (emojis + emojis).shuffled().enumerated().map { Card(id: $0, emoji: $1) }
+        let photos = MemoryPhotos.all().shuffled()
+        faces = Self.faces(photos: photos, theme: Self.themes.randomElement() ?? Self.themes[0],
+                           pairs: Self.pairCount(for: difficulty))
+        photoImages = Dictionary(uniqueKeysWithValues: faces.compactMap { face in
+            guard case .photo(let url) = face, let image = UIImage(contentsOfFile: url.path) else { return nil }
+            return (url, image)
+        })
+        cards = (faces + faces).shuffled().enumerated().map { Card(id: $0, face: $1) }
         cardPositions = Dictionary(uniqueKeysWithValues: cards.indices.map { (cards[$0].id, $0 + 1) })
         flipped = []
         matched = 0
         moves = 0
         startedAt = .now
+    }
+
+    /// Emoji carry their own VoiceOver names; photos are numbered so a pair can
+    /// still be matched by ear.
+    private func label(_ face: Face) -> String {
+        switch face {
+        case .emoji(let emoji): emoji
+        case .photo: String(format: AppLanguage.localized("game.memory.photo %lld"),
+                            (faces.firstIndex(of: face) ?? 0) + 1)
+        }
     }
 
     private func flip(_ cardID: Int) {
@@ -155,13 +192,13 @@ struct MemoryMatchView: View {
         guard flipped.count == 2 else { return }
         moves += 1
         let (a, b) = (flipped[0], flipped[1])
-        if cards[a].emoji == cards[b].emoji {
+        if cards[a].face == cards[b].face {
             cards[a].isMatched = true
             cards[b].isMatched = true
             matched += 1
             flipped = []
             Feedback.play(.success)
-            if matched == emojis.count { finish() }
+            if matched == faces.count { finish() }
         } else {
             Feedback.play(.miss)
             let pair = flipped
@@ -178,14 +215,14 @@ struct MemoryMatchView: View {
 
     private func finish() {
         let elapsed = Int(Date.now.timeIntervalSince(startedAt))
-        let score = Self.score(pairCount: emojis.count, moves: moves)
+        let score = Self.score(pairCount: faces.count, moves: moves)
         // Score stays in the model as anonymous telemetry for Jev (#45); the
         // player sees progress, not points.
         modelContext.record(GameSession(gameID: .memoryMatch, score: score,
-                                        rounds: emojis.count, durationSeconds: elapsed,
-                                        correct: emojis.count, attempts: moves,
+                                        rounds: faces.count, durationSeconds: elapsed,
+                                        correct: faces.count, attempts: moves,
                                         difficulty: difficulty))
-        finalDetail = String(format: AppLanguage.localized("game.celebration.pairs %lld"), emojis.count)
+        finalDetail = String(format: AppLanguage.localized("game.celebration.pairs %lld"), faces.count)
         showCelebration = true
     }
 }
