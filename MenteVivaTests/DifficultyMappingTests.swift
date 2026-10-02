@@ -74,7 +74,9 @@ final class DifficultyMappingTests: XCTestCase {
     }
 
     func testGivenNoStoredPlanWhenStoredDifficultyThenMedium() {
-        UserDefaults.standard.removeObject(forKey: "jev.difficulty")
-        XCTAssertEqual(Difficulty.stored(.stroop), .medium)
+        // Own suite: .standard is the host app's, which may hold a family pin.
+        let defaults = UserDefaults(suiteName: "DifficultyMappingTests")!
+        defaults.removePersistentDomain(forName: "DifficultyMappingTests")
+        XCTAssertEqual(Difficulty.stored(.stroop, defaults: defaults), .medium)
     }
 }
