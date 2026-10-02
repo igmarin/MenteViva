@@ -38,6 +38,7 @@
 		B5C4C1B6398F812500000030 /* JevServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 858C839C80DBBF1B0000002A; };
 		19A5511F2D9320B700000032 /* MemoryPhotosTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982802FDA721007D0000002C; };
 		2E81FDB867FC926B00000038 /* PlayerStateSummaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9231182AE986A100000032; };
+		56E513B81D42ABF300000033 /* PluralStringsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478EE86492C1F2390000002D; };
 		F3781E2CF00E20FA00000033 /* RoundProgressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690FA2BE3DFB9D180000002D; };
 		0EEED9F3112B457400000033 /* WeeklySummaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2CB27B32AF72D220000002D; };
 
@@ -74,6 +75,7 @@
 		858C839C80DBBF1B0000002A /* JevServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/JevServiceTests.swift; sourceTree = SOURCE_ROOT; };
 		982802FDA721007D0000002C /* MemoryPhotosTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/MemoryPhotosTests.swift; sourceTree = SOURCE_ROOT; };
 		7D9231182AE986A100000032 /* PlayerStateSummaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/PlayerStateSummaryTests.swift; sourceTree = SOURCE_ROOT; };
+		478EE86492C1F2390000002D /* PluralStringsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/PluralStringsTests.swift; sourceTree = SOURCE_ROOT; };
 		690FA2BE3DFB9D180000002D /* RoundProgressTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/RoundProgressTests.swift; sourceTree = SOURCE_ROOT; };
 		A2CB27B32AF72D220000002D /* WeeklySummaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/WeeklySummaryTests.swift; sourceTree = SOURCE_ROOT; };
 		5D90A9FDEC5CFCA50000000D /* MenteViva.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MenteViva.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -151,6 +153,7 @@
 				858C839C80DBBF1B0000002A /* JevServiceTests.swift */,
 				982802FDA721007D0000002C /* MemoryPhotosTests.swift */,
 				7D9231182AE986A100000032 /* PlayerStateSummaryTests.swift */,
+				478EE86492C1F2390000002D /* PluralStringsTests.swift */,
 				690FA2BE3DFB9D180000002D /* RoundProgressTests.swift */,
 				A2CB27B32AF72D220000002D /* WeeklySummaryTests.swift */,
 			);
@@ -260,6 +263,7 @@
 				B5C4C1B6398F812500000030 /* JevServiceTests.swift in Sources */,
 				19A5511F2D9320B700000032 /* MemoryPhotosTests.swift in Sources */,
 				2E81FDB867FC926B00000038 /* PlayerStateSummaryTests.swift in Sources */,
+				56E513B81D42ABF300000033 /* PluralStringsTests.swift in Sources */,
 				F3781E2CF00E20FA00000033 /* RoundProgressTests.swift in Sources */,
 				0EEED9F3112B457400000033 /* WeeklySummaryTests.swift in Sources */,
 			);

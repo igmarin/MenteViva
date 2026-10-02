@@ -4,6 +4,15 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 
 ## [Unreleased]
 
+### Fixed
+- **The app always opens (#124):** if the saved game history can't be opened
+  (for example after a failed update), the app now starts with a temporary
+  history instead of crashing on every launch; the problem is logged.
+- **For family shows the level you just set (#124):** after changing a game's
+  level and going back, its progress lines show the new level right away.
+- **Counts read naturally (#124):** "1 game" / "1 juego" and "You played 1
+  time this week" / "Jugaste 1 vez", instead of "1 games" / "1 times".
+
 ### Accessibility
 - **Follows the device text size (#117):** the app used to lock text at the
   default size, ignoring the iPad/iPhone setting. Now it follows it, and Bigger
