@@ -23,16 +23,21 @@ nonisolated enum DailyPolicy {
     static let raiseNeedsSessions = 3
 
     /// `lastChange`: game -> day stamp when its difficulty last moved.
+    /// `pinned` / `hidden`: the family's choices (#108). A pinned game keeps its
+    /// level, and since the plan's levels become the stored ones, switching back
+    /// to Auto resumes from the pin. Hidden games are never picked.
     static func plan(state: PlayerStateSummary,
                      lastChange: [GameID: String] = [:],
-                     dayStamp: String) -> DailyPlan {
-        let ranked = GameID.allCases.enumerated()
+                     dayStamp: String,
+                     pinned: [GameID: Difficulty] = [:],
+                     hidden: Set<GameID> = []) -> DailyPlan {
+        let ranked = GameID.allCases.filter { !hidden.contains($0) }.enumerated()
             .map { (index: $0.offset, game: $0.element, score: mixScore($0.element, state)) }
             .sorted { $0.score != $1.score ? $0.score > $1.score : $0.index < $1.index }
         var difficulty: [GameID: Difficulty] = [:]
         for game in GameID.allCases {
-            difficulty[game] = nextDifficulty(state.games[game.rawValue],
-                                              changedOn: lastChange[game], today: dayStamp)
+            difficulty[game] = pinned[game] ?? nextDifficulty(state.games[game.rawValue],
+                                                             changedOn: lastChange[game], today: dayStamp)
         }
         return DailyPlan(dayStamp: dayStamp,
                          games: ranked.prefix(gamesPerDay).map(\.game),

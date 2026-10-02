@@ -21,6 +21,11 @@ Grilled with the owner; evidence: Jev 012 (`jev-json/012-*`, analysis in `jev-re
 | New games | Not yet; ranking kept: reminiscence 1.87 › sayings 1.83 › sequencing 1.80 › spot-the-difference 1.37 | add now 0.26 |
 | Quick Eyes | Ships as is; #46 stays open | 0.40 |
 
+He plays on both an iPad and an iPhone. History and Family settings stay **per device** (free
+account, no iCloud sync; owner, 2026-10-01): the For family screen says so, and the caregiver
+sets difficulty / hidden games on each. Revisit with the paid account (#37, #11). Every layout
+change is checked on an iPhone and an iPad simulator.
+
 The #18 gate's data has landed; new games stay deferred by this decision, not by the gate.
 Points stay hidden from the player (#45); the caregiver screen is where numbers live.
 

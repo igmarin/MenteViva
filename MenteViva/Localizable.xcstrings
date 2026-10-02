@@ -1430,13 +1430,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "How each game went in the last 7 days, compared with the 7 days before. These numbers appear only here."
+            "value": "Everything here covers this device only. How each game went in the last 7 days, compared with the 7 days before. These numbers appear only here."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Cómo fue cada juego en los últimos 7 días, comparado con los 7 días anteriores. Estos números solo aparecen aquí."
+            "value": "Todo lo de aquí es solo de este dispositivo. Cómo fue cada juego en los últimos 7 días, comparado con los 7 días anteriores. Estos números solo aparecen aquí."
           }
         }
       }
@@ -1709,6 +1709,166 @@
           "stringUnit": {
             "state": "translated",
             "value": "Difícil"
+          }
+        }
+      }
+    },
+    "family.games.header": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Games on this device"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Juegos en este dispositivo"
+          }
+        }
+      }
+    },
+    "family.games.footer": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Changes apply from the next game, on this device only."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Los cambios se aplican desde el próximo juego, solo en este dispositivo."
+          }
+        }
+      }
+    },
+    "family.game.hint": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Opens this game's settings"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abre los ajustes de este juego"
+          }
+        }
+      }
+    },
+    "family.pinned": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "set by you"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "elegido por ti"
+          }
+        }
+      }
+    },
+    "family.hidden": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hidden from home"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Oculto en el inicio"
+          }
+        }
+      }
+    },
+    "family.show": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show on home"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mostrar en el inicio"
+          }
+        }
+      }
+    },
+    "family.show.last": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "At least one game always stays on home."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Al menos un juego siempre queda en el inicio."
+          }
+        }
+      }
+    },
+    "family.difficulty": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Difficulty"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dificultad"
+          }
+        }
+      }
+    },
+    "family.difficulty.auto": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Automatic (recommended)"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Automática (recomendada)"
+          }
+        }
+      }
+    },
+    "family.difficulty.footer": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Automatic moves at most one step a week, based on how the games go. A level you choose stays until you switch back to Automatic, which then continues from it."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La automática cambia como mucho un paso por semana, según cómo van los juegos. Un nivel que elijas se mantiene hasta que vuelvas a Automática, que sigue desde ese nivel."
           }
         }
       }

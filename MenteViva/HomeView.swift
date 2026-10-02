@@ -11,6 +11,8 @@ struct HomeView: View {
     /// Today's picks. Empty until the on-device policy has run (a local
     /// fetch, so effectively instant); nothing on this screen waits on the network.
     @State private var todaysMix: Set<GameID> = []
+    /// Games the family hid on this device (#108).
+    @AppStorage(FamilySettings.hiddenKey) private var hiddenGames = ""
 
     var body: some View {
         NavigationStack {
@@ -22,7 +24,7 @@ struct HomeView: View {
                         .padding(.horizontal, 4)
 
                     LazyVGrid(columns: columns, spacing: 16) {
-                        ForEach(GameID.allCases, id: \.self) { game in
+                        ForEach(GameID.allCases.filter { !FamilySettings.hidden(from: hiddenGames).contains($0) }, id: \.self) { game in
                             NavigationLink {
                                 destination(for: game)
                             } label: {

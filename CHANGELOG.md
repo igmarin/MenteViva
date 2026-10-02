@@ -13,6 +13,13 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
   that sends them as text. Each session now records the difficulty it was
   played at. EN + ES.
 
+- **Family settings (#108):** For family → Games on this device: per game,
+  show or hide it on Home (hidden games are never in the daily picks; the last
+  game can't be hidden) and choose Automatic or a fixed Easy/Medium/Hard. A
+  fixed level stays until switched back to Automatic, which continues from it.
+  Per device. Resolves #47: Color Clash and Number Trail can be hidden, code
+  kept. EN + ES.
+
 ### Fixed
 - **Finished games missing from My Week (#106):** every game now saves its
   session the moment it ends instead of waiting for SwiftData's autosave, so an

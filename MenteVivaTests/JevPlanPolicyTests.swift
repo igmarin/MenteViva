@@ -13,9 +13,29 @@ final class JevPlanPolicyTests: XCTestCase {
 
     private func makePlan(_ answers: [String: JevAnswer],
                           gamesPerDay: Int = 3,
-                          floor: Double = 0.6) -> DailyPlan {
+                          floor: Double = 0.6,
+                          pinned: [GameID: Difficulty] = [:],
+                          hidden: Set<GameID> = []) -> DailyPlan {
         JevService.makePlan(from: answers, current: current, dayStamp: stamp,
-                            gamesPerDay: gamesPerDay, confidenceFloor: floor)
+                            gamesPerDay: gamesPerDay, confidenceFloor: floor,
+                            pinned: pinned, hidden: hidden)
+    }
+
+    // MARK: Family settings (#108)
+
+    func testGivenHiddenTopGameWhenPlanThenItIsSkippedAndTheNextOnesFill() {
+        let answers: [String: JevAnswer] = [
+            "include_stroop": .noul(probability: 0.9),
+            "include_math_streaks": .noul(probability: 0.7),
+            "include_memory_match": .noul(probability: 0.4),
+            "include_quick_eyes": .noul(probability: 0.2),
+        ]
+        XCTAssertEqual(makePlan(answers, hidden: [.stroop]).games, [.mathStreaks, .memoryMatch, .quickEyes])
+    }
+
+    func testGivenPinnedGameWhenJevIsConfidentThenThePinIsKept() {
+        let answers: [String: JevAnswer] = ["difficulty_stroop": .score(score: 0, confidence: 0.95)]
+        XCTAssertEqual(makePlan(answers, pinned: [.stroop: .hard]).difficulty[.stroop], .hard)
     }
 
     // MARK: Mix ranking

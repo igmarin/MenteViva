@@ -20,8 +20,27 @@ final class DailyPolicyTests: XCTestCase {
     }
 
     private func plan(_ s: PlayerStateSummary, lastChange: [GameID: String] = [:],
-                      day: String = "2026-09-30") -> DailyPlan {
-        DailyPolicy.plan(state: s, lastChange: lastChange, dayStamp: day)
+                      day: String = "2026-09-30", pinned: [GameID: Difficulty] = [:],
+                      hidden: Set<GameID> = []) -> DailyPlan {
+        DailyPolicy.plan(state: s, lastChange: lastChange, dayStamp: day, pinned: pinned, hidden: hidden)
+    }
+
+    // MARK: Family settings (#108)
+
+    func testGivenHiddenGamesWhenPlanThenTheyAreNeverPickedAndTheMixStaysFull() {
+        let p = plan(state(), hidden: [.memoryMatch, .quickEyes])
+        XCTAssertEqual(p.games, [.categoryFluency, .stroop, .mathStreaks])
+    }
+
+    func testGivenAllButOneGameHiddenWhenPlanThenOnlyThatGameIsPicked() {
+        let p = plan(state(), hidden: Set(GameID.allCases).subtracting([.stroop]))
+        XCTAssertEqual(p.games, [.stroop])
+    }
+
+    func testGivenPinnedGameWithLowAccuracyWhenPlanThenThePinIsKept() {
+        let s = state([.quickEyes: stats(sessions: 4, accuracy: 0.3, level: .hard)])
+        XCTAssertEqual(plan(s, pinned: [.quickEyes: .hard]).difficulty[.quickEyes], .hard)
+        XCTAssertEqual(plan(s).difficulty[.quickEyes], .medium)   // auto would have eased it
     }
 
     // MARK: Mix
