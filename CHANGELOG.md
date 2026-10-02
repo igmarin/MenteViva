@@ -21,6 +21,13 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
   kept. EN + ES.
 
 
+### Added
+- **Memory Lane with his own photos (#110):** For family → Memory Lane photos:
+  add up to 8 photos with Apple's photo picker (no library permission), each
+  with its own Remove button. Photos become Memory Lane cards first; the
+  theme's pictures fill the rest. Kept small, on this device only, never
+  uploaded. VoiceOver reads photo cards as "Family photo 1, 2…". EN + ES.
+
 ### Changed
 - **Memory Lane looks grown-up (#109):** boards of 4 / 6 / 8 pairs (was 6 / 8 /
   10) laid out to fit the screen on iPad and iPhone, with no scrolling and full

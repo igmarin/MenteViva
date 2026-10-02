@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftData
+import PhotosUI
 
 /// "For family" (#107, #108): the numbers behind My Week and the per-game
 /// choices, for the adult child. Open on purpose (owner decision 2026-10-01):
@@ -36,6 +37,8 @@ struct FamilyView: View {
                 Text(AppLanguage.localized("family.games.footer"))
                     .font(.footnote)
             }
+
+            FamilyPhotosSection()
 
             if progress.isEmpty {
                 Text(AppLanguage.localized("family.empty"))
@@ -98,6 +101,73 @@ struct FamilyView: View {
         ([AppLanguage.localized("family.share.title")] + progress.map { p in
             "\(p.game.emoji) \(AppLanguage.localized(p.game.title))\n" + lines(for: p).joined(separator: "\n")
         }).joined(separator: "\n\n")
+    }
+}
+
+/// Memory Lane photos (#110): picked with the system photo picker (no library
+/// permission), kept on this device only. Each has its own Remove button.
+private struct FamilyPhotosSection: View {
+    @State private var photos = MemoryPhotos.all()
+    @State private var picked: [PhotosPickerItem] = []
+    private let columns = [GridItem(.adaptive(minimum: 120), spacing: 12)]
+
+    var body: some View {
+        Section {
+            if !photos.isEmpty {
+                LazyVGrid(columns: columns, spacing: 12) {
+                    ForEach(Array(photos.enumerated()), id: \.element) { index, url in
+                        VStack(spacing: 6) {
+                            if let image = UIImage(contentsOfFile: url.path) {
+                                Image(uiImage: image)
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: 120, height: 120)
+                                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                                    .accessibilityHidden(true)
+                            }
+                            // Bordered style keeps each button separate inside one list row.
+                            Button(role: .destructive) {
+                                MemoryPhotos.remove(url)
+                                photos = MemoryPhotos.all()
+                            } label: {
+                                Text(AppLanguage.localized("family.photos.remove"))
+                                    .font(.body)
+                                    .frame(width: 104, height: 60)
+                            }
+                            .buttonStyle(.bordered)
+                            .accessibilityLabel(String(format: AppLanguage.localized("family.photos.remove.a11y %lld"), index + 1))
+                        }
+                    }
+                }
+                .padding(.vertical, 8)
+            }
+            if photos.count < MemoryPhotos.maxCount {
+                PhotosPicker(selection: $picked, maxSelectionCount: MemoryPhotos.maxCount - photos.count,
+                             matching: .images) {
+                    Label(AppLanguage.localized("family.photos.add"), systemImage: "photo.on.rectangle.angled")
+                        .font(.title3)
+                        .frame(maxWidth: .infinity, minHeight: 100, alignment: .leading)
+                }
+            }
+        } header: {
+            Text(AppLanguage.localized("family.photos.header"))
+                .font(.title3.weight(.semibold))
+        } footer: {
+            Text(AppLanguage.localized("family.photos.footer"))
+                .font(.footnote)
+        }
+        .onChange(of: picked) { _, items in
+            guard !items.isEmpty else { return }
+            Task {
+                for item in items {
+                    if let data = try? await item.loadTransferable(type: Data.self) {
+                        try? MemoryPhotos.add(data)
+                    }
+                }
+                picked = []
+                photos = MemoryPhotos.all()
+            }
+        }
     }
 }
 
