@@ -33,6 +33,7 @@
 		8C75A9CE4133529700000020 /* SoundPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B94116EB608F25D0000001A; };
 		D9207C4B070633A000000022 /* WeeklySummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DCDF59CF4AC6AE0000001C; };
 		F1CAEDFBEAB27E7A00000018 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881D5FFD680EE69800000012; };
+		9F9B2B4F803D01DB0000002E /* ContrastTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF326128D400FE3100000028; };
 		D251CDE1271D51A600000031 /* DailyPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A13B966464CCDD440000002B; };
 		30AC8D27570BF6EA00000031 /* DayGroupingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B2C1FA22781E7680000002B; };
 		35A281A4703D4C320000002E /* DayStampTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 704A57A9A9F6E88000000028; };
@@ -76,6 +77,7 @@
 		6B94116EB608F25D0000001A /* SoundPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/SoundPlayer.swift; sourceTree = "<group>"; };
 		E5DCDF59CF4AC6AE0000001C /* WeeklySummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/WeeklySummary.swift; sourceTree = "<group>"; };
 		881D5FFD680EE69800000012 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		FF326128D400FE3100000028 /* ContrastTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/ContrastTests.swift; sourceTree = SOURCE_ROOT; };
 		A13B966464CCDD440000002B /* DailyPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/DailyPolicyTests.swift; sourceTree = SOURCE_ROOT; };
 		8B2C1FA22781E7680000002B /* DayGroupingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/DayGroupingTests.swift; sourceTree = SOURCE_ROOT; };
 		704A57A9A9F6E88000000028 /* DayStampTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/DayStampTests.swift; sourceTree = SOURCE_ROOT; };
@@ -160,6 +162,7 @@
 		956A7D38BC89506B0000000B /* MenteVivaTests */ = {
 			isa = PBXGroup;
 			children = (
+				FF326128D400FE3100000028 /* ContrastTests.swift */,
 				A13B966464CCDD440000002B /* DailyPolicyTests.swift */,
 				8B2C1FA22781E7680000002B /* DayGroupingTests.swift */,
 				704A57A9A9F6E88000000028 /* DayStampTests.swift */,
@@ -276,6 +279,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9F9B2B4F803D01DB0000002E /* ContrastTests.swift in Sources */,
 				D251CDE1271D51A600000031 /* DailyPolicyTests.swift in Sources */,
 				30AC8D27570BF6EA00000031 /* DayGroupingTests.swift in Sources */,
 				35A281A4703D4C320000002E /* DayStampTests.swift in Sources */,
