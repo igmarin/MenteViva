@@ -52,7 +52,7 @@ final class GameSession {
 
 extension Sequence<GameSession> {
     /// Mean accuracy of the sessions that recorded one; nil when none did (#122).
-    var meanAccuracy: Double? {
+    nonisolated var meanAccuracy: Double? {
         let values = compactMap(\.accuracy)
         return values.isEmpty ? nil : values.reduce(0, +) / Double(values.count)
     }
