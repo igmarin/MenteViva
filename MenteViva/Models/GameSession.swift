@@ -65,7 +65,7 @@ extension ModelContext {
     func record(_ session: GameSession) {
         insert(session)
         do {
-            try save()
+            try HotPath.measure("session.save") { try save() }
         } catch {
             Logger(subsystem: "com.igmarin.MenteViva", category: "store")
                 .error("Could not save session: \(String(describing: error), privacy: .public)")

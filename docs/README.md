@@ -13,6 +13,7 @@ screen of real content, split it — long docs don't get read.
 | [jev-json/](jev-json/) | Raw Jev request/response archive (audit trail); 011 is the app's real daily request | Growing |
 | [mvp.md](mvp.md) | MVP definition of done + phase gates | Living |
 | [playtest.md](playtest.md) | How to run a playtest and record it (#6, #33) | Living |
+| [profiling.md](profiling.md) | Signposts + Instruments: how to time the hot paths | Living |
 | [playtest-session-1.md](playtest-session-1.md) | Printable session sheet for dad's playtest (#6) — findings map to #44/#46/#47 | Current |
 | [install-runbook.md](install-runbook.md) | Installing on a device with a free Apple ID (7-day expiry) | Current |
 | [device-support.md](device-support.md) | What hardware/OS we claim and what we verified | Living |

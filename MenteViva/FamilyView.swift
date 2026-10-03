@@ -12,7 +12,7 @@ struct FamilyView: View {
     @Query(sort: \GameSession.playedAt, order: .reverse)
     private var sessions: [GameSession]
 
-    private var progress: [GameProgress] { GameProgress.weekly(sessions) }
+    private var progress: [GameProgress] { HotPath.measure("progress.weekly") { GameProgress.weekly(sessions) } }
     /// Kept in state so a level changed on a game's screen shows here on the
     /// way back (#124); refreshed whenever this device's settings change.
     @State private var pinned = FamilySettings.pinned()

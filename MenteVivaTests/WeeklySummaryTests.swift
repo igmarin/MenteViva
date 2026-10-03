@@ -149,3 +149,18 @@ final class GameProgressTests: XCTestCase {
         XCTAssertEqual(weekly([s]).first?.game, .memoryMatch)
     }
 }
+
+/// Baseline for the `progress.weekly` hot path: it reruns on every redraw of
+/// History and Family, so a year of daily play must stay cheap.
+final class WeeklyProgressPerformanceTests: XCTestCase {
+    func testGivenAYearOfPlayWhenWeeklyProgressThenItStaysCheap() {
+        let sessions = (0..<2_000).map { index in
+            let session = GameSession(
+                gameID: GameID.allCases[index % GameID.allCases.count], score: 0, rounds: 6,
+                durationSeconds: 40, correct: 5, attempts: 6)
+            session.playedAt = Date(timeIntervalSinceNow: -Double(index) * 4_000)
+            return session
+        }
+        measure { _ = GameProgress.weekly(sessions) }
+    }
+}
