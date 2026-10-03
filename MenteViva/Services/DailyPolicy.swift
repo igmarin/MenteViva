@@ -1,5 +1,12 @@
 import Foundation
 
+/// Today's mix and each game's level; valid only for its day.
+nonisolated struct DailyPlan: Codable, Equatable {
+    let dayStamp: String              // local "yyyy-MM-dd"; valid only for its day
+    let games: [GameID]               // recommended mix, best first
+    let difficulty: [GameID: Difficulty]
+}
+
 /// Today's plan decided by rules, on the device: no model, no network, no key (#101).
 ///
 /// - Mix: the most worthwhile games first, nudged toward games not touched lately.

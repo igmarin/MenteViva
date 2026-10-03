@@ -14,16 +14,16 @@ final class DayStampTests: XCTestCase {
 
     func testGivenKnownDateWhenStampedThenFormatIsYearMonthDay() throws {
         let date = try localNoon(2026, 3, 7)
-        XCTAssertEqual(JevService.dayStamp(date), "2026-03-07")
+        XCTAssertEqual(PlanStore.dayStamp(date), "2026-03-07")
     }
 
     func testGivenSingleDigitMonthAndDayWhenStampedThenZeroPadded() throws {
         let date = try localNoon(2026, 1, 5)
-        XCTAssertEqual(JevService.dayStamp(date), "2026-01-05")
+        XCTAssertEqual(PlanStore.dayStamp(date), "2026-01-05")
     }
 
     func testGivenNowWhenStampedThenMatchesExpectedShape() {
-        let stamp = JevService.dayStamp()
+        let stamp = PlanStore.dayStamp()
         let pattern = #"^\d{4}-\d{2}-\d{2}$"#
         XCTAssertNotNil(stamp.range(of: pattern, options: .regularExpression),
                         "stamp '\(stamp)' must be yyyy-MM-dd")
@@ -32,6 +32,6 @@ final class DayStampTests: XCTestCase {
     func testGivenTwoDatesOnDifferentDaysWhenStampedThenStampsDiffer() throws {
         let day1 = try localNoon(2026, 6, 1)
         let day2 = try localNoon(2026, 6, 2)
-        XCTAssertNotEqual(JevService.dayStamp(day1), JevService.dayStamp(day2))
+        XCTAssertNotEqual(PlanStore.dayStamp(day1), PlanStore.dayStamp(day2))
     }
 }

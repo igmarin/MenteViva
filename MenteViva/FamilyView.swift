@@ -282,16 +282,6 @@ private struct FamilyGameView: View {
     }
 }
 
-extension Difficulty {
-    var title: String.LocalizationValue {
-        switch self {
-        case .easy: "difficulty.easy"
-        case .medium: "difficulty.medium"
-        case .hard: "difficulty.hard"
-        }
-    }
-}
-
 #Preview {
     NavigationStack {
         FamilyView()

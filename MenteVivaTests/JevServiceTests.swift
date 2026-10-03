@@ -163,8 +163,8 @@ final class JevServiceOnDeviceTests: XCTestCase {
         XCTAssertEqual(plan.difficulty[.stroop], .easy)
         XCTAssertEqual(plan, DailyPolicy.plan(state: state, dayStamp: plan.dayStamp))
         XCTAssertTrue(StubURLProtocol.requests.isEmpty, "no proxy URL means no network request")
-        XCTAssertEqual(JevService.storedDifficulty(defaults: defaults)[.stroop], .easy)
-        XCTAssertEqual(JevService.lastDifficultyChange(defaults: defaults)[.stroop], plan.dayStamp)
-        XCTAssertNil(JevService.lastDifficultyChange(defaults: defaults)[.memoryMatch])
+        XCTAssertEqual(PlanStore.storedDifficulty(defaults: defaults)[.stroop], .easy)
+        XCTAssertEqual(PlanStore.lastDifficultyChange(defaults: defaults)[.stroop], plan.dayStamp)
+        XCTAssertNil(PlanStore.lastDifficultyChange(defaults: defaults)[.memoryMatch])
     }
 }

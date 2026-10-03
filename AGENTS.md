@@ -29,9 +29,11 @@ Instructions for AI agents (and humans in a hurry) working on MenteViva.
 MenteViva/            app (SwiftUI + SwiftData)
   MenteVivaApp.swift  entry; LOCAL_ONLY picks the store
   HomeView, OnboardingView, SettingsView, HistoryView
-  Games/              one file per game (5) + CelebrationView
-  Models/             GameSession, RoundProgress
-  Services/           DailyPolicy (on-device plan), JevService (optional client), SoundPlayer
+  Games/              one file per game (5) + CelebrationView, MissCue, FitOrScroll
+  Models/             GameSession, GameID, Difficulty, RoundProgress
+  Services/           DailyPolicy (on-device plan), PlanStore (saved plan + levels),
+                      JevService (optional Jev client), FamilySettings, MemoryPhotos,
+                      PlayerStateSummary, WeeklySummary, AppLanguage, SoundPlayer
   Localizable.xcstrings  every string, EN + ES
 MenteVivaTests/       unit tests (Given/When/Then names)
 proxy/worker.js       Cloudflare Worker that holds the Jev key
@@ -117,7 +119,7 @@ docs/                 start at docs/README.md
 ## Patterns
 
 - One file per game in `MenteViva/Games/`; copy `MemoryMatchView.swift`'s
-  shape (View + @State + `modelContext.insert(GameSession(...))` on finish).
+  shape (View + @State + `modelContext.record(GameSession(...))` on finish, #106).
   No game engine, no base classes, no protocol ceremony.
 - The daily plan is `Services/DailyPolicy.swift` (pure, tested). Jev judgments, when enabled, live
   in `Services/JevService.swift`; policy stays in code, never in the model. See docs/jev-integration.md.
