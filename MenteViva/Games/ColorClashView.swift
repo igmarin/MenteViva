@@ -64,6 +64,10 @@ struct ColorClashView: View {
         difficulty.pick(0.7, 0.25, 0)
     }
 
+    // The word and its shape follow the device text size (#117).
+    @ScaledMetric(relativeTo: .largeTitle) private var wordSize: CGFloat = 64
+    @ScaledMetric(relativeTo: .largeTitle) private var shapeSize: CGFloat = 40
+
     @State private var difficulty = Difficulty.stored(.stroop)
     @State private var word: Ink = .red
     @State private var ink: Ink = .blue
@@ -92,10 +96,12 @@ struct ColorClashView: View {
             // the shape is also drawn so colour-blind players can match it (#64).
             HStack(spacing: 16) {
                 Text(word.word)
-                    .font(.system(size: 64, weight: .bold))
+                    .font(.system(size: wordSize, weight: .bold))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.5)
                     .foregroundStyle(ink.color)
                 Image(systemName: ink.shape)
-                    .font(.system(size: 40, weight: .bold))
+                    .font(.system(size: shapeSize, weight: .bold))
                     .foregroundStyle(ink.color)
             }
             .modifier(MissCue(active: $missed))
@@ -128,6 +134,7 @@ struct ColorClashView: View {
                 .foregroundStyle(.secondary)
         }
         .padding()
+        .fitOrScroll()
         .navigationTitle(AppLanguage.localized("game.colorclash.title"))
         .onAppear { startedAt = .now; deal() }
         .celebration(isPresented: $showCelebration, detail: finalDetail, onPlayAgain: restart)

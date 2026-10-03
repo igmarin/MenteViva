@@ -5,7 +5,12 @@ import SwiftData
 /// navigation puzzles. Tiles carry the game emoji so the screen is readable
 /// even when the text is too small for him to bother with.
 struct HomeView: View {
-    private let columns = [GridItem(.adaptive(minimum: 150), spacing: 16)]
+    @Environment(\.dynamicTypeSize) private var typeSize
+    /// Wider tiles at accessibility text sizes (#117) so names never break
+    /// mid-word: one column on iPhone, two on iPad.
+    private var columns: [GridItem] {
+        [GridItem(.adaptive(minimum: typeSize.isAccessibilitySize ? 300 : 150), spacing: 16)]
+    }
     @State private var showSettings = false
     @Environment(\.modelContext) private var modelContext
     /// Today's picks. Empty until the on-device policy has run (a local
