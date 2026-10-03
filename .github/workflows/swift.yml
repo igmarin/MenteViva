@@ -36,6 +36,9 @@ jobs:
           exit 1
         }
 
+    - name: Lint (Apple swift-format, ships with Xcode)
+      run: xcrun swift-format lint --strict --recursive MenteViva MenteVivaTests tools
+
     - name: Pick an available iPhone simulator
       id: sim
       run: |

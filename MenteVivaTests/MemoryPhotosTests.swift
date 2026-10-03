@@ -1,5 +1,6 @@
-import XCTest
 import UIKit
+import XCTest
+
 @testable import MenteViva
 
 /// #110: his own photos as Memory Lane cards — stored small, on the device only.
@@ -53,8 +54,11 @@ final class MemoryPhotosTests: XCTestCase {
     // MARK: Adding several at once (#120)
 
     func testGivenGoodAndUnreadablePhotosWhenAddingThenEachIsCounted() {
-        let result = MemoryPhotos.add([photoData(width: 10, height: 10), Data("hello".utf8), nil,
-                                       photoData(width: 20, height: 20)], to: folder)
+        let result = MemoryPhotos.add(
+            [
+                photoData(width: 10, height: 10), Data("hello".utf8), nil,
+                photoData(width: 20, height: 20),
+            ], to: folder)
         XCTAssertEqual(result, MemoryPhotos.AddResult(added: 2, unreadable: 2, overLimit: 0))
         XCTAssertEqual(MemoryPhotos.all(in: folder).count, 2)
     }

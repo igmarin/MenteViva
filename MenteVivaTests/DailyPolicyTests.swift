@@ -1,4 +1,5 @@
 import XCTest
+
 @testable import MenteViva
 
 /// Policy (#101): the daily plan is decided by rules on the device. Same state,
@@ -7,21 +8,28 @@ final class DailyPolicyTests: XCTestCase {
 
     private typealias Stats = PlayerStateSummary.GameStats
 
-    private func stats(sessions: Int = 0, accuracy: Double? = nil, days: Int = 14,
-                       level: Difficulty = .medium) -> Stats {
-        Stats(sessionsLast14Days: sessions, meanAccuracy: accuracy, meanRoundsCompleted: 8,
-              daysSinceLastPlayed: days, currentDifficulty: level)
+    private func stats(
+        sessions: Int = 0, accuracy: Double? = nil, days: Int = 14,
+        level: Difficulty = .medium
+    ) -> Stats {
+        Stats(
+            sessionsLast14Days: sessions, meanAccuracy: accuracy, meanRoundsCompleted: 8,
+            daysSinceLastPlayed: days, currentDifficulty: level)
     }
 
     private func state(_ overrides: [GameID: Stats] = [:]) -> PlayerStateSummary {
-        PlayerStateSummary(games: Dictionary(uniqueKeysWithValues: GameID.allCases.map {
-            ($0.rawValue, overrides[$0] ?? stats())
-        }))
+        PlayerStateSummary(
+            games: Dictionary(
+                uniqueKeysWithValues: GameID.allCases.map {
+                    ($0.rawValue, overrides[$0] ?? stats())
+                }))
     }
 
-    private func plan(_ s: PlayerStateSummary, lastChange: [GameID: String] = [:],
-                      day: String = "2026-09-30", pinned: [GameID: Difficulty] = [:],
-                      hidden: Set<GameID> = []) -> DailyPlan {
+    private func plan(
+        _ s: PlayerStateSummary, lastChange: [GameID: String] = [:],
+        day: String = "2026-09-30", pinned: [GameID: Difficulty] = [:],
+        hidden: Set<GameID> = []
+    ) -> DailyPlan {
         DailyPolicy.plan(state: s, lastChange: lastChange, dayStamp: day, pinned: pinned, hidden: hidden)
     }
 
@@ -40,7 +48,7 @@ final class DailyPolicyTests: XCTestCase {
     func testGivenPinnedGameWithLowAccuracyWhenPlanThenThePinIsKept() {
         let s = state([.quickEyes: stats(sessions: 4, accuracy: 0.3, level: .hard)])
         XCTAssertEqual(plan(s, pinned: [.quickEyes: .hard]).difficulty[.quickEyes], .hard)
-        XCTAssertEqual(plan(s).difficulty[.quickEyes], .medium)   // auto would have eased it
+        XCTAssertEqual(plan(s).difficulty[.quickEyes], .medium)  // auto would have eased it
     }
 
     // MARK: Mix
@@ -62,8 +70,10 @@ final class DailyPolicyTests: XCTestCase {
     }
 
     func testGivenTopGamePlayedTodayAndAnotherRestedWhenPlanThenRestedOneOutranksIt() {
-        let s = state([.memoryMatch: stats(sessions: 5, accuracy: 0.8, days: 0),
-                       .quickEyes: stats(sessions: 1, accuracy: 0.8, days: 7)])
+        let s = state([
+            .memoryMatch: stats(sessions: 5, accuracy: 0.8, days: 0),
+            .quickEyes: stats(sessions: 1, accuracy: 0.8, days: 7),
+        ])
         let games = plan(s).games
         XCTAssertLessThan(games.firstIndex(of: .quickEyes)!, games.firstIndex(of: .memoryMatch) ?? 99)
     }
@@ -104,8 +114,11 @@ final class DailyPolicyTests: XCTestCase {
     }
 
     func testGivenMiddlingAccuracyOrNoSessionsWhenPlanThenDifficultyKept() {
-        let p = plan(state([.memoryMatch: stats(sessions: 6, accuracy: 0.78, level: .easy),
-                            .mathStreaks: stats(sessions: 0, accuracy: nil, level: .hard)]))
+        let p = plan(
+            state([
+                .memoryMatch: stats(sessions: 6, accuracy: 0.78, level: .easy),
+                .mathStreaks: stats(sessions: 0, accuracy: nil, level: .hard),
+            ]))
         XCTAssertEqual(p.difficulty[.memoryMatch], .easy)
         XCTAssertEqual(p.difficulty[.mathStreaks], .hard)
     }
@@ -135,8 +148,8 @@ final class DailyPolicyTests: XCTestCase {
         let p = plan(summary)
         // Jev picked quick_eyes, category_fluency, memory_match for this payload.
         XCTAssertEqual(Set(p.games), [.quickEyes, .categoryFluency, .memoryMatch])
-        XCTAssertEqual(p.difficulty[.stroop], .easy)           // 0.60 accuracy, one session
-        XCTAssertEqual(p.difficulty[.mathStreaks], .medium)    // no sessions: no evidence, no change
+        XCTAssertEqual(p.difficulty[.stroop], .easy)  // 0.60 accuracy, one session
+        XCTAssertEqual(p.difficulty[.mathStreaks], .medium)  // no sessions: no evidence, no change
         XCTAssertEqual(p.difficulty[.memoryMatch], .medium)
     }
 }

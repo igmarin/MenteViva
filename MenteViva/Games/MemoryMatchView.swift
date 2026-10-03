@@ -1,5 +1,5 @@
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 /// Memory Lane: classic pair-matching on large cards.
 /// Difficulty = board size (4 / 6 / 8 pairs). Fully offline, fully deterministic.
@@ -16,10 +16,10 @@ struct MemoryMatchView: View {
     /// Four grown-up sets of 8 pairs. One is drawn per game; emoji carry their
     /// own VoiceOver names, so themes need no extra strings.
     private static let themes: [[String]] = [
-        ["☕️", "🫖", "🍞", "🧀", "🍷", "🥐", "🍋", "🫒"],   // kitchen table
-        ["🌹", "🌻", "🌷", "🪴", "🍐", "🌳", "🦋", "🐝"],   // the garden
-        ["⛵️", "🚂", "✈️", "🗺️", "🧳", "⛰️", "🏖️", "🚲"],   // travels
-        ["🎻", "🎺", "🎹", "📻", "🕰️", "📚", "🧶", "🪑"],   // music and home
+        ["☕️", "🫖", "🍞", "🧀", "🍷", "🥐", "🍋", "🫒"],  // kitchen table
+        ["🌹", "🌻", "🌷", "🪴", "🍐", "🌳", "🦋", "🐝"],  // the garden
+        ["⛵️", "🚂", "✈️", "🗺️", "🧳", "⛰️", "🏖️", "🚲"],  // travels
+        ["🎻", "🎺", "🎹", "📻", "🕰️", "📚", "🧶", "🪑"],  // music and home
     ]
     private static let spacing: CGFloat = 12
     /// Deep slate card back: calm, not childish, readable in light and dark.
@@ -95,18 +95,30 @@ struct MemoryMatchView: View {
 
             GeometryReader { geometry in
                 let fit = Self.gridFit(count: cards.count, in: geometry.size, spacing: Self.spacing)
-                LazyVGrid(columns: Array(repeating: GridItem(.fixed(fit.card.width), spacing: Self.spacing),
-                                         count: fit.columns),
-                          spacing: Self.spacing) {
+                LazyVGrid(
+                    columns: Array(
+                        repeating: GridItem(.fixed(fit.card.width), spacing: Self.spacing),
+                        count: fit.columns),
+                    spacing: Self.spacing
+                ) {
                     ForEach(cards) { card in
-                        Button { flip(card.id) } label: { face(card, size: fit.card) }
-                            .buttonStyle(.plain)
-                            .accessibilityLabel(card.isFaceUp || card.isMatched
-                                                ? label(card.face)
-                                                : AppLanguage.localized("game.memory.card.hidden"))
-                            .accessibilityHint(card.isMatched
-                                               ? AppLanguage.localized("game.memory.a11y.matched")
-                                               : String(format: AppLanguage.localized("game.memory.a11y.position %lld %lld"), cardPositions[card.id] ?? 0, cards.count))
+                        Button {
+                            flip(card.id)
+                        } label: {
+                            face(card, size: fit.card)
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel(
+                            card.isFaceUp || card.isMatched
+                                ? label(card.face)
+                                : AppLanguage.localized("game.memory.card.hidden")
+                        )
+                        .accessibilityHint(
+                            card.isMatched
+                                ? AppLanguage.localized("game.memory.a11y.matched")
+                                : String(
+                                    format: AppLanguage.localized("game.memory.a11y.position %lld %lld"),
+                                    cardPositions[card.id] ?? 0, cards.count))
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -125,8 +137,11 @@ struct MemoryMatchView: View {
         let shown = card.isFaceUp || card.isMatched
         return ZStack {
             RoundedRectangle(cornerRadius: 18)
-                .fill(shown ? AnyShapeStyle(card.isMatched ? Color.green.opacity(0.14) : Color(.systemBackground))
-                            : AnyShapeStyle(Self.cardBack.gradient))
+                .fill(
+                    shown
+                        ? AnyShapeStyle(card.isMatched ? Color.green.opacity(0.14) : Color(.systemBackground))
+                        : AnyShapeStyle(Self.cardBack.gradient)
+                )
                 .shadow(color: .black.opacity(0.15), radius: 4, y: 2)
             RoundedRectangle(cornerRadius: 18)
                 .strokeBorder(.black.opacity(shown ? 0.12 : 0), lineWidth: 1)
@@ -158,12 +173,14 @@ struct MemoryMatchView: View {
     private func deal() {
         flipBackTask?.cancel()
         let photos = MemoryPhotos.all().shuffled()
-        faces = Self.faces(photos: photos, theme: Self.themes.randomElement() ?? Self.themes[0],
-                           pairs: Self.pairCount(for: difficulty))
-        photoImages = Dictionary(uniqueKeysWithValues: faces.compactMap { face in
-            guard case .photo(let url) = face, let image = UIImage(contentsOfFile: url.path) else { return nil }
-            return (url, image)
-        })
+        faces = Self.faces(
+            photos: photos, theme: Self.themes.randomElement() ?? Self.themes[0],
+            pairs: Self.pairCount(for: difficulty))
+        photoImages = Dictionary(
+            uniqueKeysWithValues: faces.compactMap { face in
+                guard case .photo(let url) = face, let image = UIImage(contentsOfFile: url.path) else { return nil }
+                return (url, image)
+            })
         cards = (faces + faces).shuffled().enumerated().map { Card(id: $0, face: $1) }
         cardPositions = Dictionary(uniqueKeysWithValues: cards.indices.map { (cards[$0].id, $0 + 1) })
         flipped = []
@@ -177,8 +194,10 @@ struct MemoryMatchView: View {
     private func label(_ face: Face) -> String {
         switch face {
         case .emoji(let emoji): emoji
-        case .photo: String(format: AppLanguage.localized("game.memory.photo %lld"),
-                            (faces.firstIndex(of: face) ?? 0) + 1)
+        case .photo:
+            String(
+                format: AppLanguage.localized("game.memory.photo %lld"),
+                (faces.firstIndex(of: face) ?? 0) + 1)
         }
     }
 
@@ -186,7 +205,8 @@ struct MemoryMatchView: View {
         // Face-up and found cards ignore taps here rather than via .disabled,
         // so the system never greys out the pictures he needs to read.
         guard let i = cards.firstIndex(where: { $0.id == cardID }),
-              !cards[i].isFaceUp, !cards[i].isMatched else { return }
+            !cards[i].isFaceUp, !cards[i].isMatched
+        else { return }
         cards[i].isFaceUp = true
         flipped.append(i)
         guard flipped.count == 2 else { return }
@@ -206,7 +226,8 @@ struct MemoryMatchView: View {
             flipBackTask = Task { @MainActor in
                 try? await Task.sleep(for: .seconds(1.2))
                 guard !Task.isCancelled,
-                      pair.allSatisfy({ cards.indices.contains($0) }) else { return }
+                    pair.allSatisfy({ cards.indices.contains($0) })
+                else { return }
                 cards[pair[0]].isFaceUp = false
                 cards[pair[1]].isFaceUp = false
             }
@@ -218,10 +239,12 @@ struct MemoryMatchView: View {
         let score = Self.score(pairCount: faces.count, moves: moves)
         // Score stays in the model as anonymous telemetry for Jev (#45); the
         // player sees progress, not points.
-        modelContext.record(GameSession(gameID: .memoryMatch, score: score,
-                                        rounds: faces.count, durationSeconds: elapsed,
-                                        correct: faces.count, attempts: moves,
-                                        difficulty: difficulty))
+        modelContext.record(
+            GameSession(
+                gameID: .memoryMatch, score: score,
+                rounds: faces.count, durationSeconds: elapsed,
+                correct: faces.count, attempts: moves,
+                difficulty: difficulty))
         finalDetail = String(format: AppLanguage.localized("game.celebration.pairs %lld"), faces.count)
         showCelebration = true
     }

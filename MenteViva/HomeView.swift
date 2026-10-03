@@ -1,5 +1,5 @@
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 /// Home: the one screen dad lands on. Big warm tiles, one per game, no
 /// navigation puzzles. Tiles carry the game emoji so the screen is readable
@@ -29,12 +29,14 @@ struct HomeView: View {
                         .padding(.horizontal, 4)
 
                     LazyVGrid(columns: columns, spacing: 16) {
-                        ForEach(GameID.allCases.filter { !FamilySettings.hidden(from: hiddenGames).contains($0) }, id: \.self) { game in
+                        ForEach(GameID.allCases.filter { !FamilySettings.hidden(from: hiddenGames).contains($0) }, id: \.self) {
+                            game in
                             NavigationLink {
                                 destination(for: game)
                             } label: {
-                                GameTile(emoji: game.emoji, title: AppLanguage.localized(game.title),
-                                         isTodaysPick: todaysMix.contains(game))
+                                GameTile(
+                                    emoji: game.emoji, title: AppLanguage.localized(game.title),
+                                    isTodaysPick: todaysMix.contains(game))
                             }
                             .buttonStyle(.plain)
                         }
@@ -76,8 +78,10 @@ struct HomeView: View {
 
     private func refreshPlan() async {
         let since = Calendar.current.date(byAdding: .day, value: -14, to: .now) ?? .distantPast
-        let recent = (try? modelContext.fetch(FetchDescriptor<GameSession>(
-            predicate: #Predicate { $0.playedAt >= since }))) ?? []
+        let recent =
+            (try? modelContext.fetch(
+                FetchDescriptor<GameSession>(
+                    predicate: #Predicate { $0.playedAt >= since }))) ?? []
         let difficulty = PlanStore.storedDifficulty()
         let state = PlayerStateSummary.build(from: recent, difficulty: difficulty)
         let plan = await JevService.shared.dailyPlan(state: state, currentDifficulty: difficulty)
@@ -133,9 +137,10 @@ extension Color {
     /// "Today's pick" badge: a deep orange in light mode, system orange in
     /// dark mode, so the text stays readable on its tile (#118, WCAG AA 4.5:1;
     /// plain orange was 1.65:1 in light mode). ContrastTests checks both.
-    static let todaysPick = Color(UIColor { traits in
-        traits.userInterfaceStyle == .dark ? .systemOrange : UIColor(red: 0.55, green: 0.27, blue: 0, alpha: 1)
-    })
+    static let todaysPick = Color(
+        UIColor { traits in
+            traits.userInterfaceStyle == .dark ? .systemOrange : UIColor(red: 0.55, green: 0.27, blue: 0, alpha: 1)
+        })
 }
 
 #Preview {

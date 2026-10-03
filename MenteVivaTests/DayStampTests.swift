@@ -1,4 +1,5 @@
 import XCTest
+
 @testable import MenteViva
 
 /// Policy: the day stamp is the cache key for "one plan per local day".
@@ -25,8 +26,9 @@ final class DayStampTests: XCTestCase {
     func testGivenNowWhenStampedThenMatchesExpectedShape() {
         let stamp = PlanStore.dayStamp()
         let pattern = #"^\d{4}-\d{2}-\d{2}$"#
-        XCTAssertNotNil(stamp.range(of: pattern, options: .regularExpression),
-                        "stamp '\(stamp)' must be yyyy-MM-dd")
+        XCTAssertNotNil(
+            stamp.range(of: pattern, options: .regularExpression),
+            "stamp '\(stamp)' must be yyyy-MM-dd")
     }
 
     func testGivenTwoDatesOnDifferentDaysWhenStampedThenStampsDiffer() throws {

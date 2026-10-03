@@ -26,10 +26,11 @@ nonisolated enum FamilySettings {
 
     /// Games with a fixed difficulty; Auto games are absent.
     static func pinned(defaults: UserDefaults = .standard) -> [GameID: Difficulty] {
-        Dictionary(uniqueKeysWithValues: GameID.allCases.compactMap { game in
-            (defaults.object(forKey: pinKey(game)) as? Int)
-                .flatMap(Difficulty.init(rawValue:))
-                .map { (game, $0) }
-        })
+        Dictionary(
+            uniqueKeysWithValues: GameID.allCases.compactMap { game in
+                (defaults.object(forKey: pinKey(game)) as? Int)
+                    .flatMap(Difficulty.init(rawValue:))
+                    .map { (game, $0) }
+            })
     }
 }

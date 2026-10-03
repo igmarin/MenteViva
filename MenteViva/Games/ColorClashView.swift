@@ -1,5 +1,5 @@
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 /// Color Clash: Stroop — the word names a color, the ink may be another.
 /// Tap the INK color. 10 gentle rounds, no timer.
@@ -111,7 +111,9 @@ struct ColorClashView: View {
 
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
                 ForEach(Ink.allCases, id: \.self) { candidate in
-                    Button { tap(candidate) } label: {
+                    Button {
+                        tap(candidate)
+                    } label: {
                         RoundedRectangle(cornerRadius: 16)
                             .fill(candidate.color)
                             .frame(maxWidth: .infinity, minHeight: 110)
@@ -134,7 +136,10 @@ struct ColorClashView: View {
         .padding()
         .fitOrScroll()
         .navigationTitle(AppLanguage.localized("game.colorclash.title"))
-        .onAppear { startedAt = .now; deal() }
+        .onAppear {
+            startedAt = .now
+            deal()
+        }
         .celebration(isPresented: $showCelebration, detail: finalDetail, onPlayAgain: restart)
     }
 
@@ -173,10 +178,12 @@ struct ColorClashView: View {
         let score = Self.score(correct: correct)
         // Completion, never a hit count: Color Clash is error-inducing by
         // design (Stroop), so the warm message celebrates finishing (#45).
-        modelContext.record(GameSession(gameID: .stroop, score: score,
-                                        rounds: Self.totalRounds, durationSeconds: elapsed,
-                                        correct: correct, attempts: Self.totalRounds,
-                                        difficulty: difficulty))
+        modelContext.record(
+            GameSession(
+                gameID: .stroop, score: score,
+                rounds: Self.totalRounds, durationSeconds: elapsed,
+                correct: correct, attempts: Self.totalRounds,
+                difficulty: difficulty))
         finalDetail = String(format: AppLanguage.localized("game.celebration.rounds %lld"), Self.totalRounds)
         showCelebration = true
     }

@@ -1,5 +1,5 @@
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 /// Quick Eyes: processing-speed game. A picture flashes on screen for a
 /// shrinking display time, then the player taps the matching picture among
@@ -73,7 +73,9 @@ struct QuickEyesView: View {
                         .font(.title2)
                     LazyVGrid(columns: columns, spacing: 16) {
                         ForEach(options, id: \.self) { emoji in
-                            Button { choose(emoji) } label: {
+                            Button {
+                                choose(emoji)
+                            } label: {
                                 Text(emoji)
                                     .font(.system(size: 56))
                             }
@@ -116,7 +118,8 @@ struct QuickEyesView: View {
         // VoiceOver needs time to speak the picture; hold it longer (#64).
         let hold = UIAccessibility.isVoiceOverRunning ? max(displayTime, Self.voiceOverHold) : displayTime
         AccessibilityNotification.Announcement(
-            String(format: AppLanguage.localized("game.quickeyes.a11y.flash %@"), target)).post()
+            String(format: AppLanguage.localized("game.quickeyes.a11y.flash %@"), target)
+        ).post()
         revealTask = Task { @MainActor in
             try? await Task.sleep(for: .seconds(hold))
             guard !Task.isCancelled, phase == .showing else { return }
@@ -153,12 +156,15 @@ struct QuickEyesView: View {
         revealTask = nil
         let elapsed = Int(Date.now.timeIntervalSince(startedAt))
         let score = Self.score(correct: correct, speedBonus: speedBonus)
-        modelContext.record(GameSession(gameID: .quickEyes, score: score,
-                                        rounds: Self.totalRounds, durationSeconds: elapsed,
-                                        correct: correct, attempts: Self.totalRounds,
-                                        difficulty: difficulty))
-        finalDetail = String(format: AppLanguage.localized("game.celebration.spotted %lld %lld"),
-                             correct, Self.totalRounds)
+        modelContext.record(
+            GameSession(
+                gameID: .quickEyes, score: score,
+                rounds: Self.totalRounds, durationSeconds: elapsed,
+                correct: correct, attempts: Self.totalRounds,
+                difficulty: difficulty))
+        finalDetail = String(
+            format: AppLanguage.localized("game.celebration.spotted %lld %lld"),
+            correct, Self.totalRounds)
         showCelebration = true
     }
 }

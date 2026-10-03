@@ -26,7 +26,9 @@ nonisolated enum PlanStore {
         if let data = try? JSONEncoder().encode(Dictionary(uniqueKeysWithValues: changed.map { ($0.key.rawValue, $0.value) })) {
             defaults.set(data, forKey: changeKey)
         }
-        if let data = try? JSONEncoder().encode(Dictionary(uniqueKeysWithValues: plan.difficulty.map { ($0.key.rawValue, $0.value.rawValue) })) {
+        if let data = try? JSONEncoder().encode(
+            Dictionary(uniqueKeysWithValues: plan.difficulty.map { ($0.key.rawValue, $0.value.rawValue) }))
+        {
             defaults.set(data, forKey: difficultyKey)
         }
     }
@@ -34,16 +36,19 @@ nonisolated enum PlanStore {
     /// Each game's level from the last saved plan (medium for a new player).
     /// Only changes when a new daily plan is saved.
     static func storedDifficulty(defaults: UserDefaults = .standard) -> [GameID: Difficulty] {
-        let raw = defaults.data(forKey: difficultyKey)
+        let raw =
+            defaults.data(forKey: difficultyKey)
             .flatMap { try? JSONDecoder().decode([String: Int].self, from: $0) } ?? [:]
-        return Dictionary(uniqueKeysWithValues: GameID.allCases.map { game in
-            (game, raw[game.rawValue].flatMap(Difficulty.init(rawValue:)) ?? .medium)
-        })
+        return Dictionary(
+            uniqueKeysWithValues: GameID.allCases.map { game in
+                (game, raw[game.rawValue].flatMap(Difficulty.init(rawValue:)) ?? .medium)
+            })
     }
 
     /// Day stamp of each game's last level change.
     static func lastDifficultyChange(defaults: UserDefaults = .standard) -> [GameID: String] {
-        let raw = defaults.data(forKey: changeKey)
+        let raw =
+            defaults.data(forKey: changeKey)
             .flatMap { try? JSONDecoder().decode([String: String].self, from: $0) } ?? [:]
         return Dictionary(uniqueKeysWithValues: raw.compactMap { key, stamp in GameID(rawValue: key).map { ($0, stamp) } })
     }

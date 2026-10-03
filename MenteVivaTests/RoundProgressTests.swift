@@ -1,4 +1,5 @@
 import XCTest
+
 @testable import MenteViva
 
 /// Boundary tests for the round counter every game uses. Written after a crash
@@ -34,7 +35,7 @@ final class RoundProgressTests: XCTestCase {
         var progress = RoundProgress(totalRounds: 2)
         _ = progress.completeRound()
         _ = progress.completeRound()
-        XCTAssertTrue(progress.completeRound())   // idempotent, no over-count
+        XCTAssertTrue(progress.completeRound())  // idempotent, no over-count
         XCTAssertEqual(progress.completedRounds, 2)
         XCTAssertEqual(progress.displayRound, 2)  // clamps, never 3/2
     }
@@ -95,8 +96,9 @@ final class GameScoringTests: XCTestCase {
 
 final class GameSessionAccuracyTests: XCTestCase {
     func testGivenCorrectAndAttemptsWhenAccuracyThenRatio() {
-        let s = GameSession(gameID: .stroop, score: 0, rounds: 10, durationSeconds: 5,
-                            correct: 7, attempts: 10)
+        let s = GameSession(
+            gameID: .stroop, score: 0, rounds: 10, durationSeconds: 5,
+            correct: 7, attempts: 10)
         XCTAssertEqual(s.accuracy ?? -1, 0.7, accuracy: 0.0001)
     }
 
@@ -106,8 +108,9 @@ final class GameSessionAccuracyTests: XCTestCase {
     }
 
     func testGivenMemoryPairsAndMovesWhenAccuracyThenPairsOverMoves() {
-        let s = GameSession(gameID: .memoryMatch, score: 0, rounds: 8, durationSeconds: 5,
-                            correct: 8, attempts: 16)
+        let s = GameSession(
+            gameID: .memoryMatch, score: 0, rounds: 8, durationSeconds: 5,
+            correct: 8, attempts: 16)
         XCTAssertEqual(s.accuracy ?? -1, 0.5, accuracy: 0.0001)
     }
 }
