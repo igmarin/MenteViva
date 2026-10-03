@@ -65,9 +65,7 @@ struct MathStreakView: View {
                 }
             }
 
-            Text("\(progress.displayRound) / \(totalQuestions)")
-                .font(.title3)
-                .foregroundStyle(.secondary)
+            RoundCounter(progress: progress)
         }
         .padding()
         .fitOrScroll()

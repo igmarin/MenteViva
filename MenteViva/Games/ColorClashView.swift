@@ -129,9 +129,7 @@ struct ColorClashView: View {
                 }
             }
 
-            Text("\(progress.displayRound) / \(Self.totalRounds)")
-                .font(.title3)
-                .foregroundStyle(.secondary)
+            RoundCounter(progress: progress)
         }
         .padding()
         .fitOrScroll()

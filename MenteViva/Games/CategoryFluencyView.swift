@@ -78,9 +78,11 @@ struct CategoryFluencyView: View {
                     .fontWeight(.bold)
                     .accessibilityAddTraits(.isHeader)
 
-                Text("\(found) / \(round.items.count)")
+                Text(verbatim: "\(found) / \(round.items.count)")
                     .font(.title3)
                     .foregroundStyle(.secondary)
+                    .accessibilityLabel(String(format: AppLanguage.localized("game.category.found %lld %lld"),
+                                               found, round.items.count))
 
                 LazyVGrid(columns: columns, spacing: 16) {
                     ForEach(tiles) { tile in
@@ -97,7 +99,6 @@ struct CategoryFluencyView: View {
                         }
                         .modifier(MissCue(active: Binding(get: { missedTile == tile.id },
                                                           set: { if !$0 { missedTile = nil } })))
-                        .disabled(tile.isPicked)
                         .accessibilityLabel(tile.emoji)
                         .accessibilityHint(tile.isPicked
                                            ? AppLanguage.localized("game.category.a11y.picked")

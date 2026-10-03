@@ -17,22 +17,6 @@
         }
       }
     },
-    "%lld / %lld": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "new",
-            "value": "%1$lld / %2$lld"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$lld / %2$lld"
-          }
-        }
-      }
-    },
     "%lld + %lld": {
       "localizations": {
         "en": {
@@ -669,22 +653,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Camino de Memoria"
-          }
-        }
-      }
-    },
-    "game.quickeyes.a11y.showing": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "A picture is being shown briefly"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Se muestra una imagen por un instante"
           }
         }
       }
@@ -2037,6 +2005,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "Foto familiar %lld"
+          }
+        }
+      }
+    },
+    "game.round.a11y %lld %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Round %1$lld of %2$lld"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ronda %1$lld de %2$lld"
+          }
+        }
+      }
+    },
+    "game.category.found %lld %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld of %2$lld found"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld de %2$lld encontrados"
           }
         }
       }
