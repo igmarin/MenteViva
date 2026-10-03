@@ -25,11 +25,10 @@ nonisolated struct PlayerStateSummary: Codable {
                 $0.gameID == game.rawValue
                     && (calendar.dateComponents([.day], from: $0.playedAt, to: now).day ?? window) < window
             }
-            let accuracies = mine.compactMap(\.accuracy)
             let last = mine.map(\.playedAt).max()
             games[game.rawValue] = GameStats(
                 sessionsLast14Days: mine.count,
-                meanAccuracy: accuracies.isEmpty ? nil : accuracies.reduce(0, +) / Double(accuracies.count),
+                meanAccuracy: mine.meanAccuracy,
                 meanRoundsCompleted: mine.isEmpty ? 0 : Double(mine.map(\.rounds).reduce(0, +)) / Double(mine.count),
                 daysSinceLastPlayed: last.flatMap { calendar.dateComponents([.day], from: $0, to: now).day } ?? window,
                 currentDifficulty: difficulty[game] ?? .medium)

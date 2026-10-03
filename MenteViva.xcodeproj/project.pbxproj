@@ -5,6 +5,7 @@
 	};
 	objectVersion = 90;
 	objects = {
+		8AC071529447874E00000016 /* BigTargets.swift in Sources */ = {isa = PBXBuildFile; fileRef = B91ABDA086A9E6DC00000010; };
 		424941BBC892698300000016 /* FamilyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2D43BA12C23BE6900000010; };
 		2526D29DE5FE6C8300000025 /* CategoryFluencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 915FB304D5C7D9690000001F; };
 		1DA22A903C3C9B3500000021 /* CelebrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4174FC9AF3B1DBCB0000001B; };
@@ -47,6 +48,7 @@
 		F3781E2CF00E20FA00000033 /* RoundProgressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690FA2BE3DFB9D180000002D; };
 		0EEED9F3112B457400000033 /* WeeklySummaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2CB27B32AF72D220000002D; };
 
+		B91ABDA086A9E6DC00000010 /* BigTargets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BigTargets.swift; sourceTree = "<group>"; };
 		F2D43BA12C23BE6900000010 /* FamilyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FamilyView.swift; sourceTree = "<group>"; };
 		915FB304D5C7D9690000001F /* CategoryFluencyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/CategoryFluencyView.swift; sourceTree = "<group>"; };
 		4174FC9AF3B1DBCB0000001B /* CelebrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/CelebrationView.swift; sourceTree = "<group>"; };
@@ -117,6 +119,7 @@
 		DC57E42946F6E08C00000005 /* MenteViva */ = {
 			isa = PBXGroup;
 			children = (
+				B91ABDA086A9E6DC00000010 /* BigTargets.swift */,
 				F2D43BA12C23BE6900000010 /* FamilyView.swift */,
 				915FB304D5C7D9690000001F /* CategoryFluencyView.swift */,
 				4174FC9AF3B1DBCB0000001B /* CelebrationView.swift */,
@@ -237,6 +240,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8AC071529447874E00000016 /* BigTargets.swift in Sources */,
 				424941BBC892698300000016 /* FamilyView.swift in Sources */,
 				2526D29DE5FE6C8300000025 /* CategoryFluencyView.swift in Sources */,
 				1DA22A903C3C9B3500000021 /* CelebrationView.swift in Sources */,

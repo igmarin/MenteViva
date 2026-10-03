@@ -72,10 +72,7 @@ nonisolated enum DailyPolicy {
 
     /// Whole days from `from` to `to` (both "yyyy-MM-dd"); large when unparseable, so a bad stamp never blocks a change.
     private static func daysBetween(_ from: String, _ to: String) -> Int {
-        let f = DateFormatter()
-        f.locale = Locale(identifier: "en_US_POSIX")
-        f.dateFormat = "yyyy-MM-dd"
-        guard let a = f.date(from: from), let b = f.date(from: to) else { return .max }
+        guard let a = PlanStore.day(fromStamp: from), let b = PlanStore.day(fromStamp: to) else { return .max }
         return Calendar.current.dateComponents([.day], from: a, to: b).day ?? .max
     }
 }

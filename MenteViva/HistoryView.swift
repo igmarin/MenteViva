@@ -33,8 +33,7 @@ struct HistoryView: View {
                         Label(AppLanguage.localized("history.share"), systemImage: "square.and.arrow.up")
                             .font(.title3)
                             .labelStyle(.iconOnly)
-                            .frame(minWidth: 100, minHeight: 100)
-                            .contentShape(Rectangle())
+                            .bigTapTarget()
                     }
                     .accessibilityHint(AppLanguage.localized("history.share.hint"))
                 }

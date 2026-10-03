@@ -82,14 +82,9 @@ struct GameProgress: Equatable {
             let before = lastWeek.filter { $0.game == game }
             guard !mine.isEmpty || !before.isEmpty else { return nil }
             return GameProgress(game: game, sessions: mine.count, previousSessions: before.count,
-                                accuracy: meanAccuracy(mine), previousAccuracy: meanAccuracy(before),
+                                accuracy: mine.meanAccuracy, previousAccuracy: before.meanAccuracy,
                                 level: latestLevel(mine), previousLevel: latestLevel(before))
         }
-    }
-
-    private static func meanAccuracy(_ sessions: [GameSession]) -> Double? {
-        let values = sessions.compactMap(\.accuracy)
-        return values.isEmpty ? nil : values.reduce(0, +) / Double(values.count)
     }
 
     private static func latestLevel(_ sessions: [GameSession]) -> Difficulty? {

@@ -71,8 +71,7 @@ struct FamilyView: View {
                         Label(AppLanguage.localized("family.share"), systemImage: "square.and.arrow.up")
                             .font(.title3)
                             .labelStyle(.iconOnly)
-                            .frame(minWidth: 100, minHeight: 100)
-                            .contentShape(Rectangle())
+                            .bigTapTarget()
                     }
                     .accessibilityHint(AppLanguage.localized("family.share.hint"))
                 }
@@ -82,9 +81,7 @@ struct FamilyView: View {
 
     /// Level the next game will use, then this week, last week, and trends.
     private func lines(for p: GameProgress) -> [String] {
-        var lines = [String(format: AppLanguage.localized("family.level %@ %@"),
-                            AppLanguage.localized((pinned[p.game] ?? Difficulty.stored(p.game)).title),
-                            AppLanguage.localized(pinned[p.game] == nil ? "family.auto" : "family.pinned")),
+        var lines = [levelLine(p.game, pin: pinned[p.game]),
                      // Interpolated so "1 game" / "3 games" picks its plural form.
                      week(AppLanguage.localized("family.week.this \(p.sessions)" as String.LocalizationValue), p.accuracy),
                      week(AppLanguage.localized("family.week.last \(p.previousSessions)" as String.LocalizationValue),
@@ -207,10 +204,7 @@ private struct FamilyGameRow: View {
         if FamilySettings.hidden(from: hiddenGames).contains(game) {
             return AppLanguage.localized("family.hidden")
         }
-        let level = Difficulty(rawValue: pin) ?? Difficulty.stored(game)
-        return String(format: AppLanguage.localized("family.level %@ %@"),
-                      AppLanguage.localized(level.title),
-                      AppLanguage.localized(pin == FamilySettings.auto ? "family.auto" : "family.pinned"))
+        return levelLine(game, pin: Difficulty(rawValue: pin))
     }
 }
 
@@ -280,6 +274,14 @@ private struct FamilyGameView: View {
         .buttonStyle(.plain)
         .accessibilityAddTraits(pin == value ? [.isSelected] : [])
     }
+}
+
+/// "Next game: Easy (set by you)": the level a game will use and who chose
+/// it. Shared by the game list and the progress lines (#122).
+private func levelLine(_ game: GameID, pin: Difficulty?) -> String {
+    String(format: AppLanguage.localized("family.level %@ %@"),
+           AppLanguage.localized((pin ?? Difficulty.stored(game)).title),
+           AppLanguage.localized(pin == nil ? "family.auto" : "family.pinned"))
 }
 
 #Preview {

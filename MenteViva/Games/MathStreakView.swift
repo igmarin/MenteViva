@@ -59,10 +59,8 @@ struct MathStreakView: View {
                             .font(.system(size: answerSize, weight: .semibold))
                             .lineLimit(1)
                             .minimumScaleFactor(0.5)
-                            .frame(maxWidth: .infinity, minHeight: 110)
-                            .background(.blue.opacity(0.15), in: .rect(cornerRadius: 16))
                     }
-                    .buttonStyle(.plain)
+                    .buttonStyle(AnswerTileStyle())
                     .accessibilityLabel("\(option)")
                 }
             }

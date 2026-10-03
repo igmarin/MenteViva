@@ -48,6 +48,14 @@ final class GameSession {
     }
 }
 
+extension Sequence<GameSession> {
+    /// Mean accuracy of the sessions that recorded one; nil when none did (#122).
+    var meanAccuracy: Double? {
+        let values = compactMap(\.accuracy)
+        return values.isEmpty ? nil : values.reduce(0, +) / Double(values.count)
+    }
+}
+
 extension ModelContext {
     /// Inserts and saves at once (#106): a finished game must survive the app
     /// being closed before SwiftData's periodic autosave runs. A failed save is

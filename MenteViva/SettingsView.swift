@@ -3,8 +3,11 @@ import SwiftUI
 /// Settings a stranger can reach alone: language, sound & haptics, bigger text,
 /// the family screen (#107), privacy, version.
 struct SettingsView: View {
-    @AppStorage("appLanguage") private var appLanguage = AppLanguage.system.rawValue
-    @AppStorage("biggerText") private var biggerText = false
+    /// UserDefaults key of the Bigger text toggle.
+    static let biggerTextKey = "biggerText"
+
+    @AppStorage(AppLanguage.storageKey) private var appLanguage = AppLanguage.system.rawValue
+    @AppStorage(SettingsView.biggerTextKey) private var biggerText = false
     @AppStorage(SoundPlayer.enabledKey) private var soundEnabled = true
     @Environment(\.dismiss) private var dismiss
 
@@ -87,8 +90,7 @@ struct SettingsView: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button(AppLanguage.localized("settings.done")) { dismiss() }
                         .font(.title3)
-                        .frame(minWidth: 100, minHeight: 100)
-                        .contentShape(Rectangle())
+                        .bigTapTarget()
                 }
             }
         }

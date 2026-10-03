@@ -5,6 +5,9 @@ import Foundation
 enum AppLanguage: String, CaseIterable, Identifiable {
     case system, english = "en", spanish = "es"
 
+    /// UserDefaults key of the stored choice (raw value).
+    static let storageKey = "appLanguage"
+
     var id: String { rawValue }
 
     var label: String {
@@ -20,7 +23,7 @@ enum AppLanguage: String, CaseIterable, Identifiable {
         if let storedLanguage = defaults.array(forKey: "AppleLanguages")?.first as? String {
             return locale(for: storedLanguage)
         }
-        return locale(for: defaults.string(forKey: "appLanguage") ?? system.rawValue)
+        return locale(for: defaults.string(forKey: storageKey) ?? system.rawValue)
     }
 
     static func locale(for rawValue: String) -> Locale {
