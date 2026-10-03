@@ -66,7 +66,6 @@ struct OnboardingView: View {
             ForEach(AppLanguage.allCases) { language in
                 Button {
                     AppLanguage.apply(language.rawValue)
-                    appLanguage = language.rawValue
                 } label: {
                     Text(language.label)
                         .font(.title3.weight(language.rawValue == appLanguage ? .bold : .regular))
