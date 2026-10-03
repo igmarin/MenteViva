@@ -2,6 +2,25 @@
 
 Newest first. Format: date — decision — why — what would make us revisit.
 
+## 2026-10-03 — Captions, per-device My progress, week ring; reminiscence game next
+
+**Question:** after the photo playtest, what do we build next and how do we show progress?
+Grilled with the owner; evidence: Jev 013 (`jev-json/013-*`, analysis in `jev-revisit.md` §013).
+
+| Topic | Decision | Jev 013 |
+|---|---|---|
+| Next game | Reminiscence ("Who is this?"): photo, tap "Show me" to reveal and hear the caption, no wrong answer; bundled everyday objects when there are no photos | 0.95 |
+| Captions | One optional short caption per photo (name, nickname, place, event), on this device only, never in a share text or sent to Jev. Built inside the reminiscence PR | foundation first 0.46 |
+| Privacy | A line where the caption is typed, plus its own section in the policy | owner |
+| Progress measures | Rates, never sums: mean accuracy per play, level reached, days played per week; trend only after 3+ plays, only against the player's own weeks. Reminiscence records no accuracy | owner |
+| Progress screen | "For family" becomes a per-device "My progress"; hide games and pin difficulty move to "Set up" | 1.00 |
+| Consistency | Week ring of 7 dots. No streaks, no leaderboards, no pressure timers, no reminders | 0.84 |
+| My Week | One row per day with a count per game, no scores | 0.71 |
+| Game mix | Share of plays per game, labeled "played this week" | 0.54 |
+| Number Trail | − then × and exact ÷ as difficulty steps, lowest priority; tracked: how to measure when to step up (auto or manual) is decided later | 0.77 / fit 0.79 |
+| Challenge level | Tracked, not decided | 0.69 |
+| Quick Eyes | A "find the face for this name" variant is noted on #46, deferred | fit 1.48, conf .23 |
+
 ## 2026-10-01 — Playtest #6 outcome: progress first, Family settings, adult Memory Lane, no new games yet
 
 **Question:** after the structured playtest, what do we build next, and how is progress tracked?

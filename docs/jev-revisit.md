@@ -231,3 +231,40 @@ Reads:
    screenshot before it ships.
 5. **Quick Eyes is a coin flip** (0.40): observed engagement wins for now; #46
    stays open for frustration evidence.
+
+## 013 — Progress screen, gamification, captions and next build — 2026-10-03
+
+Asked after the owner's notes on the first photo-based session: he recognizes
+faces but cannot recall the name, so a short caption (a name, nickname, place
+or event) is the missing piece. The state carried seven *proposed* changes
+(captions, a "Who is this?" reminiscence game, a photo-to-caption Memory Lane
+variant, Number Trail operators by level, per-day counts in My Week, rates
+instead of sums, a per-device "My progress"). Raw pair:
+`jev-json/013-progress-gamification.*`.
+
+| Question | Jev | Confidence |
+|---|---|---|
+| Consistency view | **week_ring** 0.84 (count only 0.16, streak 0.00) | .76 |
+| Progress screen framing | **my_progress_per_device** 1.00 | 1.00 |
+| Build first after captions | **photo_caption_reminiscence** 0.95 (Memory Lane match 0.04) | .94 |
+| Captions as a separate foundation first | unsure, **0.46** | — |
+| My Week as per-day counts | yes, **0.71** | — |
+| Share-of-play per game chart | leaning yes, **0.54** | — |
+| Opt-in Challenge level | yes, **0.69** | — |
+| Number Trail operators by level | yes, **0.77** | — |
+| Fit (0–2) | photo reminiscence **1.81**, Memory Lane name-match **1.81**, Quick Eyes find-the-face 1.48, Number Trail operators **0.79** | .72 / .71 / .23 / .54 |
+
+Reads:
+
+1. **No streaks.** The week ring wins and a streak that resets scored 0.00:
+   consistency is shown without a loss state.
+2. **"For family" becomes a per-device "My progress"** (unanimous). Hide-games
+   and pin-difficulty move to a separate "Set up".
+3. **Reminiscence first, with captions inside it** (0.95). Captions as their
+   own foundation is a coin flip (0.46), so they ship in the reminiscence PR.
+4. **Number Trail operators score lowest (0.79).** Worth doing as difficulty
+   steps, but it ranks last and Number Trail is hidden on the player's iPad.
+5. **The game-mix share is only lukewarm (0.54)**, matching the worry that it
+   mostly reflects what the daily plan picked. Label it "played this week",
+   never "favorite".
+6. **Quick Eyes find-the-face has low confidence (.23)**; keep it as a note on #46.
