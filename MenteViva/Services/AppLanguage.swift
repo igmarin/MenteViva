@@ -20,13 +20,12 @@ enum AppLanguage: String, CaseIterable, Identifiable {
         }
     }
 
-    static var currentLocale: Locale {
-        let defaults = UserDefaults.standard
-        if let storedLanguage = defaults.array(forKey: "AppleLanguages")?.first as? String {
-            return locale(for: storedLanguage)
-        }
-        return locale(for: defaults.string(forKey: storageKey) ?? system.rawValue)
+    /// The choice in effect: the stored language, else "follow the device".
+    static func selected(in defaults: UserDefaults = .standard) -> AppLanguage {
+        AppLanguage(rawValue: defaults.string(forKey: storageKey) ?? "") ?? .system
     }
+
+    static var currentLocale: Locale { locale(for: selected().rawValue) }
 
     static func locale(for rawValue: String) -> Locale {
         guard let language = AppLanguage(rawValue: rawValue), language != .system else {
@@ -35,23 +34,33 @@ enum AppLanguage: String, CaseIterable, Identifiable {
         return Locale(identifier: language.rawValue)
     }
 
-    static func localized(_ key: String) -> String {
-        String(localized: String.LocalizationValue(key), locale: currentLocale)
+    /// Strings come from the chosen language's own bundle: `locale:` alone only
+    /// formats, and the main bundle's language is fixed at launch (#134).
+    private static func bundle(in defaults: UserDefaults) -> Bundle {
+        let language = selected(in: defaults)
+        guard language != .system,
+            let path = Bundle.main.path(forResource: language.rawValue, ofType: "lproj"),
+            let bundle = Bundle(path: path)
+        else { return .main }
+        return bundle
     }
 
-    static func localized(_ resource: String.LocalizationValue) -> String {
-        String(localized: resource, locale: currentLocale)
+    static func localized(_ key: String, defaults: UserDefaults = .standard) -> String {
+        localized(String.LocalizationValue(key), defaults: defaults)
     }
 
-    /// Applies the choice by writing AppleLanguages, which is what
-    /// `AppLanguage.localized()` resolves against. The root view observes the
-    /// stored choice, so the visible language changes without relaunching.
-    static func apply(_ rawValue: String) {
-        let defaults = UserDefaults.standard
-        guard let language = AppLanguage(rawValue: rawValue), language != .system else {
-            defaults.removeObject(forKey: "AppleLanguages")
-            return
-        }
-        defaults.set([language.rawValue], forKey: "AppleLanguages")
+    static func localized(_ resource: String.LocalizationValue, defaults: UserDefaults = .standard) -> String {
+        String(
+            localized: resource, bundle: bundle(in: defaults),
+            locale: locale(for: selected(in: defaults).rawValue))
+    }
+
+    /// Stores the choice; the views observe it through `@AppStorage`, so the
+    /// visible language changes without relaunching.
+    static func apply(_ rawValue: String, to defaults: UserDefaults = .standard) {
+        defaults.set(rawValue, forKey: storageKey)
+        // Older builds also wrote this; left behind, it would pin the main
+        // bundle to the old choice at the next launch.
+        defaults.removeObject(forKey: "AppleLanguages")
     }
 }

@@ -5,6 +5,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 ## [Unreleased]
 
 ### Fixed
+- **Language switch applies everywhere at once (#134):** game text and spoken
+  labels now follow the chosen language right away, not after a relaunch.
 - **Memory Lane photos say what happened (#120):** after picking photos, one
   line says how many were added and, if some weren't, that a photo couldn't
   be used or that the album holds 8. VoiceOver reads it too. EN + ES.

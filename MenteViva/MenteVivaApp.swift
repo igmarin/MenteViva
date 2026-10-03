@@ -9,11 +9,6 @@ struct MenteVivaApp: App {
     /// the paid Developer Program and enabling CloudKit in a build without the
     /// entitlement traps inside CloudKit's mirroring setup — an uncatchable
     /// EXC_BREAKPOINT, not a Swift error we could fall back from.
-    init() {
-        // Must happen before any view resolves a string, so the stored language
-        // choice wins on this launch rather than the next one.
-        AppLanguage.apply(UserDefaults.standard.string(forKey: AppLanguage.storageKey) ?? AppLanguage.system.rawValue)
-    }
     private let modelContainer: ModelContainer = {
         let schema = Schema([GameSession.self])
         #if LOCAL_ONLY
