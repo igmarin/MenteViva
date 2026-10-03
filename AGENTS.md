@@ -87,7 +87,11 @@ docs/                 start at docs/README.md
    issue". Close → regenerate → reopen.
 5. Verify before committing: build must pass —
    `xcodebuild -project MenteViva.xcodeproj -scheme MenteViva -destination 'generic/platform=iOS Simulator' build`
-   and tests must pass (conventions §9). Syntax checks (`swiftc -parse`) are
+   and tests must pass (conventions §9), and lint must be clean:
+   `xcrun swift-format lint --strict -r MenteViva MenteVivaTests tools`
+   (Apple's formatter, ships with Xcode; config in `.swift-format`, #123).
+   `xcrun swift-format format -i -r MenteViva MenteVivaTests tools` fixes most of it.
+   Syntax checks (`swiftc -parse`) are
    NOT verification. CI (`swift.yml`) repeats build + test and checks the
    regenerated `project.pbxproj` for drift on PRs and pushes to `main`; still
    run them locally first.
