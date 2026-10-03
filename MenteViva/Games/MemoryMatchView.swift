@@ -171,6 +171,10 @@ struct MemoryMatchView: View {
     }
 
     private func deal() {
+        HotPath.measure("memory.deal") { dealCards() }
+    }
+
+    private func dealCards() {
         flipBackTask?.cancel()
         let photos = MemoryPhotos.all().shuffled()
         faces = Self.faces(

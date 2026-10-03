@@ -35,6 +35,11 @@ enum MemoryPhotos {
 
     static func add(_ data: Data, to folder: URL = folder) throws {
         guard all(in: folder).count < maxCount else { throw AddError.albumFull }
+        try HotPath.measure("photo.downscale") { try downscale(data, into: folder) }
+    }
+
+    /// Decode, shrink to `maxSide`, re-encode as JPEG and store it.
+    private static func downscale(_ data: Data, into folder: URL) throws {
         guard let image = UIImage(data: data) else { throw AddError.notAnImage }
         let scale = min(1, maxSide / max(image.size.width, image.size.height))
         let size = CGSize(width: (image.size.width * scale).rounded(), height: (image.size.height * scale).rounded())

@@ -33,7 +33,7 @@ MenteViva/            app (SwiftUI + SwiftData)
   Models/             GameSession, GameID, Difficulty, RoundProgress
   Services/           DailyPolicy (on-device plan), PlanStore (saved plan + levels),
                       JevService (optional Jev client), FamilySettings, MemoryPhotos,
-                      PlayerStateSummary, WeeklySummary, AppLanguage, SoundPlayer
+                      PlayerStateSummary, WeeklySummary, AppLanguage, SoundPlayer, HotPath (signposts)
   Localizable.xcstrings  every string, EN + ES
 MenteVivaTests/       unit tests (Given/When/Then names)
 proxy/worker.js       Cloudflare Worker that holds the Jev key

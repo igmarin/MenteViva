@@ -42,7 +42,7 @@ struct HistoryView: View {
     }
 
     private var progress: [GameProgress] {
-        GameProgress.weekly(sessions).filter { $0.sessions > 0 }
+        HotPath.measure("progress.weekly") { GameProgress.weekly(sessions) }.filter { $0.sessions > 0 }
     }
 
     private var summary: WeeklySummary { WeeklySummary(playedAt: sessions.map(\.playedAt)) }

@@ -27,6 +27,7 @@
 		CF167B18375C83D400000020 /* AppLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 935C3DAA5B7FC9820000001A; };
 		30ECA8CB22C0601E00000020 /* DailyPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABA89EC2CAC17B0C0000001A; };
 		5BDF348CC430543800000023 /* FamilySettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D5B4260F3371760000001D; };
+		EB1D5656AAE8FB090000001C /* HotPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66F53A1E32AAD85F00000016; };
 		89CAE55D19053AF10000001F /* JevService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42B3456BD42F17B700000019; };
 		1D8B162B0DC9013B00000021 /* MemoryPhotos.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A47663ED0263910000001B; };
 		275EC605D5ED04650000001E /* PlanStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3931AC8D4E8A85DB00000018; };
@@ -73,6 +74,7 @@
 		935C3DAA5B7FC9820000001A /* AppLanguage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/AppLanguage.swift; sourceTree = "<group>"; };
 		ABA89EC2CAC17B0C0000001A /* DailyPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/DailyPolicy.swift; sourceTree = "<group>"; };
 		74D5B4260F3371760000001D /* FamilySettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/FamilySettings.swift; sourceTree = "<group>"; };
+		66F53A1E32AAD85F00000016 /* HotPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/HotPath.swift; sourceTree = "<group>"; };
 		42B3456BD42F17B700000019 /* JevService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/JevService.swift; sourceTree = "<group>"; };
 		D5A47663ED0263910000001B /* MemoryPhotos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/MemoryPhotos.swift; sourceTree = "<group>"; };
 		3931AC8D4E8A85DB00000018 /* PlanStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/PlanStore.swift; sourceTree = "<group>"; };
@@ -147,6 +149,7 @@
 				935C3DAA5B7FC9820000001A /* AppLanguage.swift */,
 				ABA89EC2CAC17B0C0000001A /* DailyPolicy.swift */,
 				74D5B4260F3371760000001D /* FamilySettings.swift */,
+				66F53A1E32AAD85F00000016 /* HotPath.swift */,
 				42B3456BD42F17B700000019 /* JevService.swift */,
 				D5A47663ED0263910000001B /* MemoryPhotos.swift */,
 				3931AC8D4E8A85DB00000018 /* PlanStore.swift */,
@@ -271,6 +274,7 @@
 				CF167B18375C83D400000020 /* AppLanguage.swift in Sources */,
 				30ECA8CB22C0601E00000020 /* DailyPolicy.swift in Sources */,
 				5BDF348CC430543800000023 /* FamilySettings.swift in Sources */,
+				EB1D5656AAE8FB090000001C /* HotPath.swift in Sources */,
 				89CAE55D19053AF10000001F /* JevService.swift in Sources */,
 				1D8B162B0DC9013B00000021 /* MemoryPhotos.swift in Sources */,
 				275EC605D5ED04650000001E /* PlanStore.swift in Sources */,
