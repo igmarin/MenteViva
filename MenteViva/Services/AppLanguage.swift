@@ -3,7 +3,9 @@ import Foundation
 /// The app's language, or "follow the device". Stored as a raw value in
 /// UserDefaults so it can be read before the first view renders.
 enum AppLanguage: String, CaseIterable, Identifiable {
-    case system, english = "en", spanish = "es"
+    case system
+    case english = "en"
+    case spanish = "es"
 
     /// UserDefaults key of the stored choice (raw value).
     static let storageKey = "appLanguage"

@@ -9,7 +9,9 @@ struct RoundCounter: View {
         Text(verbatim: "\(progress.displayRound) / \(progress.totalRounds)")
             .font(.title3)
             .foregroundStyle(.secondary)
-            .accessibilityLabel(String(format: AppLanguage.localized("game.round.a11y %lld %lld"),
-                                       progress.displayRound, progress.totalRounds))
+            .accessibilityLabel(
+                String(
+                    format: AppLanguage.localized("game.round.a11y %lld %lld"),
+                    progress.displayRound, progress.totalRounds))
     }
 }

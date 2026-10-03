@@ -1,5 +1,5 @@
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 /// Number Trail: one gentle addition at a time. Sums start at ≤10 and grow
 /// with the streak. 4 big answer buttons, 10 questions, no timer.
@@ -54,7 +54,9 @@ struct MathStreakView: View {
 
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
                 ForEach(options, id: \.self) { option in
-                    Button { tap(option) } label: {
+                    Button {
+                        tap(option)
+                    } label: {
                         Text(verbatim: "\(option)")
                             .font(.system(size: answerSize, weight: .semibold))
                             .lineLimit(1)
@@ -84,7 +86,7 @@ struct MathStreakView: View {
     }
 
     private func deal() {
-        let maxSum = Self.maxSum(streak: streak, difficulty: difficulty) // grows gently with the streak
+        let maxSum = Self.maxSum(streak: streak, difficulty: difficulty)  // grows gently with the streak
         a = Int.random(in: 1...(maxSum - 1))
         b = Int.random(in: 1...(maxSum - a))
         var pool = Set([answer])
@@ -118,12 +120,15 @@ struct MathStreakView: View {
     private func finish() {
         let elapsed = Int(Date.now.timeIntervalSince(startedAt))
         let score = Self.score(correct: correct, bestStreak: bestStreak)
-        modelContext.record(GameSession(gameID: .mathStreaks, score: score,
-                                        rounds: totalQuestions, durationSeconds: elapsed,
-                                        correct: correct, attempts: totalQuestions,
-                                        difficulty: difficulty))
+        modelContext.record(
+            GameSession(
+                gameID: .mathStreaks, score: score,
+                rounds: totalQuestions, durationSeconds: elapsed,
+                correct: correct, attempts: totalQuestions,
+                difficulty: difficulty))
         // A streak of 2+ is worth naming; below that, celebrate finishing (#45).
-        finalDetail = bestStreak >= 2
+        finalDetail =
+            bestStreak >= 2
             ? String(format: AppLanguage.localized("game.celebration.streak %lld"), bestStreak)
             : String(format: AppLanguage.localized("game.celebration.questions %lld"), totalQuestions)
         showCelebration = true

@@ -80,9 +80,11 @@ struct SettingsView: View {
                 }
 
                 Section {
-                    LabeledContent(AppLanguage.localized("settings.version"),
-                                   value: Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "—")
-                        .font(.body)
+                    LabeledContent(
+                        AppLanguage.localized("settings.version"),
+                        value: Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "—"
+                    )
+                    .font(.body)
                 }
             }
             .navigationTitle(AppLanguage.localized("settings.title"))

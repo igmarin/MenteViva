@@ -1,4 +1,5 @@
 import XCTest
+
 @testable import MenteViva
 
 /// Policy: JevService.makePlan turns a hand-built answers dictionary into a
@@ -11,14 +12,17 @@ final class JevPlanPolicyTests: XCTestCase {
         .mathStreaks: .medium, .quickEyes: .medium,
     ]
 
-    private func makePlan(_ answers: [String: JevAnswer],
-                          gamesPerDay: Int = 3,
-                          floor: Double = 0.6,
-                          pinned: [GameID: Difficulty] = [:],
-                          hidden: Set<GameID> = []) -> DailyPlan {
-        JevService.makePlan(from: answers, current: current, dayStamp: stamp,
-                            gamesPerDay: gamesPerDay, confidenceFloor: floor,
-                            pinned: pinned, hidden: hidden)
+    private func makePlan(
+        _ answers: [String: JevAnswer],
+        gamesPerDay: Int = 3,
+        floor: Double = 0.6,
+        pinned: [GameID: Difficulty] = [:],
+        hidden: Set<GameID> = []
+    ) -> DailyPlan {
+        JevService.makePlan(
+            from: answers, current: current, dayStamp: stamp,
+            gamesPerDay: gamesPerDay, confidenceFloor: floor,
+            pinned: pinned, hidden: hidden)
     }
 
     // MARK: Family settings (#108)
@@ -54,7 +58,7 @@ final class JevPlanPolicyTests: XCTestCase {
 
     func testGivenMissingIncludeAnswersWhenPlanThenThoseGamesSortLast() {
         let answers: [String: JevAnswer] = [
-            "include_quick_eyes": .noul(probability: 0.5),
+            "include_quick_eyes": .noul(probability: 0.5)
         ]
         let plan = makePlan(answers)
         XCTAssertEqual(plan.games.first, .quickEyes)
@@ -63,8 +67,9 @@ final class JevPlanPolicyTests: XCTestCase {
 
     func testGivenAllProbabilitiesLowWhenPlanThenMixStillHasGamesPerDay() {
         // prefix() keeps the mix non-empty even when Jev hates everything.
-        let answers = Dictionary(uniqueKeysWithValues:
-            GameID.allCases.map { ("include_\($0.rawValue)", JevAnswer.noul(probability: 0.01)) })
+        let answers = Dictionary(
+            uniqueKeysWithValues:
+                GameID.allCases.map { ("include_\($0.rawValue)", JevAnswer.noul(probability: 0.01)) })
         let plan = makePlan(answers)
         XCTAssertEqual(plan.games.count, 3)
         XCTAssertEqual(Set(plan.games).count, 3)
@@ -83,7 +88,7 @@ final class JevPlanPolicyTests: XCTestCase {
 
     func testGivenConfidentScoreWhenPlanThenDifficultyIsApplied() {
         let answers: [String: JevAnswer] = [
-            "difficulty_stroop": .score(score: 1.8, confidence: 0.9),
+            "difficulty_stroop": .score(score: 1.8, confidence: 0.9)
         ]
         let plan = makePlan(answers)
         XCTAssertEqual(plan.difficulty[.stroop], .hard)
@@ -93,7 +98,7 @@ final class JevPlanPolicyTests: XCTestCase {
         // A poor difficulty match is the high-stakes concern; below the floor
         // we keep yesterday's setting.
         let answers: [String: JevAnswer] = [
-            "difficulty_stroop": .score(score: 2.0, confidence: 0.59),
+            "difficulty_stroop": .score(score: 2.0, confidence: 0.59)
         ]
         let plan = makePlan(answers)
         XCTAssertEqual(plan.difficulty[.stroop], .medium)
@@ -101,7 +106,7 @@ final class JevPlanPolicyTests: XCTestCase {
 
     func testGivenScoreAtConfidenceFloorWhenPlanThenItIsApplied() {
         let answers: [String: JevAnswer] = [
-            "difficulty_stroop": .score(score: 0.2, confidence: 0.6),
+            "difficulty_stroop": .score(score: 0.2, confidence: 0.6)
         ]
         let plan = makePlan(answers)
         XCTAssertEqual(plan.difficulty[.stroop], .easy)

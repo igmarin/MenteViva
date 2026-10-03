@@ -33,13 +33,15 @@ actor JevService {
     private let difficultyConfidenceThreshold = 0.6
     private let gamesPerDay = 3
 
-    init(proxyURL: URL? = Bundle.main.infoDictionary?["JEV_PROXY_URL"]
+    init(
+        proxyURL: URL? = Bundle.main.infoDictionary?["JEV_PROXY_URL"]
             .flatMap { $0 as? String }
             .flatMap { $0.isEmpty ? nil : $0 }
             .flatMap(URL.init(string:)),
-         proxySecret: String = Bundle.main.infoDictionary?["JEV_PROXY_SECRET"] as? String ?? "",
-         session: URLSession = .shared,
-         defaults: UserDefaults = .standard) {
+        proxySecret: String = Bundle.main.infoDictionary?["JEV_PROXY_SECRET"] as? String ?? "",
+        session: URLSession = .shared,
+        defaults: UserDefaults = .standard
+    ) {
         self.proxyURL = proxyURL
         self.proxySecret = proxySecret
         self.session = session
@@ -51,9 +53,11 @@ actor JevService {
     /// Today's plan: cache first, otherwise the on-device DailyPolicy (overridden by Jev when a proxy is set).
     /// The plan is cached too, so a failing network is tried once per day, and
     /// concurrent callers share one in-flight request.
-    func dailyPlan(state: PlayerStateSummary,
-                   currentDifficulty: [GameID: Difficulty],
-                   now: Date = .now) async -> DailyPlan {
+    func dailyPlan(
+        state: PlayerStateSummary,
+        currentDifficulty: [GameID: Difficulty],
+        now: Date = .now
+    ) async -> DailyPlan {
         let stamp = PlanStore.dayStamp(now)
         if let cached = PlanStore.cachedPlan(defaults: defaults), cached.dayStamp == stamp { return cached }
         if let inFlight { return await inFlight.value }
@@ -65,23 +69,27 @@ actor JevService {
         return plan
     }
 
-    private func fetchPlan(state: PlayerStateSummary,
-                           current: [GameID: Difficulty],
-                           stamp: String) async -> DailyPlan {
+    private func fetchPlan(
+        state: PlayerStateSummary,
+        current: [GameID: Difficulty],
+        stamp: String
+    ) async -> DailyPlan {
         let pinned = FamilySettings.pinned(defaults: defaults)
         let hidden = FamilySettings.hidden(defaults: defaults)
-        var plan = DailyPolicy.plan(state: state,
-                                    lastChange: PlanStore.lastDifficultyChange(defaults: defaults),
-                                    dayStamp: stamp, pinned: pinned, hidden: hidden)
+        var plan = DailyPolicy.plan(
+            state: state,
+            lastChange: PlanStore.lastDifficultyChange(defaults: defaults),
+            dayStamp: stamp, pinned: pinned, hidden: hidden)
         if let proxyURL {
             do {
                 let answers = try await ask(state: state, proxyURL: proxyURL)
-                plan = Self.makePlan(from: answers,
-                                     current: current,
-                                     dayStamp: stamp,
-                                     gamesPerDay: gamesPerDay,
-                                     confidenceFloor: difficultyConfidenceThreshold,
-                                     pinned: pinned, hidden: hidden)
+                plan = Self.makePlan(
+                    from: answers,
+                    current: current,
+                    dayStamp: stamp,
+                    gamesPerDay: gamesPerDay,
+                    confidenceFloor: difficultyConfidenceThreshold,
+                    pinned: pinned, hidden: hidden)
             } catch {
                 Self.log.info("Jev unavailable, using the on-device plan: \(String(describing: error), privacy: .public)")
             }
@@ -99,14 +107,14 @@ actor JevService {
                 instructions: "Should \(game.rawValue) be in today's recommended mix for this player?",
                 criteria: [
                     "true": "Keeps the day varied, matches recent engagement, or the game has been rested too long",
-                    "false": "Played very recently and repeatedly, or the player consistently disengages from it"
+                    "false": "Played very recently and repeatedly, or the player consistently disengages from it",
                 ])
             questions["difficulty_\(game.rawValue)"] = .score(
                 instructions: "What difficulty should \(game.rawValue) be set to today?",
                 criteria: [
                     "Easy — player is struggling or accuracy dropped recently; reduce cognitive load",
                     "Medium — player is steady; maintain current challenge",
-                    "Hard — player consistently succeeds quickly; increase challenge"
+                    "Hard — player consistently succeeds quickly; increase challenge",
                 ])
         }
 
@@ -126,16 +134,17 @@ actor JevService {
         return try JSONDecoder().decode(JevResponse.self, from: data).answers
     }
 
-
     // MARK: - Policy in code: answers -> plan
 
-    nonisolated static func makePlan(from answers: [String: JevAnswer],
-                         current: [GameID: Difficulty],
-                         dayStamp: String,
-                         gamesPerDay: Int,
-                         confidenceFloor: Double,
-                         pinned: [GameID: Difficulty] = [:],
-                         hidden: Set<GameID> = []) -> DailyPlan {
+    nonisolated static func makePlan(
+        from answers: [String: JevAnswer],
+        current: [GameID: Difficulty],
+        dayStamp: String,
+        gamesPerDay: Int,
+        confidenceFloor: Double,
+        pinned: [GameID: Difficulty] = [:],
+        hidden: Set<GameID> = []
+    ) -> DailyPlan {
         // Mix: rank by P(include), hidden games never ranked (#108). Missing
         // answers sort last; prefix() keeps the mix non-empty even if every
         // probability is low.
@@ -145,8 +154,9 @@ actor JevService {
         // Difficulty: apply only confident scores; otherwise keep current.
         var difficulty = current
         for game in GameID.allCases {
-            if case let .score(score, confidence)? = answers["difficulty_\(game.rawValue)"],
-               confidence >= confidenceFloor {
+            if case .score(let score, let confidence)? = answers["difficulty_\(game.rawValue)"],
+                confidence >= confidenceFloor
+            {
                 difficulty[game] = Difficulty(jevScore: score)
             }
         }
@@ -159,7 +169,7 @@ actor JevService {
 // MARK: - Wire models (mirror https://api.typesafe.ai/v1/systemone)
 
 nonisolated private struct JevRequest: Encodable {
-    let state: PlayerStateSummary   // JSON-object state
+    let state: PlayerStateSummary  // JSON-object state
     let model: String
     let questions: [String: JevQuestion]
 }
@@ -171,11 +181,11 @@ nonisolated private enum JevQuestion: Encodable {
     func encode(to encoder: Encoder) throws {
         var c = encoder.container(keyedBy: CodingKeys.self)
         switch self {
-        case let .noul(instructions, criteria):
+        case .noul(let instructions, let criteria):
             try c.encode("noul", forKey: .type)
             try c.encode(instructions, forKey: .instructions)
             try c.encode(criteria, forKey: .criteria)
-        case let .score(instructions, criteria):
+        case .score(let instructions, let criteria):
             try c.encode("score", forKey: .type)
             try c.encode(instructions, forKey: .instructions)
             try c.encode(criteria, forKey: .criteria)
@@ -206,10 +216,10 @@ nonisolated private struct JevResponse: Decodable {
 nonisolated enum JevAnswer: Decodable {
     case noul(probability: Double)
     case score(score: Double, confidence: Double)
-    case choice(choice: String, confidence: Double)   // unused today; decoded for completeness
+    case choice(choice: String, confidence: Double)  // unused today; decoded for completeness
 
     var noul: Double? {
-        if case let .noul(p) = self { return p }
+        if case .noul(let p) = self { return p }
         return nil
     }
 
@@ -221,14 +231,17 @@ nonisolated enum JevAnswer: Decodable {
         case "noul":
             self = .noul(probability: try c.decode(Double.self, forKey: .noul))
         case "score":
-            self = .score(score: try c.decode(Double.self, forKey: .score),
-                          confidence: try c.decode(Double.self, forKey: .confidence))
+            self = .score(
+                score: try c.decode(Double.self, forKey: .score),
+                confidence: try c.decode(Double.self, forKey: .confidence))
         case "choice":
-            self = .choice(choice: try c.decode(String.self, forKey: .choice),
-                           confidence: try c.decode(Double.self, forKey: .confidence))
+            self = .choice(
+                choice: try c.decode(String.self, forKey: .choice),
+                confidence: try c.decode(Double.self, forKey: .confidence))
         default:
-            throw DecodingError.dataCorruptedError(forKey: .type, in: c,
-                                                   debugDescription: "unknown answer type")
+            throw DecodingError.dataCorruptedError(
+                forKey: .type, in: c,
+                debugDescription: "unknown answer type")
         }
     }
 }

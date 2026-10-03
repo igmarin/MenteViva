@@ -71,8 +71,9 @@ struct OnboardingView: View {
                     Text(language.label)
                         .font(.title3.weight(language.rawValue == appLanguage ? .bold : .regular))
                         .frame(maxWidth: .infinity, minHeight: 100)
-                        .background(language.rawValue == appLanguage ? .blue.opacity(0.22) : .gray.opacity(0.12),
-                                    in: .rect(cornerRadius: 16))
+                        .background(
+                            language.rawValue == appLanguage ? .blue.opacity(0.22) : .gray.opacity(0.12),
+                            in: .rect(cornerRadius: 16))
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel(language.label)

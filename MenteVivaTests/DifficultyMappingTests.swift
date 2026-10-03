@@ -1,4 +1,5 @@
 import XCTest
+
 @testable import MenteViva
 
 /// Each game's difficulty knob: easy is never harder than medium, medium never
@@ -21,14 +22,14 @@ final class DifficultyMappingTests: XCTestCase {
     func testGivenTallPhoneSpaceWhenTwelveCardsThenFewerColumnsAndCardsFitHeight() {
         let fit = MemoryMatchView.gridFit(count: 12, in: CGSize(width: 400, height: 900), spacing: 0)
         XCTAssertEqual(fit.columns, 2)
-        XCTAssertEqual(fit.card.height, 150, accuracy: 0.01)   // 6 rows fill 900
+        XCTAssertEqual(fit.card.height, 150, accuracy: 0.01)  // 6 rows fill 900
     }
 
     func testGivenSpacingWhenFittingThenGapsAreSubtracted() {
         let fit = MemoryMatchView.gridFit(count: 8, in: CGSize(width: 800, height: 1000), spacing: 16)
         XCTAssertEqual(fit.columns, 2)
-        XCTAssertEqual(fit.card.width, 392, accuracy: 0.01)    // (800 - 16) / 2
-        XCTAssertEqual(fit.card.height, 238, accuracy: 0.01)   // (1000 - 3*16) / 4
+        XCTAssertEqual(fit.card.width, 392, accuracy: 0.01)  // (800 - 16) / 2
+        XCTAssertEqual(fit.card.height, 238, accuracy: 0.01)  // (1000 - 3*16) / 4
     }
 
     func testGivenSixteenCardsOnAPhoneWhenFittingThenFullRowsBeatALoneLastCard() {
@@ -52,17 +53,23 @@ final class DifficultyMappingTests: XCTestCase {
         XCTAssertEqual(MathStreakView.maxSum(streak: 0, difficulty: .medium), 10)
         XCTAssertEqual(MathStreakView.maxSum(streak: 100, difficulty: .medium), 50)
         XCTAssertEqual(MathStreakView.maxSum(streak: 100, difficulty: .easy), 20)
-        XCTAssertGreaterThan(MathStreakView.maxSum(streak: 0, difficulty: .hard),
-                             MathStreakView.maxSum(streak: 0, difficulty: .medium))
+        XCTAssertGreaterThan(
+            MathStreakView.maxSum(streak: 0, difficulty: .hard),
+            MathStreakView.maxSum(streak: 0, difficulty: .medium))
     }
 
     func testGivenDifficultiesWhenDisplayTimesThenEasyFlashesLongerAndFloorIsHigher() {
-        let (e, m, h) = (QuickEyesView.displayTimes(for: .easy),
-                         QuickEyesView.displayTimes(for: .medium),
-                         QuickEyesView.displayTimes(for: .hard))
-        XCTAssertGreaterThan(e.start, m.start); XCTAssertGreaterThan(m.start, h.start)
-        XCTAssertGreaterThan(e.floor, m.floor); XCTAssertGreaterThan(m.floor, h.floor)
-        XCTAssertEqual(m.start, 1.2); XCTAssertEqual(m.floor, 0.35)
+        let (e, m, h) = (
+            QuickEyesView.displayTimes(for: .easy),
+            QuickEyesView.displayTimes(for: .medium),
+            QuickEyesView.displayTimes(for: .hard)
+        )
+        XCTAssertGreaterThan(e.start, m.start)
+        XCTAssertGreaterThan(m.start, h.start)
+        XCTAssertGreaterThan(e.floor, m.floor)
+        XCTAssertGreaterThan(m.floor, h.floor)
+        XCTAssertEqual(m.start, 1.2)
+        XCTAssertEqual(m.floor, 0.35)
     }
 
     func testGivenDifficultiesWhenStroopMatchingChanceThenEasyMostHardNone() {

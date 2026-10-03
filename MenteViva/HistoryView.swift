@@ -1,5 +1,5 @@
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 /// "My Week": a warm, big-type look back at the last 7 days of play.
 /// One row per session: game emoji, localized game name. No scores (#45).
@@ -152,7 +152,7 @@ struct HistoryView: View {
         guard let game = session.game else {
             return ("🎮", AppLanguage.localized("history.game.unknown"))
         }
-        return (game.emoji, AppLanguage.localized( game.title))
+        return (game.emoji, AppLanguage.localized(game.title))
     }
 }
 

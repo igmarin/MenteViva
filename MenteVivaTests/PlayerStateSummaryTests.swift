@@ -1,13 +1,17 @@
 import XCTest
+
 @testable import MenteViva
 
 final class PlayerStateSummaryTests: XCTestCase {
     private let now = Date(timeIntervalSince1970: 1_800_000_000)
 
-    private func session(_ game: GameID, daysAgo: Int, correct: Int = 0, attempts: Int = 0,
-                         rounds: Int = 10) -> GameSession {
-        let s = GameSession(gameID: game, score: 0, rounds: rounds, durationSeconds: 1,
-                            correct: correct, attempts: attempts)
+    private func session(
+        _ game: GameID, daysAgo: Int, correct: Int = 0, attempts: Int = 0,
+        rounds: Int = 10
+    ) -> GameSession {
+        let s = GameSession(
+            gameID: game, score: 0, rounds: rounds, durationSeconds: 1,
+            correct: correct, attempts: attempts)
         s.playedAt = Calendar.current.date(byAdding: .day, value: -daysAgo, to: now)!
         return s
     }

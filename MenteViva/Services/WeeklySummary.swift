@@ -30,9 +30,11 @@ struct WeeklySummary: Equatable {
 
     /// Warm, plain-text card used on screen and as the share payload.
     var text: String {
-        var lines = [AppLanguage.localized("history.share.title"),
-                     String(format: AppLanguage.localized("history.share.days %lld"), daysPlayed),
-                     String(format: AppLanguage.localized("history.share.games %lld"), gamesPlayed)]
+        var lines = [
+            AppLanguage.localized("history.share.title"),
+            String(format: AppLanguage.localized("history.share.days %lld"), daysPlayed),
+            String(format: AppLanguage.localized("history.share.games %lld"), gamesPlayed),
+        ]
         if streak >= 2 {
             lines.append(String(format: AppLanguage.localized("history.share.streak %lld"), streak))
         }
@@ -59,7 +61,8 @@ struct GameProgress: Equatable {
 
     var levelTrend: Trend? {
         guard let level, let previousLevel else { return nil }
-        return level.rawValue > previousLevel.rawValue ? .up
+        return level.rawValue > previousLevel.rawValue
+            ? .up
             : level.rawValue < previousLevel.rawValue ? .down : .steady
     }
 
@@ -70,8 +73,10 @@ struct GameProgress: Equatable {
     }
 
     /// Games played in the last 14 days, in `GameID.allCases` order.
-    static func weekly(_ sessions: [GameSession], now: Date = .now,
-                       calendar: Calendar = .current) -> [GameProgress] {
+    static func weekly(
+        _ sessions: [GameSession], now: Date = .now,
+        calendar: Calendar = .current
+    ) -> [GameProgress] {
         let weekAgo = calendar.date(byAdding: .day, value: -7, to: now) ?? now
         let thisWeek = DayGrouping.lastWeek(sessions, date: \.playedAt, now: now, calendar: calendar)
             .filter { $0.playedAt <= now }
@@ -81,9 +86,10 @@ struct GameProgress: Equatable {
             let mine = thisWeek.filter { $0.game == game }
             let before = lastWeek.filter { $0.game == game }
             guard !mine.isEmpty || !before.isEmpty else { return nil }
-            return GameProgress(game: game, sessions: mine.count, previousSessions: before.count,
-                                accuracy: mine.meanAccuracy, previousAccuracy: before.meanAccuracy,
-                                level: latestLevel(mine), previousLevel: latestLevel(before))
+            return GameProgress(
+                game: game, sessions: mine.count, previousSessions: before.count,
+                accuracy: mine.meanAccuracy, previousAccuracy: before.meanAccuracy,
+                level: latestLevel(mine), previousLevel: latestLevel(before))
         }
     }
 
@@ -95,14 +101,18 @@ struct GameProgress: Equatable {
 /// Day grouping shared by My Week and its tests: the last 7 days of items,
 /// grouped by calendar day, newest day first.
 enum DayGrouping {
-    static func lastWeek<T>(_ items: [T], date: (T) -> Date,
-                            now: Date = .now, calendar: Calendar = .current) -> [T] {
+    static func lastWeek<T>(
+        _ items: [T], date: (T) -> Date,
+        now: Date = .now, calendar: Calendar = .current
+    ) -> [T] {
         let cutoff = calendar.date(byAdding: .day, value: -7, to: now) ?? now
         return items.filter { date($0) >= cutoff }
     }
 
-    static func byDay<T>(_ items: [T], date: (T) -> Date,
-                         calendar: Calendar = .current) -> [(day: Date, items: [T])] {
+    static func byDay<T>(
+        _ items: [T], date: (T) -> Date,
+        calendar: Calendar = .current
+    ) -> [(day: Date, items: [T])] {
         let grouped = Dictionary(grouping: items) { calendar.startOfDay(for: date($0)) }
         return grouped.keys.sorted(by: >).map { (day: $0, items: grouped[$0] ?? []) }
     }

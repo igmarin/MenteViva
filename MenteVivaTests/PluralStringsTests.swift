@@ -1,4 +1,5 @@
 import XCTest
+
 @testable import MenteViva
 
 /// #124: counts read naturally in both languages ("1 game", never "1 games").

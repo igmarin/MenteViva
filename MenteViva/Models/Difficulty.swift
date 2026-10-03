@@ -2,7 +2,9 @@ import Foundation
 
 /// A game's level. Each game turns it into its own knobs with `pick`.
 nonisolated enum Difficulty: Int, Codable {
-    case easy = 0, medium = 1, hard = 2
+    case easy = 0
+    case medium = 1
+    case hard = 2
 
     init(jevScore: Double) {
         let clamped = min(max(jevScore, 0), 2)

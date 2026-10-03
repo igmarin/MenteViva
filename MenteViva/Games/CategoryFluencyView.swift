@@ -1,5 +1,5 @@
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 /// Name the Herd: pick the 7 items that belong to the shown category
 /// from a grid of big emoji tiles (3 / 5 / 7 decoys by difficulty). 3 categories per session.
@@ -81,28 +81,42 @@ struct CategoryFluencyView: View {
                 Text(verbatim: "\(found) / \(round.items.count)")
                     .font(.title3)
                     .foregroundStyle(.secondary)
-                    .accessibilityLabel(String(format: AppLanguage.localized("game.category.found %lld %lld"),
-                                               found, round.items.count))
+                    .accessibilityLabel(
+                        String(
+                            format: AppLanguage.localized("game.category.found %lld %lld"),
+                            found, round.items.count))
 
                 LazyVGrid(columns: columns, spacing: 16) {
                     ForEach(tiles) { tile in
-                        Button { tap(tile.id) } label: {
+                        Button {
+                            tap(tile.id)
+                        } label: {
                             Text(tile.emoji)
                                 .font(.system(size: 52))
                         }
-                        .buttonStyle(AnswerTileStyle(tint: tile.isPicked ? .green.opacity(0.25) : .blue.opacity(0.15),
-                                                     minHeight: 100))
+                        .buttonStyle(
+                            AnswerTileStyle(
+                                tint: tile.isPicked ? .green.opacity(0.25) : .blue.opacity(0.15),
+                                minHeight: 100)
+                        )
                         // Non-color cue: picked tiles get a visible checkmark,
                         // not just a green tint (WCAG 1.4.1, conventions.md §4).
                         .overlay(alignment: .topTrailing) {
                             if tile.isPicked { CheckBadge() }
                         }
-                        .modifier(MissCue(active: Binding(get: { missedTile == tile.id },
-                                                          set: { if !$0 { missedTile = nil } })))
+                        .modifier(
+                            MissCue(
+                                active: Binding(
+                                    get: { missedTile == tile.id },
+                                    set: { if !$0 { missedTile = nil } }))
+                        )
                         .accessibilityLabel(tile.emoji)
-                        .accessibilityHint(tile.isPicked
-                                           ? AppLanguage.localized("game.category.a11y.picked")
-                                           : String(format: AppLanguage.localized("game.category.a11y.position %lld %lld"), tilePositions[tile.id] ?? 0, tiles.count))
+                        .accessibilityHint(
+                            tile.isPicked
+                                ? AppLanguage.localized("game.category.a11y.picked")
+                                : String(
+                                    format: AppLanguage.localized("game.category.a11y.position %lld %lld"),
+                                    tilePositions[tile.id] ?? 0, tiles.count))
                     }
                 }
             }
@@ -132,7 +146,8 @@ struct CategoryFluencyView: View {
         guard let category = currentRound else { return }
         let decoys = Category.allCases.filter { $0 != category }
             .flatMap(\.items).shuffled().prefix(Self.decoyCount(for: difficulty))
-        let mixed = category.items.map { (emoji: $0, belongs: true) }
+        let mixed =
+            category.items.map { (emoji: $0, belongs: true) }
             + decoys.map { (emoji: $0, belongs: false) }
         tiles = mixed.shuffled().enumerated().map { Tile(id: $0, emoji: $1.emoji, belongs: $1.belongs) }
         tilePositions = Dictionary(uniqueKeysWithValues: tiles.indices.map { (tiles[$0].id, $0 + 1) })
@@ -141,9 +156,14 @@ struct CategoryFluencyView: View {
 
     private func tap(_ tileID: Int) {
         guard let i = tiles.firstIndex(where: { $0.id == tileID }),
-              !tiles[i].isPicked else { return }
+            !tiles[i].isPicked
+        else { return }
         totalPicks += 1
-        guard tiles[i].belongs else { Feedback.play(.miss); missedTile = tileID; return } // decoy: kind, quiet
+        guard tiles[i].belongs else {
+            Feedback.play(.miss)
+            missedTile = tileID
+            return
+        }  // decoy: kind, quiet
         tiles[i].isPicked = true
         found += 1
         totalCorrect += 1
@@ -159,10 +179,12 @@ struct CategoryFluencyView: View {
     private func finish() {
         let elapsed = Int(Date.now.timeIntervalSince(startedAt))
         let score = Self.score(totalCorrect: totalCorrect)
-        modelContext.record(GameSession(gameID: .categoryFluency, score: score,
-                                        rounds: roundsPerSession, durationSeconds: elapsed,
-                                        correct: totalCorrect, attempts: totalPicks,
-                                        difficulty: difficulty))
+        modelContext.record(
+            GameSession(
+                gameID: .categoryFluency, score: score,
+                rounds: roundsPerSession, durationSeconds: elapsed,
+                correct: totalCorrect, attempts: totalPicks,
+                difficulty: difficulty))
         finalDetail = String(format: AppLanguage.localized("game.celebration.items %lld"), totalCorrect)
         showCelebration = true
     }

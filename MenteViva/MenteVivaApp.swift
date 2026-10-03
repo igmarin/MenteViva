@@ -1,6 +1,6 @@
-import SwiftUI
-import SwiftData
 import OSLog
+import SwiftData
+import SwiftUI
 
 @main
 struct MenteVivaApp: App {
@@ -17,10 +17,12 @@ struct MenteVivaApp: App {
     private let modelContainer: ModelContainer = {
         let schema = Schema([GameSession.self])
         #if LOCAL_ONLY
-        let stores = [ModelConfiguration(schema: schema)]
+            let stores = [ModelConfiguration(schema: schema)]
         #else
-        let stores = [ModelConfiguration(schema: schema, cloudKitDatabase: .private("iCloud.com.igmarin.MenteViva")),
-                      ModelConfiguration(schema: schema)]
+            let stores = [
+                ModelConfiguration(schema: schema, cloudKitDatabase: .private("iCloud.com.igmarin.MenteViva")),
+                ModelConfiguration(schema: schema),
+            ]
         #endif
         return makeContainer(trying: stores, schema: schema)
     }()
@@ -38,7 +40,8 @@ struct MenteVivaApp: App {
             }
         }
         do {
-            return try ModelContainer(for: schema, configurations: [ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)])
+            return try ModelContainer(
+                for: schema, configurations: [ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)])
         } catch {
             fatalError("Could not create even an in-memory store: \(error)")
         }

@@ -1,6 +1,6 @@
 import Foundation
-import SwiftData
 import OSLog
+import SwiftData
 
 /// CloudKit mirroring audit: no unique constraints, no relationships, and
 /// every property has a default — satisfies SwiftData + CloudKit constraints.
@@ -35,8 +35,10 @@ final class GameSession {
     /// The game this session belongs to; "memory" is Memory Lane's pre-#57 ID.
     var game: GameID? { GameID(rawValue: gameID) ?? (gameID == "memory" ? .memoryMatch : nil) }
 
-    init(gameID: GameID, score: Int, rounds: Int, durationSeconds: Int,
-         correct: Int = 0, attempts: Int = 0, difficulty: Difficulty? = nil) {
+    init(
+        gameID: GameID, score: Int, rounds: Int, durationSeconds: Int,
+        correct: Int = 0, attempts: Int = 0, difficulty: Difficulty? = nil
+    ) {
         self.gameID = gameID.rawValue
         self.score = score
         self.rounds = rounds

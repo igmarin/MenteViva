@@ -1,4 +1,5 @@
 import XCTest
+
 @testable import MenteViva
 
 final class WeeklySummaryTests: XCTestCase {
@@ -6,8 +7,9 @@ final class WeeklySummaryTests: XCTestCase {
     private let now = Date(timeIntervalSince1970: 1_790_000_000)
 
     private func daysAgo(_ n: Int, hoursOffset: Int = 0) -> Date {
-        calendar.date(byAdding: .hour, value: hoursOffset,
-                      to: calendar.date(byAdding: .day, value: -n, to: now)!)!
+        calendar.date(
+            byAdding: .hour, value: hoursOffset,
+            to: calendar.date(byAdding: .day, value: -n, to: now)!)!
     }
 
     func testGivenNoSessionsWhenSummarizingThenEverythingIsZero() {
@@ -49,10 +51,13 @@ final class GameProgressTests: XCTestCase {
     private let calendar = Calendar(identifier: .gregorian)
     private let now = Date(timeIntervalSince1970: 1_790_000_000)
 
-    private func session(_ game: GameID, daysAgo: Int, level: Difficulty? = nil,
-                         correct: Int = 0, attempts: Int = 0) -> GameSession {
-        let s = GameSession(gameID: game, score: 0, rounds: 6, durationSeconds: 30,
-                            correct: correct, attempts: attempts, difficulty: level)
+    private func session(
+        _ game: GameID, daysAgo: Int, level: Difficulty? = nil,
+        correct: Int = 0, attempts: Int = 0
+    ) -> GameSession {
+        let s = GameSession(
+            gameID: game, score: 0, rounds: 6, durationSeconds: 30,
+            correct: correct, attempts: attempts, difficulty: level)
         s.playedAt = calendar.date(byAdding: .day, value: -daysAgo, to: now)!
         return s
     }
@@ -86,7 +91,7 @@ final class GameProgressTests: XCTestCase {
             session(.memoryMatch, daysAgo: 4, level: .medium),
             session(.memoryMatch, daysAgo: 10, level: .medium),
         ]).first
-        XCTAssertEqual(p?.level, .hard)          // latest this week
+        XCTAssertEqual(p?.level, .hard)  // latest this week
         XCTAssertEqual(p?.previousLevel, .medium)
         XCTAssertEqual(p?.levelTrend, .up)
     }

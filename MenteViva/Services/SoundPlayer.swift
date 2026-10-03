@@ -71,7 +71,8 @@ enum SoundPlayer {
         guard let engine else { return }
 
         guard let format = AVAudioFormat(standardFormatWithSampleRate: 44100, channels: 1),
-              let buffer = Self.buffer(for: event, format: format) else { return }
+            let buffer = Self.buffer(for: event, format: format)
+        else { return }
 
         if playerNode == nil {
             let player = AVAudioPlayerNode()
@@ -112,7 +113,8 @@ enum SoundPlayer {
 
         let totalFrames = AVAudioFrameCount(totalDuration * sampleRate)
         guard let buffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: totalFrames),
-              let channel = buffer.floatChannelData?[0] else { return nil }
+            let channel = buffer.floatChannelData?[0]
+        else { return nil }
         buffer.frameLength = totalFrames
 
         var offset = 0

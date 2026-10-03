@@ -65,12 +65,12 @@ private struct ConfettiView: View {
 
     private struct Piece: Identifiable {
         let id: Int
-        let x: Double        // 0...1 horizontal start
-        let size: Double     // 6...12 pt
-        let delay: Double    // 0...8 s stagger
-        let duration: Double // 7...12 s fall time
-        let sway: Double     // 8...28 pt horizontal drift
-        let spin: Double     // turns per fall
+        let x: Double  // 0...1 horizontal start
+        let size: Double  // 6...12 pt
+        let delay: Double  // 0...8 s stagger
+        let duration: Double  // 7...12 s fall time
+        let sway: Double  // 8...28 pt horizontal drift
+        let spin: Double  // turns per fall
         let color: Color
         let isCircle: Bool
     }
@@ -78,24 +78,26 @@ private struct ConfettiView: View {
     private static let palette: [Color] = [.pink, .orange, .yellow, .green, .mint, .blue, .purple]
 
     private let pieces: [Piece] = (0..<48).map { i in
-        Piece(id: i,
-              x: Double.random(in: 0...1),
-              size: Double.random(in: 6...12),
-              delay: Double.random(in: 0...8),
-              duration: Double.random(in: 7...12),
-              sway: Double.random(in: 8...28) * (Bool.random() ? 1 : -1),
-              spin: Double.random(in: 0.5...1.5) * (Bool.random() ? 1 : -1),
-              color: (palette.randomElement() ?? .blue).opacity(0.8),
-              isCircle: Bool.random())
+        Piece(
+            id: i,
+            x: Double.random(in: 0...1),
+            size: Double.random(in: 6...12),
+            delay: Double.random(in: 0...8),
+            duration: Double.random(in: 7...12),
+            sway: Double.random(in: 8...28) * (Bool.random() ? 1 : -1),
+            spin: Double.random(in: 0.5...1.5) * (Bool.random() ? 1 : -1),
+            color: (palette.randomElement() ?? .blue).opacity(0.8),
+            isCircle: Bool.random())
     }
 
     var body: some View {
         if reduceMotion {
             Canvas { context, size in
                 for piece in pieces.prefix(12) {
-                    let rect = CGRect(x: piece.x * size.width,
-                                      y: size.height * Double(piece.id) / 12.0,
-                                      width: piece.size, height: piece.size)
+                    let rect = CGRect(
+                        x: piece.x * size.width,
+                        y: size.height * Double(piece.id) / 12.0,
+                        width: piece.size, height: piece.size)
                     context.fill(Path(ellipseIn: rect), with: .color(piece.color))
                 }
             }
@@ -104,19 +106,23 @@ private struct ConfettiView: View {
                 Canvas { context, size in
                     let now = timeline.date.timeIntervalSinceReferenceDate
                     for piece in pieces {
-                        let cycle = (now - piece.delay)
+                        let cycle =
+                            (now - piece.delay)
                             .truncatingRemainder(dividingBy: piece.duration) / piece.duration
                         guard cycle >= 0 else { continue }
-                        let x = piece.x * size.width
+                        let x =
+                            piece.x * size.width
                             + piece.sway * sin(cycle * .pi * 4)
                         let y = -20 + cycle * (size.height + 40)
                         var ctx = context
                         ctx.translateBy(x: x, y: y)
                         ctx.rotate(by: .degrees(360 * piece.spin * cycle))
-                        let rect = CGRect(x: -piece.size / 2, y: -piece.size / 2,
-                                          width: piece.size,
-                                          height: piece.isCircle ? piece.size : piece.size * 1.6)
-                        let path = piece.isCircle
+                        let rect = CGRect(
+                            x: -piece.size / 2, y: -piece.size / 2,
+                            width: piece.size,
+                            height: piece.isCircle ? piece.size : piece.size * 1.6)
+                        let path =
+                            piece.isCircle
                             ? Path(ellipseIn: rect)
                             : Path(roundedRect: rect, cornerRadius: 2)
                         ctx.fill(path, with: .color(piece.color))
@@ -129,8 +135,10 @@ private struct ConfettiView: View {
 
 extension View {
     /// The shared end-of-session screen (#45): progress, never points.
-    func celebration(isPresented: Binding<Bool>, detail: String,
-                     onPlayAgain: @escaping () -> Void) -> some View {
+    func celebration(
+        isPresented: Binding<Bool>, detail: String,
+        onPlayAgain: @escaping () -> Void
+    ) -> some View {
         modifier(CelebrationCover(isPresented: isPresented, detail: detail, onPlayAgain: onPlayAgain))
     }
 }
@@ -143,9 +151,16 @@ private struct CelebrationCover: ViewModifier {
 
     func body(content: Content) -> some View {
         content.fullScreenCover(isPresented: $isPresented) {
-            CelebrationView(detail: detail,
-                            onPlayAgain: { isPresented = false; onPlayAgain() },
-                            onHome: { isPresented = false; dismiss() })
+            CelebrationView(
+                detail: detail,
+                onPlayAgain: {
+                    isPresented = false
+                    onPlayAgain()
+                },
+                onHome: {
+                    isPresented = false
+                    dismiss()
+                })
         }
     }
 }

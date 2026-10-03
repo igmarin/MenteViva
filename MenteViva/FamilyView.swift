@@ -1,6 +1,6 @@
-import SwiftUI
-import SwiftData
 import PhotosUI
+import SwiftData
+import SwiftUI
 
 /// "For family" (#107, #108): the numbers behind My Week and the per-game
 /// choices, for the adult child. Open on purpose (owner decision 2026-10-01):
@@ -81,18 +81,26 @@ struct FamilyView: View {
 
     /// Level the next game will use, then this week, last week, and trends.
     private func lines(for p: GameProgress) -> [String] {
-        var lines = [levelLine(p.game, pin: pinned[p.game]),
-                     // Interpolated so "1 game" / "3 games" picks its plural form.
-                     week(AppLanguage.localized("family.week.this \(p.sessions)" as String.LocalizationValue), p.accuracy),
-                     week(AppLanguage.localized("family.week.last \(p.previousSessions)" as String.LocalizationValue),
-                          p.previousAccuracy)]
+        var lines = [
+            levelLine(p.game, pin: pinned[p.game]),
+            // Interpolated so "1 game" / "3 games" picks its plural form.
+            week(AppLanguage.localized("family.week.this \(p.sessions)" as String.LocalizationValue), p.accuracy),
+            week(
+                AppLanguage.localized("family.week.last \(p.previousSessions)" as String.LocalizationValue),
+                p.previousAccuracy),
+        ]
         if let from = p.previousLevel, let to = p.level, let trend = p.levelTrend, trend != .steady {
-            lines.append(String(format: AppLanguage.localized(trend == .up ? "family.level.up %@ %@" : "family.level.down %@ %@"),
-                                AppLanguage.localized(from.title), AppLanguage.localized(to.title)))
+            lines.append(
+                String(
+                    format: AppLanguage.localized(trend == .up ? "family.level.up %@ %@" : "family.level.down %@ %@"),
+                    AppLanguage.localized(from.title), AppLanguage.localized(to.title)))
         }
         if let trend = p.accuracyTrend {
-            lines.append(AppLanguage.localized(trend == .up ? "family.accuracy.up"
-                                               : trend == .down ? "family.accuracy.down" : "family.accuracy.steady"))
+            lines.append(
+                AppLanguage.localized(
+                    trend == .up
+                        ? "family.accuracy.up"
+                        : trend == .down ? "family.accuracy.down" : "family.accuracy.steady"))
         }
         return lines
     }
@@ -104,9 +112,10 @@ struct FamilyView: View {
 
     /// Plain text for WhatsApp/SMS/email: the same lines, one block per game.
     private var shareText: String {
-        ([AppLanguage.localized("family.share.title")] + progress.map { p in
-            "\(p.game.emoji) \(AppLanguage.localized(p.game.title))\n" + lines(for: p).joined(separator: "\n")
-        }).joined(separator: "\n\n")
+        ([AppLanguage.localized("family.share.title")]
+            + progress.map { p in
+                "\(p.game.emoji) \(AppLanguage.localized(p.game.title))\n" + lines(for: p).joined(separator: "\n")
+            }).joined(separator: "\n\n")
     }
 }
 
@@ -144,7 +153,8 @@ private struct FamilyPhotosSection: View {
                                     .frame(width: 104, height: 60)
                             }
                             .buttonStyle(.bordered)
-                            .accessibilityLabel(String(format: AppLanguage.localized("family.photos.remove.a11y %lld"), index + 1))
+                            .accessibilityLabel(
+                                String(format: AppLanguage.localized("family.photos.remove.a11y %lld"), index + 1))
                         }
                     }
                 }
@@ -155,8 +165,10 @@ private struct FamilyPhotosSection: View {
                     .font(.body)
             }
             if photos.count < MemoryPhotos.maxCount {
-                PhotosPicker(selection: $picked, maxSelectionCount: MemoryPhotos.maxCount - photos.count,
-                             matching: .images) {
+                PhotosPicker(
+                    selection: $picked, maxSelectionCount: MemoryPhotos.maxCount - photos.count,
+                    matching: .images
+                ) {
                     Label(AppLanguage.localized("family.photos.add"), systemImage: "photo.on.rectangle.angled")
                         .font(.title3)
                         .frame(maxWidth: .infinity, minHeight: 100, alignment: .leading)
@@ -254,16 +266,19 @@ private struct FamilyGameView: View {
     var body: some View {
         List {
             Section {
-                Toggle(AppLanguage.localized("family.show"), isOn: Binding(
-                    get: { !hidden.contains(game) },
-                    set: { show in
-                        var games = hidden
-                        if show { games.remove(game) } else { games.insert(game) }
-                        hiddenGames = FamilySettings.csv(games)
-                    }))
-                    .font(.title3)
-                    .frame(minHeight: 100)
-                    .disabled(isLastVisible)
+                Toggle(
+                    AppLanguage.localized("family.show"),
+                    isOn: Binding(
+                        get: { !hidden.contains(game) },
+                        set: { show in
+                            var games = hidden
+                            if show { games.remove(game) } else { games.insert(game) }
+                            hiddenGames = FamilySettings.csv(games)
+                        })
+                )
+                .font(.title3)
+                .frame(minHeight: 100)
+                .disabled(isLastVisible)
             } footer: {
                 if isLastVisible {
                     Text(AppLanguage.localized("family.show.last")).font(.footnote)
@@ -306,9 +321,10 @@ private struct FamilyGameView: View {
 /// "Next game: Easy (set by you)": the level a game will use and who chose
 /// it. Shared by the game list and the progress lines (#122).
 private func levelLine(_ game: GameID, pin: Difficulty?) -> String {
-    String(format: AppLanguage.localized("family.level %@ %@"),
-           AppLanguage.localized((pin ?? Difficulty.stored(game)).title),
-           AppLanguage.localized(pin == nil ? "family.auto" : "family.pinned"))
+    String(
+        format: AppLanguage.localized("family.level %@ %@"),
+        AppLanguage.localized((pin ?? Difficulty.stored(game)).title),
+        AppLanguage.localized(pin == nil ? "family.auto" : "family.pinned"))
 }
 
 #Preview {

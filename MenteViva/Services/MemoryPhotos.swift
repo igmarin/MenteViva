@@ -4,7 +4,7 @@ import UIKit
 /// (no library permission needed), shrunk to at most 600 px, and kept only in
 /// this app's own storage on this device — nothing is uploaded or shared.
 enum MemoryPhotos {
-    static let maxCount = 8   // the largest board has 8 pairs
+    static let maxCount = 8  // the largest board has 8 pairs
     static let maxSide: CGFloat = 600
 
     enum AddError: Error { case notAnImage, albumFull }
@@ -22,8 +22,9 @@ enum MemoryPhotos {
 
     /// Stored photos, oldest first.
     static func all(in folder: URL = folder) -> [URL] {
-        let files = (try? FileManager.default.contentsOfDirectory(
-            at: folder, includingPropertiesForKeys: [.creationDateKey])) ?? []
+        let files =
+            (try? FileManager.default.contentsOfDirectory(
+                at: folder, includingPropertiesForKeys: [.creationDateKey])) ?? []
         return files.filter { $0.pathExtension == "jpg" }.sorted { a, b in
             let date = { (url: URL) in
                 (try? url.resourceValues(forKeys: [.creationDateKey]).creationDate) ?? .distantPast
@@ -52,7 +53,10 @@ enum MemoryPhotos {
     static func add(_ photos: [Data?], to folder: URL = folder) -> AddResult {
         var result = AddResult()
         for data in photos {
-            guard let data else { result.unreadable += 1; continue }
+            guard let data else {
+                result.unreadable += 1
+                continue
+            }
             do {
                 try add(data, to: folder)
                 result.added += 1
