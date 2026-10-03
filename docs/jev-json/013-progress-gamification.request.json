@@ -1,0 +1,117 @@
+{
+  "model": "jev-latest",
+  "state": {
+    "product": "MenteViva, iOS exercise app for older adults. Warm, no-fail, big-target design, EN+ES, offline, zero third-party dependencies, solo developer. Copy ceiling: 'fun mental exercise', no medical claims. Points were removed from the UI because players found them confusing. Each device holds one person's play history; the owner plays on an iPhone and the primary player on his own iPad.",
+    "player": "Primary player: an older adult who plays alone on his own iPad. The owner, his adult child, also plays on a separate device and wants to track his own progress too. The owner does not want the app to feel like supervision of either of them.",
+    "games": "Memory Lane (pair matching, 4/6/8 pairs, can use the family's own photos), Name the Herd (pick the items of a category), Quick Eyes (an item flashes, find it among 4), Color Clash (Stroop), Number Trail (addition streaks). Each session stores accuracy, rounds, duration and difficulty level.",
+    "playtest_findings": "Memory Lane, Name the Herd and Quick Eyes held his attention; Color Clash and Number Trail fell flat. He recognizes familiar faces but cannot recall the name: the missing piece is the name or a short phrase tied to a photo (a person, a nickname, a place such as a family home, an event such as an anniversary).",
+    "owner_decisions": "Proposed, not yet decided: (1) photos get an optional short caption typed by family, kept on the device only; (2) a photo-reminiscence game where he sees a photo, is asked 'Who is this?', and taps 'Show me' to reveal and hear the caption, no wrong answer, with bundled everyday objects when there are no photos; (3) a Memory Lane variant matching a photo to its caption; (4) Number Trail gains subtraction, multiplication and exact division as difficulty steps; (5) My Week becomes one row per day with a count per game instead of one row per session; (6) progress is measured with rates, never sums: mean accuracy per play, level reached, days played per week, trends shown only after 3+ plays and compared only to the player's own earlier weeks; (7) the 'For family' screen is renamed to a per-device 'My progress' and shows the same rates to whoever holds the device, while hiding games and pinning difficulty move to a separate 'Set up'.",
+    "gamification_candidates": "week_ring: 7 dots per week, one filled per day played, no loss state. streak: consecutive days played, resets to zero on a miss. weekly_count_only: a plain count of days played this week. personal_bests: best week so far, compared only to oneself. milestones: one-time warm messages such as first time reaching Hard. challenge_level: an opt-in level above Hard, off by default. Ruled out by the owner: leaderboards, pressure timers, reminder notifications."
+  },
+  "questions": {
+    "consistency_display": {
+      "type": "choice",
+      "instructions": "Which single view of consistency best motivates this player and his adult child without guilt?",
+      "criteria": {
+        "week_ring": "A ring of 7 dots per week, a dot filled for each day played, never a loss state",
+        "streak": "A count of consecutive days played that resets to zero after a missed day",
+        "weekly_count_only": "A plain count of days played this week, no visual"
+      }
+    },
+    "progress_screen_framing": {
+      "type": "choice",
+      "instructions": "How should the screen with rates and trends be framed?",
+      "criteria": {
+        "my_progress_per_device": "A per-device 'My progress' showing the same rates to whoever holds the device, with hide-games and pin-difficulty moved to a separate 'Set up'",
+        "keep_family_screen": "Keep the caregiver-oriented 'For family' screen as it is",
+        "separate_caregiver_view": "Two views: a warm player view and a numbers view labeled for caregivers"
+      }
+    },
+    "build_order_after_captions": {
+      "type": "choice",
+      "instructions": "After photo captions exist, which should be built first?",
+      "criteria": {
+        "photo_caption_reminiscence": "The photo-reminiscence game: photo, 'Who is this?', tap to reveal and hear the caption",
+        "memory_lane_name_match": "Memory Lane variant: match a photo to its caption",
+        "number_trail_operators": "Number Trail with subtraction, multiplication and division as difficulty steps",
+        "my_week_and_progress": "The per-day counts in My Week and the per-device My progress screen"
+      }
+    },
+    "captions_before_games": {
+      "type": "noul",
+      "instructions": "Should photo captions be built as their own foundation before any game uses them?",
+      "criteria": {
+        "true": "Both the reminiscence game and the Memory Lane variant need captions, and the caption field is also the privacy-sensitive part; ship it alone first",
+        "false": "Build the reminiscence game with captions inside it; a separate foundation delays visible value"
+      }
+    },
+    "my_week_per_day_counts": {
+      "type": "noul",
+      "instructions": "Should My Week show one row per day with a count per game, replacing one row per session?",
+      "criteria": {
+        "true": "Seven short rows instead of an ever-growing log reads as progress, not as a record of everything",
+        "false": "The per-session list is concrete and warm; a count loses the sense of each time he played"
+      }
+    },
+    "show_game_mix": {
+      "type": "noul",
+      "instructions": "Should the progress screen show the share of this week's plays per game (for example 50% one game, 0% another)?",
+      "criteria": {
+        "true": "It shows which games resonate and which are ignored, labeled 'played this week' not 'favorite'",
+        "false": "The share mostly reflects what the daily plan suggested, so it can mislead until games are chosen by hand"
+      }
+    },
+    "challenge_level": {
+      "type": "noul",
+      "instructions": "Should an opt-in level above Hard exist, off by default and never shown to the primary player unless turned on?",
+      "criteria": {
+        "true": "The owner wants a challenge for himself and the app serves two players",
+        "false": "A level only one person uses adds code and settings for one user; wait for a request"
+      }
+    },
+    "number_trail_operators_by_level": {
+      "type": "noul",
+      "instructions": "Should Number Trail add subtraction (never below zero), then multiplication and exact division, as difficulty steps rather than a random mix?",
+      "criteria": {
+        "true": "Operators map cleanly onto the existing easy/medium/hard ladder and keep each level predictable",
+        "false": "A random mix keeps the game less predictable and engaging for players who find it flat"
+      }
+    },
+    "fit_photo_caption_reminiscence": {
+      "type": "score",
+      "instructions": "Score photo_caption_reminiscence (photo, 'Who is this?', tap to reveal and hear the caption, no wrong answer) as the next addition for this player: errorless fit, familiarity, adult dignity, engagement, and buildability by a solo developer with zero dependencies.",
+      "criteria": [
+        "0 = poor next game",
+        "1 = reasonable",
+        "2 = excellent next game"
+      ]
+    },
+    "fit_memory_lane_name_match": {
+      "type": "score",
+      "instructions": "Score memory_lane_name_match (match a family photo to its caption) as the next addition for this player: errorless fit, familiarity, adult dignity, engagement, and buildability by a solo developer with zero dependencies.",
+      "criteria": [
+        "0 = poor next game",
+        "1 = reasonable",
+        "2 = excellent next game"
+      ]
+    },
+    "fit_quick_eyes_find_the_face": {
+      "type": "score",
+      "instructions": "Score quick_eyes_find_the_face (a name is shown, find the matching photo among 4) as the next addition for this player: errorless fit, familiarity, adult dignity, engagement, and buildability by a solo developer with zero dependencies.",
+      "criteria": [
+        "0 = poor next game",
+        "1 = reasonable",
+        "2 = excellent next game"
+      ]
+    },
+    "fit_number_trail_operators": {
+      "type": "score",
+      "instructions": "Score number_trail_operators (subtraction, multiplication, exact division as difficulty steps) as the next addition for this player: errorless fit, familiarity, adult dignity, engagement, and buildability by a solo developer with zero dependencies.",
+      "criteria": [
+        "0 = poor next game",
+        "1 = reasonable",
+        "2 = excellent next game"
+      ]
+    }
+  }
+}
