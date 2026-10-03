@@ -5,6 +5,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 ## [Unreleased]
 
 ### Fixed
+- **Memory Lane photos say what happened (#120):** after picking photos, one
+  line says how many were added and, if some weren't, that a photo couldn't
+  be used or that the album holds 8. VoiceOver reads it too. EN + ES.
 - **The app always opens (#124):** if the saved game history can't be opened
   (for example after a failed update), the app now starts with a temporary
   history instead of crashing on every launch; the problem is logged.

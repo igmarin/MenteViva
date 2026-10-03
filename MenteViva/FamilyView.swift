@@ -115,6 +115,8 @@ struct FamilyView: View {
 private struct FamilyPhotosSection: View {
     @State private var photos = MemoryPhotos.all()
     @State private var picked: [PhotosPickerItem] = []
+    /// What the last pick did, in plain words (#120); cleared on Remove.
+    @State private var note: String?
     private let columns = [GridItem(.adaptive(minimum: 120), spacing: 12)]
 
     var body: some View {
@@ -135,6 +137,7 @@ private struct FamilyPhotosSection: View {
                             Button(role: .destructive) {
                                 MemoryPhotos.remove(url)
                                 photos = MemoryPhotos.all()
+                                note = nil
                             } label: {
                                 Text(AppLanguage.localized("family.photos.remove"))
                                     .font(.body)
@@ -146,6 +149,10 @@ private struct FamilyPhotosSection: View {
                     }
                 }
                 .padding(.vertical, 8)
+            }
+            if let note {
+                Text(note)
+                    .font(.body)
             }
             if photos.count < MemoryPhotos.maxCount {
                 PhotosPicker(selection: $picked, maxSelectionCount: MemoryPhotos.maxCount - photos.count,
@@ -165,15 +172,35 @@ private struct FamilyPhotosSection: View {
         .onChange(of: picked) { _, items in
             guard !items.isEmpty else { return }
             Task {
+                var datas: [Data?] = []
                 for item in items {
-                    if let data = try? await item.loadTransferable(type: Data.self) {
-                        try? MemoryPhotos.add(data)
-                    }
+                    datas.append(try? await item.loadTransferable(type: Data.self))
                 }
+                let result = MemoryPhotos.add(datas)
                 picked = []
                 photos = MemoryPhotos.all()
+                note = result.note
+                if let note { AccessibilityNotification.Announcement(note).post() }
             }
         }
+    }
+}
+
+extension MemoryPhotos.AddResult {
+    /// One warm line about the last pick; nil when nothing happened. Never
+    /// "error" or "failed": a photo "couldn't be used" and the album "holds 8".
+    var note: String? {
+        var parts: [String] = []
+        if added > 0 {
+            parts.append(AppLanguage.localized("family.photos.added \(added)" as String.LocalizationValue))
+        }
+        if unreadable > 0 {
+            parts.append(AppLanguage.localized("family.photos.unreadable \(unreadable)" as String.LocalizationValue))
+        }
+        if overLimit > 0 {
+            parts.append(String(format: AppLanguage.localized("family.photos.full %lld"), MemoryPhotos.maxCount))
+        }
+        return parts.isEmpty ? nil : parts.joined(separator: " ")
     }
 }
 
