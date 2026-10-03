@@ -50,8 +50,8 @@ app — the App Store enforces this for us; no code check needed.
 
 | Screen | iPhone | iPad |
 |---|---|---|
-| Home tiles | 2 across | 4 across (adaptive, min 150pt) |
-| Memory Lane grid | adaptive, min 110pt (120pt cards) | more columns |
+| Home tiles | 2 across (1 at accessibility text sizes: 300pt minimum) | 4 across (adaptive, min 150pt) |
+| Memory Lane board | every card visible, no scroll: `gridFit` picks the columns that make cards largest (4/6/8 pairs; cards stay ≥60pt, tested) | same, larger cards |
 | Category Fluency grid | adaptive, min 100pt | more columns |
 | Other games | fixed layouts, no grid | same, centered |
 | My Week rows | full width, 72pt tall | full width |
