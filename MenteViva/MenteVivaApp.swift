@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftData
+import OSLog
 
 @main
 struct MenteVivaApp: App {
@@ -15,27 +16,33 @@ struct MenteVivaApp: App {
     }
     private let modelContainer: ModelContainer = {
         let schema = Schema([GameSession.self])
-
         #if LOCAL_ONLY
-        let config = ModelConfiguration(schema: schema)
+        let stores = [ModelConfiguration(schema: schema)]
         #else
-        let config = ModelConfiguration(
-            schema: schema,
-            cloudKitDatabase: .private("iCloud.com.igmarin.MenteViva")
-        )
+        let stores = [ModelConfiguration(schema: schema, cloudKitDatabase: .private("iCloud.com.igmarin.MenteViva")),
+                      ModelConfiguration(schema: schema)]
         #endif
+        return makeContainer(trying: stores, schema: schema)
+    }()
 
-        do {
-            return try ModelContainer(for: schema, configurations: [config])
-        } catch {
-            // Store-level failure: never break play.
+    /// The first store that opens, in order. If none does (a failed migration,
+    /// a damaged file), an in-memory store (#124): this launch's games aren't
+    /// kept, but the app opens and play goes on. Logged, never shown.
+    static func makeContainer(trying stores: [ModelConfiguration], schema: Schema) -> ModelContainer {
+        let log = Logger(subsystem: "com.igmarin.MenteViva", category: "store")
+        for store in stores {
             do {
-                return try ModelContainer(for: schema, configurations: [ModelConfiguration(schema: schema)])
+                return try ModelContainer(for: schema, configurations: [store])
             } catch {
-                fatalError("Could not create any ModelContainer: \(error)")
+                log.error("Store did not open: \(String(describing: error), privacy: .public)")
             }
         }
-    }()
+        do {
+            return try ModelContainer(for: schema, configurations: [ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)])
+        } catch {
+            fatalError("Could not create even an in-memory store: \(error)")
+        }
+    }
 
     var body: some Scene {
         WindowGroup {

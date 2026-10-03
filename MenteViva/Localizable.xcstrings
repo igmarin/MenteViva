@@ -836,15 +836,39 @@
     "history.summary %lld": {
       "localizations": {
         "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "You played %lld times this week! 🌟"
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "You played %lld time this week! 🌟"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "You played %lld times this week! 🌟"
+                }
+              }
+            }
           }
         },
         "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "¡Jugaste %lld veces esta semana! 🌟"
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "¡Jugaste %lld vez esta semana! 🌟"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "¡Jugaste %lld veces esta semana! 🌟"
+                }
+              }
+            }
           }
         }
       }
@@ -1492,15 +1516,39 @@
     "family.week.this %lld": {
       "localizations": {
         "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "This week: %lld games"
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "This week: %lld game"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "This week: %lld games"
+                }
+              }
+            }
           }
         },
         "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Esta semana: %lld juegos"
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Esta semana: %lld juego"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Esta semana: %lld juegos"
+                }
+              }
+            }
           }
         }
       }
@@ -1508,15 +1556,39 @@
     "family.week.last %lld": {
       "localizations": {
         "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Week before: %lld games"
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Week before: %lld game"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Week before: %lld games"
+                }
+              }
+            }
           }
         },
         "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Semana anterior: %lld juegos"
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Semana anterior: %lld juego"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Semana anterior: %lld juegos"
+                }
+              }
+            }
           }
         }
       }

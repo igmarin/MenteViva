@@ -13,6 +13,9 @@ struct FamilyView: View {
     private var sessions: [GameSession]
 
     private var progress: [GameProgress] { GameProgress.weekly(sessions) }
+    /// Kept in state so a level changed on a game's screen shows here on the
+    /// way back (#124); refreshed whenever this device's settings change.
+    @State private var pinned = FamilySettings.pinned()
 
     var body: some View {
         List {
@@ -56,6 +59,11 @@ struct FamilyView: View {
             }
         }
         .navigationTitle(AppLanguage.localized("family.title"))
+        .task {
+            for await _ in NotificationCenter.default.notifications(named: UserDefaults.didChangeNotification) {
+                pinned = FamilySettings.pinned()
+            }
+        }
         .toolbar {
             if !progress.isEmpty {
                 ToolbarItem(placement: .topBarTrailing) {
@@ -75,10 +83,12 @@ struct FamilyView: View {
     /// Level the next game will use, then this week, last week, and trends.
     private func lines(for p: GameProgress) -> [String] {
         var lines = [String(format: AppLanguage.localized("family.level %@ %@"),
-                            AppLanguage.localized(Difficulty.stored(p.game).title),
-                            AppLanguage.localized(FamilySettings.pinned()[p.game] == nil ? "family.auto" : "family.pinned")),
-                     week("family.week.this %lld", p.sessions, p.accuracy),
-                     week("family.week.last %lld", p.previousSessions, p.previousAccuracy)]
+                            AppLanguage.localized((pinned[p.game] ?? Difficulty.stored(p.game)).title),
+                            AppLanguage.localized(pinned[p.game] == nil ? "family.auto" : "family.pinned")),
+                     // Interpolated so "1 game" / "3 games" picks its plural form.
+                     week(AppLanguage.localized("family.week.this \(p.sessions)" as String.LocalizationValue), p.accuracy),
+                     week(AppLanguage.localized("family.week.last \(p.previousSessions)" as String.LocalizationValue),
+                          p.previousAccuracy)]
         if let from = p.previousLevel, let to = p.level, let trend = p.levelTrend, trend != .steady {
             lines.append(String(format: AppLanguage.localized(trend == .up ? "family.level.up %@ %@" : "family.level.down %@ %@"),
                                 AppLanguage.localized(from.title), AppLanguage.localized(to.title)))
@@ -90,8 +100,7 @@ struct FamilyView: View {
         return lines
     }
 
-    private func week(_ key: String, _ count: Int, _ accuracy: Double?) -> String {
-        let games = String(format: AppLanguage.localized(key), count)
+    private func week(_ games: String, _ accuracy: Double?) -> String {
         guard let accuracy else { return games }
         return games + " · " + String(format: AppLanguage.localized("family.right %lld"), Int((accuracy * 100).rounded()))
     }
