@@ -96,6 +96,7 @@ struct HomeView: View {
         case .categoryFluency: CategoryFluencyView()
         case .mathStreaks: MathStreakView()
         case .quickEyes: QuickEyesView()
+        case .reminiscence: ReminiscenceView()
         }
     }
 }

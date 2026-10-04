@@ -102,7 +102,9 @@ actor JevService {
 
     private func ask(state: PlayerStateSummary, proxyURL: URL) async throws -> [String: JevAnswer] {
         var questions: [String: JevQuestion] = [:]
-        for game in GameID.allCases {
+        // Games without levels (Remember Together, #139) stay out of the Jev wire: it has no
+        // difficulty to judge, and the optional Jev request keeps the shape archived in docs/jev-json/011.
+        for game in GameID.allCases where game.hasLevels {
             questions["include_\(game.rawValue)"] = .noul(
                 instructions: "Should \(game.rawValue) be in today's recommended mix for this player?",
                 criteria: [
