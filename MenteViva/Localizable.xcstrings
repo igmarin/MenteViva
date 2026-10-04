@@ -166,6 +166,86 @@
         }
       }
     },
+    "family.caption.field" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A name or a few words"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un nombre o unas palabras"
+          }
+        }
+      }
+    },
+    "family.caption.placeholder" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mom's house"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La casa de mamá"
+          }
+        }
+      }
+    },
+    "family.caption.privacy" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stays on this device only. Not shared, not sent anywhere."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se queda solo en este dispositivo. No se comparte ni se envía a ningún lado."
+          }
+        }
+      }
+    },
+    "family.caption.save" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Guardar"
+          }
+        }
+      }
+    },
+    "family.caption.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Name this photo"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ponle nombre a esta foto"
+          }
+        }
+      }
+    },
     "family.difficulty" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -247,6 +327,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Abre los ajustes de este juego"
+          }
+        }
+      }
+    },
+    "family.game.nolevel" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Photos and names, no levels"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fotos y nombres, sin niveles"
           }
         }
       }
@@ -440,6 +536,38 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "family.photos.caption.a11y %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Photo %lld: add or change its name"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Foto %lld: poner o cambiar su nombre"
+          }
+        }
+      }
+    },
+    "family.photos.caption.add" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add a name"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Poner un nombre"
           }
         }
       }

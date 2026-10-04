@@ -81,14 +81,15 @@ struct FamilyView: View {
 
     /// Level the next game will use, then this week, last week, and trends.
     private func lines(for p: GameProgress) -> [String] {
-        var lines = [
-            levelLine(p.game, pin: pinned[p.game]),
-            // Interpolated so "1 game" / "3 games" picks its plural form.
-            week(AppLanguage.localized("family.week.this \(p.sessions)" as String.LocalizationValue), p.accuracy),
+        // A game without levels (Remember Together, #139) has no level line.
+        var lines = p.game.hasLevels ? [levelLine(p.game, pin: pinned[p.game])] : []
+        // Interpolated so "1 game" / "3 games" picks its plural form.
+        lines.append(
+            week(AppLanguage.localized("family.week.this \(p.sessions)" as String.LocalizationValue), p.accuracy))
+        lines.append(
             week(
                 AppLanguage.localized("family.week.last \(p.previousSessions)" as String.LocalizationValue),
-                p.previousAccuracy),
-        ]
+                p.previousAccuracy))
         if let from = p.previousLevel, let to = p.level, let trend = p.levelTrend, trend != .steady {
             lines.append(
                 String(
@@ -119,6 +120,11 @@ struct FamilyView: View {
     }
 }
 
+private struct CaptionTarget: Identifiable {
+    let url: URL
+    var id: URL { url }
+}
+
 /// Memory Lane photos (#110): picked with the system photo picker (no library
 /// permission), kept on this device only. Each has its own Remove button.
 private struct FamilyPhotosSection: View {
@@ -126,6 +132,8 @@ private struct FamilyPhotosSection: View {
     @State private var picked: [PhotosPickerItem] = []
     /// What the last pick did, in plain words (#120); cleared on Remove.
     @State private var note: String?
+    /// The photo being named (#139).
+    @State private var captioning: CaptionTarget?
     private let columns = [GridItem(.adaptive(minimum: 120), spacing: 12)]
 
     var body: some View {
@@ -143,18 +151,18 @@ private struct FamilyPhotosSection: View {
                                     .accessibilityHidden(true)
                             }
                             // Bordered style keeps each button separate inside one list row.
-                            Button(role: .destructive) {
-                                MemoryPhotos.remove(url)
-                                photos = MemoryPhotos.all()
-                                note = nil
+                            Button {
+                                captioning = CaptionTarget(url: url)
                             } label: {
-                                Text(AppLanguage.localized("family.photos.remove"))
+                                Text(MemoryPhotos.caption(for: url) ?? AppLanguage.localized("family.photos.caption.add"))
                                     .font(.body)
+                                    .lineLimit(2)
+                                    .multilineTextAlignment(.center)
                                     .frame(width: 104, height: 60)
                             }
                             .buttonStyle(.bordered)
                             .accessibilityLabel(
-                                String(format: AppLanguage.localized("family.photos.remove.a11y %lld"), index + 1))
+                                String(format: AppLanguage.localized("family.photos.caption.a11y %lld"), index + 1))
                         }
                     }
                 }
@@ -180,6 +188,12 @@ private struct FamilyPhotosSection: View {
         } footer: {
             Text(AppLanguage.localized("family.photos.footer"))
                 .font(.footnote)
+        }
+        .sheet(item: $captioning) { target in
+            FamilyPhotoCaptionSheet(photo: target.url) {
+                photos = MemoryPhotos.all()
+                note = nil
+            }
         }
         .onChange(of: picked) { _, items in
             guard !items.isEmpty else { return }
@@ -243,6 +257,7 @@ private struct FamilyGameRow: View {
         if FamilySettings.hidden(from: hiddenGames).contains(game) {
             return AppLanguage.localized("family.hidden")
         }
+        guard game.hasLevels else { return AppLanguage.localized("family.game.nolevel") }
         return levelLine(game, pin: Difficulty(rawValue: pin))
     }
 }
@@ -285,15 +300,17 @@ private struct FamilyGameView: View {
                 }
             }
 
-            Section {
-                choice(FamilySettings.auto, AppLanguage.localized("family.difficulty.auto"))
-                ForEach([Difficulty.easy, .medium, .hard], id: \.self) { level in
-                    choice(level.rawValue, AppLanguage.localized(level.title))
+            if game.hasLevels {
+                Section {
+                    choice(FamilySettings.auto, AppLanguage.localized("family.difficulty.auto"))
+                    ForEach([Difficulty.easy, .medium, .hard], id: \.self) { level in
+                        choice(level.rawValue, AppLanguage.localized(level.title))
+                    }
+                } header: {
+                    Text(AppLanguage.localized("family.difficulty")).font(.title3)
+                } footer: {
+                    Text(AppLanguage.localized("family.difficulty.footer")).font(.footnote)
                 }
-            } header: {
-                Text(AppLanguage.localized("family.difficulty")).font(.title3)
-            } footer: {
-                Text(AppLanguage.localized("family.difficulty.footer")).font(.footnote)
             }
         }
         .navigationTitle(Text(verbatim: "\(game.emoji) \(AppLanguage.localized(game.title))"))
