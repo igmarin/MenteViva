@@ -15,8 +15,9 @@ nothing can be answered wrongly. Captions are typed by family and stay on the de
    The sheet says: "Stays on this device only. Not shared, not sent anywhere."
 2. **Game ("Reminiscence").** A session is up to 5 cards, in random order:
    - Photo with a caption: "Who is this?" and a 64pt+ "Show me". It reveals the caption in
-     large type and speaks it (system speech, in the app language, only when sound is on). A
-     "hear it again" button and "Next".
+     large type. The name is spoken automatically **only if the player turned on "Read names
+     aloud" in Settings (off by default, separate from the sound-and-haptics toggle)**. A speaker
+     button on the revealed card always works: tapping it is asking to hear the name. Then "Next".
    - Photo without a caption: "Let's look together", then "Next".
    - No photos at all: bundled everyday objects (SF Symbols such as cup, clock, key, house),
      same flow, caption = the object's localized name.
@@ -35,9 +36,9 @@ nothing can be answered wrongly. Captions are typed by family and stay on the de
 
 ## Files
 
-New: `Games/ReminiscenceView.swift`, `Services/CaptionSpeaker.swift` (one small speech wrapper),
+New: `Games/ReminiscenceView.swift`, `Services/CaptionSpeaker.swift` (one small speech wrapper, plus the `speakNamesKey` setting),
 `Services/EverydayObjects.swift` (the fallback list). Changed: `GameID`, `HomeView`,
-`DailyPolicy` (mix weight), `MemoryPhotos` (caption), `FamilyView` (caption sheet, no pin row),
+`DailyPolicy` (mix weight), `MemoryPhotos` (caption), `FamilyView` (caption sheet, no pin row), `SettingsView` (the toggle),
 strings, `docs/privacy-policy.md`, `CHANGELOG.md`.
 
 ## Rules honored
@@ -47,7 +48,7 @@ revealed, "photo, no name yet" before); strings EN+ES; zero dependencies (AVFoun
 
 ## Tests (written first)
 
-Caption round trip and delete-with-photo; the 60-character limit; accuracy nil for a reminiscence
+Speech is never started without the toggle or a tap; caption round trip and delete-with-photo; the 60-character limit; accuracy nil for a reminiscence
 session; the daily plan never raises or lowers its difficulty from it; card dealing (5 max,
 photos first, objects only when the album is empty).
 
