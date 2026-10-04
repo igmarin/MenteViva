@@ -23,6 +23,13 @@ access to the rest of your library. The app keeps a small copy of each in its
 private storage on this device, never uploads or shares them, and deletes the
 copy when you tap Remove (or delete the app).
 
+**Names on photos.** For each Memory Lane photo you can type a name or a few
+words (a person, a nickname, a place, an event). It is stored next to the photo,
+in the app's private storage on this device, and nowhere else: it is never
+uploaded, never part of a share, and never sent to any service. Removing the
+photo removes its name. Optionally the app can read a name aloud using your
+device's built-in voice; that happens on the device.
+
 **What leaves the device: normally, nothing.** The app works fully offline, and
 its daily game suggestion is worked out on your device. There is one optional
 variant of that suggestion that, *only if it is turned on in a given build*, sends a small summary to our suggestion service:

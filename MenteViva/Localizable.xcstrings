@@ -2573,13 +2573,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No ads. No tracking. No account. Your games stay on your device. If daily suggestions are on, only anonymous totals leave it — which games, how many, how well. Never your name. Photos you add for Memory Lane stay on this device."
+            "value" : "No ads. No tracking. No account. Your games stay on your device. If daily suggestions are on, only anonymous totals leave it — which games, how many, how well. Never your name. Photos you add for Memory Lane, and the names you give them, stay on this device."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sin anuncios. Sin rastreo. Sin cuenta. Tus partidas se quedan en tu dispositivo. Si las sugerencias diarias están activas, solo salen totales anónimos: qué juegos, cuántos y qué tan bien. Nunca tu nombre. Las fotos que añadas para Camino de Memoria se quedan en este dispositivo."
+            "value" : "Sin anuncios. Sin rastreo. Sin cuenta. Tus partidas se quedan en tu dispositivo. Si las sugerencias diarias están activas, solo salen totales anónimos: qué juegos, cuántos y qué tan bien. Nunca tu nombre. Las fotos que añadas para Camino de Memoria, y los nombres que les pongas, se quedan en este dispositivo."
           }
         }
       }
@@ -2631,6 +2631,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tonos y toques suaves"
+          }
+        }
+      }
+    },
+    "settings.speak" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Read names aloud"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leer los nombres en voz alta"
+          }
+        }
+      }
+    },
+    "settings.speak.hint" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Says the name out loud when you tap Show me in Remember Together. Off by default."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dice el nombre en voz alta cuando tocas Muéstrame en Recordar juntos. Desactivado de forma predeterminada."
           }
         }
       }

@@ -9,6 +9,7 @@ struct SettingsView: View {
     @AppStorage(AppLanguage.storageKey) private var appLanguage = AppLanguage.system.rawValue
     @AppStorage(SettingsView.biggerTextKey) private var biggerText = false
     @AppStorage(SoundPlayer.enabledKey) private var soundEnabled = true
+    @AppStorage(CaptionSpeaker.speakNamesKey) private var speakNames = false
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
@@ -50,6 +51,13 @@ struct SettingsView: View {
                         .font(.title3)
                         .frame(minHeight: 100)
                         .accessibilityHint(AppLanguage.localized("settings.sound.hint"))
+                }
+
+                Section {
+                    Toggle(AppLanguage.localized("settings.speak"), isOn: $speakNames)
+                        .font(.title3)
+                        .frame(minHeight: 100)
+                        .accessibilityHint(AppLanguage.localized("settings.speak.hint"))
                 }
 
                 Section {

@@ -25,6 +25,7 @@ final class CaptionStringsTests: XCTestCase {
             "family.caption.title", "family.caption.field", "family.caption.placeholder",
             "family.caption.privacy", "family.caption.save", "family.photos.caption.add",
             "family.game.nolevel", "family.photos.caption.a11y %lld",
+            "settings.speak", "settings.speak.hint",
         ])
     }
 }
