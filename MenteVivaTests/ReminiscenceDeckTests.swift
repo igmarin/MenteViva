@@ -41,6 +41,36 @@ final class ReminiscenceDeckTests: XCTestCase {
         XCTAssertNil(cards[1].caption)
     }
 
+    /// Deterministic generator so the shuffle test never flakes.
+    private struct SeededGenerator: RandomNumberGenerator {
+        var state: UInt64
+        mutating func next() -> UInt64 {
+            state = state &* 6_364_136_223_846_793_005 &+ 1_442_695_040_888_963_407
+            return state
+        }
+    }
+
+    func testGivenNoPhotosWhenManySessionsDealtThenEveryObjectAppears() {
+        var generator = SeededGenerator(state: 7)
+        var seen = Set<String>()
+        for _ in 0..<30 {
+            let cards = ReminiscenceDeck.dealSession(photos: [], captions: [:], using: &generator)
+            seen.formUnion(
+                cards.compactMap { card in
+                    if case .symbol(let name) = card.picture { name } else { nil }
+                })
+        }
+        XCTAssertEqual(seen, Set(EverydayObjects.all.map(\.symbol)))
+    }
+
+    func testGivenPhotosWhenSessionDealtThenOnlyPhotosAndAtMostFive() {
+        var generator = SeededGenerator(state: 3)
+        let urls = photos(8)
+        let cards = ReminiscenceDeck.dealSession(photos: urls, captions: [:], using: &generator)
+        XCTAssertEqual(cards.count, 5)
+        XCTAssertTrue(cards.allSatisfy { if case .photo(let url) = $0.picture { urls.contains(url) } else { false } })
+    }
+
     func testGivenEveryObjectSymbolThenItResolvesToAnImage() {
         for object in EverydayObjects.all {
             XCTAssertNotNil(UIImage(systemName: object.symbol), object.symbol)

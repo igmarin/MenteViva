@@ -40,6 +40,7 @@ struct ReminiscenceView: View {
         .fitOrScroll()
         .navigationTitle(AppLanguage.localized("game.reminiscence.title"))
         .onAppear(perform: deal)
+        .onDisappear { CaptionSpeaker.stop() }
         .celebration(isPresented: $showCelebration, detail: finalDetail, onPlayAgain: deal)
     }
 
@@ -113,18 +114,20 @@ struct ReminiscenceView: View {
     }
 
     private func next() {
+        CaptionSpeaker.stop()
         revealed = false
         Feedback.play(.tap)
         if progress.completeRound() { finish() }
     }
 
     private func deal() {
-        let photos = MemoryPhotos.all().shuffled()
+        let photos = MemoryPhotos.all()
         let captions = Dictionary(
             uniqueKeysWithValues: photos.compactMap { url in
                 MemoryPhotos.caption(for: url).map { (url, $0) }
             })
-        cards = ReminiscenceDeck.deal(photos: photos, captions: captions)
+        var generator = SystemRandomNumberGenerator()
+        cards = ReminiscenceDeck.dealSession(photos: photos, captions: captions, using: &generator)
         progress = RoundProgress(totalRounds: cards.count)
         revealed = false
         startedAt = .now

@@ -1,3 +1,4 @@
+import AVFoundation
 import XCTest
 
 @testable import MenteViva
@@ -20,6 +21,13 @@ final class CaptionSpeakerTests: XCTestCase {
     func testGivenToggleOnWhenAutoSpeaksThenTrue() {
         defaults.set(true, forKey: CaptionSpeaker.speakNamesKey)
         XCTAssertTrue(CaptionSpeaker.autoSpeaks(defaults: defaults))
+    }
+
+    @MainActor
+    func testGivenSessionWhenConfiguredForSpeechThenItPlaysEvenOnSilent() throws {
+        let session = AVAudioSession.sharedInstance()
+        try CaptionSpeaker.configureSession(session)
+        XCTAssertEqual(session.category, .playback)
     }
 
     func testGivenLanguageWhenVoiceLanguageThenRegionalCode() {

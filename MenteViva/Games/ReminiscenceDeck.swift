@@ -18,6 +18,16 @@ struct ReminiscenceCard: Equatable, Identifiable {
 enum ReminiscenceDeck {
     static let cardsPerSession = 5
 
+    /// One session: photos and objects in random order, so a player without
+    /// photos does not see the same five objects every time.
+    static func dealSession<G: RandomNumberGenerator>(
+        photos: [URL], captions: [URL: String], using generator: inout G
+    ) -> [ReminiscenceCard] {
+        deal(
+            photos: photos.shuffled(using: &generator), captions: captions,
+            objects: EverydayObjects.all.shuffled(using: &generator))
+    }
+
     static func deal(
         photos: [URL], captions: [URL: String],
         objects: [EverydayObject] = EverydayObjects.all,

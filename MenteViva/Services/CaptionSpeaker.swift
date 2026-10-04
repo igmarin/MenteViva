@@ -23,8 +23,21 @@ enum CaptionSpeaker {
 
     private static let synthesizer = AVSpeechSynthesizer()
 
+    /// Speech must be heard with the silent switch on: asking to hear a name is
+    /// an explicit request, unlike the ambient game tones.
+    static func configureSession(_ session: AVAudioSession = .sharedInstance()) throws {
+        try session.setCategory(.playback, mode: .spokenAudio, options: [.duckOthers])
+    }
+
+    /// Cuts the voice off, so a name never carries over onto the next photo.
+    static func stop() {
+        synthesizer.stopSpeaking(at: .immediate)
+    }
+
     static func speak(_ text: String) {
         synthesizer.stopSpeaking(at: .immediate)
+        try? configureSession()
+        try? AVAudioSession.sharedInstance().setActive(true)
         let utterance = AVSpeechUtterance(string: text)
         utterance.voice = AVSpeechSynthesisVoice(language: voiceLanguage(for: AppLanguage.selected()))
         synthesizer.speak(utterance)
