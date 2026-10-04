@@ -203,13 +203,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Saved on this device only. The app never shares or sends it."
+            "value" : "Saved on this device. The app never shares or sends it. Your own backup, if you use one, may include it."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Se guarda solo en este dispositivo. La app nunca lo comparte ni lo envía."
+            "value" : "Se guarda en este dispositivo. La app nunca lo comparte ni lo envía. Tu propia copia de seguridad, si la usas, puede incluirlo."
           }
         }
       }
