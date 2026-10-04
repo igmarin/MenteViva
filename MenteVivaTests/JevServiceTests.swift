@@ -150,7 +150,10 @@ final class JevServiceTests: XCTestCase {
                     return d
                 })
         let sent = try JSONSerialization.jsonObject(with: body) as? [String: Any]
-        XCTAssertEqual(Set((sent?["questions"] as? [String: Any] ?? [:]).keys), archivedKeys)
+        // The archived request predates Remember Together (#139): Jev is asked whether to include
+        // it (so it can be picked), but never for a difficulty, since it has no levels.
+        XCTAssertEqual(
+            Set((sent?["questions"] as? [String: Any] ?? [:]).keys), archivedKeys.union(["include_reminiscence"]))
         XCTAssertEqual(archivedKeys.count, 10)
         XCTAssertEqual(sent?["model"] as? String, "jev-latest")
     }

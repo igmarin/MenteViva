@@ -10,7 +10,7 @@ enum MemoryPhotos {
     enum AddError: Error { case notAnImage, albumFull }
 
     /// What happened when several photos were added at once (#120).
-    struct AddResult: Equatable {
+    nonisolated struct AddResult: Equatable {
         var added = 0
         var unreadable = 0
         var overLimit = 0
@@ -76,5 +76,35 @@ enum MemoryPhotos {
 
     static func remove(_ url: URL) {
         try? FileManager.default.removeItem(at: url)
+        try? FileManager.default.removeItem(at: captionFile(for: url))
+    }
+
+    // MARK: Captions (#139)
+
+    /// A name or a few words that help remember who or what a photo shows.
+    /// Kept in a `.txt` next to the photo, on this device only.
+    static let maxCaptionLength = 60
+
+    private static func captionFile(for photo: URL) -> URL {
+        photo.deletingPathExtension().appendingPathExtension("txt")
+    }
+
+    /// The photo's caption, or nil when it has none.
+    static func caption(for photo: URL) -> String? {
+        guard let text = try? String(contentsOf: captionFile(for: photo), encoding: .utf8) else { return nil }
+        return text.isEmpty ? nil : text
+    }
+
+    /// Saves the trimmed text, cut to `maxCaptionLength`; empty text removes the caption.
+    static func setCaption(_ text: String, for photo: URL) throws {
+        let file = captionFile(for: photo)
+        let caption = String(text.trimmingCharacters(in: .whitespacesAndNewlines).prefix(maxCaptionLength))
+        if caption.isEmpty {
+            // Nothing to clear is fine; any other failure must reach the sheet.
+            guard FileManager.default.fileExists(atPath: file.path) else { return }
+            try FileManager.default.removeItem(at: file)
+        } else {
+            try caption.write(to: file, atomically: true, encoding: .utf8)
+        }
     }
 }

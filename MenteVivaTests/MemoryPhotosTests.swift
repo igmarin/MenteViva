@@ -74,6 +74,72 @@ final class MemoryPhotosTests: XCTestCase {
         XCTAssertNotNil(MemoryPhotos.AddResult(added: 0, unreadable: 1, overLimit: 0).note)
     }
 
+    // MARK: Captions (#139)
+
+    private func addOnePhoto() throws -> URL {
+        try MemoryPhotos.add(photoData(width: 100, height: 100), to: folder)
+        return try XCTUnwrap(MemoryPhotos.all(in: folder).first)
+    }
+
+    func testGivenCaptionWhenSetThenItReadsBack() throws {
+        let photo = try addOnePhoto()
+        try MemoryPhotos.setCaption("Mamá, Ñandú 🙂", for: photo)
+        XCTAssertEqual(MemoryPhotos.caption(for: photo), "Mamá, Ñandú 🙂")
+    }
+
+    func testGivenPhotoGoneWhenCaptionSetThenItThrowsSoTheSheetCanSaySo() {
+        let gone = folder.appendingPathComponent("missing-folder/\(UUID().uuidString).jpg")
+        XCTAssertThrowsError(try MemoryPhotos.setCaption("Ana", for: gone))
+    }
+
+    func testGivenCaptionThatCannotBeRemovedWhenClearedThenItThrows() throws {
+        let photo = try addOnePhoto()
+        try MemoryPhotos.setCaption("Ana", for: photo)
+        // A read-only folder: the old caption file can't be deleted.
+        try FileManager.default.setAttributes([.posixPermissions: 0o500], ofItemAtPath: folder.path)
+        defer { try? FileManager.default.setAttributes([.posixPermissions: 0o700], ofItemAtPath: folder.path) }
+        XCTAssertThrowsError(try MemoryPhotos.setCaption("", for: photo))
+    }
+
+    func testGivenNoCaptionFileWhenClearedThenItIsANoOp() throws {
+        let photo = try addOnePhoto()
+        XCTAssertNoThrow(try MemoryPhotos.setCaption("  ", for: photo))
+    }
+
+    func testGivenWhitespaceOnlyWhenSetThenThereIsNoCaption() throws {
+        let photo = try addOnePhoto()
+        try MemoryPhotos.setCaption("  \n ", for: photo)
+        XCTAssertNil(MemoryPhotos.caption(for: photo))
+    }
+
+    func testGivenCaptionOverSixtyWhenSetThenItIsTruncatedToSixty() throws {
+        let photo = try addOnePhoto()
+        try MemoryPhotos.setCaption(String(repeating: "a", count: 90), for: photo)
+        XCTAssertEqual(MemoryPhotos.caption(for: photo)?.count, MemoryPhotos.maxCaptionLength)
+        XCTAssertEqual(MemoryPhotos.maxCaptionLength, 60)
+    }
+
+    func testGivenEmptyTextWhenSetThenTheExistingCaptionIsRemoved() throws {
+        let photo = try addOnePhoto()
+        try MemoryPhotos.setCaption("Ana", for: photo)
+        try MemoryPhotos.setCaption("", for: photo)
+        XCTAssertNil(MemoryPhotos.caption(for: photo))
+    }
+
+    func testGivenCaptionWhenPhotoRemovedThenNoTextFileRemains() throws {
+        let photo = try addOnePhoto()
+        try MemoryPhotos.setCaption("Ana", for: photo)
+        MemoryPhotos.remove(photo)
+        let left = try FileManager.default.contentsOfDirectory(atPath: folder.path)
+        XCTAssertEqual(left, [])
+    }
+
+    func testGivenCaptionWhenListingPhotosThenTheCaptionFileIsNotListed() throws {
+        let photo = try addOnePhoto()
+        try MemoryPhotos.setCaption("Ana", for: photo)
+        XCTAssertEqual(MemoryPhotos.all(in: folder).count, 1)
+    }
+
     // MARK: Board faces
 
     private let theme = ["☕️", "🫖", "🍞", "🧀", "🍷", "🥐", "🍋", "🫒"]

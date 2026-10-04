@@ -11,6 +11,7 @@ Grilled with the owner; evidence: Jev 013 (`jev-json/013-*`, analysis in `jev-re
 |---|---|---|
 | Next game | Reminiscence ("Who is this?"): photo, tap "Show me" to reveal and hear the caption, no wrong answer; bundled everyday objects when there are no photos | 0.95 |
 | Captions | One optional short caption per photo (name, nickname, place, event), on this device only, never in a share text or sent to Jev. Built inside the reminiscence PR | foundation first 0.46 |
+| Speech | The name is spoken on its own only if "Read names aloud" (Settings) is on, off by default; the speaker button always works | owner |
 | Privacy | A line where the caption is typed, plus its own section in the policy | owner |
 | Progress measures | Rates, never sums: mean accuracy per play, level reached, days played per week; trend only after 3+ plays, only against the player's own weeks. Reminiscence records no accuracy | owner |
 | Progress screen | "For family" becomes a per-device "My progress"; hide games and pin difficulty move to "Set up" | 1.00 |

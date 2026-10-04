@@ -29,11 +29,12 @@ Instructions for AI agents (and humans in a hurry) working on MenteViva.
 MenteViva/            app (SwiftUI + SwiftData)
   MenteVivaApp.swift  entry; LOCAL_ONLY picks the store
   HomeView, OnboardingView, SettingsView, HistoryView
-  Games/              one file per game (5) + CelebrationView, MissCue, FitOrScroll
+  Games/              one file per game (6) + CelebrationView, MissCue, FitOrScroll
   Models/             GameSession, GameID, Difficulty, RoundProgress
   Services/           DailyPolicy (on-device plan), PlanStore (saved plan + levels),
                       JevService (optional Jev client), FamilySettings, MemoryPhotos,
-                      PlayerStateSummary, WeeklySummary, AppLanguage, SoundPlayer, HotPath (signposts)
+                      PlayerStateSummary, WeeklySummary, AppLanguage, SoundPlayer, HotPath (signposts),
+                      CaptionSpeaker, EverydayObjects
   Localizable.xcstrings  every string, EN + ES
 MenteVivaTests/       unit tests (Given/When/Then names)
 proxy/worker.js       Cloudflare Worker that holds the Jev key
@@ -44,7 +45,7 @@ docs/                 start at docs/README.md
 
 ## Current status
 
-- 5 games shipped (Memory Lane, Color Clash, Name the Herd, Number Trail,
+- 6 games shipped (Memory Lane, Color Clash, Name the Herd, Number Trail, Remember Together,
   Quick Eyes); ES/EN complete; local-only build is the default.
 - **Daily picks and difficulty are decided on the device** (`DailyPolicy`, #101): no model,
   no network, no cost. Jev is an optional override, wired and verified live (proxy deployed #63,

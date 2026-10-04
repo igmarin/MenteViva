@@ -37,7 +37,8 @@ final class DailyPolicyTests: XCTestCase {
 
     func testGivenHiddenGamesWhenPlanThenTheyAreNeverPickedAndTheMixStaysFull() {
         let p = plan(state(), hidden: [.memoryMatch, .quickEyes])
-        XCTAssertEqual(p.games, [.categoryFluency, .stroop, .mathStreaks])
+        // Remember Together (#139) is the sixth game and ties Name the Herd's value.
+        XCTAssertEqual(p.games, [.categoryFluency, .reminiscence, .stroop])
     }
 
     func testGivenAllButOneGameHiddenWhenPlanThenOnlyThatGameIsPicked() {
@@ -145,7 +146,8 @@ final class DailyPolicyTests: XCTestCase {
         let data = try Data(contentsOf: root.appendingPathComponent("docs/jev-json/011-daily-plan.request.json"))
         struct Envelope: Decodable { let state: PlayerStateSummary }
         let summary = try JSONDecoder().decode(Envelope.self, from: data).state
-        let p = plan(summary)
+        // The payload predates the sixth game, so compare in the five-game world.
+        let p = plan(summary, hidden: [.reminiscence])
         // Jev picked quick_eyes, category_fluency, memory_match for this payload.
         XCTAssertEqual(Set(p.games), [.quickEyes, .categoryFluency, .memoryMatch])
         XCTAssertEqual(p.difficulty[.stroop], .easy)  // 0.60 accuracy, one session
