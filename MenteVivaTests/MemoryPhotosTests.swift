@@ -87,6 +87,11 @@ final class MemoryPhotosTests: XCTestCase {
         XCTAssertEqual(MemoryPhotos.caption(for: photo), "Mamá, Ñandú 🙂")
     }
 
+    func testGivenPhotoGoneWhenCaptionSetThenItThrowsSoTheSheetCanSaySo() {
+        let gone = folder.appendingPathComponent("missing-folder/\(UUID().uuidString).jpg")
+        XCTAssertThrowsError(try MemoryPhotos.setCaption("Ana", for: gone))
+    }
+
     func testGivenWhitespaceOnlyWhenSetThenThereIsNoCaption() throws {
         let photo = try addOnePhoto()
         try MemoryPhotos.setCaption("  \n ", for: photo)

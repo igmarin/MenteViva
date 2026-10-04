@@ -102,15 +102,16 @@ actor JevService {
 
     private func ask(state: PlayerStateSummary, proxyURL: URL) async throws -> [String: JevAnswer] {
         var questions: [String: JevQuestion] = [:]
-        // Games without levels (Remember Together, #139) stay out of the Jev wire: it has no
-        // difficulty to judge, and the optional Jev request keeps the shape archived in docs/jev-json/011.
-        for game in GameID.allCases where game.hasLevels {
+        // Jev is asked whether to include every game, so each can be picked; only games with
+        // levels (not Remember Together, #139) get a difficulty question.
+        for game in GameID.allCases {
             questions["include_\(game.rawValue)"] = .noul(
                 instructions: "Should \(game.rawValue) be in today's recommended mix for this player?",
                 criteria: [
                     "true": "Keeps the day varied, matches recent engagement, or the game has been rested too long",
                     "false": "Played very recently and repeatedly, or the player consistently disengages from it",
                 ])
+            guard game.hasLevels else { continue }
             questions["difficulty_\(game.rawValue)"] = .score(
                 instructions: "What difficulty should \(game.rawValue) be set to today?",
                 criteria: [

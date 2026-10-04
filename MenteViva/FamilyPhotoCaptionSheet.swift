@@ -10,6 +10,8 @@ struct FamilyPhotoCaptionSheet: View {
     @Environment(\.dismiss) private var dismiss
     @State private var text: String
     @State private var image: UIImage?
+    /// Set when the name couldn't be written, so the sheet stays open and says so.
+    @State private var saveProblem = false
 
     init(photo: URL, onChange: @escaping () -> Void) {
         self.photo = photo
@@ -43,6 +45,11 @@ struct FamilyPhotoCaptionSheet: View {
                     Text(AppLanguage.localized("family.caption.privacy"))
                         .font(.body)
                         .foregroundStyle(.secondary)
+                    if saveProblem {
+                        Text(AppLanguage.localized("family.caption.save.problem"))
+                            .font(.body)
+                            .accessibilityAddTraits(.isStaticText)
+                    }
                     Button(action: save) {
                         Text(AppLanguage.localized("family.caption.save"))
                             .font(.title3.weight(.semibold))
@@ -71,7 +78,13 @@ struct FamilyPhotoCaptionSheet: View {
     }
 
     private func save() {
-        try? MemoryPhotos.setCaption(text, for: photo)
+        do {
+            try MemoryPhotos.setCaption(text, for: photo)
+        } catch {
+            saveProblem = true
+            AccessibilityNotification.Announcement(AppLanguage.localized("family.caption.save.problem")).post()
+            return
+        }
         onChange()
         dismiss()
     }

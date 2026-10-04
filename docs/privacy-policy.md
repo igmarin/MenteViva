@@ -27,7 +27,9 @@ copy when you tap Remove (or delete the app).
 words (a person, a nickname, a place, an event). It is stored next to the photo,
 in the app's private storage on this device, and nowhere else: it is never
 uploaded, never part of a share, and never sent to any service. Removing the
-photo removes its name. Optionally the app can read a name aloud using your
+photo removes its name. Like everything an app keeps on your device, photos and
+names may be included in your own iPhone or iPad backup (for example iCloud
+Backup), which belongs to you and which you control in Apple's Settings. Optionally the app can read a name aloud using your
 device's built-in voice; that happens on the device.
 
 **What leaves the device: normally, nothing.** The app works fully offline, and
@@ -59,6 +61,13 @@ hosting]**. We answer in English or Spanish.
 ---
 
 ## Notes for us (not part of the published page)
+
+- **Backups (PR #144 review):** photos and captions live in Application Support, which iOS
+  backs up by default. We chose to say so in the policy and the in-app text instead of excluding the
+  folder, because exclusion would lose the family's typed names whenever a phone is restored. Our
+  reading is that a user's own device backup is not data *we* collect, so the label stays Data Not
+  Collected; re-check that against Apple's definitions before the App Store submission (#37).
+  To switch: set `isExcludedFromBackup` on `MemoryPhotos.folder` and drop the backup sentences.
 
 - Matches the App Privacy label draft in [store-listing.md](store-listing.md):
   **Data Not Collected** while the proxy is off; re-audit if it ships on.

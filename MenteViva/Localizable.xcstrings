@@ -203,13 +203,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Stays on this device only. Not shared, not sent anywhere."
+            "value" : "Saved on this device only. The app never shares or sends it."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Se queda solo en este dispositivo. No se comparte ni se envía a ningún lado."
+            "value" : "Se guarda solo en este dispositivo. La app nunca lo comparte ni lo envía."
           }
         }
       }
@@ -226,6 +226,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Guardar"
+          }
+        }
+      }
+    },
+    "family.caption.save.problem" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "We couldn't save that name. Please try again."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No pudimos guardar ese nombre. Inténtalo de nuevo."
           }
         }
       }
@@ -2573,13 +2589,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No ads. No tracking. No account. Your games stay on your device. If daily suggestions are on, only anonymous totals leave it — which games, how many, how well. Never your name. Photos you add for Memory Lane, and the names you give them, stay on this device."
+            "value" : "No ads. No tracking. No account. Your games stay on your device. If daily suggestions are on, only anonymous totals leave it — which games, how many, how well. Never your name. Photos you add for Memory Lane, and the names you give them, stay on this device. Your own iPhone or iPad backup, if you use one, may include them."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sin anuncios. Sin rastreo. Sin cuenta. Tus partidas se quedan en tu dispositivo. Si las sugerencias diarias están activas, solo salen totales anónimos: qué juegos, cuántos y qué tan bien. Nunca tu nombre. Las fotos que añadas para Camino de Memoria, y los nombres que les pongas, se quedan en este dispositivo."
+            "value" : "Sin anuncios. Sin rastreo. Sin cuenta. Tus partidas se quedan en tu dispositivo. Si las sugerencias diarias están activas, solo salen totales anónimos: qué juegos, cuántos y qué tan bien. Nunca tu nombre. Las fotos que añadas para Camino de Memoria, y los nombres que les pongas, se quedan en este dispositivo. Tu propia copia de seguridad del iPhone o iPad, si la usas, puede incluirlos."
           }
         }
       }
