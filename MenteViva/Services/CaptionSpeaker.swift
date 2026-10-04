@@ -22,6 +22,25 @@ enum CaptionSpeaker {
     }
 
     private static let synthesizer = AVSpeechSynthesizer()
+    private static let sessionEnder = SessionEnder()
+
+    /// Gives other audio its volume back (ducking ends when the session deactivates)
+    /// once the voice has finished or been cut off. Skipped when a newer utterance
+    /// is already speaking, so replacing one name with another is never cut short.
+    private final class SessionEnder: NSObject, AVSpeechSynthesizerDelegate {
+        func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
+            end(synthesizer)
+        }
+
+        func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didCancel utterance: AVSpeechUtterance) {
+            end(synthesizer)
+        }
+
+        private func end(_ synthesizer: AVSpeechSynthesizer) {
+            guard !synthesizer.isSpeaking else { return }
+            try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+        }
+    }
 
     /// Speech must be heard with the silent switch on: asking to hear a name is
     /// an explicit request, unlike the ambient game tones.
@@ -40,6 +59,7 @@ enum CaptionSpeaker {
         try? AVAudioSession.sharedInstance().setActive(true)
         let utterance = AVSpeechUtterance(string: text)
         utterance.voice = AVSpeechSynthesisVoice(language: voiceLanguage(for: AppLanguage.selected()))
+        synthesizer.delegate = sessionEnder
         synthesizer.speak(utterance)
     }
 }

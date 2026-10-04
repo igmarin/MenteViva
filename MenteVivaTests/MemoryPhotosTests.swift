@@ -92,6 +92,20 @@ final class MemoryPhotosTests: XCTestCase {
         XCTAssertThrowsError(try MemoryPhotos.setCaption("Ana", for: gone))
     }
 
+    func testGivenCaptionThatCannotBeRemovedWhenClearedThenItThrows() throws {
+        let photo = try addOnePhoto()
+        try MemoryPhotos.setCaption("Ana", for: photo)
+        // A read-only folder: the old caption file can't be deleted.
+        try FileManager.default.setAttributes([.posixPermissions: 0o500], ofItemAtPath: folder.path)
+        defer { try? FileManager.default.setAttributes([.posixPermissions: 0o700], ofItemAtPath: folder.path) }
+        XCTAssertThrowsError(try MemoryPhotos.setCaption("", for: photo))
+    }
+
+    func testGivenNoCaptionFileWhenClearedThenItIsANoOp() throws {
+        let photo = try addOnePhoto()
+        XCTAssertNoThrow(try MemoryPhotos.setCaption("  ", for: photo))
+    }
+
     func testGivenWhitespaceOnlyWhenSetThenThereIsNoCaption() throws {
         let photo = try addOnePhoto()
         try MemoryPhotos.setCaption("  \n ", for: photo)

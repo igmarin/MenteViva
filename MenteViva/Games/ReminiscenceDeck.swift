@@ -2,7 +2,7 @@ import Foundation
 
 /// One card of Remember Together (#139): a picture and, if there is one, the
 /// name that helps remember it.
-struct ReminiscenceCard: Equatable, Identifiable {
+nonisolated struct ReminiscenceCard: Equatable, Identifiable {
     enum Picture: Equatable {
         case photo(URL)
         case symbol(String)

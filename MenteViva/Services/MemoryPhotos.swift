@@ -10,7 +10,7 @@ enum MemoryPhotos {
     enum AddError: Error { case notAnImage, albumFull }
 
     /// What happened when several photos were added at once (#120).
-    struct AddResult: Equatable {
+    nonisolated struct AddResult: Equatable {
         var added = 0
         var unreadable = 0
         var overLimit = 0
@@ -100,7 +100,9 @@ enum MemoryPhotos {
         let file = captionFile(for: photo)
         let caption = String(text.trimmingCharacters(in: .whitespacesAndNewlines).prefix(maxCaptionLength))
         if caption.isEmpty {
-            try? FileManager.default.removeItem(at: file)
+            // Nothing to clear is fine; any other failure must reach the sheet.
+            guard FileManager.default.fileExists(atPath: file.path) else { return }
+            try FileManager.default.removeItem(at: file)
         } else {
             try caption.write(to: file, atomically: true, encoding: .utf8)
         }

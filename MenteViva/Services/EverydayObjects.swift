@@ -2,7 +2,7 @@ import Foundation
 
 /// A familiar thing shown in Remember Together when no family photos are added
 /// (#139): an SF Symbol (no image files, no licensing) and the key of its name.
-struct EverydayObject: Equatable {
+nonisolated struct EverydayObject: Equatable {
     let symbol: String
     let nameKey: String
 }
