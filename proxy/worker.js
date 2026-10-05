@@ -7,9 +7,13 @@ const UPSTREAM = "https://api.typesafe.ai/v1/systemone";
 const MAX_BODY_BYTES = 16 * 1024;
 const UPSTREAM_TIMEOUT_MS = 8000;
 const MODELS = new Set(["jev-latest"]);
-// Mirrors GameID in MenteViva/Services/JevService.swift — keep in sync.
-const GAMES = ["memory_match", "stroop", "category_fluency", "math_streaks", "quick_eyes"];
-const QUESTION_KEYS = new Set(GAMES.flatMap((g) => [`include_${g}`, `difficulty_${g}`]));
+// Mirrors GameID in MenteViva/Models/GameID.swift — keep in sync.
+// LEVELLESS mirrors GameID.hasLevels: those games send no difficulty_ key.
+const GAMES = ["memory_match", "stroop", "category_fluency", "math_streaks", "quick_eyes", "reminiscence"];
+const LEVELLESS = new Set(["reminiscence"]);
+const QUESTION_KEYS = new Set(
+  GAMES.flatMap((g) => (LEVELLESS.has(g) ? [`include_${g}`] : [`include_${g}`, `difficulty_${g}`])),
+);
 
 const json = (status, message) =>
   new Response(JSON.stringify({ message }), { status, headers: { "Content-Type": "application/json" } });
