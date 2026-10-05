@@ -2,7 +2,10 @@ name: Claude Code Review
 
 on:
   pull_request:
-    types: [opened, synchronize, ready_for_review, reopened]
+    # One review per PR, not one per push: `synchronize` fires on every commit and
+    # the Actions minutes are out (AGENTS.md). Pre-push hook + local /code-review
+    # cover the rest.
+    types: [opened, ready_for_review]
     # Optional: Only run on specific file changes
     # paths:
     #   - "src/**/*.ts"
