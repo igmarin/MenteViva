@@ -93,9 +93,11 @@ docs/                 start at docs/README.md
    (Apple's formatter, ships with Xcode; config in `.swift-format`, #123).
    `xcrun swift-format format -i -r MenteViva MenteVivaTests tools` fixes most of it.
    Syntax checks (`swiftc -parse`) are
-   NOT verification. CI (`swift.yml`) repeats build + test and checks the
-   regenerated `project.pbxproj` for drift on PRs and pushes to `main`; still
-   run them locally first.
+   NOT verification. **A pre-push hook runs all of this for you** — install it
+   once with `git config core.hooksPath .githooks`; `git push --no-verify`
+   skips it. `.github/workflows/swift.yml` holds the same checks but is
+   manual-dispatch only while the Actions minutes are out, so the hook is the
+   thing that actually runs.
 6. Track work in GitHub issues with the current milestone (see
    [milestones](https://github.com/igmarin/MenteViva/milestones)). Closed-issue labels mark the release
    (e.g. `v0.1.0`).

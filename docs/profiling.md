@@ -63,13 +63,23 @@ on the main actor inside `.task`. Not yet fixed; measure it on a device before d
 and shared macOS runners make simulator timings noise rather than signal. A timing gate that
 flakes gets skipped, not fixed. Read it off a trace from step 2 instead.
 
-Two things CI *does* enforce, both deterministic:
+Two things *are* enforced automatically, both deterministic, and both by the pre-push hook
+(`.githooks/pre-push`) rather than by CI — the GitHub Actions minutes are out, so
+`swift.yml` is manual-dispatch only. Install the hook once:
+
+```
+git config core.hooksPath .githooks
+```
 
 - **This page stays true.** `tools/check_signposts.sh` fails when the table above and the
   `HotPath.measure` calls in `MenteViva/` disagree in either direction. Run it before
   committing a new signpost.
 - **`progress.weekly` stays linear.** `WeeklyProgressPerformanceTests` runs a year of daily
-  play (2,000 sessions) through it and fails over a 2 s ceiling. Real cost is a few
-  milliseconds, so the ceiling only trips on a superlinear rewrite — not on a slow runner.
-  It replaced an `XCTest` `measure {}` block, which records timings but, with no stored
-  baseline, could never fail.
+  play (2,000 sessions) through it and fails over a 2 s ceiling. Real cost is 4 ms, so the
+  ceiling only trips on a superlinear rewrite — not on a slow machine. It replaced an
+  `XCTest` `measure {}` block, which records timings but, with no stored baseline, could
+  never fail.
+
+Nothing automatic records a trace: profiling needs a booted simulator, the app installed,
+and someone playing. `tools/profile.sh` is the whole ritual; run it by hand after a change
+that touches photos, dealing, or the weekly screens.

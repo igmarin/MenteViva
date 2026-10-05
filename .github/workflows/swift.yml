@@ -5,15 +5,19 @@
 # We use xcodebuild against the generated project instead.
 #
 # Cost warning: macOS runners bill at a much higher rate than Linux and this is a
-# private repo. Triggers are pull_request + push-to-main + manual; drop the
-# pull_request trigger if the minutes matter more than the signal.
+# private repo, and the minutes ran out. The automatic triggers are therefore OFF:
+# this runs only when started by hand from the Actions tab.
+#
+# `.githooks/pre-push` runs the same checks locally and is what actually guards
+# `main` today. Install it once: git config core.hooksPath .githooks
+# To turn CI back on when there are minutes again, restore:
+#   pull_request:
+#   push:
+#     branches: [ "main" ]
 
 name: Build and test
 
 on:
-  pull_request:
-  push:
-    branches: [ "main" ]
   workflow_dispatch:
 
 jobs:
