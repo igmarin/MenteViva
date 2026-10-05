@@ -1,0 +1,108 @@
+{
+  "answers": {
+    "difficulty_category_fluency": {
+      "confidence": 0.83,
+      "legend": {
+        "0": "Easy \u2014 player is struggling or accuracy dropped recently; reduce cognitive load",
+        "1": "Medium \u2014 player is steady; maintain current challenge",
+        "2": "Hard \u2014 player consistently succeeds quickly; increase challenge"
+      },
+      "probabilities": {
+        "0": 0.02,
+        "1": 0.89,
+        "2": 0.09
+      },
+      "score": 1.08,
+      "type": "score"
+    },
+    "difficulty_math_streaks": {
+      "confidence": 0.69,
+      "legend": {
+        "0": "Easy \u2014 player is struggling or accuracy dropped recently; reduce cognitive load",
+        "1": "Medium \u2014 player is steady; maintain current challenge",
+        "2": "Hard \u2014 player consistently succeeds quickly; increase challenge"
+      },
+      "probabilities": {
+        "0": 0.8,
+        "1": 0.2,
+        "2": 0.0
+      },
+      "score": 0.21,
+      "type": "score"
+    },
+    "difficulty_memory_match": {
+      "confidence": 0.91,
+      "legend": {
+        "0": "Easy \u2014 player is struggling or accuracy dropped recently; reduce cognitive load",
+        "1": "Medium \u2014 player is steady; maintain current challenge",
+        "2": "Hard \u2014 player consistently succeeds quickly; increase challenge"
+      },
+      "probabilities": {
+        "0": 0.03,
+        "1": 0.94,
+        "2": 0.03
+      },
+      "score": 1.0,
+      "type": "score"
+    },
+    "difficulty_quick_eyes": {
+      "confidence": 0.51,
+      "legend": {
+        "0": "Easy \u2014 player is struggling or accuracy dropped recently; reduce cognitive load",
+        "1": "Medium \u2014 player is steady; maintain current challenge",
+        "2": "Hard \u2014 player consistently succeeds quickly; increase challenge"
+      },
+      "probabilities": {
+        "0": 0.32,
+        "1": 0.67,
+        "2": 0.01
+      },
+      "score": 0.68,
+      "type": "score"
+    },
+    "difficulty_stroop": {
+      "confidence": 0.93,
+      "legend": {
+        "0": "Easy \u2014 player is struggling or accuracy dropped recently; reduce cognitive load",
+        "1": "Medium \u2014 player is steady; maintain current challenge",
+        "2": "Hard \u2014 player consistently succeeds quickly; increase challenge"
+      },
+      "probabilities": {
+        "0": 0.96,
+        "1": 0.04,
+        "2": 0.0
+      },
+      "score": 0.05,
+      "type": "score"
+    },
+    "include_category_fluency": {
+      "noul": 0.74,
+      "type": "noul"
+    },
+    "include_math_streaks": {
+      "noul": 0.56,
+      "type": "noul"
+    },
+    "include_memory_match": {
+      "noul": 0.65,
+      "type": "noul"
+    },
+    "include_quick_eyes": {
+      "noul": 0.76,
+      "type": "noul"
+    },
+    "include_reminiscence": {
+      "noul": 0.75,
+      "type": "noul"
+    },
+    "include_stroop": {
+      "noul": 0.65,
+      "type": "noul"
+    }
+  },
+  "model": "jev-1.13.0",
+  "usage": {
+    "input_tokens": 1407,
+    "output_tokens": 203
+  }
+}

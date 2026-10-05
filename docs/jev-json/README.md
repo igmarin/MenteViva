@@ -42,3 +42,8 @@ and rejected every real request with 400 (#146). `JevServiceTests` pins the app'
 keys to this file and `proxy/worker.test.js` replays the exact bytes through the
 worker, so the two sides cannot drift apart again unnoticed. 011 stays: its
 response is still the fixture the plan-ranking test replays.
+
+`014-daily-plan.response.json` is the live answer through the deployed proxy on
+2026-10-04: HTTP 200, model `jev-1.13.0`, 11 answers for 11 questions. Jev put
+Remember Together second in the mix (`include_reminiscence` 0.75), which is the
+pick the 400s had been suppressing.

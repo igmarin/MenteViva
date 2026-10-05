@@ -129,6 +129,26 @@ final class JevServiceTests: XCTestCase {
         XCTAssertEqual(plan.difficulty[.quickEyes], .medium)  // 0.70 @ 0.52 is under the 0.6 gate
     }
 
+    /// The six-game path end to end: #146's live 200, replayed. Remember Together ranks
+    /// second on Jev's own numbers, which is exactly what the rejected-request bug blocked.
+    func testGivenArchivedSixGameResponseWhenPlanThenRememberTogetherIsPicked() async throws {
+        StubURLProtocol.handler = { _ in (200, try! self.archived("014-daily-plan.response.json")) }
+        // .hard only for reminiscence, so "untouched" is distinguishable from "also medium".
+        var incoming = medium
+        incoming[.reminiscence] = .hard
+        let plan = await service().dailyPlan(state: state, currentDifficulty: incoming)
+        // Noul: quick_eyes .76, reminiscence .75, category_fluency .74 lead the ranking.
+        XCTAssertEqual(plan.games, [.quickEyes, .reminiscence, .categoryFluency])
+        XCTAssertEqual(plan.difficulty[.stroop], .easy)  // 0.05 @ 0.93
+        XCTAssertEqual(plan.difficulty[.mathStreaks], .easy)  // 0.21 @ 0.69
+        XCTAssertEqual(plan.difficulty[.categoryFluency], .medium)  // 1.08 @ 0.83
+        XCTAssertEqual(plan.difficulty[.memoryMatch], .medium)  // 1.00 @ 0.91
+        XCTAssertEqual(plan.difficulty[.quickEyes], .medium)  // 0.68 @ 0.51 is under the 0.6 gate
+        // Remember Together has no levels, so Jev is never asked and never answers for it:
+        // the level carries over from `current` untouched (JevService.swift `var difficulty = current`).
+        XCTAssertEqual(plan.difficulty[.reminiscence], .hard)
+    }
+
     func testGivenAppRequestWhenSentThenQuestionKeysMatchArchivedLiveRequest() async throws {
         let archivedRequest = try JSONSerialization.jsonObject(with: archived("014-daily-plan.request.json")) as? [String: Any]
         let archivedKeys = Set((archivedRequest?["questions"] as? [String: Any] ?? [:]).keys)
