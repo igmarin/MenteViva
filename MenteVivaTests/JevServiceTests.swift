@@ -109,7 +109,7 @@ final class JevServiceTests: XCTestCase {
         XCTAssertNil(StubURLProtocol.requests.last?.value(forHTTPHeaderField: "X-MenteViva-Key"))
     }
 
-    // MARK: - Archived live pair (docs/jev-json/011): pins the real wire contract
+    // MARK: - Archived live pairs (docs/jev-json/011, 014): pin the real wire contract
 
     private func archived(_ name: String) throws -> Data {
         let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
@@ -130,7 +130,7 @@ final class JevServiceTests: XCTestCase {
     }
 
     func testGivenAppRequestWhenSentThenQuestionKeysMatchArchivedLiveRequest() async throws {
-        let archivedRequest = try JSONSerialization.jsonObject(with: archived("011-daily-plan.request.json")) as? [String: Any]
+        let archivedRequest = try JSONSerialization.jsonObject(with: archived("014-daily-plan.request.json")) as? [String: Any]
         let archivedKeys = Set((archivedRequest?["questions"] as? [String: Any] ?? [:]).keys)
         StubURLProtocol.handler = { _ in (200, Data("{\"answers\":{}}".utf8)) }
         _ = await service().dailyPlan(state: state, currentDifficulty: medium)
@@ -150,11 +150,10 @@ final class JevServiceTests: XCTestCase {
                     return d
                 })
         let sent = try JSONSerialization.jsonObject(with: body) as? [String: Any]
-        // The archived request predates Remember Together (#139): Jev is asked whether to include
-        // it (so it can be picked), but never for a difficulty, since it has no levels.
-        XCTAssertEqual(
-            Set((sent?["questions"] as? [String: Any] ?? [:]).keys), archivedKeys.union(["include_reminiscence"]))
-        XCTAssertEqual(archivedKeys.count, 10)
+        // 014 is the current contract: include_ for all six games, difficulty_ only for the
+        // five with levels (Remember Together has none), so 11 keys and no compensation here.
+        XCTAssertEqual(Set((sent?["questions"] as? [String: Any] ?? [:]).keys), archivedKeys)
+        XCTAssertEqual(archivedKeys.count, 11)
         XCTAssertEqual(sent?["model"] as? String, "jev-latest")
     }
 }

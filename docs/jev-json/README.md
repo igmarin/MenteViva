@@ -28,3 +28,17 @@ claims — in request files or anywhere else in this archive.
 from the code through a stubbed `URLSession`, not retyped). Its `state` is a
 **sample fixture** with made-up numbers, not a real player. The response is the
 live answer via the deployed proxy. `JevServiceTests` replays the pair.
+
+## 014 — the six-game daily request
+
+`014-daily-plan.request.json` replaces 011 as the current wire contract. 011 was
+captured before Remember Together (#139) and asks about five games; 014 asks about
+six — `include_` for every game, `difficulty_` only for the five that have levels.
+Captured the same way (from `JevService` through a stubbed `URLSession`, not retyped),
+with the same anonymized sample state plus a `reminiscence` entry.
+
+It exists because the proxy's question-key allow-list had been left at five games
+and rejected every real request with 400 (#146). `JevServiceTests` pins the app's
+keys to this file and `proxy/worker.test.js` replays the exact bytes through the
+worker, so the two sides cannot drift apart again unnoticed. 011 stays: its
+response is still the fixture the plan-ranking test replays.
