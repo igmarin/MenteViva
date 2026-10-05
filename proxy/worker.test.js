@@ -1,4 +1,4 @@
-// Run: node --test proxy/   (no dependencies; global fetch is mocked)
+// Run: node --test proxy/worker.test.js   (no dependencies; global fetch is mocked)
 import { test, beforeEach, afterEach } from "node:test";
 import assert from "node:assert/strict";
 import worker from "./worker.js";
@@ -67,6 +67,29 @@ test("missing state -> 400", async () => {
 test("unknown question key -> 400", async () => {
   const b = good(); b.questions.evil_prompt = { type: "noul" };
   assert.equal((await worker.fetch(req(b), env)).status, 400);
+});
+
+test("real app payload: include_ for all 6 games, difficulty_ only for levelled ones -> 200", async () => {
+  // What JevService.makeRequest actually sends: include_ per GameID.allCases,
+  // difficulty_ only where GameID.hasLevels is true (reminiscence is false).
+  const games = ["memory_match", "stroop", "category_fluency", "math_streaks", "quick_eyes", "reminiscence"];
+  const b = good();
+  b.questions = {};
+  for (const g of games) {
+    b.questions[`include_${g}`] = { type: "noul" };
+    if (g !== "reminiscence") b.questions[`difficulty_${g}`] = { type: "score" };
+  }
+  const r = await worker.fetch(req(b), env);
+  assert.equal(r.status, 200);
+  assert.equal(upstreamCalls.length, 1);
+  assert.deepEqual(JSON.parse(upstreamCalls[0].init.body), b);
+});
+
+test("difficulty_reminiscence -> 400 (reminiscence has no levels)", async () => {
+  const b = good();
+  b.questions.difficulty_reminiscence = { type: "score" };
+  assert.equal((await worker.fetch(req(b), env)).status, 400);
+  assert.equal(upstreamCalls.length, 0);
 });
 
 test("GET -> 405; other path -> 404", async () => {

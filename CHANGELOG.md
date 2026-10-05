@@ -12,6 +12,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
   aloud", speaks the name on its own (off by default); the speaker button always works.
 
 ### Fixed
+- **Daily picks use Jev again when it is set up (#146):** adding Remember Together
+  left the key-holding proxy expecting five games, so it turned every request away
+  and the app quietly fell back to its own on-device plan. Installs without the
+  proxy were never affected.
 - **Language switch applies everywhere at once (#134):** game text and spoken
   labels now follow the chosen language right away, not after a relaunch.
 - **Memory Lane photos say what happened (#120):** after picking photos, one
