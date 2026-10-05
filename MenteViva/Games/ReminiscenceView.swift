@@ -121,6 +121,12 @@ struct ReminiscenceView: View {
     }
 
     private func deal() {
+        HotPath.measure("reminiscence.deal") { dealCards() }
+    }
+
+    /// Reads the album and one caption file per photo: main-thread file I/O,
+    /// the same shape as Memory Lane's deal. See docs/profiling.md.
+    private func dealCards() {
         let photos = MemoryPhotos.all()
         let captions = Dictionary(
             uniqueKeysWithValues: photos.compactMap { url in
@@ -163,7 +169,7 @@ private struct PhotoCard: View {
                 Image(systemName: "photo").font(.system(size: 80)).foregroundStyle(.secondary)
             }
         }
-        .task { image = UIImage(contentsOfFile: url.path) }
+        .task { image = HotPath.measure("reminiscence.photo") { UIImage(contentsOfFile: url.path) } }
     }
 }
 

@@ -39,6 +39,9 @@ jobs:
     - name: Lint (Apple swift-format, ships with Xcode)
       run: xcrun swift-format lint --strict --recursive MenteViva MenteVivaTests tools
 
+    - name: Signposts match docs/profiling.md
+      run: ./tools/check_signposts.sh
+
     - name: Pick an available iPhone simulator
       id: sim
       run: |
