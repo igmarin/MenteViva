@@ -16,4 +16,12 @@ enum HotPath {
         defer { signposter.endInterval(name, state) }
         return try body()
     }
+
+    /// Same, for work that awaits. The interval covers the suspensions too,
+    /// which is the point: waiting on the network is the slow part.
+    static func measure<T>(_ name: StaticString, _ body: () async throws -> T) async rethrows -> T {
+        let state = signposter.beginInterval(name)
+        defer { signposter.endInterval(name, state) }
+        return try await body()
+    }
 }
