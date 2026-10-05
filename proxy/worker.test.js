@@ -2,6 +2,8 @@
 import { test, beforeEach, afterEach } from "node:test";
 import assert from "node:assert/strict";
 import worker from "./worker.js";
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 
 const env = { TYPESAFE_AI_KEY: "test-upstream", APP_SHARED_SECRET: "test-secret" };
 const good = () => ({
@@ -67,6 +69,20 @@ test("missing state -> 400", async () => {
 test("unknown question key -> 400", async () => {
   const b = good(); b.questions.evil_prompt = { type: "noul" };
   assert.equal((await worker.fetch(req(b), env)).status, 400);
+});
+
+// Archived live pair (docs/jev-json/014): the exact bytes JevService built, captured
+// through a stubbed URLSession. Replaying them here means the allow-list can never
+// drift from the app again without a test going red.
+test("archived 014 request body -> 200, forwarded verbatim", async () => {
+  const path = fileURLToPath(new URL("../docs/jev-json/014-daily-plan.request.json", import.meta.url));
+  const raw = readFileSync(path, "utf8");
+  const body = JSON.parse(raw);
+  assert.equal(Object.keys(body.questions).length, 11);
+  const r = await worker.fetch(req(raw), env);
+  assert.equal(r.status, 200);
+  assert.equal(upstreamCalls.length, 1);
+  assert.deepEqual(JSON.parse(upstreamCalls[0].init.body), body);
 });
 
 test("real app payload: include_ for all 6 games, difficulty_ only for levelled ones -> 200", async () => {

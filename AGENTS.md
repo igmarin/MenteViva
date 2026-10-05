@@ -49,7 +49,7 @@ docs/                 start at docs/README.md
   Quick Eyes); ES/EN complete; local-only build is the default.
 - **Daily picks and difficulty are decided on the device** (`DailyPolicy`, #101): no model,
   no network, no cost. Jev is an optional override, wired and verified live (proxy deployed #63,
-  payload archived `docs/jev-json/011`), used only when `MenteViva/Config/Local.xcconfig`
+  payload archived `docs/jev-json/014`), used only when `MenteViva/Config/Local.xcconfig`
   (git-ignored; copy the `.example`) sets the proxy URL and secret (#91). Open-model
   alternatives were tested and rejected for the app: `docs/decision-model-spike-2026-09-30.md`.
 - Dad playtest #6 ran (findings on #6). Work from it, in order: #106 save fix, #107 weekly
