@@ -150,9 +150,18 @@ final class GameProgressTests: XCTestCase {
     }
 }
 
-/// Baseline for the `progress.weekly` hot path: it reruns on every redraw of
+/// Ceiling for the `progress.weekly` hot path: it reruns on every redraw of
 /// History and Family, so a year of daily play must stay cheap.
+///
+/// A ceiling, not a benchmark. `measure {}` records timings but fails only
+/// against a stored baseline, so on CI it asserted nothing; one generous
+/// assert does. The budget it guards is algorithmic (a superlinear rewrite),
+/// never device latency — that is read off a trace, see docs/profiling.md.
 final class WeeklyProgressPerformanceTests: XCTestCase {
+    /// Headroom over the real cost is wide on purpose: shared CI runners are
+    /// slow and noisy, and a timing test that flakes gets skipped, not fixed.
+    private let ceiling: TimeInterval = 2
+
     func testGivenAYearOfPlayWhenWeeklyProgressThenItStaysCheap() {
         let sessions = (0..<2_000).map { index in
             let session = GameSession(
@@ -161,6 +170,12 @@ final class WeeklyProgressPerformanceTests: XCTestCase {
             session.playedAt = Date(timeIntervalSinceNow: -Double(index) * 4_000)
             return session
         }
-        measure { _ = GameProgress.weekly(sessions) }
+        let started = Date.now
+        _ = GameProgress.weekly(sessions)
+        let elapsed = Date.now.timeIntervalSince(started)
+        print("progress.weekly over 2,000 sessions: \(Int(elapsed * 1_000)) ms (ceiling \(Int(ceiling)) s)")
+        XCTAssertLessThan(
+            elapsed, ceiling,
+            "GameProgress.weekly got dramatically slower; it is probably no longer linear. docs/profiling.md")
     }
 }

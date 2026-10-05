@@ -56,22 +56,26 @@ enum MemoryPhotos {
     /// Adds each photo in order; one that can't be used never stops the rest.
     /// `nil` is a photo the picker couldn't hand over.
     static func add(_ photos: [Data?], to folder: URL = folder) -> AddResult {
-        var result = AddResult()
-        for data in photos {
-            guard let data else {
-                result.unreadable += 1
-                continue
+        // The whole batch is what the family waits on after the picker closes;
+        // photo.downscale inside shows which photo cost what.
+        HotPath.measure("photo.import") {
+            var result = AddResult()
+            for data in photos {
+                guard let data else {
+                    result.unreadable += 1
+                    continue
+                }
+                do {
+                    try add(data, to: folder)
+                    result.added += 1
+                } catch AddError.albumFull {
+                    result.overLimit += 1
+                } catch {
+                    result.unreadable += 1
+                }
             }
-            do {
-                try add(data, to: folder)
-                result.added += 1
-            } catch AddError.albumFull {
-                result.overLimit += 1
-            } catch {
-                result.unreadable += 1
-            }
+            return result
         }
-        return result
     }
 
     static func remove(_ url: URL) {
@@ -90,9 +94,14 @@ enum MemoryPhotos {
     }
 
     /// The photo's caption, or nil when it has none.
+    ///
+    /// Signposted because For family reads it inside a `ForEach` body, so the
+    /// run count in a trace says how many times a redraw went back to disk.
     static func caption(for photo: URL) -> String? {
-        guard let text = try? String(contentsOf: captionFile(for: photo), encoding: .utf8) else { return nil }
-        return text.isEmpty ? nil : text
+        HotPath.measure("photo.caption") {
+            guard let text = try? String(contentsOf: captionFile(for: photo), encoding: .utf8) else { return nil }
+            return text.isEmpty ? nil : text
+        }
     }
 
     /// Saves the trimmed text, cut to `maxCaptionLength`; empty text removes the caption.

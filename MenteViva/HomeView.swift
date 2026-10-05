@@ -76,16 +76,21 @@ struct HomeView: View {
         }
     }
 
+    /// Everything Home waits on before it can star today's games: a 14-day
+    /// SwiftData fetch, the summary, and the plan — which, with a Jev proxy
+    /// configured, includes a network call with a 10 s timeout.
     private func refreshPlan() async {
-        let since = Calendar.current.date(byAdding: .day, value: -14, to: .now) ?? .distantPast
-        let recent =
-            (try? modelContext.fetch(
-                FetchDescriptor<GameSession>(
-                    predicate: #Predicate { $0.playedAt >= since }))) ?? []
-        let difficulty = PlanStore.storedDifficulty()
-        let state = PlayerStateSummary.build(from: recent, difficulty: difficulty)
-        let plan = await JevService.shared.dailyPlan(state: state, currentDifficulty: difficulty)
-        todaysMix = Set(plan.games)
+        await HotPath.measure("plan.today") {
+            let since = Calendar.current.date(byAdding: .day, value: -14, to: .now) ?? .distantPast
+            let recent =
+                (try? modelContext.fetch(
+                    FetchDescriptor<GameSession>(
+                        predicate: #Predicate { $0.playedAt >= since }))) ?? []
+            let difficulty = PlanStore.storedDifficulty()
+            let state = PlayerStateSummary.build(from: recent, difficulty: difficulty)
+            let plan = await JevService.shared.dailyPlan(state: state, currentDifficulty: difficulty)
+            todaysMix = Set(plan.games)
+        }
     }
 
     @ViewBuilder
