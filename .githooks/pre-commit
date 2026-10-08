@@ -8,8 +8,9 @@
 # Model:          OCR_MODEL=claude-sonnet-5-5 git commit   (default: Haiku, cheap)
 #
 # The key is read from the environment and handed to ocr as env vars, so it is
-# never written to ~/.opencodereview/config.json. CLAUDE_API_KEY or
-# ANTHROPIC_API_KEY, either works.
+# never written to ~/.opencodereview/config.json. It is still visible to the
+# ocr child process (and anything that can read its environment). CLAUDE_API_KEY
+# or ANTHROPIC_API_KEY, either works.
 set -uo pipefail
 cd "$(git rev-parse --show-toplevel)"
 
