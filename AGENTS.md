@@ -97,7 +97,11 @@ docs/                 start at docs/README.md
    once with `git config core.hooksPath .githooks`; `git push --no-verify`
    skips it. `.github/workflows/swift.yml` holds the same checks but is
    manual-dispatch only while the Actions minutes are out, so the hook is the
-   thing that actually runs.
+   thing that actually runs. The same `core.hooksPath` also enables a
+   **pre-commit hook** that runs `ocr review` on the staged changes and blocks
+   the commit on critical/high findings (needs `CLAUDE_API_KEY` in your shell and
+   `npm i -g @alibaba-group/open-code-review`; without them it warns and skips;
+   `git commit --no-verify` skips it too).
 6. Track work in GitHub issues with the current milestone (see
    [milestones](https://github.com/igmarin/MenteViva/milestones)). Closed-issue labels mark the release
    (e.g. `v0.1.0`).
