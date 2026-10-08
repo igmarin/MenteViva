@@ -99,7 +99,7 @@ docs/                 start at docs/README.md
    manual-dispatch only while the Actions minutes are out, so the hook is the
    thing that actually runs. The same `core.hooksPath` also enables a
    **pre-commit hook** that runs `ocr review` on the staged changes and blocks
-   the commit on critical/high findings (needs `CLAUDE_API_KEY` in your shell and
+   the commit on critical/high findings (needs `OPENAI_API_KEY` in your shell and
    `npm i -g @alibaba-group/open-code-review`; without them it warns and skips;
    `git commit --no-verify` skips it too).
 6. Track work in GitHub issues with the current milestone (see
