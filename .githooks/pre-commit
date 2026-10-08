@@ -26,7 +26,8 @@ command -v "$ocr_bin" > /dev/null || skip "ocr not installed (npm i -g @alibaba-
 git diff --cached --quiet && skip "nothing staged"
 
 output="$(mktemp)"
-trap 'rm -f "$output"' EXIT
+errlog="$(mktemp)"
+trap 'rm -f "$output" "$errlog"' EXIT
 
 echo "ocr review (git commit --no-verify to skip)..."
 OCR_LLM_URL="${OCR_LLM_URL:-https://api.anthropic.com}" \
@@ -34,7 +35,7 @@ OCR_LLM_URL="${OCR_LLM_URL:-https://api.anthropic.com}" \
     OCR_LLM_MODEL="${OCR_MODEL:-claude-haiku-5-5}" \
     OCR_USE_ANTHROPIC=true \
     OCR_NO_UPDATE=1 \
-    "$ocr_bin" review --effort low --format json --audience agent -o "$output" > /dev/null 2>&1
+    "$ocr_bin" review --effort low --format json --audience agent -o "$output" > /dev/null 2> "$errlog"
 rc=$?
 
 # Prints blocking findings and exits 1 if any; exits 2 if the review itself failed.
@@ -59,5 +60,8 @@ case $? in
         echo "Commit stopped: critical/high findings above. Fix them, or git commit --no-verify."
         exit 1
         ;;
-    *) skip "review failed (rc=$rc) — check the API key credit and 'ocr review' output" ;;
+    *)
+        tail -5 "$errlog" | sed 's/^/    /'
+        skip "review failed (rc=$rc), see the error above"
+        ;;
 esac
