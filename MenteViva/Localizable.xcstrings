@@ -1763,6 +1763,38 @@
         }
       }
     },
+    "game.readaloud" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Read aloud"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leer en voz alta"
+          }
+        }
+      }
+    },
+    "game.readaloud.hint" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reads the instructions out loud"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lee las instrucciones en voz alta"
+          }
+        }
+      }
+    },
     "game.reminiscence.a11y.object" : {
       "localizations" : {
         "en" : {

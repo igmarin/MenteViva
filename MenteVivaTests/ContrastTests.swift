@@ -33,13 +33,18 @@ final class ContrastTests: XCTestCase {
         return (max(l1, l2) + 0.05) / (min(l1, l2) + 0.05)
     }
 
-    private func contrastOnTile(_ ink: Color, _ style: UIUserInterfaceStyle) -> Double {
-        let text = rgb(UIColor(Color.todaysPick), style)
-        let tint = rgb(UIColor(ink), style)
+    /// `color` at `alpha` over the background, as SwiftUI draws `.opacity(alpha)`.
+    private func wash(_ color: Color, _ alpha: Double, _ style: UIUserInterfaceStyle) -> RGB {
+        let tint = rgb(UIColor(color), style)
         let base = rgb(.systemBackground, style)
-        let a = 0.22
-        let tile = (tint.0 * a + base.0 * (1 - a), tint.1 * a + base.1 * (1 - a), tint.2 * a + base.2 * (1 - a))
-        return contrast(text, tile)
+        return (
+            tint.0 * alpha + base.0 * (1 - alpha), tint.1 * alpha + base.1 * (1 - alpha),
+            tint.2 * alpha + base.2 * (1 - alpha)
+        )
+    }
+
+    private func contrastOnTile(_ ink: Color, _ style: UIUserInterfaceStyle) -> Double {
+        contrast(rgb(UIColor(Color.todaysPick), style), wash(ink, 0.22, style))
     }
 
     func testGivenLightModeWhenTodaysPickOnEveryGameTileThenTextContrastIsAtLeastAA() {
@@ -60,6 +65,14 @@ final class ContrastTests: XCTestCase {
                 let ratio = contrast(rgb(UIColor(game.ink), style), rgb(.systemBackground, style))
                 XCTAssertGreaterThanOrEqual(ratio, 4.5, "\(game), style \(style.rawValue)")
             }
+        }
+    }
+
+    /// Quick Eyes' "Almost" line (step 3): warm text on a soft amber note.
+    func testGivenTheAlmostNoteWhenItsTextSitsOnSoftAmberThenContrastIsAtLeastAAInBothModes() {
+        for style in styles {
+            let ratio = contrast(rgb(UIColor(Color.todaysPick), style), wash(.amber, 0.24, style))
+            XCTAssertGreaterThanOrEqual(ratio, 4.5, "style \(style.rawValue)")
         }
     }
 

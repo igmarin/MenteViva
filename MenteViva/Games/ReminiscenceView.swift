@@ -38,10 +38,8 @@ struct ReminiscenceView: View {
         }
         .padding()
         .fitOrScroll()
-        .navigationTitle(AppLanguage.localized("game.reminiscence.title"))
-        .tint(GameID.reminiscence.ink)
+        .gameHeader(.reminiscence, instruction: card.map { AppLanguage.localized(prompt(for: $0)) } ?? "")
         .onAppear(perform: deal)
-        .onDisappear { CaptionSpeaker.stop() }
         .celebration(isPresented: $showCelebration, detail: finalDetail, onPlayAgain: deal)
     }
 
