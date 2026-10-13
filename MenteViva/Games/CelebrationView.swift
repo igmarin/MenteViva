@@ -161,7 +161,8 @@ extension View {
 
 private struct CelebrationCover: ViewModifier {
     @Environment(\.dismiss) private var dismiss
-    @Environment(\.playNext) private var playNext
+    /// Home's open games; nil anywhere else (previews), where "Next" just closes.
+    @Environment(GamePath.self) private var path: GamePath?
     @Binding var isPresented: Bool
     let game: GameID
     let detail: String
@@ -193,7 +194,7 @@ private struct CelebrationCover: ViewModifier {
     private func openPendingNext() {
         guard let next = pendingNext else { return }
         pendingNext = nil
-        playNext(next)
+        path?.games = [next]
     }
 }
 

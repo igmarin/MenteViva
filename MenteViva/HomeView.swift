@@ -14,7 +14,7 @@ struct HomeView: View {
     @Query(GameSession.thisWeek()) private var sessions: [GameSession]
     @State private var showSettings = false
     /// The games opened from Home, so "Next" can swap the finished game for the next one.
-    @State private var path: [GameID] = []
+    @State private var path = GamePath()
     /// Today's picks in plan order. Empty until the on-device policy has run (a
     /// local fetch, so effectively instant); nothing here waits on the network.
     @State private var plan: [GameID] = []
@@ -34,7 +34,7 @@ struct HomeView: View {
     }
 
     var body: some View {
-        NavigationStack(path: $path) {
+        NavigationStack(path: $path.games) {
             ScrollView {
                 if sizeClass == .regular {
                     // iPad: today on the left, everything else on the right.
@@ -76,7 +76,7 @@ struct HomeView: View {
                 SettingsView()
             }
         }
-        .environment(\.playNext) { path = [$0] }
+        .environment(path)
     }
 
     // MARK: - Today

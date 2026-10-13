@@ -53,8 +53,9 @@ extension GameID {
     }
 }
 
-extension EnvironmentValues {
-    /// Opens a game in place of the one just finished (step 5's "Next" button).
-    /// Home provides it; anywhere else it does nothing.
-    @Entry var playNext: (GameID) -> Void = { _ in }
+/// The games opened from Home (step 5): "Next" swaps the finished game for the
+/// next one. Shared as an object rather than a closure, so SwiftUI compares it
+/// by identity and its readers never redraw just because Home did.
+@Observable final class GamePath {
+    var games: [GameID] = []
 }
