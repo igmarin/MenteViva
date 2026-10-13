@@ -48,6 +48,10 @@ actor JevService {
         self.defaults = defaults
     }
 
+    /// True only in builds with a proxy URL (Local.xcconfig): then anonymous
+    /// totals leave the device and Settings says so; otherwise nothing does.
+    var sendsSummaries: Bool { proxyURL != nil }
+
     // MARK: - Public API
 
     /// Today's plan: cache first, otherwise the on-device DailyPolicy (overridden by Jev when a proxy is set).

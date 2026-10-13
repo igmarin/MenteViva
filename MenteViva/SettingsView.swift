@@ -86,10 +86,22 @@ struct SettingsView: View {
                     .accessibilityHint(AppLanguage.localized("setup.open.hint"))
                 }
 
+                // Three short promises he can read at a glance, true for this
+                // build: the suggestions line only when totals really leave.
                 Section {
-                    Text(AppLanguage.localized("settings.privacy.body"))
+                    privacyLine(
+                        String(format: AppLanguage.localized("settings.privacy.device %@"), device),
+                        systemImage: device == "iPad" ? "ipad" : "iphone")
+                    privacyLine(AppLanguage.localized("settings.privacy.noaccount"), systemImage: "nosign")
+                    privacyLine(AppLanguage.localized("settings.privacy.photos"), systemImage: "photo.on.rectangle")
+                    if JevService.shared.sendsSummaries {
+                        Text(AppLanguage.localized("settings.privacy.suggestions"))
+                            .font(.body)
+                            .foregroundStyle(.secondary)
+                    }
+                    Text(String(format: AppLanguage.localized("settings.privacy.backup %@"), device))
                         .font(.body)
-                        .accessibilityAddTraits(.isStaticText)
+                        .foregroundStyle(.secondary)
                 } header: {
                     Text(AppLanguage.localized("settings.privacy.title"))
                         .font(.title3)
@@ -115,6 +127,20 @@ struct SettingsView: View {
         .id(appLanguage)
     }
 
+    /// "iPad" or "iPhone", so each promise names the device in his hands.
+    private var device: String { UIDevice.current.model }
+
+    private func privacyLine(_ text: String, systemImage: String) -> some View {
+        Label {
+            Text(text).font(.title3.weight(.semibold))
+        } icon: {
+            Image(systemName: systemImage)
+                .font(.title2)
+                .foregroundStyle(Color.brand)
+                .accessibilityHidden(true)
+        }
+        .padding(.vertical, 6)
+    }
 }
 
 #Preview {

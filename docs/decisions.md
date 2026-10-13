@@ -2,6 +2,27 @@
 
 Newest first. Format: date — decision — why — what would make us revisit.
 
+## 2026-10-13 — Privacy as three lines; the icon becomes a framed card
+
+**Question:** Settings' privacy paragraph was hard to read and mentioned daily suggestions, which are
+off in his build; the app icon (blank cream cards) no longer matched the Card Table's framed cards.
+Decided by the owner from `design/2026-10-13-privacy-and-icon.html`. No Jev judgment: a visual call
+inside the already-judged Card Table direction (Jev 015).
+
+**Decision:**
+
+- Privacy stays at the bottom of Settings, as three short lines with icons ("Your games stay on this
+  iPad.", "No account, no ads, no tracking.", "Your photos and their names never leave it.") and the
+  backup note in smaller type. The anonymous-totals line shows only when a Jev proxy is configured.
+  The promise card at the top of Settings was considered and not chosen.
+- Icon option A: one game card as Home deals it (white paper, Memory Lane's ink frame and emblem) on
+  the table gradient. The hand (B) and recoloured old cards (C) were set aside.
+
+**Still open:** the small icon mark beside "Mente Viva" at the top of Home; the welcome-screen line
+"No account. Everything stays on this iPad."
+
+Revisit when: the playtest shows he never scrolls to the privacy lines, or the icon is hard to spot on his home screen.
+
 ## 2026-10-13 — My progress: what "this week" and "earlier weeks" mean (#141)
 
 Details the 2026-10-03 "Progress measures" row; the owner confirms on the PR.

@@ -81,7 +81,7 @@ hosting]**. We answer in English or Spanish.
   (`proxy/worker.js`), so Cloudflare sees the device IP on each daily request even though we store
   nothing and the payload has no identifiers. Decide with Apple's App Privacy definitions whether
   the label still holds, and add one plain sentence about the IP to the published text above.
-  In-app `settings.privacy.body` already says "only anonymous totals leave"; the payload also
+  In-app `settings.privacy.suggestions` (shown only when a proxy is set) says "only anonymous totals"; the payload also
   carries each game's current difficulty and days since last play (numbers, not dates).
 - Hosting: the repo is private and GitHub Pages on private repos needs a paid
   plan, so use a tiny public policy repo or Cloudflare Pages (decisions
