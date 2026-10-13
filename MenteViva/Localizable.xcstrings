@@ -1092,7 +1092,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Añadido a tu semana"
+            "value" : "Agregado a tu semana"
           }
         }
       }
@@ -2406,7 +2406,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Seguimos con: %@"
+            "value" : "Seguimos con %@"
           }
         }
       }
