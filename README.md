@@ -10,7 +10,7 @@ pressuring anyone, no fail shame — "Almost, try again", never "wrong".
 
 **v0.1.0 shipped**; five playable games since, offline-first, ES/EN complete.
 See [CHANGELOG.md](CHANGELOG.md). What's next: [docs/roadmap.md](docs/roadmap.md)
-and [GitHub milestones](https://github.com/igmarin/MenteViva/milestones).
+and [GitHub milestones](https://github.com/nebulaideas/MenteViva/milestones).
 
 ## The games
 
