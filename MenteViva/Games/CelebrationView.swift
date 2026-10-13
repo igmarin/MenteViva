@@ -166,9 +166,12 @@ private struct CelebrationCover: ViewModifier {
     let game: GameID
     let detail: String
     let onPlayAgain: () -> Void
+    /// The game chosen with "Next", opened only once the cover is gone: changing
+    /// the path mid-dismissal would remove this view while it still presents.
+    @State private var pendingNext: GameID?
 
     func body(content: Content) -> some View {
-        content.fullScreenCover(isPresented: $isPresented) {
+        content.fullScreenCover(isPresented: $isPresented, onDismiss: openPendingNext) {
             CelebrationView(
                 game: game,
                 detail: detail,
@@ -177,14 +180,20 @@ private struct CelebrationCover: ViewModifier {
                     onPlayAgain()
                 },
                 onNext: { next in
+                    pendingNext = next
                     isPresented = false
-                    playNext(next)
                 },
                 onHome: {
                     isPresented = false
                     dismiss()
                 })
         }
+    }
+
+    private func openPendingNext() {
+        guard let next = pendingNext else { return }
+        pendingNext = nil
+        playNext(next)
     }
 }
 
