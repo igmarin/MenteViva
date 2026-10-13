@@ -2,6 +2,33 @@
 
 Newest first. Format: date — decision — why — what would make us revisit.
 
+## 2026-10-12 — Visual direction: the Card Table
+
+**Question:** the app is easy to use but looks generic (pale system blue on white everywhere,
+game icons in five emoji styles, the same reward every time). What visual identity do we build?
+Decided by the owner after a design review that used Apple Design Award winners 2024–2026 as
+reference ([2024](https://www.apple.com/newsroom/2024/06/apple-announces-winners-of-the-2024-apple-design-awards/),
+[2025](https://www.apple.com/newsroom/2025/06/apple-unveils-winners-and-finalists-of-the-2025-apple-design-awards/),
+[2026](https://www.apple.com/newsroom/2026/06/apple-reveals-winners-of-the-2026-apple-design-awards/)).
+No Jev judgment was run for this one (AGENTS.md workflow step 3); run it before step 1 ships if we want it on record.
+
+**Decision:** Direction A, "Card Table". Garden and Calm Glass were considered and set aside.
+
+- Each game is a framed card in its own colour, with an emblem drawn in SwiftUI shapes (no image assets).
+- Home deals today's three with one "Play today's three" button; they run back to back, with "Back to the table" one tap away.
+- Each finished game adds its card to the week; My Week shows the week as a board of cards. Still no scores (#45).
+- Palette comes from the app icon; fonts are system only (New York for greetings and titles, SF Pro Rounded for the rest). Zero dependencies.
+
+**Why:** it grows out of the icon and Memory Lane's cards, cards are a familiar adult object
+(#109 "he's not a child"), Home stops asking dad to choose, and progress becomes visible without numbers.
+
+**Still open:** card face (Framed is the default; Paper and Index are in the spec), greeting by name,
+native-speaker review of the new Spanish strings.
+
+Review: `design/2026-10-12-review.html`. Spec and build order: `design/2026-10-12-card-table.html`.
+
+Revisit when: dad reaches for a different Home mock when shown the three on a phone, or the theme step ships and the app reads worse.
+
 ## 2026-10-03 — Captions, per-device My progress, week ring; reminiscence game next
 
 **Question:** after the photo playtest, what do we build next and how do we show progress?
