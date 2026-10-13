@@ -14,29 +14,29 @@ final class WeeklySummaryTests: XCTestCase {
 
     func testGivenNoSessionsWhenSummarizingThenEverythingIsZero() {
         let s = WeeklySummary(playedAt: [], now: now, calendar: calendar)
-        XCTAssertEqual(s, WeeklySummary(playedAt: [], now: now, calendar: calendar))
-        XCTAssertEqual([s.daysPlayed, s.gamesPlayed, s.streak], [0, 0, 0])
+        XCTAssertEqual([s.daysPlayed, s.gamesPlayed], [0, 0])
     }
 
     func testGivenTwoGamesOneDayWhenSummarizingThenCountsOneDayTwoGames() {
         let s = WeeklySummary(playedAt: [now, now.addingTimeInterval(-60)], now: now, calendar: calendar)
-        XCTAssertEqual([s.daysPlayed, s.gamesPlayed, s.streak], [1, 2, 1])
+        XCTAssertEqual([s.daysPlayed, s.gamesPlayed], [1, 2])
     }
 
-    func testGivenThreeConsecutiveDaysWhenSummarizingThenStreakIsThree() {
-        let s = WeeklySummary(playedAt: [now, daysAgo(1), daysAgo(2)], now: now, calendar: calendar)
-        XCTAssertEqual(s.streak, 3)
+    func testGivenLastSaturdayAndThisWeekWhenSummarizingThenOnlyThisWeekCounts() {
+        // `now` is a Monday; with weeks starting on Sunday, Sunday counts and Saturday doesn't,
+        // so the summary agrees with the week board above it.
+        var utc = Calendar(identifier: .gregorian)
+        utc.timeZone = TimeZone(identifier: "UTC")!
+        utc.firstWeekday = 1
+        let sunday = now.addingTimeInterval(-86_400)
+        let saturday = now.addingTimeInterval(-2 * 86_400)
+        let s = WeeklySummary(playedAt: [now, sunday, saturday], now: now, calendar: utc)
+        XCTAssertEqual([s.daysPlayed, s.gamesPlayed], [2, 2])
     }
 
-    func testGivenNothingTodayButYesterdayWhenSummarizingThenStreakSurvives() {
-        let s = WeeklySummary(playedAt: [daysAgo(1), daysAgo(2)], now: now, calendar: calendar)
-        XCTAssertEqual(s.streak, 2)
-    }
-
-    func testGivenAGapWhenSummarizingThenStreakStopsAtTheGap() {
-        let s = WeeklySummary(playedAt: [now, daysAgo(2)], now: now, calendar: calendar)
-        XCTAssertEqual(s.streak, 1)
-        XCTAssertEqual(s.daysPlayed, 2)
+    func testGivenSeveralDaysWhenSharingThenNoStreakLine() {
+        let s = WeeklySummary(playedAt: [now, daysAgo(1)], now: now, calendar: calendar)
+        XCTAssertEqual(s.text.components(separatedBy: "\n").count, 3)
     }
 
     func testGivenSessionsOlderThanAWeekWhenSummarizingThenTheyAreExcludedFromCounts() {
@@ -62,8 +62,23 @@ final class GameProgressTests: XCTestCase {
         return s
     }
 
+    /// The window rules, tested on a rolling week ending `now`.
     private func weekly(_ sessions: [GameSession]) -> [GameProgress] {
-        GameProgress.weekly(sessions, now: now, calendar: calendar)
+        GameProgress.weekly(
+            sessions, now: now, calendar: calendar,
+            weekStart: calendar.date(byAdding: .day, value: -7, to: now)!)
+    }
+
+    func testGivenLastSaturdayAndYesterdayWhenWeeklyOnAMondayThenOnlySundayIsThisWeek() {
+        // By default the week is the calendar week, the same as My Week's board.
+        var utc = Calendar(identifier: .gregorian)
+        utc.timeZone = TimeZone(identifier: "UTC")!
+        utc.firstWeekday = 1
+        let sunday = session(.memoryMatch, daysAgo: 1)
+        let saturday = session(.memoryMatch, daysAgo: 2)
+        let p = GameProgress.weekly([sunday, saturday], now: now, calendar: utc)
+        XCTAssertEqual(p.map(\.sessions), [1])
+        XCTAssertEqual(p.map(\.previousSessions), [1])
     }
 
     func testGivenNoSessionsWhenWeeklyThenEmpty() {

@@ -1,7 +1,8 @@
 import SwiftData
 import SwiftUI
 
-/// "My Week": a warm, big-type look back at the last 7 days of play.
+/// "My Week": a warm, big-type look at this calendar week of play, the same
+/// week as the board at the top, so every count on the screen agrees.
 /// One row per day, with each game played and how many times (#140). No scores (#45).
 /// One warm progress line per game played (#107): words and an icon, never a
 /// number and never a down arrow — the numbers live in the family screen.
@@ -10,7 +11,7 @@ struct HistoryView: View {
     private var sessions: [GameSession]
 
     private var weekSessions: [GameSession] {
-        DayGrouping.lastWeek(sessions, date: \.playedAt)
+        DayGrouping.thisWeek(sessions, date: \.playedAt).flatMap(\.items)
     }
 
     private var days: [DayTally] {
@@ -42,7 +43,9 @@ struct HistoryView: View {
     }
 
     private var progress: [GameProgress] {
-        HotPath.measure("progress.weekly") { GameProgress.weekly(sessions) }.filter { $0.sessions > 0 }
+        // Only games played this week, so the list matches the board and the counts.
+        let played = Set(weekSessions.compactMap(\.game))
+        return HotPath.measure("progress.weekly") { GameProgress.weekly(sessions) }.filter { played.contains($0.game) }
     }
 
     private var summary: WeeklySummary { WeeklySummary(playedAt: sessions.map(\.playedAt)) }

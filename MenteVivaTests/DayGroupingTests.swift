@@ -13,12 +13,6 @@ final class DayGroupingTests: XCTestCase {
         return cal.date(byAdding: .hour, value: hour, to: day)!
     }
 
-    func testGivenSessionsOlderThanAWeekWhenLastWeekThenTheyAreDropped() {
-        let dates = [ago(days: 0), ago(days: 3), ago(days: 8), ago(days: 30)]
-        let kept = DayGrouping.lastWeek(dates, date: { $0 }, now: now, calendar: cal)
-        XCTAssertEqual(kept, [ago(days: 0), ago(days: 3)])
-    }
-
     func testGivenTwoSessionsOnOneDayWhenGroupedThenOneGroupWithBoth() {
         let dates = [ago(days: 1, hour: 8), ago(days: 1, hour: 20), ago(days: 2)]
         let groups = DayGrouping.byDay(dates, date: { $0 }, calendar: cal)

@@ -1,44 +1,26 @@
 import Foundation
 
-/// Caregiver-friendly weekly summary (#71): days played, games played, streak.
-/// Built only from session dates. No scores, no judgments (#45), no medical
+/// Caregiver-friendly weekly summary (#71): days played and games played this
+/// calendar week, the same week as the week board. No streak (decisions
+/// 2026-10-03: no loss state), no scores, no judgments (#45), no medical
 /// claims. Sharing is always player-initiated (History share button).
 struct WeeklySummary: Equatable {
     var daysPlayed: Int
     var gamesPlayed: Int
-    /// Consecutive days with play, counting back from today (or yesterday if
-    /// today has no play yet, so the streak isn't lost before the player sits down).
-    var streak: Int
 
     init(playedAt dates: [Date], now: Date = .now, calendar: Calendar = .current) {
-        let today = calendar.startOfDay(for: now)
-        let weekStart = calendar.date(byAdding: .day, value: -7, to: now) ?? now
-        let week = dates.filter { $0 >= weekStart && $0 <= now }
+        let week = DayGrouping.thisWeek(dates, date: { $0 }, now: now, calendar: calendar).flatMap(\.items)
         gamesPlayed = week.count
         daysPlayed = Set(week.map { calendar.startOfDay(for: $0) }).count
-
-        let allDays = Set(dates.map { calendar.startOfDay(for: $0) })
-        var day = allDays.contains(today) ? today : (calendar.date(byAdding: .day, value: -1, to: today) ?? today)
-        var run = 0
-        while allDays.contains(day) {
-            run += 1
-            guard let previous = calendar.date(byAdding: .day, value: -1, to: day) else { break }
-            day = previous
-        }
-        streak = run
     }
 
     /// Warm, plain-text card used on screen and as the share payload.
     var text: String {
-        var lines = [
+        [
             AppLanguage.localized("history.share.title"),
             String(format: AppLanguage.localized("history.share.days %lld"), daysPlayed),
             String(format: AppLanguage.localized("history.share.games %lld"), gamesPlayed),
-        ]
-        if streak >= 2 {
-            lines.append(String(format: AppLanguage.localized("history.share.streak %lld"), streak))
-        }
-        return lines.joined(separator: "\n")
+        ].joined(separator: "\n")
     }
 }
 
@@ -72,16 +54,18 @@ struct GameProgress: Equatable {
         return change > Self.accuracyNoise ? .up : change < -Self.accuracyNoise ? .down : .steady
     }
 
-    /// Games played in the last 14 days, in `GameID.allCases` order.
+    /// Games played this week or the week before, in `GameID.allCases` order.
+    /// "This week" starts at `weekStart`, by default the calendar week's first
+    /// day, so My Week's lines cover the same days as its board (#170).
     static func weekly(
         _ sessions: [GameSession], now: Date = .now,
-        calendar: Calendar = .current
+        calendar: Calendar = .current, weekStart: Date? = nil
     ) -> [GameProgress] {
-        let weekAgo = calendar.date(byAdding: .day, value: -7, to: now) ?? now
-        let thisWeek = DayGrouping.lastWeek(sessions, date: \.playedAt, now: now, calendar: calendar)
-            .filter { $0.playedAt <= now }
-        let lastWeek = DayGrouping.lastWeek(sessions, date: \.playedAt, now: weekAgo, calendar: calendar)
-            .filter { $0.playedAt < weekAgo }
+        let start =
+            weekStart ?? calendar.dateInterval(of: .weekOfYear, for: now)?.start ?? calendar.startOfDay(for: now)
+        let previousStart = calendar.date(byAdding: .day, value: -7, to: start) ?? start
+        let thisWeek = sessions.filter { $0.playedAt >= start }
+        let lastWeek = sessions.filter { $0.playedAt >= previousStart && $0.playedAt < start }
         return GameID.allCases.compactMap { game in
             let mine = thisWeek.filter { $0.game == game }
             let before = lastWeek.filter { $0.game == game }
@@ -98,17 +82,9 @@ struct GameProgress: Equatable {
     }
 }
 
-/// Day grouping shared by My Week and its tests: the last 7 days of items,
+/// Day grouping shared by My Week, the week board and their tests: items
 /// grouped by calendar day, newest day first.
 enum DayGrouping {
-    static func lastWeek<T>(
-        _ items: [T], date: (T) -> Date,
-        now: Date = .now, calendar: Calendar = .current
-    ) -> [T] {
-        let cutoff = calendar.date(byAdding: .day, value: -7, to: now) ?? now
-        return items.filter { date($0) >= cutoff }
-    }
-
     static func byDay<T>(
         _ items: [T], date: (T) -> Date,
         calendar: Calendar = .current

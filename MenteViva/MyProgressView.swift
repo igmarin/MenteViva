@@ -40,7 +40,7 @@ struct MyProgressView: View {
                         ForEach(facts(r), id: \.self) { Text($0).font(.title3) }
                         ForEach(trends(r), id: \.text) { trendRow($0, ink: r.game.ink) }
                     } header: {
-                        Text(verbatim: "\(r.game.emoji) \(AppLanguage.localized(r.game.title))")
+                        GameName(game: r.game)
                             .font(.title3.weight(.semibold))
                             .accessibilityAddTraits(.isHeader)
                     }
@@ -66,7 +66,7 @@ struct MyProgressView: View {
     /// "Played this week": the game's part of the week, in words and a bar.
     private func shareRow(_ r: ProgressRates) -> some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(verbatim: "\(r.game.emoji) \(AppLanguage.localized(r.game.title))")
+            GameName(game: r.game)
                 .font(.title3.weight(.semibold))
             Text(shareLine(r))
                 .font(.title3)

@@ -1,7 +1,7 @@
 # ES review packet — for the native-speaker pass (#12)
 
 Hand this whole file to the reviewer. Generated from `Localizable.xcstrings`
-(180 user-facing strings; keys that are only format specifiers are omitted).
+(179 user-facing strings; keys that are only format specifiers are omitted).
 Rows already signed off on #12 are pre-marked ✅.
 Regenerate after any string change: `python3 tools/generate_es_packet.py`.
 
@@ -137,7 +137,6 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `history.share.days %lld` | 📅 Days played: %lld | 📅 Días que jugué: %lld | WeeklySummary |  |
 | `history.share.games %lld` | 🎮 Games played: %lld | 🎮 Juegos jugados: %lld | WeeklySummary |  |
 | `history.share.hint` | Sends this week's games as a message | Envía los juegos de esta semana como mensaje | HistoryView |  |
-| `history.share.streak %lld` | 🌟 Days in a row: %lld | 🌟 Días seguidos: %lld | WeeklySummary |  |
 | `history.share.title` | 🌻 My week with MenteViva | 🌻 Mi semana con MenteViva | WeeklySummary |  |
 | `history.summary %lld` | one: You played %lld time this week! 🌟 / other: You played %lld times this week! 🌟 | one: ¡Jugaste %lld vez esta semana! 🌟 / other: ¡Jugaste %lld veces esta semana! 🌟 | HistoryView |  |
 | `history.title` | My Week | Mi Semana | HistoryView, HomeView |  |
