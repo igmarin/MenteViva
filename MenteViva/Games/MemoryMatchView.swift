@@ -125,8 +125,7 @@ struct MemoryMatchView: View {
             }
         }
         .padding()
-        .navigationTitle(AppLanguage.localized("game.memory.title"))
-        .tint(GameID.memoryMatch.ink)
+        .gameHeader(.memoryMatch, instruction: AppLanguage.localized("game.memory.instruction"))
         .onAppear(perform: deal)
         .onDisappear { flipBackTask?.cancel() }
         .celebration(isPresented: $showCelebration, detail: finalDetail, onPlayAgain: deal)

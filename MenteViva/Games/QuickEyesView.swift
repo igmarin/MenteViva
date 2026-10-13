@@ -65,9 +65,15 @@ struct QuickEyesView: View {
             case .choosing:
                 VStack(spacing: 16) {
                     if missedLastRound {
+                        // A soft amber note, not secondary grey: the kindest
+                        // line on screen should also be easy to read.
                         Text(AppLanguage.localized("game.quickeyes.almost"))
-                            .font(.title2)
-                            .foregroundStyle(.secondary)
+                            .font(.title2.weight(.semibold))
+                            .foregroundStyle(Color.todaysPick)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 14)
+                            .padding(.vertical, 10)
+                            .background(Color.amber.opacity(0.24), in: .rect(cornerRadius: 14))
                     }
                     Text(AppLanguage.localized("game.quickeyes.prompt"))
                         .font(.title2)
@@ -92,8 +98,10 @@ struct QuickEyesView: View {
         }
         .padding()
         .fitOrScroll()
-        .navigationTitle(AppLanguage.localized("game.quickeyes.title"))
-        .tint(GameID.quickEyes.ink)
+        .gameHeader(
+            .quickEyes,
+            instruction: AppLanguage.localized(phase == .showing ? "game.quickeyes.instruction" : "game.quickeyes.prompt")
+        )
         .onAppear(perform: startRound)
         .onDisappear { revealTask?.cancel() }
         // Same celebration as every other game (#45): progress, not points.

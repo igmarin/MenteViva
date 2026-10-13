@@ -78,13 +78,10 @@ struct CategoryFluencyView: View {
                     .fontWeight(.bold)
                     .accessibilityAddTraits(.isHeader)
 
-                Text(verbatim: "\(found) / \(round.items.count)")
-                    .font(.title3)
-                    .foregroundStyle(.secondary)
-                    .accessibilityLabel(
-                        String(
-                            format: AppLanguage.localized("game.category.found %lld %lld"),
-                            found, round.items.count))
+                ProgressCards(
+                    done: found, total: round.items.count,
+                    words: String(
+                        format: AppLanguage.localized("game.category.found %lld %lld"), found, round.items.count))
 
                 LazyVGrid(columns: columns, spacing: 16) {
                     ForEach(tiles) { tile in
@@ -121,8 +118,10 @@ struct CategoryFluencyView: View {
         }
         .padding()
         .fitOrScroll()
-        .navigationTitle(AppLanguage.localized("game.category.title"))
-        .tint(GameID.categoryFluency.ink)
+        .gameHeader(
+            .categoryFluency,
+            instruction: AppLanguage.localized("game.category.instruction") + " " + (currentRound?.name ?? "")
+        )
         .onAppear(perform: setup)
         .celebration(isPresented: $showCelebration, detail: finalDetail, onPlayAgain: restart)
     }

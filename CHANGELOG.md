@@ -20,6 +20,11 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
   its colour, with its own drawn emblem instead of an emoji and its name on a band
   of that colour. "Today's pick" stays on the card with its star. Cards sink a
   little when pressed (they dim instead with Reduce Motion).
+- **One header for every game (Card Table, step 3):** the big title is gone; the
+  game's name sits small at the top, and a speaker button next to it reads the
+  instructions aloud (in English or Spanish). Progress is a row of small cards in
+  the game's colour with "Round 4 of 10" in full-contrast text, instead of grey
+  "4 / 10". Quick Eyes' "Almost" line is a soft amber note instead of grey.
 
 ### Fixed
 - **Daily picks use Jev again when it is set up (#146):** adding Remember Together
