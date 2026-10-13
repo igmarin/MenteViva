@@ -55,6 +55,16 @@ struct HistoryView: View {
 
     private var sessionList: some View {
         List {
+            // The week as cards (Card Table, step 5), the same board as on Home.
+            Section {
+                WeekBoard(
+                    days: DayGrouping.thisWeek(sessions, date: \.playedAt).map {
+                        (day: $0.day, games: $0.items.compactMap(\.game))
+                    }
+                )
+                .padding(.vertical, 8)
+            }
+
             Section {
                 Text("history.summary \(weekSessions.count)")
                     .font(.title2)
@@ -117,7 +127,8 @@ struct HistoryView: View {
         } icon: {
             Image(systemName: movedUp ? "arrow.up.circle.fill" : "arrow.right.circle.fill")
                 .font(.title2)
-                .foregroundStyle(movedUp ? .green : .blue)
+                // The game's own colour (Card Table); direction and words carry the meaning.
+                .foregroundStyle(p.game.ink)
         }
         .padding(.vertical, 8)
         .accessibilityElement(children: .combine)

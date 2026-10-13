@@ -77,6 +77,23 @@ final class TodayRunTests: XCTestCase {
         XCTAssertFalse(today.isFinished)
     }
 
+    // MARK: - After a game (step 5)
+
+    func testGivenOneOfTodaysGamesJustFinishedWhenNextAfterThenItIsTheNextUnplayedPick() {
+        XCTAssertEqual(run([played(.memoryMatch, hoursAgo: 0.1)]).next(after: .memoryMatch), .categoryFluency)
+    }
+
+    func testGivenAGameOutsideTodaysPlanJustFinishedWhenNextAfterThenThereIsNone() {
+        XCTAssertNil(run([played(.stroop, hoursAgo: 0.1)]).next(after: .stroop))
+    }
+
+    func testGivenTheLastOfTodaysGamesJustFinishedWhenNextAfterThenThereIsNone() {
+        let today = run([
+            played(.memoryMatch, hoursAgo: 2), played(.categoryFluency, hoursAgo: 1), played(.quickEyes, hoursAgo: 0.1),
+        ])
+        XCTAssertNil(today.next(after: .quickEyes))
+    }
+
     // MARK: - Greeting
 
     func testGivenTheHourWhenGreetingThenMorningAfternoonOrEvening() {

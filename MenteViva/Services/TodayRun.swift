@@ -23,6 +23,12 @@ nonisolated struct TodayRun: Equatable {
     var remaining: Int { games.count - done.count }
     /// False before the plan exists, so an empty table never says "done".
     var isFinished: Bool { !games.isEmpty && next == nil }
+
+    /// What the end of `finished` offers (step 5): the next pick while it was
+    /// one of today's games and some are left; nil means "Play again".
+    func next(after finished: GameID) -> GameID? {
+        games.contains(finished) ? next : nil
+    }
 }
 
 /// Home's greeting by the hour: morning until noon, afternoon until six.

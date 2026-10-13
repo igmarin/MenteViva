@@ -7,8 +7,11 @@ extension Color {
     /// Icon teal: the app's tint and the fill of primary buttons, whose label
     /// uses the background colour (7.8:1 light, 11:1 dark).
     static let brand = Color(light: 0x1E5B57, dark: 0x7CCBBE)
-    /// Icon amber: the one warm accent in each emblem. Never used for text.
+    /// Icon amber: the one warm accent in each emblem, the played tick and the
+    /// "Added to your week" stamp. Never used as text itself.
     static let amber = Color(light: 0xF2B24C, dark: 0xF0B45A)
+    /// Text and ticks on amber: a dark brown, since amber is light in both modes.
+    static let onAmber = Color(UIColor(rgb: 0x2A1A05))
 
     init(light: UInt32, dark: UInt32) {
         self.init(UIColor { $0.userInterfaceStyle == .dark ? UIColor(rgb: dark) : UIColor(rgb: light) })
@@ -48,4 +51,10 @@ extension GameID {
         case .reminiscence: Color(light: 0x8C3B5A, dark: 0xEBA0BD)
         }
     }
+}
+
+extension EnvironmentValues {
+    /// Opens a game in place of the one just finished (step 5's "Next" button).
+    /// Home provides it; anywhere else it does nothing.
+    @Entry var playNext: (GameID) -> Void = { _ in }
 }

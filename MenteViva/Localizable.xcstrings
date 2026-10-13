@@ -1081,6 +1081,22 @@
         }
       }
     },
+    "game.celebration.added" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Added to your week"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Añadido a tu semana"
+          }
+        }
+      }
+    },
     "game.celebration.home" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -1111,6 +1127,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "¡Encontraste %lld!"
+          }
+        }
+      }
+    },
+    "game.celebration.next %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Next: %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Siguiente: %@"
           }
         }
       }
@@ -1253,6 +1285,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "¡Mejor racha: %lld seguidas!"
+          }
+        }
+      }
+    },
+    "game.celebration.today %lld %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld of %2$lld today"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld de %2$lld hoy"
           }
         }
       }

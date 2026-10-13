@@ -140,7 +140,7 @@ struct ColorClashView: View {
             startedAt = .now
             deal()
         }
-        .celebration(isPresented: $showCelebration, detail: finalDetail, onPlayAgain: restart)
+        .celebration(isPresented: $showCelebration, game: .stroop, detail: finalDetail, onPlayAgain: restart)
     }
 
     private func restart() {
