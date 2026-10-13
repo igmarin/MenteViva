@@ -9,12 +9,13 @@ No third-party tools: `os_signpost` (via `HotPath.measure`) plus Instruments.
 | `plan.today` | `HomeView.refreshPlan` | 14-day fetch, then the plan — a network call when Jev is on |
 | `photo.import` | `MemoryPhotos.add([Data?])` | the whole batch the family waits on after the picker |
 | `photo.downscale` | `MemoryPhotos.add` | decode + redraw + JPEG encode of a full photo |
-| `photo.caption` | `MemoryPhotos.caption` | For family reads it per photo inside a `ForEach` body |
+| `photo.caption` | `MemoryPhotos.caption` | Set up reads it per photo inside a `ForEach` body |
 | `memory.deal` | `MemoryMatchView.deal` | reads the album and decodes up to 8 photos |
 | `reminiscence.deal` | `ReminiscenceView.deal` | reads the album and one caption file per photo |
 | `reminiscence.photo` | `ReminiscenceView` `PhotoCard` | decodes one full photo per card, on every card |
 | `session.save` | `ModelContext.record` | synchronous SwiftData save after every game |
-| `progress.weekly` | `HistoryView`, `FamilyView` | recomputed on every redraw of those screens |
+| `progress.weekly` | `HistoryView` | recomputed on every redraw of My Week |
+| `progress.rates` | `MyProgressView` | recomputed on every redraw of My progress (#141) |
 
 `HotPath.measure("name") { ... }` costs next to nothing with no profiler attached.
 Add one only around work that can be slow or runs per redraw (conventions §8: no speculative code).
@@ -26,7 +27,7 @@ one at a time, which is why it needs its own per-card signpost.
 the suspensions are the point there, since the slow case is waiting on the proxy.
 
 `photo.caption` is marked for its **run count**, not its duration. Each read is well under a
-millisecond; what a trace shows is how many of them one redraw of For family costs.
+millisecond; what a trace shows is how many of them one redraw of Set up costs.
 
 ## What is deliberately not marked
 
@@ -41,7 +42,7 @@ millisecond; what a trace shows is how many of them one redraw of For family cos
 2. `tools/profile.sh 30` records 30 s of Time Profiler + Points of Interest.
    Use `tools/profile.sh --launch 30` to relaunch the app under the recorder instead:
    attaching can never catch cold start, so that is the only way to see `plan.today`.
-3. Play the flow you care about (add photos, finish a game, open My Week and Family,
+3. Play the flow you care about (add photos, finish a game, open My Week, My progress and Set up,
    play Remember Together past the first card).
 4. The script then prints every interval it recorded against the budget and opens the trace:
 

@@ -34,7 +34,7 @@ final class AppLanguageTests: XCTestCase {
     func testGivenPluralValueWhenSpanishChosenThenPluralFormResolves() {
         AppLanguage.apply("es", to: defaults)
         XCTAssertEqual(
-            AppLanguage.localized("family.week.last \(1)" as String.LocalizationValue, defaults: defaults),
-            "Semana anterior: 1 juego")
+            AppLanguage.localized("progress.plays \(1)" as String.LocalizationValue, defaults: defaults),
+            "Jugaste 1 vez esta semana")
     }
 }

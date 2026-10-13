@@ -2,6 +2,22 @@
 
 Newest first. Format: date — decision — why — what would make us revisit.
 
+## 2026-10-13 — My progress: what "this week" and "earlier weeks" mean (#141)
+
+Details the 2026-10-03 "Progress measures" row; the owner confirms on the PR.
+
+- **This week** is the last 7 calendar days, today included, so "days played" reads "3 of the last 7".
+- **Earlier weeks** are the 4 weeks before that, same game only. A trend compares this week's mean
+  accuracy per play and latest level with those weeks; under 3 plays this week, or nothing earlier,
+  it says why there is no trend instead.
+- **An easier week** is named in words ("A few fewer right answers…", "An easier level…") with the
+  same right-pointing arrow as "about the same". Never a down arrow, never colour alone.
+- **Set up** stays open, no lock (2026-10-01). Memory Lane photos and their names move there too: they
+  are a choice, not a measure.
+- **Not tracked yet** (seconds per round, milestones, personal bests, a Challenge level) is not shown on screen.
+
+Revisit when: the father finds a line on My progress confusing, or 4 weeks proves too short or long a memory.
+
 ## 2026-10-12 — Visual direction: the Card Table
 
 **Question:** the app is easy to use but looks generic (pale system blue on white everywhere,

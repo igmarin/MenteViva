@@ -1,29 +1,12 @@
 import PhotosUI
-import SwiftData
 import SwiftUI
 
-/// "For family" (#107, #108): the numbers behind My Week and the per-game
-/// choices, for the adult child. Open on purpose (owner decision 2026-10-01):
-/// no lock, nothing here can break play. Everything covers this device only.
-/// Each game played in the last 14 days: this week against the week before,
-/// the level the next game will use, and plain trend words — declines included
-/// (Jev 012), worded kindly and never as a medical reading.
-struct FamilyView: View {
-    @Query(sort: \GameSession.playedAt, order: .reverse)
-    private var sessions: [GameSession]
-
-    private var progress: [GameProgress] { HotPath.measure("progress.weekly") { GameProgress.weekly(sessions) } }
-    /// Kept in state so a level changed on a game's screen shows here on the
-    /// way back (#124); refreshed whenever this device's settings change.
-    @State private var pinned = FamilySettings.pinned()
-
+/// Set up (#141): the per-game choices and the Memory Lane photos, split from
+/// My progress. Open on purpose (owner decision 2026-10-01): no lock, nothing
+/// here can break play. Everything covers this device only.
+struct SetUpView: View {
     var body: some View {
         List {
-            Section {
-                Text(AppLanguage.localized("family.intro"))
-                    .font(.body)
-            }
-
             Section {
                 ForEach(GameID.allCases, id: \.self) { game in
                     NavigationLink {
@@ -42,81 +25,8 @@ struct FamilyView: View {
             }
 
             FamilyPhotosSection()
-
-            if progress.isEmpty {
-                Text(AppLanguage.localized("family.empty"))
-                    .font(.title3)
-            } else {
-                ForEach(progress, id: \.game) { p in
-                    Section {
-                        ForEach(lines(for: p), id: \.self) { Text($0).font(.body) }
-                    } header: {
-                        Text(verbatim: "\(p.game.emoji) \(AppLanguage.localized(p.game.title))")
-                            .font(.title3.weight(.semibold))
-                            .accessibilityAddTraits(.isHeader)
-                    }
-                }
-            }
         }
-        .navigationTitle(AppLanguage.localized("family.title"))
-        .task {
-            for await _ in NotificationCenter.default.notifications(named: UserDefaults.didChangeNotification) {
-                pinned = FamilySettings.pinned()
-            }
-        }
-        .toolbar {
-            if !progress.isEmpty {
-                ToolbarItem(placement: .topBarTrailing) {
-                    ShareLink(item: shareText) {
-                        Label(AppLanguage.localized("family.share"), systemImage: "square.and.arrow.up")
-                            .font(.title3)
-                            .labelStyle(.iconOnly)
-                            .bigTapTarget()
-                    }
-                    .accessibilityHint(AppLanguage.localized("family.share.hint"))
-                }
-            }
-        }
-    }
-
-    /// Level the next game will use, then this week, last week, and trends.
-    private func lines(for p: GameProgress) -> [String] {
-        // A game without levels (Remember Together, #139) has no level line.
-        var lines = p.game.hasLevels ? [levelLine(p.game, pin: pinned[p.game])] : []
-        // Interpolated so "1 game" / "3 games" picks its plural form.
-        lines.append(
-            week(AppLanguage.localized("family.week.this \(p.sessions)" as String.LocalizationValue), p.accuracy))
-        lines.append(
-            week(
-                AppLanguage.localized("family.week.last \(p.previousSessions)" as String.LocalizationValue),
-                p.previousAccuracy))
-        if let from = p.previousLevel, let to = p.level, let trend = p.levelTrend, trend != .steady {
-            lines.append(
-                String(
-                    format: AppLanguage.localized(trend == .up ? "family.level.up %@ %@" : "family.level.down %@ %@"),
-                    AppLanguage.localized(from.title), AppLanguage.localized(to.title)))
-        }
-        if let trend = p.accuracyTrend {
-            lines.append(
-                AppLanguage.localized(
-                    trend == .up
-                        ? "family.accuracy.up"
-                        : trend == .down ? "family.accuracy.down" : "family.accuracy.steady"))
-        }
-        return lines
-    }
-
-    private func week(_ games: String, _ accuracy: Double?) -> String {
-        guard let accuracy else { return games }
-        return games + " · " + String(format: AppLanguage.localized("family.right %lld"), Int((accuracy * 100).rounded()))
-    }
-
-    /// Plain text for WhatsApp/SMS/email: the same lines, one block per game.
-    private var shareText: String {
-        ([AppLanguage.localized("family.share.title")]
-            + progress.map { p in
-                "\(p.game.emoji) \(AppLanguage.localized(p.game.title))\n" + lines(for: p).joined(separator: "\n")
-            }).joined(separator: "\n\n")
+        .navigationTitle(AppLanguage.localized("setup.title"))
     }
 }
 
@@ -230,7 +140,7 @@ extension MemoryPhotos.AddResult {
     }
 }
 
-/// One game in the family list: name, then its level and whether it shows.
+/// One game in the Set up list: name, then its level and whether it shows.
 private struct FamilyGameRow: View {
     let game: GameID
     @AppStorage private var pin: Int
@@ -336,7 +246,7 @@ private struct FamilyGameView: View {
 }
 
 /// "Next game: Easy (set by you)": the level a game will use and who chose
-/// it. Shared by the game list and the progress lines (#122).
+/// it (#122).
 private func levelLine(_ game: GameID, pin: Difficulty?) -> String {
     String(
         format: AppLanguage.localized("family.level %@ %@"),
@@ -346,7 +256,6 @@ private func levelLine(_ game: GameID, pin: Difficulty?) -> String {
 
 #Preview {
     NavigationStack {
-        FamilyView()
+        SetUpView()
     }
-    .modelContainer(for: GameSession.self, inMemory: true)
 }

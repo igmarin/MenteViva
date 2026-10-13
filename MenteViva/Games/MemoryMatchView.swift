@@ -7,7 +7,7 @@ import SwiftUI
 /// #109: "a game, but he's not a child" — grown-up themes, paper-like cards, a
 /// calm card back, and a board sized to the screen (iPad and iPhone) so every
 /// card is visible without scrolling. Found pairs keep a checkmark, not just a tint.
-/// #110: family photos added in For family become cards first; the theme's
+/// #110: family photos added in Set up become cards first; the theme's
 /// emoji fill whatever pairs the photos don't cover.
 struct MemoryMatchView: View {
     @Environment(\.modelContext) private var modelContext

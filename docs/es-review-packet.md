@@ -1,7 +1,7 @@
 # ES review packet — for the native-speaker pass (#12)
 
 Hand this whole file to the reviewer. Generated from `Localizable.xcstrings`
-(169 user-facing strings; keys that are only format specifiers are omitted).
+(180 user-facing strings; keys that are only format specifiers are omitted).
 Rows already signed off on #12 are pre-marked ✅.
 Regenerate after any string change: `python3 tools/generate_es_packet.py`.
 
@@ -28,50 +28,38 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `difficulty.easy` | Easy | Fácil | Difficulty |  |
 | `difficulty.hard` | Hard | Difícil | Difficulty |  |
 | `difficulty.medium` | Medium | Medio | Difficulty |  |
-| `family.accuracy.down` | A few fewer right answers than the week before | Algunos aciertos menos que la semana anterior | FamilyView |  |
-| `family.accuracy.steady` | About the same as the week before | Más o menos igual que la semana anterior | FamilyView |  |
-| `family.accuracy.up` | More right answers than the week before | Más aciertos que la semana anterior | FamilyView |  |
-| `family.auto` | set automatically | ajustado automáticamente | FamilyView |  |
+| `family.auto` | set automatically | ajustado automáticamente | SetUpView |  |
 | `family.caption.field` | A name or a few words | Un nombre o unas palabras | FamilyPhotoCaptionSheet |  |
 | `family.caption.placeholder` | Mom's house | La casa de mamá | FamilyPhotoCaptionSheet |  |
 | `family.caption.privacy` | Saved on this device. The app never shares or sends it. Your own backup, if you use one, may include it. | Se guarda en este dispositivo. La app nunca lo comparte ni lo envía. Tu propia copia de seguridad, si la usas, puede incluirlo. | FamilyPhotoCaptionSheet |  |
 | `family.caption.save` | Save | Guardar | FamilyPhotoCaptionSheet |  |
 | `family.caption.save.problem` | We couldn't save that name. Please try again. | No pudimos guardar ese nombre. Inténtalo de nuevo. | FamilyPhotoCaptionSheet |  |
 | `family.caption.title` | Name this photo | Ponle nombre a esta foto | FamilyPhotoCaptionSheet |  |
-| `family.difficulty` | Difficulty | Dificultad | FamilyView |  |
-| `family.difficulty.auto` | Automatic (recommended) | Automática (recomendada) | FamilyView |  |
-| `family.difficulty.footer` | Automatic moves at most one step a week, based on how the games go. A level you choose stays until you switch back to Automatic, which then continues from it. | La automática cambia como mucho un paso por semana, según cómo van los juegos. Un nivel que elijas se mantiene hasta que vuelvas a Automática, que sigue desde ese nivel. | FamilyView |  |
-| `family.empty` | No games in the last two weeks yet. | Todavía no hay juegos en las últimas dos semanas. | FamilyView |  |
-| `family.game.hint` | Opens this game's settings | Abre los ajustes de este juego | FamilyView |  |
-| `family.game.nolevel` | Photos and names, no levels | Fotos y nombres, sin niveles | FamilyView |  |
-| `family.games.footer` | Changes apply from the next game, on this device only. | Los cambios se aplican desde el próximo juego, solo en este dispositivo. | FamilyView |  |
-| `family.games.header` | Games on this device | Juegos en este dispositivo | FamilyView |  |
-| `family.hidden` | Hidden from home | Oculto en el inicio | FamilyView |  |
-| `family.intro` | Everything here covers this device only. How each game went in the last 7 days, compared with the 7 days before. These numbers appear only here. | Todo lo de aquí es solo de este dispositivo. Cómo fue cada juego en los últimos 7 días, comparado con los 7 días anteriores. Estos números solo aparecen aquí. | FamilyView |  |
-| `family.level %@ %@` | Next game: %1$@ (%2$@) | Próximo juego: %1$@ (%2$@) | FamilyView |  |
-| `family.level.down %@ %@` | Moved to an easier level: %1$@ to %2$@ | Pasó a un nivel más fácil: de %1$@ a %2$@ | FamilyView |  |
-| `family.level.up %@ %@` | Moved up from %1$@ to %2$@ | Subió de %1$@ a %2$@ | FamilyView |  |
-| `family.open.hint` | Shows how each game is going, with numbers | Muestra cómo va cada juego, con números | SettingsView |  |
-| `family.photos.add` | Add photos | Añadir fotos | FamilyView, MemoryMatchView |  |
-| `family.photos.added %lld` | one: Added %lld photo. / other: Added %lld photos. | one: Se agregó %lld foto. / other: Se agregaron %lld fotos. | FamilyView, MemoryMatchView |  |
-| `family.photos.caption.a11y %lld` | Photo %lld: add or change its name | Foto %lld: poner o cambiar su nombre | FamilyView |  |
-| `family.photos.caption.add` | Add a name | Poner un nombre | FamilyView |  |
-| `family.photos.footer` | Up to 8 photos from this device become Memory Lane cards. They stay on this device and are never uploaded. | Hasta 8 fotos de este dispositivo se convierten en cartas de Camino de Memoria. Se quedan en este dispositivo y nunca se suben a internet. | FamilyView |  |
-| `family.photos.full %lld` | The album holds %lld photos. Remove one to add another. | El álbum guarda %lld fotos. Quita una para agregar otra. | FamilyView |  |
-| `family.photos.header` | Memory Lane photos | Fotos para Camino de Memoria | FamilyView |  |
+| `family.difficulty` | Difficulty | Dificultad | SetUpView |  |
+| `family.difficulty.auto` | Automatic (recommended) | Automática (recomendada) | SetUpView |  |
+| `family.difficulty.footer` | Automatic moves at most one step a week, based on how the games go. A level you choose stays until you switch back to Automatic, which then continues from it. | La automática cambia como mucho un paso por semana, según cómo van los juegos. Un nivel que elijas se mantiene hasta que vuelvas a Automática, que sigue desde ese nivel. | SetUpView |  |
+| `family.game.hint` | Opens this game's settings | Abre los ajustes de este juego | SetUpView |  |
+| `family.game.nolevel` | Photos and names, no levels | Fotos y nombres, sin niveles | SetUpView |  |
+| `family.games.footer` | Changes apply from the next game, on this device only. | Los cambios se aplican desde el próximo juego, solo en este dispositivo. | SetUpView |  |
+| `family.games.header` | Games on this device | Juegos en este dispositivo | SetUpView |  |
+| `family.hidden` | Hidden from home | Oculto en el inicio | SetUpView |  |
+| `family.level %@ %@` | Next game: %1$@ (%2$@) | Próximo juego: %1$@ (%2$@) | SetUpView |  |
+| `family.photos.add` | Add photos | Añadir fotos | MemoryMatchView, SetUpView |  |
+| `family.photos.added %lld` | one: Added %lld photo. / other: Added %lld photos. | one: Se agregó %lld foto. / other: Se agregaron %lld fotos. | MemoryMatchView, SetUpView |  |
+| `family.photos.caption.a11y %lld` | Photo %lld: add or change its name | Foto %lld: poner o cambiar su nombre | SetUpView |  |
+| `family.photos.caption.add` | Add a name | Poner un nombre | SetUpView |  |
+| `family.photos.footer` | Up to 8 photos from this device become Memory Lane cards. They stay on this device and are never uploaded. | Hasta 8 fotos de este dispositivo se convierten en cartas de Camino de Memoria. Se quedan en este dispositivo y nunca se suben a internet. | SetUpView |  |
+| `family.photos.full %lld` | The album holds %lld photos. Remove one to add another. | El álbum guarda %lld fotos. Quita una para agregar otra. | SetUpView |  |
+| `family.photos.header` | Memory Lane photos | Fotos para Camino de Memoria | SetUpView |  |
 | `family.photos.remove` | Remove | Quitar | FamilyPhotoCaptionSheet |  |
 | `family.photos.remove.a11y %lld` | Remove photo %lld | Quitar foto %lld | — |  |
-| `family.photos.unreadable %lld` | one: %lld photo couldn't be used. Try another one. / other: %lld photos couldn't be used. Try other ones. | one: %lld foto no se pudo usar. Prueba con otra. / other: %lld fotos no se pudieron usar. Prueba con otras. | FamilyView |  |
-| `family.pinned` | set by you | elegido por ti | FamilyView |  |
-| `family.right %lld` | %lld%% right | %lld%% de aciertos | FamilyView |  |
-| `family.share` | Share with family | Compartir con la familia | FamilyView |  |
-| `family.share.hint` | Sends these numbers as a text message | Envía estos números como un mensaje de texto | FamilyView |  |
-| `family.share.title` | MenteViva — how each game went this week | MenteViva — cómo fue cada juego esta semana | FamilyView |  |
-| `family.show` | Show on home | Mostrar en el inicio | FamilyView |  |
-| `family.show.last` | At least one game always stays on home. | Al menos un juego siempre queda en el inicio. | FamilyView |  |
-| `family.title` | For family | Para la familia | FamilyView, SettingsView |  |
-| `family.week.last %lld` | one: Week before: %lld game / other: Week before: %lld games | one: Semana anterior: %lld juego / other: Semana anterior: %lld juegos | FamilyView |  |
-| `family.week.this %lld` | one: This week: %lld game / other: This week: %lld games | one: Esta semana: %lld juego / other: Esta semana: %lld juegos | FamilyView |  |
+| `family.photos.unreadable %lld` | one: %lld photo couldn't be used. Try another one. / other: %lld photos couldn't be used. Try other ones. | one: %lld foto no se pudo usar. Prueba con otra. / other: %lld fotos no se pudieron usar. Prueba con otras. | SetUpView |  |
+| `family.pinned` | set by you | elegido por ti | SetUpView |  |
+| `family.share` | Share with family | Compartir con la familia | MyProgressView |  |
+| `family.share.hint` | Sends these numbers as a text message | Envía estos números como un mensaje de texto | MyProgressView |  |
+| `family.share.title` | MenteViva — how each game went this week | MenteViva — cómo fue cada juego esta semana | MyProgressView |  |
+| `family.show` | Show on home | Mostrar en el inicio | SetUpView |  |
+| `family.show.last` | At least one game always stays on home. | Al menos un juego siempre queda en el inicio. | SetUpView |  |
 | `game.category.a11y.picked` | Already picked | Ya elegido | CategoryFluencyView |  |
 | `game.category.a11y.position %lld %lld` | Tile %lld of %lld | Ficha %lld de %lld | CategoryFluencyView |  |
 | `game.category.animals` | Animals | Animales | CategoryFluencyView |  |
@@ -111,6 +99,10 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `game.colorclash.word.red` | RED | ROJO | ColorClashView |  |
 | `game.common.welldone` | Well done! 🎉 | ¡Muy bien! 🎉 | CelebrationView |  |
 | `game.math.instruction` | Tap the correct answer | Toca la respuesta correcta | MathStreakView |  |
+| `game.math.operator.dividedBy` | divided by | entre | NumberTrailQuestion |  |
+| `game.math.operator.minus` | minus | menos | NumberTrailQuestion |  |
+| `game.math.operator.plus` | plus | más | NumberTrailQuestion |  |
+| `game.math.operator.times` | times | por | NumberTrailQuestion |  |
 | `game.math.title` | Number Trail | Sendero de Números | GameID |  |
 | `game.memory.a11y.matched` | Pair found | Pareja encontrada | MemoryMatchView |  |
 | `game.memory.a11y.position %lld %lld` | Card %lld of %lld | Carta %lld de %lld | MemoryMatchView |  |
@@ -135,9 +127,9 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `game.reminiscence.title` | Remember Together | Recordar juntos | GameID |  |
 | `game.reminiscence.together` | Let's look together | Veámoslo juntos | ReminiscenceView |  |
 | `game.round.a11y %lld %lld` | Round %1$lld of %2$lld | Ronda %1$lld de %2$lld | RoundCounter |  |
-| `history.a11y.played %@` | Played %@ | Jugaste %@ | HistoryView |  |
+| `history.day.times %lld` | one: once / other: %lld times | one: una vez / other: %lld veces | HistoryView |  |
+| `history.days.header` | Day by day | Día a día | HistoryView |  |
 | `history.empty` | No games yet this week. Pick a game and have some fun! | Aún no hay juegos esta semana. ¡Elige un juego y diviértete! | HistoryView |  |
-| `history.game.unknown` | Game | Juego | HistoryView |  |
 | `history.progress.header` | Your games this week | Tus juegos esta semana | HistoryView |  |
 | `history.progress.steady %@` | %@: steady and strong this week. | %@: firme y constante esta semana. | HistoryView |  |
 | `history.progress.up %@` | %@ got a little more challenging, and you're ready for it. | %@ ahora es un poco más desafiante, ¡y lo manejas muy bien! | HistoryView |  |
@@ -179,6 +171,23 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `onboarding.line3` | Pick a game and start. | Elige un juego y empieza. | OnboardingView |  |
 | `onboarding.start` | Let's play | A jugar | OnboardingView |  |
 | `onboarding.start.hint` | Opens the games | Abre los juegos | OnboardingView |  |
+| `progress.accuracy %lld` | On average, %lld%% right each game | En promedio, %lld%% de aciertos por juego | MyProgressView |  |
+| `progress.days %lld` | Played on %lld of the last 7 days | Jugaste %lld de los últimos 7 días | MyProgressView |  |
+| `progress.empty` | No games in the last 7 days yet. Whenever you play, it shows up here. | Todavía no hay juegos en los últimos 7 días. Cuando juegues, aparecerá aquí. | MyProgressView |  |
+| `progress.intro` | Your last 7 days on this device. Each game is compared only with your own earlier weeks. These numbers appear only here, unless you share them. | Tus últimos 7 días en este dispositivo. Cada juego se compara solo con tus propias semanas anteriores. Estos números solo aparecen aquí, a menos que tú los compartas. | MyProgressView |  |
+| `progress.level %@` | Level reached: %@ | Nivel alcanzado: %@ | MyProgressView |  |
+| `progress.open.hint` | How your games went this week, on this device | Cómo te fue en los juegos esta semana, en este dispositivo | SettingsView |  |
+| `progress.plays %lld` | one: Played %lld time this week / other: Played %lld times this week | one: Jugaste %lld vez esta semana / other: Jugaste %lld veces esta semana | MyProgressView |  |
+| `progress.share %lld` | %lld%% of this week's games | %lld%% de los juegos de esta semana | MyProgressView |  |
+| `progress.share.header` | Played this week | Jugados esta semana | MyProgressView |  |
+| `progress.title` | My progress | Mi progreso | MyProgressView, SettingsView |  |
+| `progress.trend.accuracy.down` | A few fewer right answers than in your earlier weeks | Algunos aciertos menos que en tus semanas anteriores | MyProgressView |  |
+| `progress.trend.accuracy.steady` | About the same as your earlier weeks | Más o menos igual que en tus semanas anteriores | MyProgressView |  |
+| `progress.trend.accuracy.up` | More right answers than in your earlier weeks | Más aciertos que en tus semanas anteriores | MyProgressView |  |
+| `progress.trend.first` | No earlier week of this game to compare with yet. | Todavía no hay una semana anterior de este juego para comparar. | MyProgressView |  |
+| `progress.trend.level.down %@` | An easier level than your earlier weeks: now %@ | Un nivel más fácil que en tus semanas anteriores: ahora %@ | MyProgressView |  |
+| `progress.trend.level.up %@` | A level up from your earlier weeks: now %@ | Un nivel más que en tus semanas anteriores: ahora %@ | MyProgressView |  |
+| `progress.trend.wait %lld` | After %lld games this week, you'll see how it compares with your earlier weeks. | Después de %lld juegos esta semana, verás cómo se compara con tus semanas anteriores. | MyProgressView |  |
 | `settings.done` | Done | Listo | FamilyPhotoCaptionSheet, SettingsView |  |
 | `settings.language` | Language | Idioma | AppLanguage, SettingsView |  |
 | `settings.language.restart` | The language changes right away. | El idioma cambia al instante. | SettingsView |  |
@@ -193,3 +202,5 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `settings.textsize` | Bigger text | Texto más grande | SettingsView |  |
 | `settings.title` | Settings | Ajustes | HomeView, SettingsView |  |
 | `settings.version` | Version | Versión | SettingsView |  |
+| `setup.open.hint` | Which games show, their difficulty, and Memory Lane photos | Qué juegos se muestran, su dificultad y las fotos de Camino de Memoria | SettingsView |  |
+| `setup.title` | Set up | Ajustes de juego | SetUpView, SettingsView |  |

@@ -12,6 +12,13 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
   aloud", speaks the name on its own (off by default); the speaker button always works.
 
 ### Changed
+- **"For family" is now "My progress" and "Set up" (#141):** Settings has two rows.
+  My progress shows whoever holds this device how each game went in the last 7 days:
+  days played out of 7, the average right answers per game, the level reached, and each
+  game's share of the week ("Played this week"). A trend appears only after 3 games that
+  week, compared only with your own earlier weeks, in words with an arrow that never
+  points down. Remember Together shows plays and days only. Sharing stays your choice.
+  Hiding games, fixing a difficulty and Memory Lane photos moved to Set up.
 - **Number Trail steps up with difficulty (#143):** Easy still asks only sums. Medium
   adds take-aways that never go below zero (the bigger number comes first). Hard adds
   times and exact division with small numbers (up to 10). The signs are the usual
