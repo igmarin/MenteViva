@@ -1,8 +1,9 @@
 import SwiftData
 import SwiftUI
 
-/// Number Trail: one gentle addition at a time. Sums start at ≤10 and grow
-/// with the streak. 4 big answer buttons, 10 questions, no timer.
+/// Number Trail: one gentle sum at a time. Numbers start small and grow with the
+/// streak; the operators step up with difficulty (#143, `NumberTrailQuestion`).
+/// 4 big answer buttons, 10 questions, no timer.
 struct MathStreakView: View {
     @Environment(\.modelContext) private var modelContext
 
@@ -14,8 +15,7 @@ struct MathStreakView: View {
     @ScaledMetric(relativeTo: .title) private var answerSize: CGFloat = 44
 
     @State private var difficulty = Difficulty.stored(.mathStreaks)
-    @State private var a = 0
-    @State private var b = 0
+    @State private var question = NumberTrailQuestion(left: 0, operation: .plus, right: 0, answer: 0)
     @State private var options: [Int] = []
     @State private var progress = RoundProgress(totalRounds: MathStreakView.totalQuestions)
     @State private var streak = 0
@@ -26,18 +26,9 @@ struct MathStreakView: View {
     @State private var finalDetail = ""
     @State private var missed = false
 
-    /// Easy stays in small sums, hard starts bigger; medium is the original curve.
-    static func maxSum(streak: Int, difficulty: Difficulty) -> Int {
-        let start = difficulty.pick(10, 10, 20)
-        let cap = difficulty.pick(20, 50, 50)
-        return min(start + streak * 5, cap)
-    }
-
     static func score(correct: Int, bestStreak: Int) -> Int {
         correct * 10 + bestStreak * 2
     }
-
-    private var answer: Int { a + b }
 
     var body: some View {
         VStack(spacing: 32) {
@@ -45,11 +36,11 @@ struct MathStreakView: View {
                 .font(.title2)
                 .multilineTextAlignment(.center)
 
-            Text("\(a) + \(b)")
+            Text(verbatim: question.text)
                 .font(.system(size: sumSize, weight: .bold))
                 .lineLimit(1)
                 .minimumScaleFactor(0.5)
-                .accessibilityLabel("\(a) + \(b)")
+                .accessibilityLabel(question.spoken())
                 .modifier(MissCue(active: $missed))
 
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
@@ -71,7 +62,7 @@ struct MathStreakView: View {
         }
         .padding()
         .fitOrScroll()
-        .gameHeader(.mathStreaks, instruction: AppLanguage.localized("game.math.instruction") + " \(a) + \(b)")
+        .gameHeader(.mathStreaks, instruction: AppLanguage.localized("game.math.instruction") + " " + question.spoken())
         .onAppear(perform: deal)
         .celebration(isPresented: $showCelebration, game: .mathStreaks, detail: finalDetail, onPlayAgain: restart)
     }
@@ -86,21 +77,14 @@ struct MathStreakView: View {
     }
 
     private func deal() {
-        let maxSum = Self.maxSum(streak: streak, difficulty: difficulty)  // grows gently with the streak
-        a = Int.random(in: 1...(maxSum - 1))
-        b = Int.random(in: 1...(maxSum - a))
-        var pool = Set([answer])
-        while pool.count < 4 {
-            let offset = Int.random(in: 1...3) * (Bool.random() ? 1 : -1)
-            let candidate = answer + offset
-            if candidate > 0 { pool.insert(candidate) }
-        }
-        options = pool.shuffled()
+        var generator = SystemRandomNumberGenerator()
+        question = NumberTrailQuestion.make(difficulty: difficulty, streak: streak, using: &generator)
+        options = NumberTrailQuestion.options(for: question.answer, using: &generator)
     }
 
     private func tap(_ option: Int) {
         guard !progress.isFinished else { return }
-        if option == answer {
+        if option == question.answer {
             streak += 1
             bestStreak = max(bestStreak, streak)
             correct += 1

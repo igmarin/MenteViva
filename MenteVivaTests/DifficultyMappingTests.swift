@@ -50,12 +50,12 @@ final class DifficultyMappingTests: XCTestCase {
     }
 
     func testGivenSameStreakWhenMaxSumThenEasyIsSmallestAndMediumIsOriginal() {
-        XCTAssertEqual(MathStreakView.maxSum(streak: 0, difficulty: .medium), 10)
-        XCTAssertEqual(MathStreakView.maxSum(streak: 100, difficulty: .medium), 50)
-        XCTAssertEqual(MathStreakView.maxSum(streak: 100, difficulty: .easy), 20)
+        XCTAssertEqual(NumberTrailQuestion.maxSum(streak: 0, difficulty: .medium), 10)
+        XCTAssertEqual(NumberTrailQuestion.maxSum(streak: 100, difficulty: .medium), 50)
+        XCTAssertEqual(NumberTrailQuestion.maxSum(streak: 100, difficulty: .easy), 20)
         XCTAssertGreaterThan(
-            MathStreakView.maxSum(streak: 0, difficulty: .hard),
-            MathStreakView.maxSum(streak: 0, difficulty: .medium))
+            NumberTrailQuestion.maxSum(streak: 0, difficulty: .hard),
+            NumberTrailQuestion.maxSum(streak: 0, difficulty: .medium))
     }
 
     func testGivenDifficultiesWhenDisplayTimesThenEasyFlashesLongerAndFloorIsHigher() {

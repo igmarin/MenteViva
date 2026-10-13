@@ -17,22 +17,6 @@
         }
       }
     },
-    "%lld + %lld" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$lld + %2$lld"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$lld + %2$lld"
-          }
-        }
-      }
-    },
     "app.title" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -1606,6 +1590,70 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Toca la respuesta correcta"
+          }
+        }
+      }
+    },
+    "game.math.operator.dividedBy" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "divided by"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "entre"
+          }
+        }
+      }
+    },
+    "game.math.operator.minus" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "minus"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "menos"
+          }
+        }
+      }
+    },
+    "game.math.operator.plus" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "plus"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "más"
+          }
+        }
+      }
+    },
+    "game.math.operator.times" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "times"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "por"
           }
         }
       }
