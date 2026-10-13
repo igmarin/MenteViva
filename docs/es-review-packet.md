@@ -127,9 +127,9 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `game.reminiscence.title` | Remember Together | Recordar juntos | GameID |  |
 | `game.reminiscence.together` | Let's look together | Veámoslo juntos | ReminiscenceView |  |
 | `game.round.a11y %lld %lld` | Round %1$lld of %2$lld | Ronda %1$lld de %2$lld | RoundCounter |  |
-| `history.a11y.played %@` | Played %@ | Jugaste %@ | HistoryView |  |
+| `history.day.times %lld` | one: once / other: %lld times | one: una vez / other: %lld veces | HistoryView |  |
+| `history.days.header` | Day by day | Día a día | HistoryView |  |
 | `history.empty` | No games yet this week. Pick a game and have some fun! | Aún no hay juegos esta semana. ¡Elige un juego y diviértete! | HistoryView |  |
-| `history.game.unknown` | Game | Juego | HistoryView |  |
 | `history.progress.header` | Your games this week | Tus juegos esta semana | HistoryView |  |
 | `history.progress.steady %@` | %@: steady and strong this week. | %@: firme y constante esta semana. | HistoryView |  |
 | `history.progress.up %@` | %@ got a little more challenging, and you're ready for it. | %@ ahora es un poco más desafiante, ¡y lo manejas muy bien! | HistoryView |  |
