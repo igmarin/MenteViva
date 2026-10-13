@@ -2052,18 +2052,58 @@
         }
       }
     },
-    "history.a11y.played %@" : {
+    "history.day.times %lld" : {
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "once"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld times"
+                }
+              }
+            }
+          }
+        },
+        "es" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "una vez"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld veces"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "history.days.header" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Played %@"
+            "value" : "Day by day"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Jugaste %@"
+            "value" : "Día a día"
           }
         }
       }
@@ -2080,23 +2120,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aún no hay juegos esta semana. ¡Elige un juego y diviértete!"
-          }
-        }
-      }
-    },
-    "history.game.unknown" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Game"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Juego"
           }
         }
       }

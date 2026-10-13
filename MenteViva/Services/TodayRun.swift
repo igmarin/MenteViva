@@ -67,4 +67,34 @@ extension DayGrouping {
             return (day: day, items: onDay.sorted { date($0) < date($1) })
         }
     }
+
+    /// My Week's rows (#140): one tally per day, newest day first. Sessions of
+    /// games this build doesn't know are left out, and so is a day with only those.
+    static func tally<T>(
+        _ items: [T], date: (T) -> Date, game: (T) -> GameID?,
+        calendar: Calendar = .current
+    ) -> [DayTally] {
+        byDay(items, date: date, calendar: calendar).compactMap { group in
+            var order: [GameID] = []
+            var counts: [GameID: Int] = [:]
+            for id in group.items.sorted(by: { date($0) < date($1) }).compactMap(game) {
+                if counts[id] == nil { order.append(id) }
+                counts[id, default: 0] += 1
+            }
+            guard !order.isEmpty else { return nil }
+            return DayTally(day: group.day, games: order.map { .init(game: $0, count: counts[$0] ?? 0) })
+        }
+    }
+}
+
+/// One day of My Week: each game played that day with how many times, in the
+/// order it was first played. No scores (#45).
+nonisolated struct DayTally: Equatable {
+    struct Count: Equatable {
+        let game: GameID
+        let count: Int
+    }
+
+    let day: Date
+    let games: [Count]
 }
