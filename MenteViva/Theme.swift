@@ -7,6 +7,8 @@ extension Color {
     /// Icon teal: the app's tint and the fill of primary buttons, whose label
     /// uses the background colour (7.8:1 light, 11:1 dark).
     static let brand = Color(light: 0x1E5B57, dark: 0x7CCBBE)
+    /// Icon amber: the one warm accent in each emblem. Never used for text.
+    static let amber = Color(light: 0xF2B24C, dark: 0xF0B45A)
 
     init(light: UInt32, dark: UInt32) {
         self.init(UIColor { $0.userInterfaceStyle == .dark ? UIColor(rgb: dark) : UIColor(rgb: light) })

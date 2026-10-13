@@ -34,11 +34,9 @@ struct HomeView: View {
                             NavigationLink {
                                 destination(for: game)
                             } label: {
-                                GameTile(
-                                    emoji: game.emoji, title: AppLanguage.localized(game.title), ink: game.ink,
-                                    isTodaysPick: todaysMix.contains(game))
+                                GameCard(game: game, isTodaysPick: todaysMix.contains(game))
                             }
-                            .buttonStyle(.plain)
+                            .buttonStyle(CardPressStyle())
                         }
                     }
 
@@ -103,41 +101,6 @@ struct HomeView: View {
         case .quickEyes: QuickEyesView()
         case .reminiscence: ReminiscenceView()
         }
-    }
-}
-
-/// One game tile: big emoji over the localized name. Deliberately large
-/// (>=150pt wide, 140pt tall) — conventions.md §4 wants >=100pt targets.
-private struct GameTile: View {
-    let emoji: String
-    let title: String
-    /// The game's own colour (Card Table theme); ContrastTests checks the badge on it.
-    let ink: Color
-    let isTodaysPick: Bool
-
-    var body: some View {
-        VStack(spacing: 12) {
-            Text(emoji)
-                .font(.system(size: 56))
-                .accessibilityHidden(true)
-            Text(title)
-                .font(.title3.weight(.semibold))
-                .multilineTextAlignment(.center)
-                .lineLimit(2)
-                .minimumScaleFactor(0.7)
-            // Text + star, not color alone (conventions §4).
-            if isTodaysPick {
-                Label(AppLanguage.localized("home.today.badge"), systemImage: "star.fill")
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(Color.todaysPick)
-            }
-        }
-        .frame(maxWidth: .infinity, minHeight: 140)
-        .padding(12)
-        .background(ink.opacity(isTodaysPick ? 0.22 : 0.12), in: .rect(cornerRadius: 20))
-        .accessibilityElement(children: .combine)
-        .accessibilityLabel(Text(title))
-        .accessibilityValue(Text(isTodaysPick ? AppLanguage.localized("home.today.badge") : ""))
     }
 }
 
