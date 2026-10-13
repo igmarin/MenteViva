@@ -14,8 +14,9 @@ struct CelebrationView: View {
     let onHome: () -> Void
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    /// Includes the session just saved: every game records before celebrating.
-    @Query(sort: \GameSession.playedAt) private var sessions: [GameSession]
+    /// This week's sessions, including the one just saved: every game records
+    /// before celebrating.
+    @Query(GameSession.thisWeek()) private var sessions: [GameSession]
     @AppStorage(FamilySettings.hiddenKey) private var hiddenGames = ""
     @State private var arrived = false
 

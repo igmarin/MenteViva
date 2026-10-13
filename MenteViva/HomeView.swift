@@ -8,11 +8,10 @@ struct HomeView: View {
     @Environment(\.dynamicTypeSize) private var typeSize
     @Environment(\.horizontalSizeClass) private var sizeClass
     @Environment(\.modelContext) private var modelContext
-    /// Every session, so the table and week board update the moment a game is saved.
-@Query(
-        filter: #Predicate<GameSession> { $0.playedAt >= weekStart },
-        sort: \\GameSession.playedAt
-    ) private var sessions: [GameSession]
+    /// This week's sessions, so the table and week board update the moment a game
+    /// is saved without loading years of history. The week is fixed when Home is
+    /// made; everything below also filters by day, so a stale week stays correct.
+    @Query(GameSession.thisWeek()) private var sessions: [GameSession]
     @State private var showSettings = false
     /// The games opened from Home, so "Next" can swap the finished game for the next one.
     @State private var path: [GameID] = []

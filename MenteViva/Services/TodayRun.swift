@@ -1,4 +1,5 @@
 import Foundation
+import SwiftData
 
 /// Where today's games stand on Home's table (Card Table, step 4): which are
 /// done, which one is next, and whether the day is finished. The plan is saved
@@ -39,6 +40,16 @@ nonisolated enum Greeting {
         case ..<18: "home.greeting.afternoon"
         default: "home.greeting.evening"
         }
+    }
+}
+
+extension GameSession {
+    /// This calendar week's sessions, oldest first: everything Home's table and
+    /// week board and the end-of-game screen read. History keeps growing, so
+    /// they never load all of it (#157 review).
+    static func thisWeek(now: Date = .now, calendar: Calendar = .current) -> FetchDescriptor<GameSession> {
+        let start = calendar.dateInterval(of: .weekOfYear, for: now)?.start ?? calendar.startOfDay(for: now)
+        return FetchDescriptor(predicate: #Predicate { $0.playedAt >= start }, sortBy: [SortDescriptor(\.playedAt)])
     }
 }
 
