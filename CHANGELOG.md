@@ -13,7 +13,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 
 ### Changed
 - **Spanish wording (#12):** the end-of-game stamp now says "Agregado a tu semana"
-  (neutral Latin American), and Home's button reads "Seguimos con …" without a colon.
+  (neutral Latin American), Home's button reads "Seguimos con …" without a colon, and
+  the end-of-game pill reads "Hoy: 1 de 3".
 - **A warmer look, taken from the app icon (Card Table, step 1):** each game has its
   own colour on Home and inside the game, and buttons and switches are icon teal
   instead of system blue. The welcome title and "Well done!" use a serif. Memory

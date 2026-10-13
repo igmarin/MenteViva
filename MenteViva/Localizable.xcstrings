@@ -1300,7 +1300,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%1$lld de %2$lld hoy"
+            "value" : "Hoy: %1$lld de %2$lld"
           }
         }
       }
