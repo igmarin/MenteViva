@@ -1,7 +1,7 @@
 # ES review packet — for the native-speaker pass (#12)
 
 Hand this whole file to the reviewer. Generated from `Localizable.xcstrings`
-(179 user-facing strings; keys that are only format specifiers are omitted).
+(183 user-facing strings; keys that are only format specifiers are omitted).
 Rows already signed off on #12 are pre-marked ✅.
 Regenerate after any string change: `python3 tools/generate_es_packet.py`.
 
@@ -192,7 +192,11 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `settings.language.restart` | The language changes right away. | El idioma cambia al instante. | SettingsView |  |
 | `settings.language.system` | Device | Sistema | AppLanguage |  |
 | `settings.open.hint` | Language, bigger text and privacy | Idioma, texto más grande y privacidad | HomeView |  |
-| `settings.privacy.body` | No ads. No tracking. No account. Your games stay on your device. If daily suggestions are on, only anonymous totals leave it — which games, how many, how well. Never your name. Photos you add for Memory Lane, and the names you give them, stay on this device. Your own iPhone or iPad backup, if you use one, may include them. | Sin anuncios. Sin rastreo. Sin cuenta. Tus partidas se quedan en tu dispositivo. Si las sugerencias diarias están activas, solo salen totales anónimos: qué juegos, cuántos y qué tan bien. Nunca tu nombre. Las fotos que añadas para Camino de Memoria, y los nombres que les pongas, se quedan en este dispositivo. Tu propia copia de seguridad del iPhone o iPad, si la usas, puede incluirlos. | SettingsView |  |
+| `settings.privacy.backup %@` | If you back up this %@, the backup keeps them too. | Si haces copia de seguridad de este %@, la copia también los guarda. | SettingsView |  |
+| `settings.privacy.device %@` | Your games stay on this %@. | Tus juegos se quedan en este %@. | SettingsView |  |
+| `settings.privacy.noaccount` | No account, no ads, no tracking. | Sin cuenta, sin anuncios, sin rastreo. | SettingsView |  |
+| `settings.privacy.photos` | Your photos and their names never leave it. | Tus fotos y sus nombres nunca salen de aquí. | SettingsView |  |
+| `settings.privacy.suggestions` | Daily suggestions send only anonymous totals: which games, how many, how well. Never your name. | Las sugerencias diarias solo envían totales anónimos: qué juegos, cuántos y qué tan bien. Nunca tu nombre. | SettingsView |  |
 | `settings.privacy.title` | Your privacy | Tu privacidad | SettingsView |  |
 | `settings.sound` | Sound & haptics | Sonido y vibración | SettingsView |  |
 | `settings.sound.hint` | Gentle tones and taps | Tonos y toques suaves | SettingsView |  |

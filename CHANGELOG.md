@@ -12,6 +12,12 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
   aloud", speaks the name on its own (off by default); the speaker button always works.
 
 ### Changed
+- **Privacy you can read (Settings):** the long paragraph is now three short lines with
+  icons: your games stay on this iPad, no account or ads or tracking, and your photos and
+  their names never leave it. The backup note follows in smaller text. The line about daily
+  suggestions appears only in builds where they're on.
+- **A new app icon:** one of the app's own framed game cards, with Memory Lane's emblem, on
+  the table colours, so the icon matches the cards inside the app.
 - **My Week agrees with itself:** "this week" now means Sunday to Saturday everywhere on
   the screen, the same week as the board at the top, so the counts, the game lines and
   the day-by-day rows match the cards shown. The "Days in a row" line is gone from the
