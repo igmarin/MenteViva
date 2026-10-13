@@ -101,7 +101,8 @@ docs/                 start at docs/README.md
    Syntax checks (`swiftc -parse`) are
    NOT verification. **A pre-push hook runs all of this for you** — install it
    once with `git config core.hooksPath .githooks`; `git push --no-verify`
-   skips it. `.github/workflows/swift.yml` holds the same checks but is
+   skips it. It tests on the first booted simulator; when several agents work
+   in parallel, each pushes with its own: `MENTEVIVA_SIMULATOR=<udid> git push`. `.github/workflows/swift.yml` holds the same checks but is
    manual-dispatch only while the Actions minutes are out, so the hook is the
    thing that actually runs. The same `core.hooksPath` also enables a
    **pre-commit hook** that runs `ocr review` on the staged changes and blocks

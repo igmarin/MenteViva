@@ -5,6 +5,8 @@
 #
 # Install once:   git config core.hooksPath .githooks
 # Skip one push:  git push --no-verify
+# Own simulator:  MENTEVIVA_SIMULATOR=<udid> git push   (parallel agents each
+#                 pass their own, or the tests reinstall over a booted one in use)
 #
 # It deliberately does NOT run tools/generate_project.swift. That rewrites
 # project.pbxproj and clears xcuserdata, which corrupts the project when Xcode
@@ -42,6 +44,10 @@ project_lists_every_file() {
 }
 
 simulator() {
+    if [ -n "${MENTEVIVA_SIMULATOR:-}" ]; then
+        echo "$MENTEVIVA_SIMULATOR"
+        return
+    fi
     local booted
     booted="$(xcrun simctl list devices available \
         | awk '/\(Booted\)/{match($0,/[0-9A-F-]{36}/); print substr($0,RSTART,RLENGTH); exit}')"
