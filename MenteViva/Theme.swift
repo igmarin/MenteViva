@@ -15,6 +15,18 @@ extension Color {
     }
 }
 
+extension ShapeStyle where Self == LinearGradient {
+    /// The icon's gradient, teal to amber: the table Home deals today's games on.
+    static var table: LinearGradient {
+        LinearGradient(
+            colors: [
+                Color(light: 0x2F7470, dark: 0x123F3C), Color(light: 0x8DAF98, dark: 0x2D4A3F),
+                Color(light: 0xEDBB6C, dark: 0x6A5024),
+            ],
+            startPoint: .bottomLeading, endPoint: .topTrailing)
+    }
+}
+
 extension UIColor {
     convenience init(rgb: UInt32) {
         self.init(

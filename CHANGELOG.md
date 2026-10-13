@@ -25,6 +25,14 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
   instructions aloud (in English or Spanish). Progress is a row of small cards in
   the game's colour with "Round 4 of 10" in full-contrast text, instead of grey
   "4 / 10". Quick Eyes' "Almost" line is a soft amber note instead of grey.
+- **Home deals today's games on a table (Card Table, step 4):** a greeting for the
+  time of day, then today's three games as cards on the icon's teal-to-amber table
+  with one big button that always names the next one ("Start today's games", then
+  "Keep going: Name the Herd"). Played games get an amber tick; when all are done
+  the cards stack up and the week shows instead. A week board (seven days, small
+  cards for the games played) opens My Week. All games stay below. On iPad, today
+  is on the left and everything else on the right; at the largest text sizes the
+  cards become full-width rows. The "Today's pick" stars are gone from the grid.
 
 ### Fixed
 - **Daily picks use Jev again when it is set up (#146):** adding Remember Together

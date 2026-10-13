@@ -40,6 +40,7 @@
 		275EC605D5ED04650000001E /* PlanStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3931AC8D4E8A85DB00000018; };
 		45C157ABD39C164F00000027 /* PlayerStateSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9EBAADE3EF5726500000021; };
 		8C75A9CE4133529700000020 /* SoundPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B94116EB608F25D0000001A; };
+		AF37EB13F2EEFE670000001D /* TodayRun.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41FBA96AED75794D00000017; };
 		D9207C4B070633A000000022 /* WeeklySummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DCDF59CF4AC6AE0000001C; };
 		F1CAEDFBEAB27E7A00000018 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881D5FFD680EE69800000012; };
 		ECD662DF93B8B0C900000011 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A215EBB02284C9F0000000B; };
@@ -62,6 +63,7 @@
 		8014E3CE95A477CB00000036 /* ReminiscenceDeckTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AC3CFEA0009500100000030; };
 		F54A8747C07E0F3800000039 /* ReminiscenceSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE180630A87047600000033; };
 		F3781E2CF00E20FA00000033 /* RoundProgressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690FA2BE3DFB9D180000002D; };
+		854BEF814FB113CF0000002E /* TodayRunTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92F4CC37A2FE5BE500000028; };
 		0EEED9F3112B457400000033 /* WeeklySummaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2CB27B32AF72D220000002D; };
 
 		B91ABDA086A9E6DC00000010 /* BigTargets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BigTargets.swift; sourceTree = "<group>"; };
@@ -99,6 +101,7 @@
 		3931AC8D4E8A85DB00000018 /* PlanStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/PlanStore.swift; sourceTree = "<group>"; };
 		D9EBAADE3EF5726500000021 /* PlayerStateSummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/PlayerStateSummary.swift; sourceTree = "<group>"; };
 		6B94116EB608F25D0000001A /* SoundPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/SoundPlayer.swift; sourceTree = "<group>"; };
+		41FBA96AED75794D00000017 /* TodayRun.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/TodayRun.swift; sourceTree = "<group>"; };
 		E5DCDF59CF4AC6AE0000001C /* WeeklySummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/WeeklySummary.swift; sourceTree = "<group>"; };
 		881D5FFD680EE69800000012 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		7A215EBB02284C9F0000000B /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
@@ -121,6 +124,7 @@
 		6AC3CFEA0009500100000030 /* ReminiscenceDeckTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/ReminiscenceDeckTests.swift; sourceTree = SOURCE_ROOT; };
 		4BE180630A87047600000033 /* ReminiscenceSessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/ReminiscenceSessionTests.swift; sourceTree = SOURCE_ROOT; };
 		690FA2BE3DFB9D180000002D /* RoundProgressTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/RoundProgressTests.swift; sourceTree = SOURCE_ROOT; };
+		92F4CC37A2FE5BE500000028 /* TodayRunTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/TodayRunTests.swift; sourceTree = SOURCE_ROOT; };
 		A2CB27B32AF72D220000002D /* WeeklySummaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/WeeklySummaryTests.swift; sourceTree = SOURCE_ROOT; };
 		5D90A9FDEC5CFCA50000000D /* MenteViva.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MenteViva.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1983297D696F1E1B0000000A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -186,6 +190,7 @@
 				3931AC8D4E8A85DB00000018 /* PlanStore.swift */,
 				D9EBAADE3EF5726500000021 /* PlayerStateSummary.swift */,
 				6B94116EB608F25D0000001A /* SoundPlayer.swift */,
+				41FBA96AED75794D00000017 /* TodayRun.swift */,
 				E5DCDF59CF4AC6AE0000001C /* WeeklySummary.swift */,
 				881D5FFD680EE69800000012 /* SettingsView.swift */,
 				7A215EBB02284C9F0000000B /* Theme.swift */,
@@ -221,6 +226,7 @@
 				6AC3CFEA0009500100000030 /* ReminiscenceDeckTests.swift */,
 				4BE180630A87047600000033 /* ReminiscenceSessionTests.swift */,
 				690FA2BE3DFB9D180000002D /* RoundProgressTests.swift */,
+				92F4CC37A2FE5BE500000028 /* TodayRunTests.swift */,
 				A2CB27B32AF72D220000002D /* WeeklySummaryTests.swift */,
 			);
 			name = MenteVivaTests;
@@ -323,6 +329,7 @@
 				275EC605D5ED04650000001E /* PlanStore.swift in Sources */,
 				45C157ABD39C164F00000027 /* PlayerStateSummary.swift in Sources */,
 				8C75A9CE4133529700000020 /* SoundPlayer.swift in Sources */,
+				AF37EB13F2EEFE670000001D /* TodayRun.swift in Sources */,
 				D9207C4B070633A000000022 /* WeeklySummary.swift in Sources */,
 				F1CAEDFBEAB27E7A00000018 /* SettingsView.swift in Sources */,
 				ECD662DF93B8B0C900000011 /* Theme.swift in Sources */,
@@ -353,6 +360,7 @@
 				8014E3CE95A477CB00000036 /* ReminiscenceDeckTests.swift in Sources */,
 				F54A8747C07E0F3800000039 /* ReminiscenceSessionTests.swift in Sources */,
 				F3781E2CF00E20FA00000033 /* RoundProgressTests.swift in Sources */,
+				854BEF814FB113CF0000002E /* TodayRunTests.swift in Sources */,
 				0EEED9F3112B457400000033 /* WeeklySummaryTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

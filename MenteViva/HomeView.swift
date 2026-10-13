@@ -1,59 +1,61 @@
 import SwiftData
 import SwiftUI
 
-/// Home: the one screen dad lands on. Big warm tiles, one per game, no
-/// navigation puzzles. Tiles carry the game emoji so the screen is readable
-/// even when the text is too small for him to bother with.
+/// Home (Card Table, step 4): a greeting, today's games dealt on a table with
+/// one button that always names the next game, the week board, and every game
+/// below. Dad never has to choose where to start; he can still pick any game.
 struct HomeView: View {
     @Environment(\.dynamicTypeSize) private var typeSize
-    /// Wider tiles at accessibility text sizes (#117) so names never break
+    @Environment(\.horizontalSizeClass) private var sizeClass
+    @Environment(\.modelContext) private var modelContext
+    /// Every session, so the table and week board update the moment a game is saved.
+@Query(
+        filter: #Predicate<GameSession> { $0.playedAt >= weekStart },
+        sort: \\GameSession.playedAt
+    ) private var sessions: [GameSession]
+    @State private var showSettings = false
+    /// Today's picks in plan order. Empty until the on-device policy has run (a
+    /// local fetch, so effectively instant); nothing here waits on the network.
+    @State private var plan: [GameID] = []
+    /// Games the family hid on this device (#108).
+    @AppStorage(FamilySettings.hiddenKey) private var hiddenGames = ""
+
+    private var hidden: Set<GameID> { FamilySettings.hidden(from: hiddenGames) }
+    private var today: TodayRun { TodayRun(plan: plan, hidden: hidden, sessions: sessions) }
+    private var week: [(day: Date, games: [GameID])] {
+        DayGrouping.thisWeek(sessions, date: \.playedAt).map { (day: $0.day, games: $0.items.compactMap(\.game)) }
+    }
+
+    /// Wider cards at accessibility text sizes (#117) so names never break
     /// mid-word: one column on iPhone, two on iPad.
     private var columns: [GridItem] {
         [GridItem(.adaptive(minimum: typeSize.isAccessibilitySize ? 300 : 150), spacing: 16)]
     }
-    @State private var showSettings = false
-    @Environment(\.modelContext) private var modelContext
-    /// Today's picks. Empty until the on-device policy has run (a local
-    /// fetch, so effectively instant); nothing on this screen waits on the network.
-    @State private var todaysMix: Set<GameID> = []
-    /// Games the family hid on this device (#108).
-    @AppStorage(FamilySettings.hiddenKey) private var hiddenGames = ""
 
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
-                    Text(AppLanguage.localized("home.greeting"))
-                        .font(.title2)
-                        .foregroundStyle(.secondary)
-                        .padding(.horizontal, 4)
-
-                    LazyVGrid(columns: columns, spacing: 16) {
-                        ForEach(GameID.allCases.filter { !FamilySettings.hidden(from: hiddenGames).contains($0) }, id: \.self) {
-                            game in
-                            NavigationLink {
-                                destination(for: game)
-                            } label: {
-                                GameCard(game: game, isTodaysPick: todaysMix.contains(game))
-                            }
-                            .buttonStyle(CardPressStyle())
+                if sizeClass == .regular {
+                    // iPad: today on the left, everything else on the right.
+                    HStack(alignment: .top, spacing: 32) {
+                        todayColumn.frame(maxWidth: 560)
+                        VStack(alignment: .leading, spacing: 20) {
+                            allGames
+                            if !today.isFinished { weekCard }
                         }
                     }
-
-                    NavigationLink {
-                        HistoryView()
-                    } label: {
-                        Label(AppLanguage.localized("history.title"), systemImage: "calendar")
-                            .font(.title3.weight(.semibold))
-                            .frame(maxWidth: .infinity, minHeight: 100)
-                            .background(.tint.opacity(0.12), in: .rect(cornerRadius: 16))
+                    .padding()
+                } else {
+                    VStack(alignment: .leading, spacing: 20) {
+                        todayColumn
+                        if !today.isFinished { weekCard }
+                        allGames
                     }
-                    .buttonStyle(.plain)
-                    .accessibilityHint(AppLanguage.localized("home.week.hint"))
+                    .padding()
                 }
-                .padding()
             }
             .navigationTitle(AppLanguage.localized("app.title"))
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
@@ -74,7 +76,192 @@ struct HomeView: View {
         }
     }
 
-    /// Everything Home waits on before it can star today's games: a 14-day
+    // MARK: - Today
+
+    private var todayColumn: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(Date.now, format: .dateTime.weekday(.wide).day().month(.wide))
+                .font(.title3.weight(.semibold))
+            Text(AppLanguage.localized(Greeting.key(hour: Calendar.current.component(.hour, from: .now))))
+                .font(.largeTitle.bold())
+                .fontDesign(.serif)
+                .accessibilityAddTraits(.isHeader)
+            Text(statusLine)
+                .font(.title2.weight(.semibold))
+            if !today.games.isEmpty {
+                table.padding(.top, 10)
+            }
+        }
+    }
+
+    private var statusLine: String {
+        if today.isFinished { return AppLanguage.localized("home.today.done") }
+        if today.done.isEmpty { return AppLanguage.localized("home.greeting") }
+        return AppLanguage.localized("home.today.togo \(today.remaining)" as String.LocalizationValue)
+    }
+
+    /// The icon's gradient with today's games on it: the hand and the button
+    /// while there is something left, a tidy pile and the week once done.
+    private var table: some View {
+        VStack(spacing: 16) {
+            if today.isFinished {
+                pile
+                weekLink { weekBoardCard }
+            } else {
+                hand
+                nextButton
+            }
+        }
+        .padding(18)
+        .frame(maxWidth: .infinity)
+        .background(.table, in: .rect(cornerRadius: 30))
+    }
+
+    @ViewBuilder
+    private var hand: some View {
+        let games = today.games
+        if typeSize.isAccessibilitySize {
+            VStack(spacing: 10) {
+                ForEach(games, id: \.self) { game in
+                    NavigationLink {
+                        destination(for: game)
+                    } label: {
+                        GameRow(game: game, playedToday: today.done.contains(game))
+                    }
+                    .buttonStyle(CardPressStyle())
+                }
+            }
+        } else {
+            HStack(spacing: -6) {
+                ForEach(Array(games.enumerated()), id: \.element) { index, game in
+                    let tilt = (Double(index) - Double(games.count - 1) / 2) * 7
+                    NavigationLink {
+                        destination(for: game)
+                    } label: {
+                        GameCard(game: game, size: .hand, playedToday: today.done.contains(game))
+                    }
+                    .buttonStyle(CardPressStyle())
+                    .rotationEffect(.degrees(tilt))
+                    .offset(y: tilt == 0 ? 0 : 8)
+                }
+            }
+            .padding(.vertical, 8)
+            .accessibilityElement(children: .contain)
+            .accessibilityLabel(AppLanguage.localized("home.today.label"))
+        }
+    }
+
+    /// Always names what comes next, so there is nothing to decide.
+    @ViewBuilder
+    private var nextButton: some View {
+        if let next = today.next {
+            NavigationLink {
+                destination(for: next)
+            } label: {
+                HStack(spacing: 14) {
+                    Image(systemName: "play.fill")
+                        .font(.title3)
+                        .foregroundStyle(Color(.systemBackground))
+                        .frame(width: 46, height: 46)
+                        .background(Color.brand, in: .circle)
+                        .accessibilityHidden(true)
+                    Text(
+                        today.done.isEmpty
+                            ? AppLanguage.localized("home.today.play")
+                            : String(
+                                format: AppLanguage.localized("home.today.continue %@"),
+                                AppLanguage.localized(next.title))
+                    )
+                    .font(.title2.weight(.heavy))
+                    .fontDesign(.rounded)
+                    .foregroundStyle(Color.brand)
+                    .multilineTextAlignment(.leading)
+                }
+                .padding(.horizontal, 16)
+                .frame(maxWidth: .infinity, minHeight: 100)
+                .background(Color(.systemBackground), in: .rect(cornerRadius: 26))
+            }
+            .buttonStyle(CardPressStyle())
+        }
+    }
+
+    /// Today's games once all are played: a tidy pile, the last one ticked.
+    private var pile: some View {
+        let games = today.games
+        return ZStack {
+            ForEach(Array(games.enumerated()), id: \.element) { index, game in
+                let last = index == games.count - 1
+                GameCard(game: game, size: .hand, playedToday: last)
+                    .rotationEffect(.degrees(last ? 0 : (index.isMultiple(of: 2) ? -9 : 6)))
+            }
+        }
+        .padding(.vertical, 10)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(AppLanguage.localized("home.today.done"))
+    }
+
+    // MARK: - Week and all games
+
+    private var weekCard: some View {
+        weekLink {
+            weekBoardCard
+                .shadow(color: .black.opacity(0.12), radius: 8, y: 4)
+        }
+    }
+
+    private var weekBoardCard: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack {
+                Text(AppLanguage.localized("home.week.title"))
+                    .font(.title3.weight(.heavy))
+                Spacer()
+                Image(systemName: "chevron.forward")
+                    .font(.headline)
+                    .foregroundStyle(.secondary)
+            }
+            WeekBoard(days: week)
+        }
+        .padding(16)
+        .frame(maxWidth: .infinity, minHeight: 100)
+        .background(Color(.systemBackground), in: .rect(cornerRadius: 24))
+        .overlay(RoundedRectangle(cornerRadius: 24).strokeBorder(.primary.opacity(0.08)))
+    }
+
+    /// My Week's door: the board itself, read by VoiceOver as "My Week".
+    private func weekLink(@ViewBuilder _ label: () -> some View) -> some View {
+        NavigationLink {
+            HistoryView()
+        } label: {
+            label()
+        }
+        .buttonStyle(CardPressStyle())
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(AppLanguage.localized("history.title"))
+        .accessibilityHint(AppLanguage.localized("home.week.hint"))
+        .accessibilityAddTraits(.isButton)
+    }
+
+    private var allGames: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text(AppLanguage.localized("home.allgames"))
+                .font(.title3.weight(.heavy))
+                .accessibilityAddTraits(.isHeader)
+            LazyVGrid(columns: columns, spacing: 16) {
+                ForEach(GameID.allCases.filter { !hidden.contains($0) }, id: \.self) { game in
+                    NavigationLink {
+                        destination(for: game)
+                    } label: {
+                        GameCard(game: game)
+                    }
+                    .buttonStyle(CardPressStyle())
+                }
+            }
+        }
+    }
+
+    // MARK: - Plan
+
+    /// Everything Home waits on before it can deal today's games: a 14-day
     /// SwiftData fetch, the summary, and the plan — which, with a Jev proxy
     /// configured, includes a network call with a 10 s timeout.
     private func refreshPlan() async {
@@ -87,7 +274,7 @@ struct HomeView: View {
             let difficulty = PlanStore.storedDifficulty()
             let state = PlayerStateSummary.build(from: recent, difficulty: difficulty)
             let plan = await JevService.shared.dailyPlan(state: state, currentDifficulty: difficulty)
-            todaysMix = Set(plan.games)
+            self.plan = plan.games
         }
     }
 
@@ -105,10 +292,9 @@ struct HomeView: View {
 }
 
 extension Color {
-    /// "Today's pick" badge: a deep orange in light mode, system orange in
-    /// dark mode, so the text stays readable on its tile (#118, WCAG AA 4.5:1;
-    /// plain orange was 1.65:1 in light mode). Also the text of Quick Eyes'
-    /// soft amber "Almost" note. ContrastTests checks every pairing.
+    /// Warm text: deep orange in light mode, system orange in dark mode. Was the
+    /// "Today's pick" badge (#118: plain orange was 1.65:1 in light mode); now
+    /// the text of Quick Eyes' soft amber "Almost" note. ContrastTests checks it.
     static let todaysPick = Color(
         UIColor { traits in
             traits.userInterfaceStyle == .dark ? .systemOrange : UIColor(red: 0.55, green: 0.27, blue: 0, alpha: 1)
