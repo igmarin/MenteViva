@@ -9,7 +9,10 @@ struct HomeView: View {
     @Environment(\.horizontalSizeClass) private var sizeClass
     @Environment(\.modelContext) private var modelContext
     /// Every session, so the table and week board update the moment a game is saved.
-    @Query(sort: \GameSession.playedAt) private var sessions: [GameSession]
+@Query(
+        filter: #Predicate<GameSession> { $0.playedAt >= weekStart },
+        sort: \\GameSession.playedAt
+    ) private var sessions: [GameSession]
     @State private var showSettings = false
     /// Today's picks in plan order. Empty until the on-device policy has run (a
     /// local fetch, so effectively instant); nothing here waits on the network.
