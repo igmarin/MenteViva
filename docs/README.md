@@ -9,7 +9,7 @@ screen of real content, split it — long docs don't get read.
 | [conventions.md](conventions.md) | Rules every commit must follow | Current |
 | [jev-integration.md](jev-integration.md) | The on-device daily policy, and how optional Jev/TypeSafe fits | Policy is the default; Jev optional, verified live (2026-09-30) |
 | [decision-model-spike-2026-09-30.md](decision-model-spike-2026-09-30.md) | Nimble and Laya tested as Jev replacements, with numbers | Snapshot |
-| [jev-revisit.md](jev-revisit.md) | Jev judgments 001–010: early decisions, corrected audience, games, segments, utility matrix | Living, to 2026-09-22 |
+| [jev-revisit.md](jev-revisit.md) | Jev judgments 001–015: early decisions, audience, games, segments, progress, Card Table | Living, to 2026-10-13 |
 | [jev-json/](jev-json/) | Raw Jev request/response archive (audit trail); 011 is the app's real daily request | Growing |
 | [mvp.md](mvp.md) | MVP definition of done + phase gates | Living |
 | [playtest.md](playtest.md) | How to run a playtest and record it (#6, #33) | Living |
@@ -19,7 +19,7 @@ screen of real content, split it — long docs don't get read.
 | [install-runbook.md](install-runbook.md) | Installing on a device with a free Apple ID (7-day expiry) | Current |
 | [device-support.md](device-support.md) | What hardware/OS we claim and what we verified | Living |
 | [decisions.md](decisions.md) | Every significant decision, with date and reason | Living log |
-| [design/](design/) | Card Table redesign: review of the current app and the round 2 spec (HTML, open in a browser) | Draft, 2026-10-12 |
+| [design/](design/) | Card Table redesign: review of the old app and the spec it was built from (HTML, open in a browser) | Shipped (#154–#159) |
 | [research-2026-09.md](research-2026-09.md) | Evidence + market scan behind the decisions | Snapshot |
 | [research-2026-09-22.md](research-2026-09-22.md) | Market and segment numbers (60+, caregivers, iOS floor) | Snapshot |
 | [statistics-rationale.md](statistics-rationale.md) | What our numbers support, and what copy may say | Current |

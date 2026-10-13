@@ -247,4 +247,4 @@ First playable. Built in one session with agent teammates.
 - JevService brace nesting (caught by first real build; parse ≠ compile).
 - Missing ES translations for math format strings auto-extracted by Xcode.
 
-[0.1.0]: https://github.com/igmarin/MenteViva/releases/tag/v0.1.0
+[0.1.0]: https://github.com/nebulaideas/MenteViva/releases/tag/v0.1.0

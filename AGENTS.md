@@ -40,7 +40,7 @@ MenteVivaTests/       unit tests (Given/When/Then names)
 proxy/worker.js       Cloudflare Worker that holds the Jev key
 tools/                generate_project.swift (the only way to edit the Xcode project)
 docs/                 start at docs/README.md
-.github/workflows/    swift.yml: build + test on PRs, push to main, manual
+.github/workflows/    swift.yml: build + test, manual dispatch only (see Workflow 5)
 ```
 
 ## Current status
@@ -52,10 +52,15 @@ docs/                 start at docs/README.md
   payload archived `docs/jev-json/014`), used only when `MenteViva/Config/Local.xcconfig`
   (git-ignored; copy the `.example`) sets the proxy URL and secret (#91). Open-model
   alternatives were tested and rejected for the app: `docs/decision-model-spike-2026-09-30.md`.
-- Dad playtest #6 ran (findings on #6). Work from it, in order: #106 save fix, #107 weekly
-  progression, #108 Family settings, #109 adult Memory Lane, #110 photo cards
-  (docs/decisions.md 2026-10-01, Jev 012). New games stay deferred (#18).
-- Live state is in the [milestones](https://github.com/igmarin/MenteViva/milestones), not here.
+- Dad playtest #6 ran (findings on #6); its follow-ups #106–#110 and Remember Together (#139)
+  shipped. New games stay deferred (#18).
+- **Card Table redesign shipped** (#154–#159, decisions.md 2026-10-12, Jev 015): each game is a
+  framed card in its own colour (`GameCard.swift`, palette in `Theme.swift`), Home deals today's
+  three, every game shares one header, and the end of a game adds its card to the week board.
+  Spec: `docs/design/2026-10-12-card-table.html`.
+- Next: dad playtest #2 (`docs/playtest-session-2.md`), then the v0.2.0 progress issues
+  (#140 My Week per day, #141 My progress + Set up).
+- Live state is in the [milestones](https://github.com/nebulaideas/MenteViva/milestones), not here.
 
 ## Signing
 
@@ -103,7 +108,7 @@ docs/                 start at docs/README.md
    `npm i -g @alibaba-group/open-code-review`; without them it warns and skips;
    `git commit --no-verify` skips it too).
 6. Track work in GitHub issues with the current milestone (see
-   [milestones](https://github.com/igmarin/MenteViva/milestones)). Closed-issue labels mark the release
+   [milestones](https://github.com/nebulaideas/MenteViva/milestones)). Closed-issue labels mark the release
    (e.g. `v0.1.0`).
 7. Update `CHANGELOG.md` under `[Unreleased]` with any user-visible change.
 
