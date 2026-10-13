@@ -65,6 +65,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
   week board. The confetti is gone; the card is the celebration.
 
 ### Fixed
+- **My progress froze on iOS 17 (#169):** opening it from Settings on an iPad with
+  iOS 17 locked the app. It now reads every play and keeps the days it needs in code,
+  the way the old For family screen did. Checked on the iPad (iOS 17.7).
 - **Daily picks use Jev again when it is set up (#146):** adding Remember Together
   left the key-holding proxy expecting five games, so it turned every request away
   and the app quietly fell back to its own on-device plan. Installs without the

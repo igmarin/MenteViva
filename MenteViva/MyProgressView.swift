@@ -7,12 +7,11 @@ import SwiftUI
 /// words with an icon, and an easier week never gets a down arrow. Sharing is
 /// the player's choice: the share button, nothing automatic.
 struct MyProgressView: View {
+    /// Every play, unfiltered: `ProgressRates.week` keeps the days it needs.
+    /// No date predicate here: on iOS 17, a `Query(filter:)` built in `init`
+    /// for a view pushed from Settings re-rendered forever and froze the app
+    /// (found on the iPad, 2026-10-13).
     @Query private var sessions: [GameSession]
-
-    init() {
-        let since = ProgressRates.since()
-        _sessions = Query(filter: #Predicate { $0.playedAt >= since })
-    }
 
     private var rates: [ProgressRates] { HotPath.measure("progress.rates") { ProgressRates.week(sessions) } }
 
