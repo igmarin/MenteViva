@@ -34,8 +34,21 @@ xcrun devicectl device install app --device "$DEV" \
 
 ## The 7-day expiry
 
-A free-account build **stops launching 7 days after it was signed**. Re-sign
-the day before any playtest rather than trusting an old install.
+A free-account build **stops launching when its provisioning profile expires**,
+7 days after the *profile* was created, not after the build was signed. Xcode
+reuses a cached profile until it expires, so a fresh build can have only a day
+or two left (2026-10-13: signed that day, profile from Oct 8, expiring Oct 15).
+Re-sign the day before any playtest, then check the date:
+
+```sh
+APP=$(ls -dt ~/Library/Developer/Xcode/DerivedData/MenteViva-*/Build/Products/Debug-iphoneos/MenteViva.app | head -1)
+security cms -D -i "$APP/embedded.mobileprovision" | plutil -extract ExpirationDate raw -
+```
+
+The date is in UTC. Fewer than 6 days left? Move the cached profile out of
+`~/Library/Developer/Xcode/UserData/Provisioning Profiles/` and build again;
+Xcode makes a new 7-day one. The file to move is `<UUID>.mobileprovision`, where
+`<UUID>` is the same command with `UUID` in place of `ExpirationDate`.
 
 - Renewal = repeat the install steps with the device connected. Two minutes.
 - The app's data (sessions, settings) survives renewal. **Deleting the app does
