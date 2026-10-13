@@ -1993,23 +1993,6 @@
         }
       }
     },
-    "history.share.streak %lld" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "🌟 Days in a row: %lld"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "🌟 Días seguidos: %lld"
-          }
-        }
-      }
-    },
     "history.share.title" : {
       "extractionState" : "stale",
       "localizations" : {

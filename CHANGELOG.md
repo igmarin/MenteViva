@@ -12,6 +12,11 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
   aloud", speaks the name on its own (off by default); the speaker button always works.
 
 ### Changed
+- **My Week agrees with itself:** "this week" now means Sunday to Saturday everywhere on
+  the screen, the same week as the board at the top, so the counts, the game lines and
+  the day-by-day rows match the cards shown. The "Days in a row" line is gone from the
+  summary and the shared text (no streaks). My progress and Set up show each game's
+  drawn emblem instead of an emoji.
 - **"For family" is now "My progress" and "Set up" (#141):** Settings has two rows.
   My progress shows whoever holds this device how each game went in the last 7 days:
   days played out of 7, the average right answers per game, the level reached, and each

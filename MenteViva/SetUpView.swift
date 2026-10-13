@@ -153,7 +153,7 @@ private struct FamilyGameRow: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text(verbatim: "\(game.emoji) \(AppLanguage.localized(game.title))")
+            GameName(game: game)
                 .font(.title3.weight(.semibold))
             Text(status)
                 .font(.body)
@@ -223,7 +223,7 @@ private struct FamilyGameView: View {
                 }
             }
         }
-        .navigationTitle(Text(verbatim: "\(game.emoji) \(AppLanguage.localized(game.title))"))
+        .navigationTitle(AppLanguage.localized(game.title))
     }
 
     private func choice(_ value: Int, _ label: String) -> some View {

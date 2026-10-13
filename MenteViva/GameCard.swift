@@ -117,6 +117,21 @@ struct CardPressStyle: ButtonStyle {
 /// Each game's emblem: plain geometry in the game's ink with one amber accent,
 /// drawn on a 64-point grid and scaled to fit. Decorative; the card's name
 /// carries the meaning for VoiceOver.
+/// A game's emblem beside its name, for list rows and headers (Card Table:
+/// emblems, not emoji). The caller sets the font.
+struct GameName: View {
+    let game: GameID
+    @ScaledMetric(relativeTo: .title3) private var size: CGFloat = 28
+
+    var body: some View {
+        Label {
+            Text(AppLanguage.localized(game.title))
+        } icon: {
+            Emblem(game: game).frame(width: size, height: size)
+        }
+    }
+}
+
 struct Emblem: View {
     let game: GameID
 
