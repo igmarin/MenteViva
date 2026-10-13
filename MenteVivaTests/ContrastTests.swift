@@ -3,13 +3,12 @@ import XCTest
 
 @testable import MenteViva
 
-/// #118: "Today's pick" must be readable on its card (WCAG AA: 4.5:1 for
-/// text) in light and dark mode. Since the Card Table theme the label sits on
-/// the card's art panel, its game's ink at 22% over the background, so every
-/// game is checked. Game inks also carry text both ways: as text on the
+/// WCAG AA (4.5:1 for text) in light and dark mode for every text pairing the
+/// Card Table theme adds. Game inks carry text both ways: as text on the
 /// background (back buttons), and under the background colour on each card's
 /// name band; contrast is symmetric, so one test covers both. Primary buttons
-/// put the background colour on a brand-teal fill.
+/// put the background colour on a brand-teal fill. The warm text that was the
+/// "Today's pick" badge (#118) now sits on Quick Eyes' soft amber note.
 final class ContrastTests: XCTestCase {
     private typealias RGB = (Double, Double, Double)
     private let styles: [UIUserInterfaceStyle] = [.light, .dark]
@@ -41,22 +40,6 @@ final class ContrastTests: XCTestCase {
             tint.0 * alpha + base.0 * (1 - alpha), tint.1 * alpha + base.1 * (1 - alpha),
             tint.2 * alpha + base.2 * (1 - alpha)
         )
-    }
-
-    private func contrastOnTile(_ ink: Color, _ style: UIUserInterfaceStyle) -> Double {
-        contrast(rgb(UIColor(Color.todaysPick), style), wash(ink, 0.22, style))
-    }
-
-    func testGivenLightModeWhenTodaysPickOnEveryGameTileThenTextContrastIsAtLeastAA() {
-        for game in GameID.allCases {
-            XCTAssertGreaterThanOrEqual(contrastOnTile(game.ink, .light), 4.5, "\(game)")
-        }
-    }
-
-    func testGivenDarkModeWhenTodaysPickOnEveryGameTileThenTextContrastIsAtLeastAA() {
-        for game in GameID.allCases {
-            XCTAssertGreaterThanOrEqual(contrastOnTile(game.ink, .dark), 4.5, "\(game)")
-        }
     }
 
     func testGivenEveryGameInkWhenUsedAsTextThenContrastIsAtLeastAAInBothModes() {

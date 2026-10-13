@@ -20,6 +20,16 @@ final class PluralStringsTests: XCTestCase {
         XCTAssertEqual(text("family.week.last \(0)", "es"), "Semana anterior: 0 juegos")
     }
 
+    func testGivenOneGameLeftTodayWhenHomeLineThenItIsSingular() {
+        XCTAssertEqual(text("home.today.togo \(1)", "en"), "Nice! 1 more to go.")
+        XCTAssertEqual(text("home.today.togo \(1)", "es"), "¡Bien! Falta 1.")
+    }
+
+    func testGivenTwoGamesLeftTodayWhenHomeLineThenItIsPlural() {
+        XCTAssertEqual(text("home.today.togo \(2)", "en"), "Nice! 2 more to go.")
+        XCTAssertEqual(text("home.today.togo \(2)", "es"), "¡Bien! Faltan 2.")
+    }
+
     func testGivenOneSessionWhenWeekHeaderThenItIsSingular() {
         XCTAssertEqual(text("history.summary \(1)", "en"), "You played 1 time this week! 🌟")
         XCTAssertEqual(text("history.summary \(1)", "es"), "¡Jugaste 1 vez esta semana! 🌟")

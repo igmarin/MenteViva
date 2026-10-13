@@ -3,10 +3,14 @@ import SwiftUI
 /// A game as a framed card (Card Table, docs/design/2026-10-12-card-table.html):
 /// paper, a frame in the game's ink around its emblem, and the name on a band of
 /// that ink. The band's text is the background colour, which ContrastTests
-/// checks against every ink. Home's tiles are these cards.
+/// checks against every ink. Home's grid uses the full size; today's games on
+/// the table use the hand size, with an amber check once played today.
 struct GameCard: View {
+    enum Size { case grid, hand }
+
     let game: GameID
-    var isTodaysPick = false
+    var size = Size.grid
+    var playedToday = false
 
     private static let art = UnevenRoundedRectangle(
         topLeadingRadius: 13, bottomLeadingRadius: 4, bottomTrailingRadius: 4, topTrailingRadius: 13)
@@ -15,41 +19,85 @@ struct GameCard: View {
 
     var body: some View {
         let title = AppLanguage.localized(game.title)
+        let hand = size == .hand
         VStack(spacing: 5) {
-            VStack(spacing: 8) {
-                Emblem(game: game)
-                    .frame(width: 64, height: 64)
-                // Text + star, not color alone (conventions §4).
-                if isTodaysPick {
-                    Label(AppLanguage.localized("home.today.badge"), systemImage: "star.fill")
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(Color.todaysPick)
-                }
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .padding(10)
-            .background(game.ink.opacity(isTodaysPick ? 0.22 : 0.12), in: Self.art)
-            .overlay(Self.art.strokeBorder(game.ink, lineWidth: 3))
+            Emblem(game: game)
+                .frame(width: hand ? 52 : 64, height: hand ? 52 : 64)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .padding(hand ? 6 : 10)
+                .background(game.ink.opacity(0.12), in: Self.art)
+                .overlay(Self.art.strokeBorder(game.ink, lineWidth: 3))
 
             Text(title)
-                .font(.title3.weight(.heavy))
+                .font((hand ? Font.headline : .title3).weight(.heavy))
                 .fontDesign(.rounded)
                 .foregroundStyle(Color(.systemBackground))
                 .multilineTextAlignment(.center)
                 .lineLimit(2)
                 .minimumScaleFactor(0.7)
                 .padding(.horizontal, 6)
-                .frame(maxWidth: .infinity, minHeight: 52)
+                .frame(maxWidth: .infinity, minHeight: hand ? 44 : 52)
                 .background(game.ink, in: Self.plate)
         }
         .padding(6)
-        .frame(minHeight: 180)
+        .frame(width: hand ? 112 : nil, height: hand ? 164 : nil)
+        .frame(minHeight: hand ? nil : 180)
         .background(Color(.systemBackground), in: .rect(cornerRadius: 18))
         .overlay(RoundedRectangle(cornerRadius: 18).strokeBorder(.primary.opacity(0.08)))
+        .overlay(alignment: .topTrailing) {
+            if playedToday { PlayedCheck().offset(x: 10, y: -10) }
+        }
         .shadow(color: .black.opacity(0.12), radius: 8, y: 4)
         .accessibilityElement(children: .combine)
         .accessibilityLabel(Text(title))
-        .accessibilityValue(Text(isTodaysPick ? AppLanguage.localized("home.today.badge") : ""))
+        .accessibilityValue(Text(playedToday ? AppLanguage.localized("home.today.played") : ""))
+    }
+}
+
+/// Today's game as a full-width row, for the largest text sizes where three
+/// cards side by side would squeeze the names (#117). The name sits under the
+/// emblem so it gets the whole width and never breaks mid-word.
+struct GameRow: View {
+    let game: GameID
+    var playedToday = false
+
+    var body: some View {
+        let title = AppLanguage.localized(game.title)
+        VStack(alignment: .leading, spacing: 10) {
+            HStack {
+                Emblem(game: game)
+                    .frame(width: 44, height: 44)
+                    .padding(10)
+                    .background(game.ink.opacity(0.12), in: .rect(cornerRadius: 14))
+                    .overlay(RoundedRectangle(cornerRadius: 14).strokeBorder(game.ink, lineWidth: 3))
+                Spacer(minLength: 0)
+                if playedToday { PlayedCheck() }
+            }
+            Text(title)
+                .font(.title2.weight(.heavy))
+                .fontDesign(.rounded)
+                .multilineTextAlignment(.leading)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .padding(14)
+        .frame(maxWidth: .infinity, minHeight: 100)
+        .background(Color(.systemBackground), in: .rect(cornerRadius: 20))
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(Text(title))
+        .accessibilityValue(Text(playedToday ? AppLanguage.localized("home.today.played") : ""))
+    }
+}
+
+/// "Played today": a tick on an amber disc, a shape as well as a colour.
+struct PlayedCheck: View {
+    var body: some View {
+        Image(systemName: "checkmark")
+            .font(.system(size: 16, weight: .heavy))
+            .foregroundStyle(.black.opacity(0.85))
+            .frame(width: 36, height: 36)
+            .background(Color.amber, in: .circle)
+            .overlay(Circle().strokeBorder(Color(.systemBackground), lineWidth: 3))
+            .accessibilityHidden(true)
     }
 }
 
@@ -149,5 +197,57 @@ struct Emblem: View {
             .rotated(by: angle * .pi / 180)
             .translatedBy(x: -rect.midX, y: -rect.midY)
         return Path(roundedRect: rect, cornerRadius: 5).applying(turn)
+    }
+}
+
+/// The week as seven dated slots (Card Table): each day shows up to three small
+/// cards in the colours of the games played, the newest on top. Empty days are a
+/// dashed outline, never a red mark; today has an amber ring. Decorative for
+/// VoiceOver: whatever contains it gives the summary.
+struct WeekBoard: View {
+    let days: [(day: Date, games: [GameID])]
+    var calendar = Calendar.current
+
+    var body: some View {
+        HStack(spacing: 4) {
+            ForEach(days, id: \.day) { entry in
+                VStack(spacing: 6) {
+                    slot(entry.games)
+                        .frame(width: 38, height: 50)
+                        .overlay {
+                            if calendar.isDateInToday(entry.day) {
+                                RoundedRectangle(cornerRadius: 12).strokeBorder(Color.amber, lineWidth: 3).padding(-5)
+                            }
+                        }
+                    Text(entry.day, format: .dateTime.weekday(.abbreviated))
+                        .font(.subheadline.weight(.bold))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.7)
+                }
+                .frame(maxWidth: .infinity)
+            }
+        }
+        .accessibilityHidden(true)
+    }
+
+    @ViewBuilder
+    private func slot(_ games: [GameID]) -> some View {
+        if games.isEmpty {
+            RoundedRectangle(cornerRadius: 8)
+                .strokeBorder(.secondary, style: StrokeStyle(lineWidth: 2, dash: [4, 4]))
+        } else {
+            let shown = Array(games.suffix(3))
+            ZStack {
+                ForEach(Array(shown.enumerated()), id: \.offset) { index, game in
+                    let fromTop = shown.count - 1 - index
+                    RoundedRectangle(cornerRadius: 6)
+                        .fill(game.ink)
+                        .overlay(RoundedRectangle(cornerRadius: 6).strokeBorder(Color(.systemBackground), lineWidth: 2))
+                        .frame(width: 26, height: 36)
+                        .rotationEffect(.degrees(fromTop == 0 ? 0 : (fromTop == 1 ? -11 : 10)))
+                        .offset(x: fromTop == 0 ? 0 : (fromTop == 1 ? -4 : 4))
+                }
+            }
+        }
     }
 }
