@@ -62,8 +62,23 @@ final class GameProgressTests: XCTestCase {
         return s
     }
 
+    /// The window rules, tested on a rolling week ending `now`.
     private func weekly(_ sessions: [GameSession]) -> [GameProgress] {
-        GameProgress.weekly(sessions, now: now, calendar: calendar)
+        GameProgress.weekly(
+            sessions, now: now, calendar: calendar,
+            weekStart: calendar.date(byAdding: .day, value: -7, to: now)!)
+    }
+
+    func testGivenLastSaturdayAndYesterdayWhenWeeklyOnAMondayThenOnlySundayIsThisWeek() {
+        // By default the week is the calendar week, the same as My Week's board.
+        var utc = Calendar(identifier: .gregorian)
+        utc.timeZone = TimeZone(identifier: "UTC")!
+        utc.firstWeekday = 1
+        let sunday = session(.memoryMatch, daysAgo: 1)
+        let saturday = session(.memoryMatch, daysAgo: 2)
+        let p = GameProgress.weekly([sunday, saturday], now: now, calendar: utc)
+        XCTAssertEqual(p.map(\.sessions), [1])
+        XCTAssertEqual(p.map(\.previousSessions), [1])
     }
 
     func testGivenNoSessionsWhenWeeklyThenEmpty() {

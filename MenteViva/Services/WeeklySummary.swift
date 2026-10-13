@@ -9,8 +9,7 @@ struct WeeklySummary: Equatable {
     var gamesPlayed: Int
 
     init(playedAt dates: [Date], now: Date = .now, calendar: Calendar = .current) {
-        let week = DayGrouping.thisWeek(dates, date: { $0 }, now: now, calendar: calendar)
-            .flatMap(\.items).filter { $0 <= now }
+        let week = DayGrouping.thisWeek(dates, date: { $0 }, now: now, calendar: calendar).flatMap(\.items)
         gamesPlayed = week.count
         daysPlayed = Set(week.map { calendar.startOfDay(for: $0) }).count
     }
@@ -55,16 +54,18 @@ struct GameProgress: Equatable {
         return change > Self.accuracyNoise ? .up : change < -Self.accuracyNoise ? .down : .steady
     }
 
-    /// Games played in the last 14 days, in `GameID.allCases` order.
+    /// Games played this week or the week before, in `GameID.allCases` order.
+    /// "This week" starts at `weekStart`, by default the calendar week's first
+    /// day, so My Week's lines cover the same days as its board (#170).
     static func weekly(
         _ sessions: [GameSession], now: Date = .now,
-        calendar: Calendar = .current
+        calendar: Calendar = .current, weekStart: Date? = nil
     ) -> [GameProgress] {
-        let weekAgo = calendar.date(byAdding: .day, value: -7, to: now) ?? now
-        let thisWeek = DayGrouping.lastWeek(sessions, date: \.playedAt, now: now, calendar: calendar)
-            .filter { $0.playedAt <= now }
-        let lastWeek = DayGrouping.lastWeek(sessions, date: \.playedAt, now: weekAgo, calendar: calendar)
-            .filter { $0.playedAt < weekAgo }
+        let start =
+            weekStart ?? calendar.dateInterval(of: .weekOfYear, for: now)?.start ?? calendar.startOfDay(for: now)
+        let previousStart = calendar.date(byAdding: .day, value: -7, to: start) ?? start
+        let thisWeek = sessions.filter { $0.playedAt >= start }
+        let lastWeek = sessions.filter { $0.playedAt >= previousStart && $0.playedAt < start }
         return GameID.allCases.compactMap { game in
             let mine = thisWeek.filter { $0.game == game }
             let before = lastWeek.filter { $0.game == game }
@@ -81,17 +82,9 @@ struct GameProgress: Equatable {
     }
 }
 
-/// Day grouping shared by My Week and its tests: the last 7 days of items,
+/// Day grouping shared by My Week, the week board and their tests: items
 /// grouped by calendar day, newest day first.
 enum DayGrouping {
-    static func lastWeek<T>(
-        _ items: [T], date: (T) -> Date,
-        now: Date = .now, calendar: Calendar = .current
-    ) -> [T] {
-        let cutoff = calendar.date(byAdding: .day, value: -7, to: now) ?? now
-        return items.filter { date($0) >= cutoff }
-    }
-
     static func byDay<T>(
         _ items: [T], date: (T) -> Date,
         calendar: Calendar = .current
