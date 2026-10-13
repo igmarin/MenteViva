@@ -10,7 +10,9 @@ Decided by the owner after a design review that used Apple Design Award winners 
 reference ([2024](https://www.apple.com/newsroom/2024/06/apple-announces-winners-of-the-2024-apple-design-awards/),
 [2025](https://www.apple.com/newsroom/2025/06/apple-unveils-winners-and-finalists-of-the-2025-apple-design-awards/),
 [2026](https://www.apple.com/newsroom/2026/06/apple-reveals-winners-of-the-2026-apple-design-awards/)).
-No Jev judgment was run for this one (AGENTS.md workflow step 3); run it before step 1 ships if we want it on record.
+Jev 015 was asked after the build to put it on record (`jev-json/015-*`, analysis in
+`jev-revisit.md` §015): card_table 1.00, framed 1.00, fit 1.84 of 2. The state described the
+built direction, so the result confirms it rather than testing it blind.
 
 **Decision:** Direction A, "Card Table". Garden and Calm Glass were considered and set aside.
 
@@ -22,8 +24,8 @@ No Jev judgment was run for this one (AGENTS.md workflow step 3); run it before 
 **Why:** it grows out of the icon and Memory Lane's cards, cards are a familiar adult object
 (#109 "he's not a child"), Home stops asking dad to choose, and progress becomes visible without numbers.
 
-**Still open:** card face (Framed is the default; Paper and Index are in the spec), greeting by name,
-native-speaker review of the new Spanish strings.
+**Still open:** greeting by name (Jev 015 leans yes, 0.73; owner to decide). Resolved since:
+card face is Framed (Jev 015 1.00); the Card Table Spanish strings were signed off on #12 (#160, #161).
 
 Review: `design/2026-10-12-review.html`. Spec and build order: `design/2026-10-12-card-table.html`.
 

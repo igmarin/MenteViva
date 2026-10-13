@@ -268,3 +268,30 @@ Reads:
    mostly reflects what the daily plan picked. Label it "played this week",
    never "favorite".
 6. **Quick Eyes find-the-face has low confidence (.23)**; keep it as a note on #46.
+
+## 015 — Card Table visual direction — 2026-10-13
+
+Asked **after** the owner chose and built the Card Table (decisions.md 2026-10-12,
+#154–#158), to put the choice on record. The state describes Card Table as built
+and the two alternatives with their risks, so it leans toward the choice already
+made. Read the unanimous answers with that in mind. Raw pair:
+`jev-json/015-card-table-direction.*`.
+
+| Question | Jev | Confidence |
+|---|---|---|
+| Visual direction | **card_table** 1.00 (garden 0.00, calm_glass 0.00) | 1.00 |
+| Card face | **framed** 1.00 (paper 0.00, index 0.00) | 1.00 |
+| Back to back with "Next: <game>" | yes, **0.73** | — |
+| Greet by an optional name | yes, **0.73** | — |
+| Week board as progress, no numbers | yes, **0.65** | — |
+| Fit of Card Table as built (0–2) | **1.84** | .78 |
+
+Reads:
+
+1. **Direction and face confirmed.** Card Table and the Framed face win outright;
+   no change to what shipped.
+2. **"Next" stays.** Going straight to the next game (0.73) agrees with step 5.
+3. **Greeting by name leans yes (0.73).** It's still an owner decision: one
+   optional field, kept on the device, with the time-of-day greeting as the default.
+4. **The week board is the weakest yes (0.65).** The risk is empty days reading
+   as missed days. Watch for it in the next playtest before adding anything to it.

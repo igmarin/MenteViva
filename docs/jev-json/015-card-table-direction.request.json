@@ -1,0 +1,65 @@
+{
+  "model": "jev-latest",
+  "state": {
+    "product": "MenteViva, iOS exercise app for older adults. Warm, no-fail, big-target design (100pt game controls), EN+ES, offline, zero third-party dependencies, solo developer. Copy ceiling: 'fun mental exercise', no medical claims. No points or scores in the UI. Six games: Memory Lane (pairs), Name the Herd (pick a category's items), Quick Eyes (find the flashed item), Color Clash (Stroop), Number Trail (addition), Remember Together (family photos, 'Who is this?'). An on-device plan picks three games a day.",
+    "player": "Primary player: an older adult who plays alone on his own iPad, with no one nearby to explain the app. He enjoyed Memory Lane, Name the Herd and Quick Eyes. An earlier playtest note: he is not a child, so nothing should look like a toy. The owner, his adult child, also plays on an iPhone.",
+    "problem": "The app was easy to use but looked generic: pale system blue on white, game icons in five different emoji styles, and the same reward screen after every game.",
+    "directions_considered": "card_table: each game is a framed playing card in its own colour with a simple drawn emblem; Home deals today's three games on a table-coloured panel with one 'Start today's games' button; each finished game adds its card to a week board of seven days; palette from the app icon (teal and amber); system fonts, a serif for greetings. garden: each day played grows a plant, calm and organic, but many wellness apps already grow plants. calm_glass: native iOS translucent glass over a sky that follows the time of day; least work and looks current, but white text on glass loses contrast on the light end of the sky.",
+    "built_so_far": "The owner chose card_table and it is built: framed cards on Home, one shared game header with a read-aloud button, progress shown as small cards per round, today's three on a table, and an end-of-game screen that stamps the card 'Added to your week', shows the week board, and offers 'Next: <game>' to go straight to the next of today's games, or 'Home'.",
+    "card_faces": "framed: the game's name on a solid band of its colour under the emblem, readable at arm's length, close to a Mexican loteria card. paper: white card, name in thin coloured text under the emblem, calmer but the name is weaker. index: like a playing card with corner marks that add detail but no meaning.",
+    "open_items": "Greeting by name: an optional field in the family settings so Home says 'Good morning, Dad'. Running today's three back to back with a Next button versus returning to Home between games."
+  },
+  "questions": {
+    "visual_direction": {
+      "type": "choice",
+      "instructions": "Which visual direction best fits this player: an older adult playing alone on an iPad who must not feel treated like a child?",
+      "criteria": {
+        "card_table": "Framed game cards in their own colours on a table, today's three dealt as a hand, finished games added to a week board",
+        "garden": "Each day played grows a plant; calm, organic progress without numbers",
+        "calm_glass": "Native translucent glass over a time-of-day sky; minimal, current, follows the system"
+      }
+    },
+    "card_face": {
+      "type": "choice",
+      "instructions": "Which card face makes each game easiest to recognise and read at arm's length for this player?",
+      "criteria": {
+        "framed": "Name on a solid band of the game's colour under the emblem",
+        "paper": "White card, name in thin coloured text under the emblem",
+        "index": "Playing-card style with corner marks"
+      }
+    },
+    "back_to_back_with_next": {
+      "type": "noul",
+      "instructions": "Should the end-of-game screen offer 'Next: <game>' to go straight to the next of today's games, with 'Home' as the second button?",
+      "criteria": {
+        "true": "One obvious next step keeps him playing without having to choose; Home is still one tap away",
+        "false": "Returning to Home between games shows progress on the table and lets him stop or choose freely"
+      }
+    },
+    "greet_by_name": {
+      "type": "noul",
+      "instructions": "Should Home greet the player by an optional name or nickname the family types in settings?",
+      "criteria": {
+        "true": "A personal greeting makes the app feel like his own and costs one optional field",
+        "false": "A stored name is personal data and a setting to explain; a warm time-of-day greeting is enough"
+      }
+    },
+    "week_board_without_numbers": {
+      "type": "noul",
+      "instructions": "Is a week board of seven days, each holding the cards of games played that day, a good way to show progress with no numbers, scores or streaks?",
+      "criteria": {
+        "true": "He sees the week fill with familiar cards; nothing to lose and no count to fall behind",
+        "false": "Empty days on a board can read as missed days and feel like a record of failure"
+      }
+    },
+    "fit_card_table": {
+      "type": "score",
+      "instructions": "Score the card_table direction as built for this player: adult dignity, legibility at arm's length, familiarity, warmth, and ease of use with no one to explain it.",
+      "criteria": [
+        "0 = poor fit",
+        "1 = reasonable",
+        "2 = excellent fit"
+      ]
+    }
+  }
+}
