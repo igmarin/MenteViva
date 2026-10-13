@@ -344,7 +344,9 @@ td code{white-space:nowrap}
   .flipcard{transition:none}
 }
 .run.land-s .sun .slot{border:none}
-.run.land-s .sun .m{display:block;animation:pop .35s .75s both}
+.run.land-s .sun .m{display:block}
+@media (prefers-reduced-motion: no-preference){ .run.land-s .sun .m{animation:pop .35s .75s both} }
+@media (prefers-reduced-motion: reduce){ .run.land-s .sun .m{animation:fadeIn .3s .2s both} }
 @keyframes dealIn{from{translate:0 230px;rotate:0deg}}
 @keyframes landIn{0%{translate:0 0;scale:1}72%{translate:140px 125px;scale:.22;rotate:0deg;opacity:1}100%{translate:140px 125px;scale:.22;rotate:0deg;opacity:0}}
 @keyframes pop{from{scale:0}}
@@ -421,7 +423,7 @@ td code{white-space:nowrap}
     <div class="phone fade" id="home-fresh" role="img" aria-label="Home in the morning: date and settings button, Good morning, today's three framed cards on the table with a Play today's three button, a This week board, and the start of All games.">
       <div class="sb"><span>9:41</span><span class="bat"></span></div>
       <div class="scr">
-        <div class="topline"><span class="date">Sunday, 12 October</span><span class="gl"><svg><use href="#i-gear"/></svg></span></div>
+        <div class="topline"><span class="date">Sunday, 11 October</span><span class="gl"><svg><use href="#i-gear"/></svg></span></div>
         <div class="a-greet">Good morning</div>
         <p class="a-sub">Your three games are ready.</p>
         <div class="table">
@@ -527,7 +529,7 @@ td code{white-space:nowrap}
       <div class="phone fade" role="img" aria-label="Home after one game: Good afternoon, One down, two to go, Memory Lane card set aside with a check badge, the other two in hand, and a Keep going: Name the Herd button.">
         <div class="sb"><span>9:41</span><span class="bat"></span></div>
         <div class="scr">
-          <div class="topline"><span class="date">Sunday, 12 October</span><span class="gl"><svg><use href="#i-gear"/></svg></span></div>
+          <div class="topline"><span class="date">Sunday, 11 October</span><span class="gl"><svg><use href="#i-gear"/></svg></span></div>
           <div class="a-greet">Good afternoon</div>
           <p class="a-sub">One down, two to go.</p>
           <div class="table">
@@ -560,7 +562,7 @@ td code{white-space:nowrap}
       <div class="phone fade" role="img" aria-label="Home when today's three are done: Good evening, a message saying they're done, the three cards in a tidy pile with a check, the week board with three cards on Sunday, and All games below.">
         <div class="sb"><span>9:41</span><span class="bat"></span></div>
         <div class="scr">
-          <div class="topline"><span class="date">Sunday, 12 October</span><span class="gl"><svg><use href="#i-gear"/></svg></span></div>
+          <div class="topline"><span class="date">Sunday, 11 October</span><span class="gl"><svg><use href="#i-gear"/></svg></span></div>
           <div class="a-greet">Good evening</div>
           <p class="a-sub">Today's three are done. See you tomorrow!</p>
           <div class="table">
@@ -597,7 +599,7 @@ td code{white-space:nowrap}
       <div class="phone fade" role="img" aria-label="Home at the largest text size: a bigger greeting, today's three as full-width rows with framed art and large names, and a Play today's three button.">
         <div class="sb"><span>9:41</span><span class="bat"></span></div>
         <div class="scr">
-          <div class="topline"><span class="date" style="font-size:22px">Sun, 12 Oct</span><span class="gl"><svg><use href="#i-gear"/></svg></span></div>
+          <div class="topline"><span class="date" style="font-size:22px">Sun, 11 Oct</span><span class="gl"><svg><use href="#i-gear"/></svg></span></div>
           <div class="a-greet" style="font-size:48px">Good morning</div>
           <p class="a-sub" style="font-size:27px">Your three games are ready.</p>
           <div class="table" style="gap:10px;padding:14px">
@@ -625,10 +627,10 @@ td code{white-space:nowrap}
   </div>
   <div class="ipad-wrap">
     <div class="ipad" role="img" aria-label="iPad Home in landscape: left column with greeting, today's three large cards and Play button; right column with six game tiles in a three-column grid and the week board.">
-      <div class="isb"><span>9:41&nbsp;&nbsp;Sun 12 Oct</span><span class="bat"></span></div>
+      <div class="isb"><span>9:41&nbsp;&nbsp;Sun 11 Oct</span><span class="bat"></span></div>
       <div class="ibody">
         <div>
-          <div class="date" style="margin-top:6px">Sunday, 12 October</div>
+          <div class="date" style="margin-top:6px">Sunday, 11 October</div>
           <div class="a-greet">Good morning</div>
           <p class="a-sub">Your three games are ready.</p>
           <div class="table" style="margin-top:22px">
