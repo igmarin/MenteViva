@@ -12,6 +12,11 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
   aloud", speaks the name on its own (off by default); the speaker button always works.
 
 ### Changed
+- **Number Trail steps up with difficulty (#143):** Easy still asks only sums. Medium
+  adds take-aways that never go below zero (the bigger number comes first). Hard adds
+  times and exact division with small numbers (up to 10). The signs are the usual
+  + − × ÷, and VoiceOver and the speaker button say them in words ("7 minus 3",
+  "7 menos 3").
 - **Spanish wording (#12):** the end-of-game stamp now says "Agregado a tu semana"
   (neutral Latin American), Home's button reads "Seguimos con …" without a colon, and
   the end-of-game pill reads "Hoy: 1 de 3".
