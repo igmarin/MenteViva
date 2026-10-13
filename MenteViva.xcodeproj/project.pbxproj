@@ -40,6 +40,7 @@
 		8C75A9CE4133529700000020 /* SoundPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B94116EB608F25D0000001A; };
 		D9207C4B070633A000000022 /* WeeklySummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DCDF59CF4AC6AE0000001C; };
 		F1CAEDFBEAB27E7A00000018 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881D5FFD680EE69800000012; };
+		ECD662DF93B8B0C900000011 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A215EBB02284C9F0000000B; };
 		F506C5A65F14390000000031 /* AppLanguageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE643EB3378B20E0000002B; };
 		4534EC198FDAD8AC00000034 /* CaptionSpeakerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD28529EBCF4FB0A0000002E; };
 		67F61994F2F1071500000034 /* CaptionStringsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDA8FA1BF6ABDB2B0000002E; };
@@ -96,6 +97,7 @@
 		6B94116EB608F25D0000001A /* SoundPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/SoundPlayer.swift; sourceTree = "<group>"; };
 		E5DCDF59CF4AC6AE0000001C /* WeeklySummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/WeeklySummary.swift; sourceTree = "<group>"; };
 		881D5FFD680EE69800000012 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		7A215EBB02284C9F0000000B /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		6BE643EB3378B20E0000002B /* AppLanguageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/AppLanguageTests.swift; sourceTree = SOURCE_ROOT; };
 		DD28529EBCF4FB0A0000002E /* CaptionSpeakerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/CaptionSpeakerTests.swift; sourceTree = SOURCE_ROOT; };
 		DDA8FA1BF6ABDB2B0000002E /* CaptionStringsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/CaptionStringsTests.swift; sourceTree = SOURCE_ROOT; };
@@ -180,6 +182,7 @@
 				6B94116EB608F25D0000001A /* SoundPlayer.swift */,
 				E5DCDF59CF4AC6AE0000001C /* WeeklySummary.swift */,
 				881D5FFD680EE69800000012 /* SettingsView.swift */,
+				7A215EBB02284C9F0000000B /* Theme.swift */,
 				1983297D696F1E1B0000000A /* Info.plist */,
 				01D0DD8A215AE2D50000000D /* Base.xcconfig */,
 				5791C14BF0160AFA00000009 /* Localizable.xcstrings */,
@@ -314,6 +317,7 @@
 				8C75A9CE4133529700000020 /* SoundPlayer.swift in Sources */,
 				D9207C4B070633A000000022 /* WeeklySummary.swift in Sources */,
 				F1CAEDFBEAB27E7A00000018 /* SettingsView.swift in Sources */,
+				ECD662DF93B8B0C900000011 /* Theme.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -72,6 +72,7 @@ struct MathStreakView: View {
         .padding()
         .fitOrScroll()
         .navigationTitle(AppLanguage.localized("game.math.title"))
+        .tint(GameID.mathStreaks.ink)
         .onAppear(perform: deal)
         .celebration(isPresented: $showCelebration, detail: finalDetail, onPlayAgain: restart)
     }

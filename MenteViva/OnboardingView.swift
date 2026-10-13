@@ -22,6 +22,7 @@ struct OnboardingView: View {
 
             Text(AppLanguage.localized("app.title"))
                 .font(.largeTitle.weight(.bold))
+                .fontDesign(.serif)
 
             VStack(spacing: 12) {
                 line(AppLanguage.localized("onboarding.line1"))
@@ -45,7 +46,8 @@ struct OnboardingView: View {
                 Text(AppLanguage.localized("onboarding.start"))
                     .font(.title2.weight(.semibold))
                     .frame(maxWidth: .infinity, minHeight: 100)
-                    .background(.blue.opacity(0.15), in: .rect(cornerRadius: 20))
+                    .foregroundStyle(Color(.systemBackground))
+                    .background(Color.brand, in: .rect(cornerRadius: 20))
             }
             .buttonStyle(.plain)
             .accessibilityHint(AppLanguage.localized("onboarding.start.hint"))
@@ -71,7 +73,8 @@ struct OnboardingView: View {
                         .font(.title3.weight(language.rawValue == appLanguage ? .bold : .regular))
                         .frame(maxWidth: .infinity, minHeight: 100)
                         .background(
-                            language.rawValue == appLanguage ? .blue.opacity(0.22) : .gray.opacity(0.12),
+                            language.rawValue == appLanguage
+                                ? AnyShapeStyle(.tint.opacity(0.22)) : AnyShapeStyle(.gray.opacity(0.12)),
                             in: .rect(cornerRadius: 16))
                 }
                 .buttonStyle(.plain)

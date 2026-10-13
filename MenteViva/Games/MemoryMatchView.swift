@@ -22,8 +22,8 @@ struct MemoryMatchView: View {
         ["🎻", "🎺", "🎹", "📻", "🕰️", "📚", "🧶", "🪑"],  // music and home
     ]
     private static let spacing: CGFloat = 12
-    /// Deep slate card back: calm, not childish, readable in light and dark.
-    private static let cardBack = Color(red: 0.20, green: 0.34, blue: 0.42)
+    /// Icon-teal card back (Card Table theme): calm, not childish, the same in light and dark.
+    private static let cardBack = Color(UIColor(rgb: 0x23685F))
 
     @State private var difficulty = Difficulty.stored(.memoryMatch)
     @State private var faces: [Face] = []
@@ -126,20 +126,21 @@ struct MemoryMatchView: View {
         }
         .padding()
         .navigationTitle(AppLanguage.localized("game.memory.title"))
+        .tint(GameID.memoryMatch.ink)
         .onAppear(perform: deal)
         .onDisappear { flipBackTask?.cancel() }
         .celebration(isPresented: $showCelebration, detail: finalDetail, onPlayAgain: deal)
     }
 
-    /// Face up: a paper card with the picture. Face down: the slate back with a
-    /// small leaf. Matched pairs get a soft green paper and the checkmark.
+    /// Face up: a paper card with the picture. Face down: the teal back with a
+    /// small leaf. Matched pairs get a soft wash of the game's ink and the checkmark.
     private func face(_ card: Card, size: CGSize) -> some View {
         let shown = card.isFaceUp || card.isMatched
         return ZStack {
             RoundedRectangle(cornerRadius: 18)
                 .fill(
                     shown
-                        ? AnyShapeStyle(card.isMatched ? Color.green.opacity(0.14) : Color(.systemBackground))
+                        ? (card.isMatched ? AnyShapeStyle(.tint.opacity(0.16)) : AnyShapeStyle(Color(.systemBackground)))
                         : AnyShapeStyle(Self.cardBack.gradient)
                 )
                 .shadow(color: .black.opacity(0.15), radius: 4, y: 2)

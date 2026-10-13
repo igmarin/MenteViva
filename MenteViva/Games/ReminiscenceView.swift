@@ -39,6 +39,7 @@ struct ReminiscenceView: View {
         .padding()
         .fitOrScroll()
         .navigationTitle(AppLanguage.localized("game.reminiscence.title"))
+        .tint(GameID.reminiscence.ink)
         .onAppear(perform: deal)
         .onDisappear { CaptionSpeaker.stop() }
         .celebration(isPresented: $showCelebration, detail: finalDetail, onPlayAgain: deal)
