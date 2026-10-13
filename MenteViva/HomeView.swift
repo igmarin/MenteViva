@@ -8,12 +8,13 @@ struct HomeView: View {
     @Environment(\.dynamicTypeSize) private var typeSize
     @Environment(\.horizontalSizeClass) private var sizeClass
     @Environment(\.modelContext) private var modelContext
-    /// Every session, so the table and week board update the moment a game is saved.
-@Query(
-        filter: #Predicate<GameSession> { $0.playedAt >= weekStart },
-        sort: \\GameSession.playedAt
-    ) private var sessions: [GameSession]
+    /// This week's sessions, so the table and week board update the moment a game
+    /// is saved without loading years of history. The week is fixed when Home is
+    /// made; everything below also filters by day, so a stale week stays correct.
+    @Query(GameSession.thisWeek()) private var sessions: [GameSession]
     @State private var showSettings = false
+    /// The games opened from Home, so "Next" can swap the finished game for the next one.
+    @State private var path: [GameID] = []
     /// Today's picks in plan order. Empty until the on-device policy has run (a
     /// local fetch, so effectively instant); nothing here waits on the network.
     @State private var plan: [GameID] = []
@@ -33,7 +34,7 @@ struct HomeView: View {
     }
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             ScrollView {
                 if sizeClass == .regular {
                     // iPad: today on the left, everything else on the right.
@@ -69,11 +70,13 @@ struct HomeView: View {
                     .accessibilityHint(AppLanguage.localized("settings.open.hint"))
                 }
             }
+            .navigationDestination(for: GameID.self) { destination(for: $0) }
             .task { await refreshPlan() }
             .sheet(isPresented: $showSettings) {
                 SettingsView()
             }
         }
+        .environment(\.playNext) { path = [$0] }
     }
 
     // MARK: - Today
@@ -123,9 +126,7 @@ struct HomeView: View {
         if typeSize.isAccessibilitySize {
             VStack(spacing: 10) {
                 ForEach(games, id: \.self) { game in
-                    NavigationLink {
-                        destination(for: game)
-                    } label: {
+                    NavigationLink(value: game) {
                         GameRow(game: game, playedToday: today.done.contains(game))
                     }
                     .buttonStyle(CardPressStyle())
@@ -135,9 +136,7 @@ struct HomeView: View {
             HStack(spacing: -6) {
                 ForEach(Array(games.enumerated()), id: \.element) { index, game in
                     let tilt = (Double(index) - Double(games.count - 1) / 2) * 7
-                    NavigationLink {
-                        destination(for: game)
-                    } label: {
+                    NavigationLink(value: game) {
                         GameCard(game: game, size: .hand, playedToday: today.done.contains(game))
                     }
                     .buttonStyle(CardPressStyle())
@@ -155,9 +154,7 @@ struct HomeView: View {
     @ViewBuilder
     private var nextButton: some View {
         if let next = today.next {
-            NavigationLink {
-                destination(for: next)
-            } label: {
+            NavigationLink(value: next) {
                 HStack(spacing: 14) {
                     Image(systemName: "play.fill")
                         .font(.title3)
@@ -248,9 +245,7 @@ struct HomeView: View {
                 .accessibilityAddTraits(.isHeader)
             LazyVGrid(columns: columns, spacing: 16) {
                 ForEach(GameID.allCases.filter { !hidden.contains($0) }, id: \.self) { game in
-                    NavigationLink {
-                        destination(for: game)
-                    } label: {
+                    NavigationLink(value: game) {
                         GameCard(game: game)
                     }
                     .buttonStyle(CardPressStyle())

@@ -105,7 +105,7 @@ struct QuickEyesView: View {
         .onAppear(perform: startRound)
         .onDisappear { revealTask?.cancel() }
         // Same celebration as every other game (#45): progress, not points.
-        .celebration(isPresented: $showCelebration, detail: finalDetail, onPlayAgain: restart)
+        .celebration(isPresented: $showCelebration, game: .quickEyes, detail: finalDetail, onPlayAgain: restart)
     }
 
     private func restart() {

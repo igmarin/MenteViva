@@ -59,6 +59,14 @@ final class ContrastTests: XCTestCase {
         }
     }
 
+    /// The "Added to your week" stamp and the played tick (step 5): dark text on amber.
+    func testGivenTheAmberStampWhenItsTextIsOnAmberThenContrastIsAtLeastAAInBothModes() {
+        for style in styles {
+            let ratio = contrast(rgb(UIColor(Color.onAmber), style), rgb(UIColor(Color.amber), style))
+            XCTAssertGreaterThanOrEqual(ratio, 4.5, "style \(style.rawValue)")
+        }
+    }
+
     func testGivenBrandButtonWhenLabelUsesTheBackgroundColorThenContrastIsAtLeastAAInBothModes() {
         for style in styles {
             let ratio = contrast(rgb(.systemBackground, style), rgb(UIColor(Color.brand), style))

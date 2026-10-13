@@ -22,6 +22,27 @@ final class GameSessionStoreTests: XCTestCase {
         XCTAssertEqual(try relaunched.fetchCount(FetchDescriptor<GameSession>()), 1)
     }
 
+    /// Card Table (#157 review): Home and the end-of-game screen read only this
+    /// calendar week's sessions, so the fetch doesn't grow with years of history.
+    func testGivenSessionsAcrossWeeksWhenFetchingThisWeekThenOnlyThisWeeksComeBackOldestFirst() throws {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = TimeZone(identifier: "UTC")!
+        calendar.firstWeekday = 2  // Monday
+        let now = Date(timeIntervalSince1970: 1_791_712_800)  // Sunday 11 Oct 2026, 10:00 UTC
+        let context = ModelContext(
+            try ModelContainer(
+                for: GameSession.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true)))
+        for (game, daysAgo) in [(GameID.stroop, 8.0), (.quickEyes, 1), (.memoryMatch, 6)] {
+            let session = GameSession(gameID: game, score: 0, rounds: 1, durationSeconds: 1)
+            session.playedAt = now.addingTimeInterval(-daysAgo * 86_400)
+            context.insert(session)
+        }
+
+        let week = try context.fetch(GameSession.thisWeek(now: now, calendar: calendar))
+
+        XCTAssertEqual(week.compactMap(\.game), [.memoryMatch, .quickEyes], "last week's Saturday is left out")
+    }
+
     /// #124: a store that can't open (failed migration, damaged file) used to
     /// crash every launch. Play must go on with an in-memory store instead.
     func testGivenAStoreThatCannotOpenWhenMakingTheContainerThenPlayStillSaves() throws {

@@ -128,7 +128,7 @@ struct MemoryMatchView: View {
         .gameHeader(.memoryMatch, instruction: AppLanguage.localized("game.memory.instruction"))
         .onAppear(perform: deal)
         .onDisappear { flipBackTask?.cancel() }
-        .celebration(isPresented: $showCelebration, detail: finalDetail, onPlayAgain: deal)
+        .celebration(isPresented: $showCelebration, game: .memoryMatch, detail: finalDetail, onPlayAgain: deal)
     }
 
     /// Face up: a paper card with the picture. Face down: the teal back with a

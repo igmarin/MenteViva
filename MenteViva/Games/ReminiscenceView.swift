@@ -40,7 +40,7 @@ struct ReminiscenceView: View {
         .fitOrScroll()
         .gameHeader(.reminiscence, instruction: card.map { AppLanguage.localized(prompt(for: $0)) } ?? "")
         .onAppear(perform: deal)
-        .celebration(isPresented: $showCelebration, detail: finalDetail, onPlayAgain: deal)
+        .celebration(isPresented: $showCelebration, game: .reminiscence, detail: finalDetail, onPlayAgain: deal)
     }
 
     // MARK: - Pieces

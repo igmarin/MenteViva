@@ -123,7 +123,7 @@ struct CategoryFluencyView: View {
             instruction: AppLanguage.localized("game.category.instruction") + " " + (currentRound?.name ?? "")
         )
         .onAppear(perform: setup)
-        .celebration(isPresented: $showCelebration, detail: finalDetail, onPlayAgain: restart)
+        .celebration(isPresented: $showCelebration, game: .categoryFluency, detail: finalDetail, onPlayAgain: restart)
     }
 
     private func restart() {

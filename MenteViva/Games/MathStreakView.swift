@@ -73,7 +73,7 @@ struct MathStreakView: View {
         .fitOrScroll()
         .gameHeader(.mathStreaks, instruction: AppLanguage.localized("game.math.instruction") + " \(a) + \(b)")
         .onAppear(perform: deal)
-        .celebration(isPresented: $showCelebration, detail: finalDetail, onPlayAgain: restart)
+        .celebration(isPresented: $showCelebration, game: .mathStreaks, detail: finalDetail, onPlayAgain: restart)
     }
 
     private func restart() {

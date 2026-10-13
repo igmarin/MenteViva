@@ -1,4 +1,5 @@
 import Foundation
+import SwiftData
 
 /// Where today's games stand on Home's table (Card Table, step 4): which are
 /// done, which one is next, and whether the day is finished. The plan is saved
@@ -23,6 +24,12 @@ nonisolated struct TodayRun: Equatable {
     var remaining: Int { games.count - done.count }
     /// False before the plan exists, so an empty table never says "done".
     var isFinished: Bool { !games.isEmpty && next == nil }
+
+    /// What the end of `finished` offers (step 5): the next pick while it was
+    /// one of today's games and some are left; nil means "Play again".
+    func next(after finished: GameID) -> GameID? {
+        games.contains(finished) ? next : nil
+    }
 }
 
 /// Home's greeting by the hour: morning until noon, afternoon until six.
@@ -33,6 +40,16 @@ nonisolated enum Greeting {
         case ..<18: "home.greeting.afternoon"
         default: "home.greeting.evening"
         }
+    }
+}
+
+extension GameSession {
+    /// This calendar week's sessions, oldest first: everything Home's table and
+    /// week board and the end-of-game screen read. History keeps growing, so
+    /// they never load all of it (#157 review).
+    static func thisWeek(now: Date = .now, calendar: Calendar = .current) -> FetchDescriptor<GameSession> {
+        let start = calendar.dateInterval(of: .weekOfYear, for: now)?.start ?? calendar.startOfDay(for: now)
+        return FetchDescriptor(predicate: #Predicate { $0.playedAt >= start }, sortBy: [SortDescriptor(\.playedAt)])
     }
 }
 

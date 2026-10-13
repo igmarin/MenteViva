@@ -33,6 +33,12 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
   cards for the games played) opens My Week. All games stay below. On iPad, today
   is on the left and everything else on the right; at the largest text sizes the
   cards become full-width rows. The "Today's pick" stars are gone from the grid.
+- **The end of a game adds a card to the week (Card Table, step 5):** the game's
+  card arrives on the table stamped "Added to your week", above "Well done!", the
+  progress line and the week board with today's new card. During today's games the
+  big button reads "Next: Quick Eyes" and opens it straight away, with "2 of 3
+  today" at the top; otherwise it stays "Play again". My Week opens with the same
+  week board. The confetti is gone; the card is the celebration.
 
 ### Fixed
 - **Daily picks use Jev again when it is set up (#146):** adding Remember Together

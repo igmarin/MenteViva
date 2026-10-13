@@ -1,136 +1,139 @@
+import SwiftData
 import SwiftUI
 
-/// Shared end-of-game celebration: gentle confetti, warm headline, a kind
-/// progress line (never points), and two big actions — play again or go home.
-/// Pure SwiftUI, no deps. Presented as a fullScreenCover by every game on finish.
-/// #45: numeric scores confused players; progress and completion motivate.
+/// Shared end-of-game screen (Card Table, step 5): the game's card arrives on
+/// the table stamped "Added to your week", then a warm headline, the progress
+/// line (never points, #45), the week board with today's new card, and two big
+/// actions. During today's games the main one names the next game; otherwise
+/// it is "Play again". Presented as a fullScreenCover by every game on finish.
 struct CelebrationView: View {
+    let game: GameID
     let detail: String
     let onPlayAgain: () -> Void
+    let onNext: (GameID) -> Void
     let onHome: () -> Void
 
-    var body: some View {
-        ZStack {
-            ConfettiView()
-                .allowsHitTesting(false)
-                .accessibilityHidden(true)
-            VStack(spacing: 32) {
-                Spacer()
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    /// This week's sessions, including the one just saved: every game records
+    /// before celebrating.
+    @Query(GameSession.thisWeek()) private var sessions: [GameSession]
+    @AppStorage(FamilySettings.hiddenKey) private var hiddenGames = ""
+    @State private var arrived = false
 
+    /// Today's games from the plan saved for today; nil before there is one.
+    private var today: TodayRun? {
+        guard let plan = PlanStore.cachedPlan(), plan.dayStamp == PlanStore.dayStamp() else { return nil }
+        return TodayRun(plan: plan.games, hidden: FamilySettings.hidden(from: hiddenGames), sessions: sessions)
+    }
+
+    var body: some View {
+        let today = today
+        VStack(spacing: 0) {
+            VStack(spacing: 22) {
+                if let today, today.games.contains(game) {
+                    Text(
+                        String(
+                            format: AppLanguage.localized("game.celebration.today %lld %lld"),
+                            today.done.count, today.games.count)
+                    )
+                    .font(.headline.weight(.heavy))
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 10)
+                    .background(Color(.systemBackground), in: .capsule)
+                }
+                card
+            }
+            .padding(.top, 24)
+            .padding(.bottom, 60)
+
+            Spacer(minLength: 0)
+
+            VStack(spacing: 14) {
                 Text(AppLanguage.localized("game.common.welldone"))
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
+                    .font(.largeTitle.bold())
                     .fontDesign(.serif)
                     .multilineTextAlignment(.center)
                     .accessibilityAddTraits(.isHeader)
-
                 Text(detail)
-                    .font(.title)
-                    .fontWeight(.semibold)
+                    .font(.title2.weight(.semibold))
                     .multilineTextAlignment(.center)
-
-                Spacer()
-
-                VStack(spacing: 16) {
-                    Button(action: onPlayAgain) {
-                        Text(AppLanguage.localized("game.celebration.playagain"))
-                            .font(.title2)
-                            .fontWeight(.semibold)
-                            .frame(maxWidth: .infinity, minHeight: 100)
-                            .foregroundStyle(Color(.systemBackground))
-                            .background(Color.brand, in: .rect(cornerRadius: 20))
+                WeekBoard(
+                    days: DayGrouping.thisWeek(sessions, date: \.playedAt).map {
+                        (day: $0.day, games: $0.items.compactMap(\.game))
                     }
-                    .buttonStyle(.plain)
-                    .accessibilityLabel(AppLanguage.localized("game.celebration.playagain"))
-
-                    Button(action: onHome) {
-                        Text(AppLanguage.localized("game.celebration.home"))
-                            .font(.title2)
-                            .fontWeight(.semibold)
-                            .frame(maxWidth: .infinity, minHeight: 100)
-                            .overlay(RoundedRectangle(cornerRadius: 20).strokeBorder(.secondary, lineWidth: 2))
-                    }
-                    .buttonStyle(.plain)
-                    .accessibilityLabel(AppLanguage.localized("game.celebration.home"))
-                }
+                )
+                .padding(.vertical, 6)
+                actions(next: today?.next(after: game))
             }
             .padding(24)
+            .frame(maxWidth: 560)
+            .frame(maxWidth: .infinity)
+            .background {
+                UnevenRoundedRectangle(topLeadingRadius: 36, topTrailingRadius: 36)
+                    .fill(Color(.systemBackground))
+                    .ignoresSafeArea(edges: .bottom)
+            }
         }
-        .onAppear { Feedback.play(.complete) }
-    }
-}
-
-/// Gentle confetti: soft pieces drifting down with a slow sway, then looping.
-/// Drawn with Canvas + TimelineView. Reduced Motion = a few static pieces.
-private struct ConfettiView: View {
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
-
-    private struct Piece: Identifiable {
-        let id: Int
-        let x: Double  // 0...1 horizontal start
-        let size: Double  // 6...12 pt
-        let delay: Double  // 0...8 s stagger
-        let duration: Double  // 7...12 s fall time
-        let sway: Double  // 8...28 pt horizontal drift
-        let spin: Double  // turns per fall
-        let color: Color
-        let isCircle: Bool
+        .fitOrScroll()
+        // The sheet's paper continues under the home indicator.
+        .background(alignment: .bottom) {
+            Color(.systemBackground).frame(height: 200).ignoresSafeArea(edges: .bottom)
+        }
+        .background(.table)
+        .onAppear {
+            Feedback.play(.complete)
+            withAnimation(.spring(duration: 0.55, bounce: 0.3).delay(0.1)) { arrived = true }
+        }
     }
 
-    private static let palette: [Color] = [.pink, .orange, .yellow, .green, .mint, .blue, .purple]
-
-    private let pieces: [Piece] = (0..<48).map { i in
-        Piece(
-            id: i,
-            x: Double.random(in: 0...1),
-            size: Double.random(in: 6...12),
-            delay: Double.random(in: 0...8),
-            duration: Double.random(in: 7...12),
-            sway: Double.random(in: 8...28) * (Bool.random() ? 1 : -1),
-            spin: Double.random(in: 0.5...1.5) * (Bool.random() ? 1 : -1),
-            color: (palette.randomElement() ?? .blue).opacity(0.8),
-            isCircle: Bool.random())
-    }
-
-    var body: some View {
-        if reduceMotion {
-            Canvas { context, size in
-                for piece in pieces.prefix(12) {
-                    let rect = CGRect(
-                        x: piece.x * size.width,
-                        y: size.height * Double(piece.id) / 12.0,
-                        width: piece.size, height: piece.size)
-                    context.fill(Path(ellipseIn: rect), with: .color(piece.color))
-                }
+    /// The finished game's card, stamped and tilted as it lands on the table.
+    private var card: some View {
+        GameCard(game: game)
+            .frame(width: 190)
+            .overlay(alignment: .bottom) {
+                Text(AppLanguage.localized("game.celebration.added"))
+                    .font(.headline.weight(.heavy))
+                    .foregroundStyle(Color.onAmber)
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 9)
+                    .background(Color.amber, in: .rect(cornerRadius: 12))
+                    .fixedSize()
+                    .rotationEffect(.degrees(6))
+                    // Below the name band, never over it: the name says which game.
+                    .offset(y: 40)
             }
-        } else {
-            TimelineView(.animation) { timeline in
-                Canvas { context, size in
-                    let now = timeline.date.timeIntervalSinceReferenceDate
-                    for piece in pieces {
-                        let cycle =
-                            (now - piece.delay)
-                            .truncatingRemainder(dividingBy: piece.duration) / piece.duration
-                        guard cycle >= 0 else { continue }
-                        let x =
-                            piece.x * size.width
-                            + piece.sway * sin(cycle * .pi * 4)
-                        let y = -20 + cycle * (size.height + 40)
-                        var ctx = context
-                        ctx.translateBy(x: x, y: y)
-                        ctx.rotate(by: .degrees(360 * piece.spin * cycle))
-                        let rect = CGRect(
-                            x: -piece.size / 2, y: -piece.size / 2,
-                            width: piece.size,
-                            height: piece.isCircle ? piece.size : piece.size * 1.6)
-                        let path =
-                            piece.isCircle
-                            ? Path(ellipseIn: rect)
-                            : Path(roundedRect: rect, cornerRadius: 2)
-                        ctx.fill(path, with: .color(piece.color))
-                    }
+            .rotationEffect(.degrees(-4))
+            .scaleEffect(arrived || reduceMotion ? 1 : 0.8)
+            .opacity(arrived || reduceMotion ? 1 : 0)
+            .accessibilityElement(children: .combine)
+    }
+
+    private func actions(next: GameID?) -> some View {
+        VStack(spacing: 12) {
+            if let next {
+                Button {
+                    onNext(next)
+                } label: {
+                    Label(
+                        String(
+                            format: AppLanguage.localized("game.celebration.next %@"),
+                            AppLanguage.localized(next.title)),
+                        systemImage: "arrow.forward"
+                    )
+                    .labelStyle(.titleAndIcon)
+                    .bigButton(filled: true)
                 }
+                .buttonStyle(.plain)
+            } else {
+                Button(action: onPlayAgain) {
+                    Text(AppLanguage.localized("game.celebration.playagain")).bigButton(filled: true)
+                }
+                .buttonStyle(.plain)
             }
+            Button(action: onHome) {
+                Text(AppLanguage.localized("game.celebration.home")).bigButton(filled: false)
+            }
+            .buttonStyle(.plain)
         }
     }
 }
@@ -138,32 +141,59 @@ private struct ConfettiView: View {
 extension View {
     /// The shared end-of-session screen (#45): progress, never points.
     func celebration(
-        isPresented: Binding<Bool>, detail: String,
+        isPresented: Binding<Bool>, game: GameID, detail: String,
         onPlayAgain: @escaping () -> Void
     ) -> some View {
-        modifier(CelebrationCover(isPresented: isPresented, detail: detail, onPlayAgain: onPlayAgain))
+        modifier(CelebrationCover(isPresented: isPresented, game: game, detail: detail, onPlayAgain: onPlayAgain))
+    }
+
+    /// A 100pt action: icon-teal fill with background-coloured text, or an outline.
+    fileprivate func bigButton(filled: Bool) -> some View {
+        font(.title2.weight(.semibold))
+            .foregroundStyle(filled ? Color(.systemBackground) : Color.primary)
+            .frame(maxWidth: .infinity, minHeight: 100)
+            .background(filled ? Color.brand : Color.clear, in: .rect(cornerRadius: 20))
+            .overlay {
+                if !filled { RoundedRectangle(cornerRadius: 20).strokeBorder(.secondary, lineWidth: 2) }
+            }
     }
 }
 
 private struct CelebrationCover: ViewModifier {
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.playNext) private var playNext
     @Binding var isPresented: Bool
+    let game: GameID
     let detail: String
     let onPlayAgain: () -> Void
+    /// The game chosen with "Next", opened only once the cover is gone: changing
+    /// the path mid-dismissal would remove this view while it still presents.
+    @State private var pendingNext: GameID?
 
     func body(content: Content) -> some View {
-        content.fullScreenCover(isPresented: $isPresented) {
+        content.fullScreenCover(isPresented: $isPresented, onDismiss: openPendingNext) {
             CelebrationView(
+                game: game,
                 detail: detail,
                 onPlayAgain: {
                     isPresented = false
                     onPlayAgain()
+                },
+                onNext: { next in
+                    pendingNext = next
+                    isPresented = false
                 },
                 onHome: {
                     isPresented = false
                     dismiss()
                 })
         }
+    }
+
+    private func openPendingNext() {
+        guard let next = pendingNext else { return }
+        pendingNext = nil
+        playNext(next)
     }
 }
 
@@ -181,5 +211,6 @@ struct CheckBadge: View {
 }
 
 #Preview {
-    CelebrationView(detail: "You found all 8 pairs!", onPlayAgain: {}, onHome: {})
+    CelebrationView(game: .memoryMatch, detail: "You found all 8 pairs!", onPlayAgain: {}, onNext: { _ in }, onHome: {})
+        .modelContainer(for: GameSession.self, inMemory: true)
 }

@@ -93,7 +93,7 @@ struct PlayedCheck: View {
     var body: some View {
         Image(systemName: "checkmark")
             .font(.system(size: 16, weight: .heavy))
-            .foregroundStyle(.black.opacity(0.85))
+            .foregroundStyle(Color.onAmber)
             .frame(width: 36, height: 36)
             .background(Color.amber, in: .circle)
             .overlay(Circle().strokeBorder(Color(.systemBackground), lineWidth: 3))
