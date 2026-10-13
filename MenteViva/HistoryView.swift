@@ -2,7 +2,7 @@ import SwiftData
 import SwiftUI
 
 /// "My Week": a warm, big-type look back at the last 7 days of play.
-/// One row per session: game emoji, localized game name. No scores (#45).
+/// One row per day, with each game played and how many times (#140). No scores (#45).
 /// One warm progress line per game played (#107): words and an icon, never a
 /// number and never a down arrow — the numbers live in the family screen.
 struct HistoryView: View {
@@ -13,8 +13,8 @@ struct HistoryView: View {
         DayGrouping.lastWeek(sessions, date: \.playedAt)
     }
 
-    private var groupedDays: [(day: Date, items: [GameSession])] {
-        DayGrouping.byDay(weekSessions, date: \.playedAt)
+    private var days: [DayTally] {
+        DayGrouping.tally(weekSessions, date: \.playedAt, game: \.game)
     }
 
     var body: some View {
@@ -85,35 +85,56 @@ struct HistoryView: View {
                     .font(.title3.weight(.semibold))
             }
 
-            ForEach(groupedDays, id: \.day) { group in
-                Section {
-                    ForEach(group.items, id: \.persistentModelID) { session in
-                        sessionRow(session)
-                    }
-                } header: {
-                    Text(dayTitle(group.day))
-                        .font(.title3.weight(.semibold))
-                }
+            Section {
+                ForEach(days, id: \.day) { dayRow($0) }
+            } header: {
+                Text(AppLanguage.localized("history.days.header"))
+                    .font(.title3.weight(.semibold))
             }
         }
     }
 
-    private func sessionRow(_ session: GameSession) -> some View {
-        let info = gameInfo(for: session)
-        return HStack(spacing: 16) {
-            Text(info.emoji)
-                .font(.system(size: 44))
-                .accessibilityHidden(true)
-
-            Text(info.name)
-                .font(.title2)
-                .lineLimit(2)
-
-            Spacer(minLength: 8)
+    /// One row per day (#140): the day, then one chip per game with its count.
+    /// The chips sit side by side while they fit and stack at large text sizes.
+    private func dayRow(_ tally: DayTally) -> some View {
+        let title = dayTitle(tally.day)
+        let chips = ForEach(tally.games, id: \.game) { gameChip($0) }
+        return VStack(alignment: .leading, spacing: 12) {
+            Text(title)
+                .font(.title2.weight(.semibold))
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: 10) { chips }
+                VStack(alignment: .leading, spacing: 10) { chips }
+            }
         }
-        .frame(minHeight: 100)
-        .accessibilityElement(children: .combine)
-        .accessibilityLabel(Text("history.a11y.played \(info.name)"))
+        .padding(.vertical, 12)
+        .frame(maxWidth: .infinity, minHeight: 100, alignment: .leading)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text(verbatim: "\(title): " + tally.games.map(spokenCount).joined(separator: "; ")))
+    }
+
+    /// The game's emblem and colour decorate; its name and count are the text.
+    private func gameChip(_ entry: DayTally.Count) -> some View {
+        HStack(spacing: 8) {
+            Emblem(game: entry.game)
+                .frame(width: 30, height: 30)
+            Text(AppLanguage.localized(entry.game.title))
+                .font(.title3)
+            Text(verbatim: "×\(entry.count)")
+                .font(.title3.weight(.heavy))
+                .monospacedDigit()
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
+        // A rounded rectangle, not a capsule, so a name wrapped at large text sizes stays a chip.
+        .background(entry.game.ink.opacity(0.12), in: .rect(cornerRadius: 22))
+        .overlay(RoundedRectangle(cornerRadius: 22).strokeBorder(entry.game.ink, lineWidth: 2))
+    }
+
+    /// "Memory Lane, 2 times" / "Memory Lane, once" for VoiceOver.
+    private func spokenCount(_ entry: DayTally.Count) -> String {
+        let times = AppLanguage.localized("history.day.times \(entry.count)" as String.LocalizationValue)
+        return "\(AppLanguage.localized(entry.game.title)), \(times)"
     }
 
     /// Level up gets the up arrow; everything else, including an easier week,
@@ -157,13 +178,6 @@ struct HistoryView: View {
             return AppLanguage.localized("history.yesterday")
         }
         return day.formatted(.dateTime.weekday(.wide).day().month(.wide))
-    }
-
-    private func gameInfo(for session: GameSession) -> (emoji: String, name: String) {
-        guard let game = session.game else {
-            return ("🎮", AppLanguage.localized("history.game.unknown"))
-        }
-        return (game.emoji, AppLanguage.localized(game.title))
     }
 }
 

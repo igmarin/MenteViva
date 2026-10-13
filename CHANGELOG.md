@@ -17,6 +17,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
   times and exact division with small numbers (up to 10). The signs are the usual
   + − × ÷, and VoiceOver and the speaker button say them in words ("7 minus 3",
   "7 menos 3").
+- **My Week reads by day (#140):** instead of one line per game played, each day is
+  one row with a chip for every game and how many times it was played ("Memory Lane
+  ×2"), so the week is about seven rows, not a long log. VoiceOver reads each day as
+  one sentence ("Today: Memory Lane, 2 times; Quick Eyes, once").
 - **Spanish wording (#12):** the end-of-game stamp now says "Agregado a tu semana"
   (neutral Latin American), Home's button reads "Seguimos con …" without a colon, and
   the end-of-game pill reads "Hoy: 1 de 3".

@@ -34,4 +34,14 @@ final class PluralStringsTests: XCTestCase {
         XCTAssertEqual(text("history.summary \(1)", "en"), "You played 1 time this week! 🌟")
         XCTAssertEqual(text("history.summary \(1)", "es"), "¡Jugaste 1 vez esta semana! 🌟")
     }
+
+    func testGivenOnePlayWhenMyWeekChipIsSpokenThenItSaysOnce() {
+        XCTAssertEqual(text("history.day.times \(1)", "en"), "once")
+        XCTAssertEqual(text("history.day.times \(1)", "es"), "una vez")
+    }
+
+    func testGivenTwoPlaysWhenMyWeekChipIsSpokenThenItSaysTimes() {
+        XCTAssertEqual(text("history.day.times \(2)", "en"), "2 times")
+        XCTAssertEqual(text("history.day.times \(2)", "es"), "2 veces")
+    }
 }
