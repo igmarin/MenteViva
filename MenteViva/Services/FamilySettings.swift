@@ -1,6 +1,6 @@
 import Foundation
 
-/// The caregiver's choices from the For family screen (#108), kept per device
+/// The choices from the Set up screen (#108, #141), kept per device
 /// (no sync on a free account). Pins fix a game's difficulty until set back to
 /// Auto; hidden games stay off Home and out of the daily picks, code kept (#47).
 /// Plain UserDefaults keys so views can bind them with @AppStorage.

@@ -28,12 +28,13 @@ Instructions for AI agents (and humans in a hurry) working on MenteViva.
 ```
 MenteViva/            app (SwiftUI + SwiftData)
   MenteVivaApp.swift  entry; LOCAL_ONLY picks the store
-  HomeView, OnboardingView, SettingsView, HistoryView
+  HomeView, OnboardingView, SettingsView, HistoryView,
+  MyProgressView (rates, #141), SetUpView (hide/pin/photos)
   Games/              one file per game (6) + CelebrationView, MissCue, FitOrScroll
   Models/             GameSession, GameID, Difficulty, RoundProgress
   Services/           DailyPolicy (on-device plan), PlanStore (saved plan + levels),
                       JevService (optional Jev client), FamilySettings, MemoryPhotos,
-                      PlayerStateSummary, WeeklySummary, AppLanguage, SoundPlayer, HotPath (signposts),
+                      PlayerStateSummary, WeeklySummary, ProgressRates, AppLanguage, SoundPlayer, HotPath (signposts),
                       CaptionSpeaker, EverydayObjects
   Localizable.xcstrings  every string, EN + ES
 MenteVivaTests/       unit tests (Given/When/Then names)

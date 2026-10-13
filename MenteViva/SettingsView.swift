@@ -1,7 +1,7 @@
 import SwiftUI
 
 /// Settings a stranger can reach alone: language, sound & haptics, bigger text,
-/// the family screen (#107), privacy, version.
+/// My progress and Set up (#141), privacy, version.
 struct SettingsView: View {
     /// UserDefaults key of the Bigger text toggle.
     static let biggerTextKey = "biggerText"
@@ -68,13 +68,22 @@ struct SettingsView: View {
 
                 Section {
                     NavigationLink {
-                        FamilyView()
+                        MyProgressView()
                     } label: {
-                        Label(AppLanguage.localized("family.title"), systemImage: "person.2.fill")
+                        Label(AppLanguage.localized("progress.title"), systemImage: "chart.bar.fill")
                             .font(.title3)
                             .frame(maxWidth: .infinity, minHeight: 100, alignment: .leading)
                     }
-                    .accessibilityHint(AppLanguage.localized("family.open.hint"))
+                    .accessibilityHint(AppLanguage.localized("progress.open.hint"))
+
+                    NavigationLink {
+                        SetUpView()
+                    } label: {
+                        Label(AppLanguage.localized("setup.title"), systemImage: "slider.horizontal.3")
+                            .font(.title3)
+                            .frame(maxWidth: .infinity, minHeight: 100, alignment: .leading)
+                    }
+                    .accessibilityHint(AppLanguage.localized("setup.open.hint"))
                 }
 
                 Section {

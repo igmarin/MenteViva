@@ -95,7 +95,7 @@ enum MemoryPhotos {
 
     /// The photo's caption, or nil when it has none.
     ///
-    /// Signposted because For family reads it inside a `ForEach` body, so the
+    /// Signposted because Set up reads it inside a `ForEach` body, so the
     /// run count in a trace says how many times a redraw went back to disk.
     static func caption(for photo: URL) -> String? {
         HotPath.measure("photo.caption") {

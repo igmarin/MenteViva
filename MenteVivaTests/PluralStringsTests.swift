@@ -10,14 +10,14 @@ final class PluralStringsTests: XCTestCase {
         return String(localized: value, bundle: bundle, locale: Locale(identifier: language))
     }
 
-    func testGivenOneGameWhenFamilyWeekLineThenItIsSingular() {
-        XCTAssertEqual(text("family.week.this \(1)", "en"), "This week: 1 game")
-        XCTAssertEqual(text("family.week.last \(1)", "es"), "Semana anterior: 1 juego")
+    func testGivenOnePlayWhenMyProgressPlaysLineThenItIsSingular() {
+        XCTAssertEqual(text("progress.plays \(1)", "en"), "Played 1 time this week")
+        XCTAssertEqual(text("progress.plays \(1)", "es"), "Jugaste 1 vez esta semana")
     }
 
-    func testGivenSeveralGamesWhenFamilyWeekLineThenItIsPlural() {
-        XCTAssertEqual(text("family.week.this \(3)", "en"), "This week: 3 games")
-        XCTAssertEqual(text("family.week.last \(0)", "es"), "Semana anterior: 0 juegos")
+    func testGivenSeveralPlaysWhenMyProgressPlaysLineThenItIsPlural() {
+        XCTAssertEqual(text("progress.plays \(3)", "en"), "Played 3 times this week")
+        XCTAssertEqual(text("progress.plays \(0)", "es"), "Jugaste 0 veces esta semana")
     }
 
     func testGivenOneGameLeftTodayWhenHomeLineThenItIsSingular() {

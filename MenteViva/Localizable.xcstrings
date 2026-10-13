@@ -82,57 +82,6 @@
         }
       }
     },
-    "family.accuracy.down" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "A few fewer right answers than the week before"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Algunos aciertos menos que la semana anterior"
-          }
-        }
-      }
-    },
-    "family.accuracy.steady" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "About the same as the week before"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Más o menos igual que la semana anterior"
-          }
-        }
-      }
-    },
-    "family.accuracy.up" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "More right answers than the week before"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Más aciertos que la semana anterior"
-          }
-        }
-      }
-    },
     "family.auto" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -297,23 +246,6 @@
         }
       }
     },
-    "family.empty" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No games in the last two weeks yet."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Todavía no hay juegos en las últimas dos semanas."
-          }
-        }
-      }
-    },
     "family.game.hint" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -398,23 +330,6 @@
         }
       }
     },
-    "family.intro" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Everything here covers this device only. How each game went in the last 7 days, compared with the 7 days before. These numbers appear only here."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Todo lo de aquí es solo de este dispositivo. Cómo fue cada juego en los últimos 7 días, comparado con los 7 días anteriores. Estos números solo aparecen aquí."
-          }
-        }
-      }
-    },
     "family.level %@ %@" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -428,57 +343,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Próximo juego: %1$@ (%2$@)"
-          }
-        }
-      }
-    },
-    "family.level.down %@ %@" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Moved to an easier level: %1$@ to %2$@"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pasó a un nivel más fácil: de %1$@ a %2$@"
-          }
-        }
-      }
-    },
-    "family.level.up %@ %@" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Moved up from %1$@ to %2$@"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Subió de %1$@ a %2$@"
-          }
-        }
-      }
-    },
-    "family.open.hint" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Shows how each game is going, with numbers"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Muestra cómo va cada juego, con números"
           }
         }
       }
@@ -714,23 +578,6 @@
         }
       }
     },
-    "family.right %lld" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld%% right"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld%% de aciertos"
-          }
-        }
-      }
-    },
     "family.share" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -812,103 +659,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Al menos un juego siempre queda en el inicio."
-          }
-        }
-      }
-    },
-    "family.title" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "For family"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Para la familia"
-          }
-        }
-      }
-    },
-    "family.week.last %lld" : {
-      "localizations" : {
-        "en" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Week before: %lld game"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Week before: %lld games"
-                }
-              }
-            }
-          }
-        },
-        "es" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Semana anterior: %lld juego"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Semana anterior: %lld juegos"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "family.week.this %lld" : {
-      "localizations" : {
-        "en" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "This week: %lld game"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "This week: %lld games"
-                }
-              }
-            }
-          }
-        },
-        "es" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Esta semana: %lld juego"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Esta semana: %lld juegos"
-                }
-              }
-            }
           }
         }
       }
@@ -2849,6 +2599,302 @@
         }
       }
     },
+    "progress.accuracy %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On average, %lld%% right each game"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En promedio, %lld%% de aciertos por juego"
+          }
+        }
+      }
+    },
+    "progress.days %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Played on %lld of the last 7 days"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jugaste %lld de los últimos 7 días"
+          }
+        }
+      }
+    },
+    "progress.empty" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No games in the last 7 days yet. Whenever you play, it shows up here."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todavía no hay juegos en los últimos 7 días. Cuando juegues, aparecerá aquí."
+          }
+        }
+      }
+    },
+    "progress.intro" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your last 7 days on this device. Each game is compared only with your own earlier weeks. These numbers appear only here, unless you share them."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tus últimos 7 días en este dispositivo. Cada juego se compara solo con tus propias semanas anteriores. Estos números solo aparecen aquí, a menos que tú los compartas."
+          }
+        }
+      }
+    },
+    "progress.level %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Level reached: %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nivel alcanzado: %@"
+          }
+        }
+      }
+    },
+    "progress.open.hint" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "How your games went this week, on this device"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cómo te fue en los juegos esta semana, en este dispositivo"
+          }
+        }
+      }
+    },
+    "progress.plays %lld" : {
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Played %lld time this week"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Played %lld times this week"
+                }
+              }
+            }
+          }
+        },
+        "es" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Jugaste %lld vez esta semana"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Jugaste %lld veces esta semana"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "progress.share %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld%% of this week's games"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld%% de los juegos de esta semana"
+          }
+        }
+      }
+    },
+    "progress.share.header" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Played this week"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jugados esta semana"
+          }
+        }
+      }
+    },
+    "progress.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "My progress"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mi progreso"
+          }
+        }
+      }
+    },
+    "progress.trend.accuracy.down" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A few fewer right answers than in your earlier weeks"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Algunos aciertos menos que en tus semanas anteriores"
+          }
+        }
+      }
+    },
+    "progress.trend.accuracy.steady" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "About the same as your earlier weeks"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Más o menos igual que en tus semanas anteriores"
+          }
+        }
+      }
+    },
+    "progress.trend.accuracy.up" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "More right answers than in your earlier weeks"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Más aciertos que en tus semanas anteriores"
+          }
+        }
+      }
+    },
+    "progress.trend.first" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No earlier week of this game to compare with yet."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todavía no hay una semana anterior de este juego para comparar."
+          }
+        }
+      }
+    },
+    "progress.trend.level.down %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "An easier level than your earlier weeks: now %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un nivel más fácil que en tus semanas anteriores: ahora %@"
+          }
+        }
+      }
+    },
+    "progress.trend.level.up %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A level up from your earlier weeks: now %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un nivel más que en tus semanas anteriores: ahora %@"
+          }
+        }
+      }
+    },
+    "progress.trend.wait %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "After %lld games this week, you'll see how it compares with your earlier weeks."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Después de %lld juegos esta semana, verás cómo se compara con tus semanas anteriores."
+          }
+        }
+      }
+    },
     "settings.done" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -3081,6 +3127,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Versión"
+          }
+        }
+      }
+    },
+    "setup.open.hint" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Which games show, their difficulty, and Memory Lane photos"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Qué juegos se muestran, su dificultad y las fotos de Camino de Memoria"
+          }
+        }
+      }
+    },
+    "setup.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Set up"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajustes de juego"
           }
         }
       }
