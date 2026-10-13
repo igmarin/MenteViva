@@ -3,11 +3,13 @@ import XCTest
 
 @testable import MenteViva
 
-/// #118: "Today's pick" must be readable on its tile (WCAG AA: 4.5:1 for
-/// text) in light and dark mode. Since the Card Table theme each tile is its
-/// game's ink at 22% over the background, so every game is checked. Game inks
-/// also tint text (back buttons), and primary buttons put the background
-/// colour on a brand-teal fill.
+/// #118: "Today's pick" must be readable on its card (WCAG AA: 4.5:1 for
+/// text) in light and dark mode. Since the Card Table theme the label sits on
+/// the card's art panel, its game's ink at 22% over the background, so every
+/// game is checked. Game inks also carry text both ways: as text on the
+/// background (back buttons), and under the background colour on each card's
+/// name band; contrast is symmetric, so one test covers both. Primary buttons
+/// put the background colour on a brand-teal fill.
 final class ContrastTests: XCTestCase {
     private typealias RGB = (Double, Double, Double)
     private let styles: [UIUserInterfaceStyle] = [.light, .dark]
