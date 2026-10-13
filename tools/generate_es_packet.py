@@ -6,6 +6,23 @@ import json, re, subprocess
 
 d = json.load(open('MenteViva/Localizable.xcstrings'))['strings']
 
+# Signed off on #12 (2026-10-13, Card Table strings, #160/#161): pre-marked ✅.
+SIGNED_OFF = {
+    'game.celebration.added', 'game.celebration.next %@', 'game.celebration.today %lld %lld',
+    'game.readaloud', 'game.readaloud.hint', 'home.allgames', 'home.greeting.afternoon',
+    'home.greeting.evening', 'home.greeting.morning', 'home.today.continue %@',
+    'home.today.done', 'home.today.label', 'home.today.play', 'home.today.played',
+    'home.today.togo %lld', 'home.week.title',
+}
+
+
+def value(loc):
+    """A plain string, or each plural form as 'one: … / other: …'."""
+    if 'stringUnit' in loc:
+        return loc['stringUnit']['value']
+    forms = loc.get('variations', {}).get('plural', {})
+    return ' / '.join('%s: %s' % (n, f['stringUnit']['value']) for n, f in forms.items())
+
 def where_used(key):
     # Explicit calls reference the key verbatim (specifiers included);
     # implicit Text("key \(x)") lookups match the prefix before specifiers.
@@ -21,14 +38,15 @@ for k in sorted(d):
     if not re.search(r'[A-Za-z]', re.sub(r'%(\d+\$)?(lld|@|f|d)', '', k)):
         continue  # pure format-specifier artifact, nothing to translate
     locs = d[k].get('localizations', {})
-    en = locs.get('en', {}).get('stringUnit', {}).get('value', '') or k
-    es = locs.get('es', {}).get('stringUnit', {}).get('value', '')
+    en = value(locs.get('en', {})) or k
+    es = value(locs.get('es', {}))
     rows.append((k, en, es, where_used(k)))
 
-header = """# ES review packet — for the native-speaker pass (#12)
+header = f"""# ES review packet — for the native-speaker pass (#12)
 
 Hand this whole file to the reviewer. Generated from `Localizable.xcstrings`
-(75 user-facing strings; 3 pure format-specifier keys omitted).
+({len(rows)} user-facing strings; keys that are only format specifiers are omitted).
+Rows already signed off on #12 are pre-marked ✅.
 Regenerate after any string change: `python3 tools/generate_es_packet.py`.
 
 ## What to check, in order
@@ -58,6 +76,7 @@ def esc(s):
 with open('docs/es-review-packet.md', 'w') as f:
     f.write(header)
     for k, en, es, used in rows:
-        f.write('| `%s` | %s | %s | %s |  |\n' % (esc(k), esc(en), esc(es), used))
+        mark = '✅' if k in SIGNED_OFF else ''
+        f.write('| `%s` | %s | %s | %s | %s |\n' % (esc(k), esc(en), esc(es), used, mark))
 
 print('packet written,', len(rows), 'rows')
