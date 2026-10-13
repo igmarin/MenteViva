@@ -11,6 +11,12 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
   typed per photo in For family and stay on this device. A new setting, "Read names
   aloud", speaks the name on its own (off by default); the speaker button always works.
 
+### Changed
+- **A warmer look, taken from the app icon (Card Table, step 1):** each game has its
+  own colour on Home and inside the game, and buttons and switches are icon teal
+  instead of system blue. The welcome title and "Well done!" use a serif. Memory
+  Lane's card backs are teal. Layouts, sizes and words are unchanged.
+
 ### Fixed
 - **Daily picks use Jev again when it is set up (#146):** adding Remember Together
   left the key-holding proxy expecting five games, so it turned every request away

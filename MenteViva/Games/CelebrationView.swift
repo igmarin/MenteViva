@@ -20,6 +20,7 @@ struct CelebrationView: View {
                 Text(AppLanguage.localized("game.common.welldone"))
                     .font(.largeTitle)
                     .fontWeight(.bold)
+                    .fontDesign(.serif)
                     .multilineTextAlignment(.center)
                     .accessibilityAddTraits(.isHeader)
 
@@ -36,7 +37,8 @@ struct CelebrationView: View {
                             .font(.title2)
                             .fontWeight(.semibold)
                             .frame(maxWidth: .infinity, minHeight: 100)
-                            .background(.blue.opacity(0.2), in: .rect(cornerRadius: 20))
+                            .foregroundStyle(Color(.systemBackground))
+                            .background(Color.brand, in: .rect(cornerRadius: 20))
                     }
                     .buttonStyle(.plain)
                     .accessibilityLabel(AppLanguage.localized("game.celebration.playagain"))
@@ -46,7 +48,7 @@ struct CelebrationView: View {
                             .font(.title2)
                             .fontWeight(.semibold)
                             .frame(maxWidth: .infinity, minHeight: 100)
-                            .background(.green.opacity(0.2), in: .rect(cornerRadius: 20))
+                            .overlay(RoundedRectangle(cornerRadius: 20).strokeBorder(.secondary, lineWidth: 2))
                     }
                     .buttonStyle(.plain)
                     .accessibilityLabel(AppLanguage.localized("game.celebration.home"))
@@ -165,13 +167,14 @@ private struct CelebrationCover: ViewModifier {
     }
 }
 
-/// Non-color cue for found/picked tiles: a solid checkmark, readable on any tint
+/// Non-color cue for found/picked tiles: a solid checkmark in the game's ink, readable on any tint
 /// (WCAG 1.4.1, conventions.md §4).
 struct CheckBadge: View {
     var body: some View {
         Image(systemName: "checkmark.circle.fill")
             .font(.title2)
-            .foregroundStyle(.white, .green)
+            // The game's ink behind a background-coloured tick: 3:1+ in both modes.
+            .foregroundStyle(Color(.systemBackground), .tint)
             .padding(6)
             .accessibilityHidden(true)
     }

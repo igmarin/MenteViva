@@ -95,12 +95,10 @@ struct CategoryFluencyView: View {
                                 .font(.system(size: 52))
                         }
                         .buttonStyle(
-                            AnswerTileStyle(
-                                tint: tile.isPicked ? .green.opacity(0.25) : .blue.opacity(0.15),
-                                minHeight: 100)
+                            AnswerTileStyle(strength: tile.isPicked ? 0.32 : 0.12, minHeight: 100)
                         )
                         // Non-color cue: picked tiles get a visible checkmark,
-                        // not just a green tint (WCAG 1.4.1, conventions.md §4).
+                        // not just a stronger tint (WCAG 1.4.1, conventions.md §4).
                         .overlay(alignment: .topTrailing) {
                             if tile.isPicked { CheckBadge() }
                         }
@@ -124,6 +122,7 @@ struct CategoryFluencyView: View {
         .padding()
         .fitOrScroll()
         .navigationTitle(AppLanguage.localized("game.category.title"))
+        .tint(GameID.categoryFluency.ink)
         .onAppear(perform: setup)
         .celebration(isPresented: $showCelebration, detail: finalDetail, onPlayAgain: restart)
     }

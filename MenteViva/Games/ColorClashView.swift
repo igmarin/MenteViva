@@ -136,6 +136,7 @@ struct ColorClashView: View {
         .padding()
         .fitOrScroll()
         .navigationTitle(AppLanguage.localized("game.colorclash.title"))
+        .tint(GameID.stroop.ink)
         .onAppear {
             startedAt = .now
             deal()

@@ -93,6 +93,7 @@ struct QuickEyesView: View {
         .padding()
         .fitOrScroll()
         .navigationTitle(AppLanguage.localized("game.quickeyes.title"))
+        .tint(GameID.quickEyes.ink)
         .onAppear(perform: startRound)
         .onDisappear { revealTask?.cancel() }
         // Same celebration as every other game (#45): progress, not points.

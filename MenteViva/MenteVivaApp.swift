@@ -69,5 +69,9 @@ private struct RootView: View {
         // setting; on raises the floor to xxxLarge but keeps larger system sizes.
         .dynamicTypeSize(biggerText ? .xxxLarge ... .accessibility5 : .xSmall ... .accessibility5)
         .environment(\.locale, AppLanguage.locale(for: appLanguage))
+        // Card Table theme: icon teal as the tint; each game re-tints its
+        // own screen with its ink. (Rounded type is set per text, not here:
+        // a root .fontDesign doesn't reach text that sets its own .font.)
+        .tint(.brand)
     }
 }

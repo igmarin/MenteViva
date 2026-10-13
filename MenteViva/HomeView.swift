@@ -35,7 +35,7 @@ struct HomeView: View {
                                 destination(for: game)
                             } label: {
                                 GameTile(
-                                    emoji: game.emoji, title: AppLanguage.localized(game.title),
+                                    emoji: game.emoji, title: AppLanguage.localized(game.title), ink: game.ink,
                                     isTodaysPick: todaysMix.contains(game))
                             }
                             .buttonStyle(.plain)
@@ -48,7 +48,7 @@ struct HomeView: View {
                         Label(AppLanguage.localized("history.title"), systemImage: "calendar")
                             .font(.title3.weight(.semibold))
                             .frame(maxWidth: .infinity, minHeight: 100)
-                            .background(.blue.opacity(0.12), in: .rect(cornerRadius: 16))
+                            .background(.tint.opacity(0.12), in: .rect(cornerRadius: 16))
                     }
                     .buttonStyle(.plain)
                     .accessibilityHint(AppLanguage.localized("home.week.hint"))
@@ -111,6 +111,8 @@ struct HomeView: View {
 private struct GameTile: View {
     let emoji: String
     let title: String
+    /// The game's own colour (Card Table theme); ContrastTests checks the badge on it.
+    let ink: Color
     let isTodaysPick: Bool
 
     var body: some View {
@@ -132,7 +134,7 @@ private struct GameTile: View {
         }
         .frame(maxWidth: .infinity, minHeight: 140)
         .padding(12)
-        .background(.blue.opacity(isTodaysPick ? 0.22 : 0.12), in: .rect(cornerRadius: 20))
+        .background(ink.opacity(isTodaysPick ? 0.22 : 0.12), in: .rect(cornerRadius: 20))
         .accessibilityElement(children: .combine)
         .accessibilityLabel(Text(title))
         .accessibilityValue(Text(isTodaysPick ? AppLanguage.localized("home.today.badge") : ""))

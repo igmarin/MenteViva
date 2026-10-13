@@ -17,4 +17,5 @@ MenteViva/Config/Local.xcconfig
 
 # Local tooling state
 node_modules/
+.omc/
 .atl/
