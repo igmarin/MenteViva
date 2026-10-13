@@ -18,6 +18,7 @@ screen of real content, split it — long docs don't get read.
 | [install-runbook.md](install-runbook.md) | Installing on a device with a free Apple ID (7-day expiry) | Current |
 | [device-support.md](device-support.md) | What hardware/OS we claim and what we verified | Living |
 | [decisions.md](decisions.md) | Every significant decision, with date and reason | Living log |
+| [design/](design/) | Card Table redesign: review of the current app and the round 2 spec (HTML, open in a browser) | Draft, 2026-10-12 |
 | [research-2026-09.md](research-2026-09.md) | Evidence + market scan behind the decisions | Snapshot |
 | [research-2026-09-22.md](research-2026-09-22.md) | Market and segment numbers (60+, caregivers, iOS floor) | Snapshot |
 | [statistics-rationale.md](statistics-rationale.md) | What our numbers support, and what copy may say | Current |

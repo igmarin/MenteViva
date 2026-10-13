@@ -1,0 +1,1008 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>MenteViva Card Table</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&family=Nunito:wght@500;600;700;800;900&family=Newsreader:opsz,wght@6..72,600;6..72,700&display=swap">
+<style>
+/* Layout: one spec column (max 1160px). Each section shows the app in phone or iPad frames first, then the rule it follows. */
+:root{
+  --bg:#F0F3F1; --surface:#FFFFFF; --fg:#13201D; --muted:#54625E; --line:#D2DAD5;
+  --accent:#1E5B57; --accent-soft:#DDEAE7; --amber-text:#8A4A0C; --amber-soft:#F6E6CB;
+  --bezel:#1B2523; --shadow:rgba(16,32,30,.28);
+  --f-display:"Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --f-body:"Hanken Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --f-mono:ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  /* app tokens: Card Table (in the app these are colour assets; fonts are New York + SF Pro Rounded) */
+  --a-bg:#EDF2EF; --a-card:#FFFFFF; --a-ink:#17262A; --a-ink2:#47585C;
+  --a-line:rgba(23,38,42,.10); --a-line-strong:rgba(23,38,42,.26); --a-glass:rgba(255,255,255,.78);
+  --a-teal:#1E5B57; --a-on-teal:#FFFFFF; --a-amber:#F2B24C; --a-amber-text:#8A4A0C; --a-on-amber:#2A1A05;
+  --a-cardback:#23685F; --a-cardback-2:#3E8579; --a-cardback-line:rgba(255,255,255,.35);
+  --a-table:linear-gradient(32deg,#2F7470 0%,#8DAF98 52%,#EDBB6C 100%);
+  --a-shadow:rgba(16,32,30,.28); --a-shadow-soft:rgba(16,32,30,.12);
+  --g-memory:#23685F; --g-clash:#B9442A; --g-herd:#56702A; --g-number:#37488A; --g-eyes:#93601A; --g-remember:#8C3B5A;
+  /* Color Clash stimulus inks: game content, identical in both themes */
+  --s-red:#C8372D; --s-blue:#2F62B5; --s-green:#2E8A46; --s-orange:#D9731A; --s-on:#FFFFFF;
+  --a-rounded:ui-rounded, "Nunito", system-ui, sans-serif;
+  --a-serif:ui-serif, "Newsreader", Georgia, serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1615; --surface:#16211F; --fg:#E7EEEB; --muted:#A2B1AC; --line:#2A3835;
+    --accent:#7CCBBE; --accent-soft:#183331; --amber-text:#F0B45A; --amber-soft:#3A2C17;
+    --bezel:#000000; --shadow:rgba(0,0,0,.6);
+    --a-bg:#111A19; --a-card:#1C2827; --a-ink:#EEF3F0; --a-ink2:#B4C2BE;
+    --a-line:rgba(238,243,240,.10); --a-line-strong:rgba(238,243,240,.28); --a-glass:rgba(40,54,52,.85);
+    --a-teal:#7CCBBE; --a-on-teal:#0E1E1C; --a-amber:#F0B45A; --a-amber-text:#F0B45A;
+    --a-cardback:#1F4F49; --a-cardback-2:#2E6B62; --a-cardback-line:rgba(255,255,255,.22);
+    --a-table:linear-gradient(32deg,#123F3C 0%,#2D4A3F 55%,#6A5024 100%);
+    --a-shadow:rgba(0,0,0,.6); --a-shadow-soft:rgba(0,0,0,.35);
+    --g-memory:#7CCBBE; --g-clash:#F29A80; --g-herd:#B4CF7E; --g-number:#A9B6F2; --g-eyes:#EDBE6E; --g-remember:#EBA0BD;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1615; --surface:#16211F; --fg:#E7EEEB; --muted:#A2B1AC; --line:#2A3835;
+  --accent:#7CCBBE; --accent-soft:#183331; --amber-text:#F0B45A; --amber-soft:#3A2C17;
+  --bezel:#000000; --shadow:rgba(0,0,0,.6);
+  --a-bg:#111A19; --a-card:#1C2827; --a-ink:#EEF3F0; --a-ink2:#B4C2BE;
+  --a-line:rgba(238,243,240,.10); --a-line-strong:rgba(238,243,240,.28); --a-glass:rgba(40,54,52,.85);
+  --a-teal:#7CCBBE; --a-on-teal:#0E1E1C; --a-amber:#F0B45A; --a-amber-text:#F0B45A;
+  --a-cardback:#1F4F49; --a-cardback-2:#2E6B62; --a-cardback-line:rgba(255,255,255,.22);
+  --a-table:linear-gradient(32deg,#123F3C 0%,#2D4A3F 55%,#6A5024 100%);
+  --a-shadow:rgba(0,0,0,.6); --a-shadow-soft:rgba(0,0,0,.35);
+  --g-memory:#7CCBBE; --g-clash:#F29A80; --g-herd:#B4CF7E; --g-number:#A9B6F2; --g-eyes:#EDBE6E; --g-remember:#EBA0BD;
+  color-scheme:dark;
+}
+/* forced app themes for the light/dark pair */
+.t-light{
+  --a-bg:#EDF2EF; --a-card:#FFFFFF; --a-ink:#17262A; --a-ink2:#47585C;
+  --a-line:rgba(23,38,42,.10); --a-line-strong:rgba(23,38,42,.26); --a-glass:rgba(255,255,255,.78);
+  --a-teal:#1E5B57; --a-on-teal:#FFFFFF; --a-amber:#F2B24C; --a-amber-text:#8A4A0C;
+  --a-table:linear-gradient(32deg,#2F7470 0%,#8DAF98 52%,#EDBB6C 100%);
+  --a-shadow:rgba(16,32,30,.28); --a-shadow-soft:rgba(16,32,30,.12);
+  --g-memory:#23685F; --g-clash:#B9442A; --g-herd:#56702A; --g-number:#37488A; --g-eyes:#93601A; --g-remember:#8C3B5A;
+}
+.t-dark{
+  --a-bg:#111A19; --a-card:#1C2827; --a-ink:#EEF3F0; --a-ink2:#B4C2BE;
+  --a-line:rgba(238,243,240,.10); --a-line-strong:rgba(238,243,240,.28); --a-glass:rgba(40,54,52,.85);
+  --a-teal:#7CCBBE; --a-on-teal:#0E1E1C; --a-amber:#F0B45A; --a-amber-text:#F0B45A;
+  --a-table:linear-gradient(32deg,#123F3C 0%,#2D4A3F 55%,#6A5024 100%);
+  --a-shadow:rgba(0,0,0,.6); --a-shadow-soft:rgba(0,0,0,.35);
+  --g-memory:#7CCBBE; --g-clash:#F29A80; --g-herd:#B4CF7E; --g-number:#A9B6F2; --g-eyes:#EDBE6E; --g-remember:#EBA0BD;
+}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font:16px/1.6 var(--f-body);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1160px;margin:0 auto;padding-inline:clamp(16px,4vw,40px);padding-block:44px 110px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0}
+h1{font-size:clamp(46px,6.4vw,74px);line-height:.92;letter-spacing:-.035em;font-weight:800}
+h2{font-size:clamp(28px,4vw,42px);line-height:1.04;letter-spacing:-.025em;font-weight:700}
+h3{font-size:20px;line-height:1.25;letter-spacing:-.01em;font-weight:700}
+p{margin:0;max-width:68ch}
+a{color:var(--accent);text-underline-offset:3px}
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+code{font-family:var(--f-mono);font-size:.86em;background:var(--accent-soft);padding:.1em .38em;border-radius:5px;overflow-wrap:anywhere}
+.eyebrow{font:700 12px/1 var(--f-body);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.lede{font-size:clamp(17px,1.6vw,20px);line-height:1.55}
+.muted{color:var(--muted)}
+section{padding-block:80px 0;display:grid;gap:30px;border-top:1px solid var(--line);margin-top:80px}
+.sec-head{display:grid;gap:12px;max-width:780px}
+figure{margin:0}
+figcaption{font:400 14.5px/1.55 var(--f-body);color:var(--fg);max-width:330px}
+figcaption b{display:block;font:700 17px/1.3 var(--f-display);margin-bottom:5px}
+.btn{font:700 14px/1 var(--f-body);padding:11px 16px;border-radius:999px;border:0;background:var(--accent);color:var(--bg);cursor:pointer}
+
+/* hero */
+.hero{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:clamp(28px,4vw,60px);align-items:center}
+.hero-text{display:grid;gap:22px;min-width:0}
+.lists{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:18px}
+.lists>div{display:grid;gap:10px;align-content:start}
+.lists ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.lists li{padding:10px 0 0;border-top:1px solid var(--line);font-size:15px;line-height:1.5}
+.lists li b{display:block}
+.tag{font:700 11px/1 var(--f-body);letter-spacing:.12em;text-transform:uppercase;padding:6px 9px;border-radius:999px;justify-self:start}
+.tag.d{background:var(--accent-soft);color:var(--accent)}
+.tag.f{background:var(--amber-soft);color:var(--amber-text)}
+
+/* galleries */
+.row-figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(330px,100%),1fr));gap:52px 24px;align-items:start}
+.row-figs figure{display:grid;gap:16px;justify-items:center}
+.small-figs{display:flex;flex-wrap:wrap;gap:34px 30px;align-items:flex-end}
+.small-figs figure{display:grid;gap:14px;justify-items:center}
+.small-figs figcaption{text-align:center;font-size:13.5px;max-width:170px}
+.small-figs figcaption b{font-size:15px}
+.deck{display:flex;flex-wrap:wrap;gap:22px;justify-content:center;padding:34px 16px;border-radius:26px;background:var(--a-table)}
+
+/* anatomy */
+.anat-wrap{display:grid;grid-template-columns:auto minmax(0,1fr);gap:48px;align-items:center}
+.anat{position:relative;justify-self:center;margin:14px}
+.mk{position:absolute;width:30px;height:30px;border-radius:50%;background:var(--fg);color:var(--bg);font:800 14px/30px var(--f-body);text-align:center;z-index:3}
+.parts{list-style:none;margin:0;padding:0;display:grid;gap:0;counter-reset:pt}
+.parts li{display:grid;grid-template-columns:42px minmax(0,1fr);gap:4px 12px;padding:14px 0;border-top:1px solid var(--line);counter-increment:pt}
+.parts li::before{content:counter(pt);width:30px;height:30px;border-radius:50%;background:var(--fg);color:var(--bg);font:800 14px/30px var(--f-body);text-align:center;grid-row:span 2}
+.parts b{font-family:var(--f-display);font-size:17px}
+.sizes{font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
+
+/* tables */
+.scrollx{overflow-x:auto;border:1px solid var(--line);border-radius:16px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:640px;font-size:14.5px}
+th,td{text-align:left;padding:11px 14px;vertical-align:top;border-top:1px solid var(--line)}
+thead th{border-top:0;font:700 11px/1.3 var(--f-body);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+td code{white-space:nowrap}
+.plan{list-style:none;margin:0;padding:0;counter-reset:s}
+.plan li{display:grid;grid-template-columns:48px minmax(0,1fr) auto;gap:6px 20px;padding:20px 0;border-top:1px solid var(--line);counter-increment:s;align-items:baseline}
+.plan li::before{content:counter(s);font:800 28px/1 var(--f-display);color:var(--accent)}
+.plan p{grid-column:2/3}
+.time{font:700 13px/1.3 var(--f-body);color:var(--amber-text);background:var(--amber-soft);padding:6px 10px;border-radius:8px;white-space:nowrap}
+.qs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(250px,100%),1fr));gap:14px;list-style:none;margin:0;padding:0}
+.qs li{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;display:grid;gap:6px}
+.qs b{font-family:var(--f-display);font-size:17px;line-height:1.3}
+
+/* motion */
+.motion{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(340px,100%),1fr));gap:28px}
+.mo{display:grid;gap:14px;align-content:start}
+.mo-top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.stage{position:relative;height:300px;width:100%;max-width:360px;justify-self:center;border-radius:24px;overflow:hidden;font-family:var(--a-rounded);color:var(--a-ink)}
+.spec-l{font-size:14px;color:var(--muted);display:grid;gap:4px}
+.spec-l b{color:var(--fg)}
+
+/* ---------- app: cards ---------- */
+.fc{width:118px;height:168px;background:var(--a-card);border-radius:16px;padding:6px;display:flex;flex-direction:column;gap:5px;box-shadow:0 12px 26px -12px var(--a-shadow),0 0 0 1px var(--a-line);color:var(--g);position:relative;flex:none;font-family:var(--a-rounded)}
+.fc .art{flex:1;min-height:0;border-radius:11px 11px 4px 4px;border:3px solid var(--g);background:color-mix(in srgb,var(--g) 12%,var(--a-card));display:grid;place-items:center}
+.fc .art svg{width:58px;height:58px;display:block}
+.fc .plate{height:42px;border-radius:4px 4px 11px 11px;background:var(--g);color:var(--a-card);display:grid;place-items:center;text-align:center;font-weight:800;font-size:16px;line-height:1.02;padding:0 5px}
+.fc.lg{width:180px;height:252px;border-radius:22px;padding:8px;gap:7px}
+.fc.lg .art{border-width:4px;border-radius:15px 15px 5px 5px}
+.fc.lg .art svg{width:92px;height:92px}
+.fc.lg .plate{height:58px;font-size:21px;border-radius:5px 5px 15px 15px}
+.fc.xl{width:240px;height:336px;border-radius:26px;padding:10px;gap:9px}
+.fc.xl .art{border-width:5px;border-radius:18px 18px 6px 6px}
+.fc.xl .art svg{width:124px;height:124px}
+.fc.xl .plate{height:74px;font-size:27px;border-radius:6px 6px 18px 18px}
+.fc.pressed{transform:scale(.96);box-shadow:0 4px 10px -6px var(--a-shadow),0 0 0 1px var(--a-line)}
+.badge{position:absolute;top:-11px;right:-11px;width:40px;height:40px;border-radius:50%;background:var(--a-amber);color:var(--a-on-amber);display:grid;place-items:center;box-shadow:0 4px 10px -4px var(--a-shadow);border:3px solid var(--a-card);z-index:2}
+.badge svg{width:19px;height:19px}
+.pcard{width:118px;height:168px;background:var(--a-card);border-radius:16px;padding:7px 7px 0;display:flex;flex-direction:column;box-shadow:0 12px 26px -12px var(--a-shadow),0 0 0 1px var(--a-line);color:var(--g);font-family:var(--a-rounded)}
+.pcard .art{flex:1;border-radius:11px;background:color-mix(in srgb,var(--g) 15%,var(--a-card));display:grid;place-items:center}
+.pcard .art svg{width:58px;height:58px}
+.pcard .plate{height:42px;display:grid;place-items:center;text-align:center;font-weight:800;font-size:15px;line-height:1.05}
+.icard{width:118px;height:168px;background:var(--a-card);border-radius:16px;box-shadow:0 12px 26px -12px var(--a-shadow),0 0 0 1px var(--a-line);color:var(--g);position:relative;display:grid;place-items:center;font-family:var(--a-rounded)}
+.icard .ix{position:absolute;width:24px;height:24px}
+.icard .tl{top:9px;left:9px}
+.icard .br{bottom:9px;right:9px;transform:rotate(180deg)}
+.icard .mid{display:grid;justify-items:center;gap:8px}
+.icard .mid svg{width:52px;height:52px}
+.icard .mid b{font-size:14px;font-weight:800;color:var(--a-ink);text-align:center;line-height:1.05;max-width:80px}
+.chipf{width:56px;height:56px;border-radius:15px;border:3px solid var(--g);background:color-mix(in srgb,var(--g) 12%,var(--a-card));display:grid;place-items:center;flex:none;color:var(--g)}
+.chipf svg{width:36px;height:36px}
+.mini{width:32px;height:44px;border-radius:7px;background:var(--g);border:2px solid var(--a-card);box-shadow:0 2px 5px var(--a-shadow-soft)}
+
+/* ---------- app: phone ---------- */
+.phone{--z:.78;zoom:var(--z);width:402px;height:874px;border-radius:58px;background:var(--a-bg);color:var(--a-ink);font-family:var(--a-rounded);position:relative;overflow:hidden;flex:none;box-shadow:0 0 0 11px var(--bezel),0 40px 70px -30px var(--shadow);margin:11px;isolation:isolate;text-align:left;line-height:1.25}
+.phone svg{display:block}
+.sb{height:54px;display:flex;align-items:center;justify-content:space-between;padding:8px 34px 0 50px;font-weight:700;font-size:17px;position:relative;z-index:2}
+.bat{width:27px;height:13px;border:1.5px solid currentColor;border-radius:4px;position:relative;opacity:.9}
+.bat::after{content:"";position:absolute;inset:1.5px 4px 1.5px 1.5px;background:currentColor;border-radius:2px}
+.hi{position:absolute;bottom:9px;left:50%;transform:translateX(-50%);width:140px;height:5px;border-radius:3px;background:var(--a-ink);opacity:.85;z-index:3}
+.scr{padding:0 20px;position:relative;z-index:1}
+.col{display:flex;flex-direction:column;height:820px;padding-bottom:40px}
+.col .bottom{margin-top:auto}
+.fade::after{content:"";position:absolute;left:0;right:0;bottom:0;height:90px;background:linear-gradient(to bottom,transparent,var(--a-bg));z-index:2;pointer-events:none}
+.gl{width:52px;height:52px;border-radius:50%;background:var(--a-glass);border:1px solid var(--a-line-strong);display:grid;place-items:center;color:var(--a-ink);box-shadow:0 3px 10px var(--a-shadow-soft);flex:none}
+.gl svg{width:22px;height:22px}
+.topline{display:flex;justify-content:space-between;align-items:center;margin-top:4px}
+.date{font-size:18px;font-weight:700;color:var(--a-ink2)}
+.a-greet{font:700 36px/1.08 var(--a-serif);margin-top:10px;letter-spacing:-.01em}
+.a-sub{font-size:21px;color:var(--a-ink2);margin-top:6px;font-weight:600;max-width:none}
+.table{margin-top:16px;border-radius:30px;background:var(--a-table);padding:22px 18px 18px;display:grid;gap:16px}
+.hand{display:flex;justify-content:center;align-items:flex-end;height:184px}
+.hand .fc{margin:0 -5px}
+.hand .fc:nth-child(1){transform:rotate(-7deg) translateY(8px)}
+.hand .fc:nth-child(3){transform:rotate(7deg) translateY(8px)}
+.hand .fc.done{transform:rotate(-15deg) translate(-14px,18px)}
+.a-btn{min-height:100px;border-radius:26px;display:flex;align-items:center;justify-content:center;gap:14px;font-weight:800;font-size:22px;padding:0 18px;text-align:center}
+.a-btn.paper{background:var(--a-card);color:var(--a-teal);box-shadow:0 10px 24px -14px var(--a-shadow)}
+.a-btn.solid{background:var(--a-teal);color:var(--a-on-teal)}
+.a-btn.line{border:2px solid var(--a-line-strong);color:var(--a-ink)}
+.a-btn svg{width:24px;height:24px;flex:none}
+.playdot{width:46px;height:46px;border-radius:50%;background:var(--a-teal);color:var(--a-on-teal);display:grid;place-items:center;flex:none}
+.playdot svg{width:20px;height:20px}
+.a-label{font-weight:800;font-size:20px;margin:24px 4px 12px}
+.games{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.gt{min-height:108px;border-radius:22px;background:var(--a-card);display:flex;align-items:center;gap:12px;padding:12px 14px;box-shadow:0 0 0 1px var(--a-line)}
+.gt b{color:var(--a-ink);font-size:18px;line-height:1.15;font-weight:800}
+.wkcard{margin-top:14px;background:var(--a-card);border-radius:24px;padding:14px 10px 12px;box-shadow:0 0 0 1px var(--a-line)}
+.wkcard .h{display:flex;justify-content:space-between;align-items:center;font-weight:800;font-size:19px;padding:0 8px 10px}
+.wkcard .h svg{width:18px;height:18px;color:var(--a-ink2)}
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.day{display:grid;justify-items:center;gap:6px;font-size:14px;color:var(--a-ink2);font-weight:700}
+.slot{width:40px;height:54px;border-radius:9px;border:2px dashed var(--a-line-strong);position:relative}
+.slot.p{border:none}
+.slot .m{position:absolute;width:30px;height:42px;border-radius:7px;background:var(--g);left:5px;top:6px;box-shadow:0 2px 5px var(--a-shadow-soft);border:2px solid var(--a-card)}
+.slot .m:nth-child(2){transform:rotate(-11deg) translate(-4px,-2px)}
+.slot .m:nth-child(3){transform:rotate(10deg) translate(4px,-1px)}
+.day.now{color:var(--a-ink)}
+.day.now .slot{outline:3px solid var(--a-amber);outline-offset:3px;border-radius:9px}
+.week.sm .slot{width:36px;height:48px}
+.week.sm .slot .m{width:26px;height:36px}
+.pile{position:relative;height:190px}
+.pile .fc{position:absolute;left:50%;top:8px;margin-left:-59px}
+.pile .fc:nth-child(1){transform:rotate(-9deg) translate(-8px,4px)}
+.pile .fc:nth-child(2){transform:rotate(6deg) translate(8px,2px)}
+.hrow{display:flex;align-items:center;gap:14px;background:var(--a-card);border-radius:20px;padding:8px 14px 8px 8px;min-height:104px;box-shadow:0 0 0 1px var(--a-line)}
+.hrow .art{width:88px;height:88px;border-radius:14px;border:3px solid var(--g);background:color-mix(in srgb,var(--g) 12%,var(--a-card));display:grid;place-items:center;flex:none;color:var(--g)}
+.hrow .art svg{width:56px;height:56px}
+.hrow b{font-size:28px;font-weight:900;color:var(--a-ink);line-height:1.05}
+
+/* game screens */
+.ghead{display:grid;grid-template-columns:52px 1fr 52px;align-items:center;gap:8px;margin-top:6px}
+.ghead .t{text-align:center;font-weight:800;font-size:20px;line-height:1.1}
+.prompt{margin-top:16px;background:var(--a-card);border-radius:28px;padding:20px 18px 20px;text-align:center;box-shadow:0 0 0 1px var(--a-line);display:grid;gap:6px;justify-items:center}
+.prompt .ins{font-size:22px;color:var(--a-ink2);font-weight:700;line-height:1.2}
+.prompt .big{font:700 46px/1.05 var(--a-serif);color:var(--a-ink)}
+.prompt .eq{font:700 84px/1 var(--a-serif);color:var(--a-ink);margin:4px 0}
+.pips{display:flex;gap:6px;justify-content:center;margin-top:8px}
+.pips i{width:20px;height:28px;border-radius:5px;border:2px solid color-mix(in srgb,var(--g) 38%,transparent)}
+.pips i.done{background:var(--g);border-color:var(--g)}
+.pips i.now{border:3px solid var(--g)}
+.pips-l{font-size:19px;color:var(--a-ink2);font-weight:700}
+.note{background:color-mix(in srgb,var(--a-amber) 24%,var(--a-card));color:var(--a-amber-text);border-radius:14px;padding:10px 14px;font-size:19px;font-weight:800}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
+.tile{height:104px;border-radius:22px;background:var(--a-card);display:grid;place-items:center;font-size:46px;box-shadow:0 0 0 1px var(--a-line);position:relative}
+.tile.on{background:color-mix(in srgb,var(--g) 20%,var(--a-card));box-shadow:0 0 0 3px var(--g)}
+.chk{position:absolute;top:7px;right:7px;width:28px;height:28px;border-radius:50%;background:var(--g);color:var(--a-card);display:grid;place-items:center}
+.chk svg{width:16px;height:16px}
+.ans{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.an{height:146px;border-radius:26px;background:var(--a-card);display:grid;place-items:center;font-weight:900;font-size:54px;box-shadow:0 0 0 2px color-mix(in srgb,var(--g) 30%,transparent);position:relative}
+.an.emo{font-size:66px;font-weight:400}
+.an.ok{background:color-mix(in srgb,var(--g) 18%,var(--a-card));box-shadow:0 0 0 4px var(--g)}
+.an.cc{color:var(--s-on);box-shadow:none}
+.an.cc svg{width:58px;height:58px}
+.stim{display:flex;gap:14px;align-items:center;font-weight:900;font-size:64px;line-height:1;margin:8px 0 2px}
+.stim svg{width:48px;height:48px}
+.mm{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.mc{height:140px;border-radius:20px;position:relative;display:grid;place-items:center;font-size:62px}
+.mc.back{background:radial-gradient(circle at 50% 50%,var(--a-amber) 0 13px,transparent 14px),linear-gradient(160deg,var(--a-cardback-2),var(--a-cardback));box-shadow:0 8px 18px -10px var(--a-shadow)}
+.mc.back::before{content:"";position:absolute;inset:9px;border-radius:13px;border:1.5px solid var(--a-cardback-line)}
+.mc.face{background:var(--a-card);box-shadow:0 0 0 1px var(--a-line),0 8px 18px -10px var(--a-shadow)}
+.mc.found{background:color-mix(in srgb,var(--g) 16%,var(--a-card));box-shadow:0 0 0 3px var(--g)}
+.photo{margin-top:14px;background:var(--a-card);border-radius:26px;padding:10px;box-shadow:0 0 0 1px var(--a-line),0 14px 30px -18px var(--a-shadow)}
+.photo .img{height:300px;border-radius:17px;border:4px solid var(--g);background:radial-gradient(circle at 74% 26%,#FCE3A4 0 26px,transparent 27px),radial-gradient(120% 70% at 20% 100%,#6E8F63 0 46%,transparent 47%),radial-gradient(110% 60% at 85% 100%,#557A55 0 44%,transparent 45%),linear-gradient(#9EC6CC,#F2D6AE)}
+.ask{font:700 36px/1.1 var(--a-serif);text-align:center;margin-top:18px}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:var(--a-bg);border-radius:38px 38px 0 0;padding:26px 20px 36px;display:grid;gap:12px}
+.sheet .h{font:700 36px/1.05 var(--a-serif);color:var(--a-ink)}
+.sheet .d{font-size:21px;color:var(--a-ink2);font-weight:700}
+.celebrate{background:var(--a-table)}
+.today-pill{margin:10px auto 0;width:max-content;background:var(--a-card);color:var(--a-ink);border-radius:999px;padding:10px 16px;font-weight:800;font-size:17px;display:flex;gap:10px;align-items:center}
+.today-pill i{width:14px;height:20px;border-radius:4px;border:2px solid var(--a-line-strong);display:inline-block}
+.today-pill i.done{background:var(--a-teal);border-color:var(--a-teal)}
+.bigcard{position:absolute;left:50%;top:126px;transform:translateX(-50%) rotate(-4deg)}
+.stamp{position:absolute;bottom:-16px;left:50%;transform:translateX(-50%) rotate(6deg);background:var(--a-amber);color:var(--a-on-amber);font-weight:900;font-size:16px;padding:9px 14px;border-radius:12px;white-space:nowrap;box-shadow:0 8px 16px -8px var(--a-shadow)}
+.wk-title{font:700 36px/1.08 var(--a-serif);margin-top:14px}
+.wk-sum{font-size:21px;font-weight:700;color:var(--a-ink2);margin-top:6px}
+.wk-board{margin-top:16px;background:var(--a-card);border-radius:26px;padding:18px 10px 16px;box-shadow:0 0 0 1px var(--a-line)}
+.rows{display:grid;gap:10px}
+.row{display:flex;gap:14px;align-items:center;background:var(--a-card);border-radius:22px;padding:14px 16px;min-height:100px;box-shadow:0 0 0 1px var(--a-line)}
+.row p{color:var(--a-ink);font-size:19px;font-weight:700;line-height:1.3}
+
+/* ---------- app: iPad ---------- */
+.ipad-wrap{overflow-x:auto;padding:4px 0 10px}
+.ipad{--zi:.62;zoom:var(--zi);width:1210px;height:834px;border-radius:44px;background:var(--a-bg);color:var(--a-ink);font-family:var(--a-rounded);box-shadow:0 0 0 14px var(--bezel),0 50px 90px -40px var(--shadow);margin:16px auto;position:relative;overflow:hidden;line-height:1.25}
+.ipad svg{display:block}
+.isb{height:34px;display:flex;justify-content:space-between;align-items:center;padding:8px 36px 0;font-weight:700;font-size:15px}
+.ibody{display:grid;grid-template-columns:590px 1fr;gap:32px;padding:6px 36px 0}
+.ipad .table{padding:28px 24px 24px;gap:22px}
+.ipad .hand{height:270px}
+.ipad .hand .fc{margin:0 -8px}
+.ipad .hand .fc:nth-child(1){transform:rotate(-7deg) translateY(12px)}
+.ipad .hand .fc:nth-child(3){transform:rotate(7deg) translateY(12px)}
+.ipad .a-greet{font-size:46px}
+.ipad .a-sub{font-size:24px}
+.itop{display:flex;justify-content:space-between;align-items:center;margin-top:4px}
+.igrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.itile{min-height:150px;border-radius:24px;background:var(--a-card);box-shadow:0 0 0 1px var(--a-line);display:grid;justify-items:start;align-content:space-between;padding:16px}
+.itile .chipf{width:64px;height:64px}
+.itile .chipf svg{width:42px;height:42px}
+.itile b{font-size:20px;font-weight:800;line-height:1.15}
+.ipad .wkcard{margin-top:20px}
+.ipad .week .slot{width:52px;height:68px}
+.ipad .week .slot .m{width:38px;height:52px;left:7px}
+
+/* motion stages */
+.deal-s{background:var(--a-table)}
+.deal-s .fc{position:absolute;left:50%;top:62px;margin-left:-59px}
+.deal-s .c1{translate:-104px 14px;rotate:-8deg}
+.deal-s .c3{translate:104px 14px;rotate:8deg}
+.flip-s{background:var(--a-bg);display:grid;place-items:center;perspective:900px}
+.flipcard{width:180px;height:150px;position:relative;transform-style:preserve-3d;transition:transform .32s cubic-bezier(.3,.7,.3,1)}
+.flipcard.on{transform:rotateY(180deg)}
+.flipcard .mc{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.flipcard .face{transform:rotateY(180deg)}
+.land-s{background:var(--a-table)}
+.land-s .fly{position:absolute;left:50%;top:18px;margin-left:-63px;width:126px;height:176px;rotate:-4deg}
+.land-s .fly .plate{font-size:16px}
+.land-s .lw{position:absolute;left:12px;right:12px;bottom:12px;background:var(--a-card);border-radius:18px;padding:12px 6px 10px}
+.land-s .sun .m{display:none}
+@media (prefers-reduced-motion: no-preference){
+  .run.deal-s .fc{animation:dealIn .62s cubic-bezier(.2,.9,.25,1.15) backwards}
+  .run.deal-s .c2{animation-delay:.07s}
+  .run.deal-s .c3{animation-delay:.14s}
+  .run.land-s .fly{animation:landIn 1s cubic-bezier(.45,0,.25,1) forwards}
+  .hero .hand .fc{animation:dealIn .7s cubic-bezier(.2,.9,.25,1.15) backwards}
+  .hero .hand .fc:nth-child(2){animation-delay:.08s}
+  .hero .hand .fc:nth-child(3){animation-delay:.16s}
+}
+@media (prefers-reduced-motion: reduce){
+  .run.deal-s .fc{animation:fadeIn .3s both}
+  .run.land-s .fly{animation:fadeOut .3s forwards}
+  .flipcard{transition:none}
+}
+.run.land-s .sun .slot{border:none}
+.run.land-s .sun .m{display:block}
+@media (prefers-reduced-motion: no-preference){ .run.land-s .sun .m{animation:pop .35s .75s both} }
+@media (prefers-reduced-motion: reduce){ .run.land-s .sun .m{animation:fadeIn .3s .2s both} }
+@keyframes dealIn{from{translate:0 230px;rotate:0deg}}
+@keyframes landIn{0%{translate:0 0;scale:1}72%{translate:140px 125px;scale:.22;rotate:0deg;opacity:1}100%{translate:140px 125px;scale:.22;rotate:0deg;opacity:0}}
+@keyframes pop{from{scale:0}}
+@keyframes fadeIn{from{opacity:0}}
+@keyframes fadeOut{to{opacity:0}}
+
+@media (max-width:1020px){
+  .hero{grid-template-columns:minmax(0,1fr)}
+  .hero .phone-fig{justify-self:center}
+  .anat-wrap{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:760px){ .ipad{--zi:.5} }
+@media (max-width:560px){
+  .plan li{grid-template-columns:36px minmax(0,1fr)}
+  .plan .time{grid-column:2/3;justify-self:start}
+  .ipad{--zi:.42}
+}
+@media (max-width:440px){ .phone{--z:.72} .fc.xl{zoom:.85} }
+@media (max-width:380px){ .phone{--z:.62} }
+@media (max-width:330px){ .phone{--z:.54} }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="e-memory" viewBox="0 0 64 64"><rect x="9" y="12" width="28" height="38" rx="5" transform="rotate(-12 23 31)" fill="currentColor" opacity=".35"/><rect x="25" y="13" width="28" height="38" rx="5" transform="rotate(9 39 32)" fill="currentColor"/><circle cx="39" cy="32" r="5.5" style="fill:var(--a-amber)"/></symbol>
+    <symbol id="e-clash" viewBox="0 0 64 64"><circle cx="24" cy="25" r="13" style="fill:var(--s-red)" opacity=".92"/><circle cx="40" cy="25" r="13" style="fill:var(--a-amber)" opacity=".92"/><circle cx="32" cy="40" r="13" style="fill:var(--s-blue)" opacity=".88"/></symbol>
+    <symbol id="e-herd" viewBox="0 0 64 64"><path d="M7 20V51H43V20" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="16" cy="41" r="6" fill="currentColor"/><circle cx="31" cy="41" r="6" fill="currentColor"/><circle cx="23.5" cy="29" r="6" fill="currentColor"/><circle cx="54" cy="22" r="6" style="fill:var(--a-amber)"/></symbol>
+    <symbol id="e-number" viewBox="0 0 64 64"><path d="M14 50 C26 50 23 32 33 32 S44 14 52 14" fill="none" stroke="currentColor" stroke-width="3" stroke-dasharray="1 6" stroke-linecap="round"/><circle cx="14" cy="50" r="7.5" fill="currentColor"/><circle cx="33" cy="32" r="7.5" fill="currentColor"/><circle cx="52" cy="14" r="7.5" style="fill:var(--a-amber)"/></symbol>
+    <symbol id="e-eyes" viewBox="0 0 64 64"><path d="M6 32 Q32 8 58 32 Q32 56 6 32Z" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linejoin="round"/><circle cx="32" cy="32" r="10" fill="currentColor"/><circle cx="36" cy="28" r="3" style="fill:var(--a-amber)"/></symbol>
+    <symbol id="e-remember" viewBox="0 0 64 64"><rect x="10" y="12" width="44" height="40" rx="5" fill="none" stroke="currentColor" stroke-width="3.5"/><path d="M14 48 L27 33 L35 41 L41 35 L50 48Z" fill="currentColor"/><circle cx="44" cy="22" r="4.5" style="fill:var(--a-amber)"/></symbol>
+    <symbol id="i-gear" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3.2"/><circle cx="12" cy="12" r="7"/><path d="M12 2.5v2.3M12 19.2v2.3M2.5 12h2.3M19.2 12h2.3M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></g></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><path d="M15 4.5 7.5 12 15 19.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-more" viewBox="0 0 24 24"><path d="M9 4.5 16.5 12 9 19.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-speak" viewBox="0 0 24 24"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor"/><path d="M15.5 9a4.5 4.5 0 0 1 0 6M18 6.5a8 8 0 0 1 0 11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/></symbol>
+    <symbol id="i-share" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5v11M8 7.5l4-4 4 4"/><path d="M7.5 10.5H6a1.5 1.5 0 0 0-1.5 1.5v7A1.5 1.5 0 0 0 6 20.5h12a1.5 1.5 0 0 0 1.5-1.5v-7a1.5 1.5 0 0 0-1.5-1.5h-1.5"/></g></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5.5 12.5 10 17l8.5-9.5" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h13M13 6.5 18.5 12 13 17.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="s-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="currentColor"/></symbol>
+    <symbol id="s-tri" viewBox="0 0 24 24"><path d="M12 3.5 21 19.5H3z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></symbol>
+    <symbol id="s-square" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3" fill="currentColor"/></symbol>
+    <symbol id="s-diamond" viewBox="0 0 24 24"><rect x="5.5" y="5.5" width="13" height="13" rx="2.5" transform="rotate(45 12 12)" fill="currentColor"/></symbol>
+  </defs>
+</svg>
+
+<div class="wrap">
+
+<header class="hero">
+  <div class="hero-text">
+    <div class="eyebrow">MenteViva · Direction A · round 2 · 12 Oct 2026</div>
+    <h1>Card Table</h1>
+    <p class="lede">You picked the Card Table. This round defines the card itself, gives Home a state for every part of the day, lays out iPad, and seats all six games at the table. It ends with the SwiftUI pieces, the new EN + ES strings, and a build order.</p>
+    <div class="lists">
+      <div>
+        <span class="tag d">Defaults I chose</span>
+        <ul>
+          <li><b>Framed card faces</b>The name sits on a band in the game's colour. Two other faces are below if you prefer one.</li>
+          <li><b>Today's three run back to back</b>“Back to the table” stays one tap away at every step.</li>
+          <li><b>Emblems drawn in SwiftUI</b>Plain shapes, so no illustrator or image files are needed to ship.</li>
+        </ul>
+      </div>
+      <div>
+        <span class="tag f">Fixed since round 1</span>
+        <ul>
+          <li><b>Name plates are easier to read</b>Was 15pt coloured text on white. Now 16pt on a solid band, 5.4–8.6:1.</li>
+          <li><b>My Week has a door on Home</b>A week board sits right under today's table.</li>
+          <li><b>Home knows when he's done</b>The cards stack up and the week fills in.</li>
+          <li><b>Name the Herd's emblem makes sense</b>Three in the pen, one left out.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <figure class="phone-fig">
+    <div class="phone fade" id="home-fresh" role="img" aria-label="Home in the morning: date and settings button, Good morning, today's three framed cards on the table with a Play today's three button, a This week board, and the start of All games.">
+      <div class="sb"><span>9:41</span><span class="bat"></span></div>
+      <div class="scr">
+        <div class="topline"><span class="date">Sunday, 11 October</span><span class="gl"><svg><use href="#i-gear"/></svg></span></div>
+        <div class="a-greet">Good morning</div>
+        <p class="a-sub">Your three games are ready.</p>
+        <div class="table">
+          <div class="hand">
+            <div class="fc" style="--g:var(--g-memory)"><div class="art"><svg><use href="#e-memory"/></svg></div><div class="plate">Memory Lane</div></div>
+            <div class="fc" style="--g:var(--g-herd)"><div class="art"><svg><use href="#e-herd"/></svg></div><div class="plate">Name the Herd</div></div>
+            <div class="fc" style="--g:var(--g-eyes)"><div class="art"><svg><use href="#e-eyes"/></svg></div><div class="plate">Quick Eyes</div></div>
+          </div>
+          <div class="a-btn paper"><span class="playdot"><svg><use href="#i-play"/></svg></span>Play today's three</div>
+        </div>
+        <div class="wkcard">
+          <div class="h"><span>This week</span><svg><use href="#i-more"/></svg></div>
+          <div class="week sm">
+            <div class="day"><span class="slot p"><i class="m" style="--g:var(--g-memory)"></i><i class="m" style="--g:var(--g-clash)"></i></span>Mon</div>
+            <div class="day"><span class="slot"></span>Tue</div>
+            <div class="day"><span class="slot p"><i class="m" style="--g:var(--g-number)"></i></span>Wed</div>
+            <div class="day"><span class="slot p"><i class="m" style="--g:var(--g-eyes)"></i><i class="m" style="--g:var(--g-memory)"></i><i class="m" style="--g:var(--g-herd)"></i></span>Thu</div>
+            <div class="day"><span class="slot"></span>Fri</div>
+            <div class="day"><span class="slot"></span>Sat</div>
+            <div class="day now"><span class="slot"></span>Sun</div>
+          </div>
+        </div>
+        <div class="a-label">All games</div>
+        <div class="games">
+          <div class="gt" style="--g:var(--g-memory)"><span class="chipf"><svg><use href="#e-memory"/></svg></span><b>Memory Lane</b></div>
+          <div class="gt" style="--g:var(--g-clash)"><span class="chipf"><svg><use href="#e-clash"/></svg></span><b>Color Clash</b></div>
+        </div>
+      </div>
+      <div class="hi"></div>
+    </div>
+  </figure>
+</header>
+
+<section id="card">
+  <div class="sec-head">
+    <div class="eyebrow">1 · The card</div>
+    <h2>One object carries every game</h2>
+    <p class="muted">The same card appears on Home, at the end of a game and in My Week. Only its size changes.</p>
+  </div>
+  <div class="anat-wrap">
+    <div class="anat">
+      <div class="fc xl" style="--g:var(--g-memory)"><div class="art"><svg><use href="#e-memory"/></svg></div><div class="plate">Memory Lane</div></div>
+      <span class="mk" style="top:-12px;left:-12px">1</span>
+      <span class="mk" style="top:128px;left:-14px">2</span>
+      <span class="mk" style="top:96px;right:46px">3</span>
+      <span class="mk" style="bottom:30px;right:-14px">4</span>
+    </div>
+    <div style="display:grid;gap:16px;min-width:0">
+      <ol class="parts">
+        <li><b>Paper</b><span>Same white as every surface, continuous corners, a soft shadow so it lies on the table.</span></li>
+        <li><b>Frame</b><span>A 3pt line in the game's ink. You can tell the game apart before reading anything.</span></li>
+        <li><b>Emblem</b><span>Plain geometry in the game's ink with one amber accent. Drawn with SwiftUI shapes.</span></li>
+        <li><b>Name plate</b><span>Paper-coloured 16pt heavy text on solid ink, up to two lines. Contrast 5.4–8.6:1 in both themes.</span></li>
+      </ol>
+      <p class="sizes">Sizes in points: hand 118 × 168 · big 180 × 252 · list chip 56 · week 32 × 44. Every tappable size stays at or above 100pt.</p>
+    </div>
+  </div>
+
+  <h3>Three faces. Framed is the default.</h3>
+  <div class="small-figs">
+    <figure>
+      <div class="pcard" style="--g:var(--g-memory)"><div class="art"><svg><use href="#e-memory"/></svg></div><div class="plate">Memory Lane</div></div>
+      <figcaption><b>Paper</b>Round 1's face. Calm, but the name is thin colour on white.</figcaption>
+    </figure>
+    <figure>
+      <div class="fc" style="--g:var(--g-memory)"><div class="art"><svg><use href="#e-memory"/></svg></div><div class="plate">Memory Lane</div></div>
+      <figcaption><b>Framed · default</b>The band carries the colour and reads at arm's length. Close to lotería without depending on it.</figcaption>
+    </figure>
+    <figure>
+      <div class="icard" style="--g:var(--g-memory)"><svg class="ix tl"><use href="#e-memory"/></svg><div class="mid"><svg><use href="#e-memory"/></svg><b>Memory Lane</b></div><svg class="ix br"><use href="#e-memory"/></svg></div>
+      <figcaption><b>Index</b>Most like a playing card. The corner marks add detail but no meaning.</figcaption>
+    </figure>
+  </div>
+
+  <h3>The deck</h3>
+  <div class="deck" role="img" aria-label="All six game cards in the framed style on the table gradient.">
+    <div class="fc" style="--g:var(--g-memory)"><div class="art"><svg><use href="#e-memory"/></svg></div><div class="plate">Memory Lane</div></div>
+    <div class="fc" style="--g:var(--g-clash)"><div class="art"><svg><use href="#e-clash"/></svg></div><div class="plate">Color Clash</div></div>
+    <div class="fc" style="--g:var(--g-herd)"><div class="art"><svg><use href="#e-herd"/></svg></div><div class="plate">Name the Herd</div></div>
+    <div class="fc" style="--g:var(--g-number)"><div class="art"><svg><use href="#e-number"/></svg></div><div class="plate">Number Trail</div></div>
+    <div class="fc" style="--g:var(--g-eyes)"><div class="art"><svg><use href="#e-eyes"/></svg></div><div class="plate">Quick Eyes</div></div>
+    <div class="fc" style="--g:var(--g-remember)"><div class="art"><svg><use href="#e-remember"/></svg></div><div class="plate">Remember Together</div></div>
+  </div>
+
+  <h3>States and sizes</h3>
+  <div class="small-figs">
+    <figure><div class="fc" style="--g:var(--g-herd)"><div class="art"><svg><use href="#e-herd"/></svg></div><div class="plate">Name the Herd</div></div><figcaption><b>Ready</b>Dealt today, waiting to be played</figcaption></figure>
+    <figure><div class="fc pressed" style="--g:var(--g-herd)"><div class="art"><svg><use href="#e-herd"/></svg></div><div class="plate">Name the Herd</div></div><figcaption><b>Pressed</b>Sinks 4% and the shadow tightens, plus a light haptic</figcaption></figure>
+    <figure><div class="fc" style="--g:var(--g-herd)"><div class="art"><svg><use href="#e-herd"/></svg></div><div class="plate">Name the Herd</div><span class="badge"><svg><use href="#i-check"/></svg></span></div><figcaption><b>Played today</b>Amber check badge. The card is never greyed out.</figcaption></figure>
+    <figure><span class="chipf" style="--g:var(--g-herd)"><svg><use href="#e-herd"/></svg></span><figcaption><b>Chip</b>Lists and progress rows</figcaption></figure>
+    <figure><span class="mini" style="--g:var(--g-herd);display:block"></span><figcaption><b>Week</b>Colour plus position in a dated slot</figcaption></figure>
+  </div>
+</section>
+
+<section id="home">
+  <div class="sec-head">
+    <div class="eyebrow">2 · Home through the day</div>
+    <h2>Home always has one obvious next step</h2>
+    <p class="muted">The morning state is at the top of the page. These are the rest of the day, the largest text size, and both themes side by side.</p>
+  </div>
+  <div class="row-figs">
+    <figure>
+      <div class="phone fade" role="img" aria-label="Home after one game: Good afternoon, One down, two to go, Memory Lane card set aside with a check badge, the other two in hand, and a Keep going: Name the Herd button.">
+        <div class="sb"><span>9:41</span><span class="bat"></span></div>
+        <div class="scr">
+          <div class="topline"><span class="date">Sunday, 11 October</span><span class="gl"><svg><use href="#i-gear"/></svg></span></div>
+          <div class="a-greet">Good afternoon</div>
+          <p class="a-sub">One down, two to go.</p>
+          <div class="table">
+            <div class="hand">
+              <div class="fc done" style="--g:var(--g-memory)"><div class="art"><svg><use href="#e-memory"/></svg></div><div class="plate">Memory Lane</div><span class="badge"><svg><use href="#i-check"/></svg></span></div>
+              <div class="fc" style="--g:var(--g-herd)"><div class="art"><svg><use href="#e-herd"/></svg></div><div class="plate">Name the Herd</div></div>
+              <div class="fc" style="--g:var(--g-eyes)"><div class="art"><svg><use href="#e-eyes"/></svg></div><div class="plate">Quick Eyes</div></div>
+            </div>
+            <div class="a-btn paper"><span class="playdot"><svg><use href="#i-play"/></svg></span>Keep going: Name the Herd</div>
+          </div>
+          <div class="wkcard">
+            <div class="h"><span>This week</span><svg><use href="#i-more"/></svg></div>
+            <div class="week sm">
+              <div class="day"><span class="slot p"><i class="m" style="--g:var(--g-memory)"></i><i class="m" style="--g:var(--g-clash)"></i></span>Mon</div>
+              <div class="day"><span class="slot"></span>Tue</div>
+              <div class="day"><span class="slot p"><i class="m" style="--g:var(--g-number)"></i></span>Wed</div>
+              <div class="day"><span class="slot p"><i class="m" style="--g:var(--g-eyes)"></i><i class="m" style="--g:var(--g-memory)"></i><i class="m" style="--g:var(--g-herd)"></i></span>Thu</div>
+              <div class="day"><span class="slot"></span>Fri</div>
+              <div class="day"><span class="slot"></span>Sat</div>
+              <div class="day now"><span class="slot p"><i class="m" style="--g:var(--g-memory)"></i></span>Sun</div>
+            </div>
+          </div>
+        </div>
+        <div class="hi"></div>
+      </div>
+      <figcaption><b>After one game</b>The played card tips aside with its check. The button names the next game, so he never has to pick.</figcaption>
+    </figure>
+
+    <figure>
+      <div class="phone fade" role="img" aria-label="Home when today's three are done: Good evening, a message saying they're done, the three cards in a tidy pile with a check, the week board with three cards on Sunday, and All games below.">
+        <div class="sb"><span>9:41</span><span class="bat"></span></div>
+        <div class="scr">
+          <div class="topline"><span class="date">Sunday, 11 October</span><span class="gl"><svg><use href="#i-gear"/></svg></span></div>
+          <div class="a-greet">Good evening</div>
+          <p class="a-sub">Today's three are done. See you tomorrow!</p>
+          <div class="table">
+            <div class="pile">
+              <div class="fc" style="--g:var(--g-memory)"><div class="art"><svg><use href="#e-memory"/></svg></div><div class="plate">Memory Lane</div></div>
+              <div class="fc" style="--g:var(--g-herd)"><div class="art"><svg><use href="#e-herd"/></svg></div><div class="plate">Name the Herd</div></div>
+              <div class="fc" style="--g:var(--g-eyes)"><div class="art"><svg><use href="#e-eyes"/></svg></div><div class="plate">Quick Eyes</div><span class="badge"><svg><use href="#i-check"/></svg></span></div>
+            </div>
+            <div class="wkcard" style="margin-top:0">
+              <div class="h"><span>This week</span><svg><use href="#i-more"/></svg></div>
+              <div class="week sm">
+                <div class="day"><span class="slot p"><i class="m" style="--g:var(--g-memory)"></i><i class="m" style="--g:var(--g-clash)"></i></span>Mon</div>
+                <div class="day"><span class="slot"></span>Tue</div>
+                <div class="day"><span class="slot p"><i class="m" style="--g:var(--g-number)"></i></span>Wed</div>
+                <div class="day"><span class="slot p"><i class="m" style="--g:var(--g-eyes)"></i><i class="m" style="--g:var(--g-memory)"></i><i class="m" style="--g:var(--g-herd)"></i></span>Thu</div>
+                <div class="day"><span class="slot"></span>Fri</div>
+                <div class="day"><span class="slot"></span>Sat</div>
+                <div class="day now"><span class="slot p"><i class="m" style="--g:var(--g-memory)"></i><i class="m" style="--g:var(--g-herd)"></i><i class="m" style="--g:var(--g-eyes)"></i></span>Sun</div>
+              </div>
+            </div>
+          </div>
+          <div class="a-label">All games</div>
+          <div class="games">
+            <div class="gt" style="--g:var(--g-memory)"><span class="chipf"><svg><use href="#e-memory"/></svg></span><b>Memory Lane</b></div>
+            <div class="gt" style="--g:var(--g-clash)"><span class="chipf"><svg><use href="#e-clash"/></svg></span><b>Color Clash</b></div>
+          </div>
+        </div>
+        <div class="hi"></div>
+      </div>
+      <figcaption><b>All three done</b>No big button: today is finished. The week board moves onto the table as the reward, and every game is still one scroll away.</figcaption>
+    </figure>
+
+    <figure>
+      <div class="phone fade" role="img" aria-label="Home at the largest text size: a bigger greeting, today's three as full-width rows with framed art and large names, and a Play today's three button.">
+        <div class="sb"><span>9:41</span><span class="bat"></span></div>
+        <div class="scr">
+          <div class="topline"><span class="date" style="font-size:22px">Sun, 11 Oct</span><span class="gl"><svg><use href="#i-gear"/></svg></span></div>
+          <div class="a-greet" style="font-size:48px">Good morning</div>
+          <p class="a-sub" style="font-size:27px">Your three games are ready.</p>
+          <div class="table" style="gap:10px;padding:14px">
+            <div class="hrow" style="--g:var(--g-memory)"><span class="art"><svg><use href="#e-memory"/></svg></span><b>Memory Lane</b></div>
+            <div class="hrow" style="--g:var(--g-herd)"><span class="art"><svg><use href="#e-herd"/></svg></span><b>Name the Herd</b></div>
+            <div class="hrow" style="--g:var(--g-eyes)"><span class="art"><svg><use href="#e-eyes"/></svg></span><b>Quick Eyes</b></div>
+            <div class="a-btn paper" style="font-size:27px;min-height:112px"><span class="playdot"><svg><use href="#i-play"/></svg></span>Play today's three</div>
+          </div>
+        </div>
+        <div class="hi"></div>
+      </div>
+      <figcaption><b>Largest text size</b>At accessibility sizes the fan becomes a stack of full-width rows, the same switch #117 already makes for game tiles.</figcaption>
+    </figure>
+
+    <figure><div id="pair-light"></div><figcaption><b>Light</b>Paper on mist, teal actions, amber only for “today” and “done”.</figcaption></figure>
+    <figure><div id="pair-dark"></div><figcaption><b>Dark</b>The table becomes a night version of the icon. Game inks lighten to stay above 7:1 on paper.</figcaption></figure>
+  </div>
+</section>
+
+<section id="ipad">
+  <div class="sec-head">
+    <div class="eyebrow">3 · iPad</div>
+    <h2>Two columns: today on the left, everything else on the right</h2>
+    <p class="muted">iPad Pro 11-inch, landscape. In portrait, the right column moves below the table, which matches the iPhone order.</p>
+  </div>
+  <div class="ipad-wrap">
+    <div class="ipad" role="img" aria-label="iPad Home in landscape: left column with greeting, today's three large cards and Play button; right column with six game tiles in a three-column grid and the week board.">
+      <div class="isb"><span>9:41&nbsp;&nbsp;Sun 11 Oct</span><span class="bat"></span></div>
+      <div class="ibody">
+        <div>
+          <div class="date" style="margin-top:6px">Sunday, 11 October</div>
+          <div class="a-greet">Good morning</div>
+          <p class="a-sub">Your three games are ready.</p>
+          <div class="table" style="margin-top:22px">
+            <div class="hand">
+              <div class="fc lg" style="--g:var(--g-memory)"><div class="art"><svg><use href="#e-memory"/></svg></div><div class="plate">Memory Lane</div></div>
+              <div class="fc lg" style="--g:var(--g-herd)"><div class="art"><svg><use href="#e-herd"/></svg></div><div class="plate">Name the Herd</div></div>
+              <div class="fc lg" style="--g:var(--g-eyes)"><div class="art"><svg><use href="#e-eyes"/></svg></div><div class="plate">Quick Eyes</div></div>
+            </div>
+            <div class="a-btn paper"><span class="playdot"><svg><use href="#i-play"/></svg></span>Play today's three</div>
+          </div>
+        </div>
+        <div>
+          <div class="itop"><span class="a-label" style="margin:0">All games</span><span class="gl"><svg><use href="#i-gear"/></svg></span></div>
+          <div class="igrid" style="margin-top:14px">
+            <div class="itile" style="--g:var(--g-memory)"><span class="chipf"><svg><use href="#e-memory"/></svg></span><b>Memory Lane</b></div>
+            <div class="itile" style="--g:var(--g-clash)"><span class="chipf"><svg><use href="#e-clash"/></svg></span><b>Color Clash</b></div>
+            <div class="itile" style="--g:var(--g-herd)"><span class="chipf"><svg><use href="#e-herd"/></svg></span><b>Name the Herd</b></div>
+            <div class="itile" style="--g:var(--g-number)"><span class="chipf"><svg><use href="#e-number"/></svg></span><b>Number Trail</b></div>
+            <div class="itile" style="--g:var(--g-eyes)"><span class="chipf"><svg><use href="#e-eyes"/></svg></span><b>Quick Eyes</b></div>
+            <div class="itile" style="--g:var(--g-remember)"><span class="chipf"><svg><use href="#e-remember"/></svg></span><b>Remember Together</b></div>
+          </div>
+          <div class="wkcard">
+            <div class="h"><span>This week</span><svg><use href="#i-more"/></svg></div>
+            <div class="week">
+              <div class="day"><span class="slot p"><i class="m" style="--g:var(--g-memory)"></i><i class="m" style="--g:var(--g-clash)"></i></span>Mon</div>
+              <div class="day"><span class="slot"></span>Tue</div>
+              <div class="day"><span class="slot p"><i class="m" style="--g:var(--g-number)"></i></span>Wed</div>
+              <div class="day"><span class="slot p"><i class="m" style="--g:var(--g-eyes)"></i><i class="m" style="--g:var(--g-memory)"></i><i class="m" style="--g:var(--g-herd)"></i></span>Thu</div>
+              <div class="day"><span class="slot"></span>Fri</div>
+              <div class="day"><span class="slot"></span>Sat</div>
+              <div class="day now"><span class="slot"></span>Sun</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="hi"></div>
+    </div>
+  </div>
+</section>
+
+<section id="games">
+  <div class="sec-head">
+    <div class="eyebrow">4 · Every game at the table</div>
+    <h2>Six games, one header, the task in front</h2>
+    <p class="muted">Every game uses the same header: back, the game's name, and a speaker that reads the instruction aloud. Progress is a row of small cards in the game's ink, with words at full contrast. Answers sit low, within thumb reach.</p>
+  </div>
+  <div class="row-figs">
+    <figure>
+      <div class="phone" role="img" aria-label="Memory Lane: header, the instruction Find the matching pairs, four progress cards with one filled, and eight cards: a found pair of coffee cups, one teapot face up and five teal card backs.">
+        <div class="sb"><span>9:41</span><span class="bat"></span></div>
+        <div class="scr" style="--g:var(--g-memory)">
+          <div class="ghead"><span class="gl"><svg><use href="#i-back"/></svg></span><span class="t">Memory Lane</span><span class="gl"><svg><use href="#i-speak"/></svg></span></div>
+          <div class="prompt" style="padding-block:16px 18px">
+            <span class="ins" style="color:var(--a-ink)">Find the matching pairs</span>
+            <div class="pips"><i class="done"></i><i class="now"></i><i></i><i></i></div>
+          </div>
+          <div class="mm">
+            <div class="mc found">☕️<span class="chk"><svg><use href="#i-check"/></svg></span></div>
+            <div class="mc back"></div>
+            <div class="mc face">🫖</div>
+            <div class="mc back"></div>
+            <div class="mc back"></div>
+            <div class="mc found">☕️<span class="chk"><svg><use href="#i-check"/></svg></span></div>
+            <div class="mc back"></div>
+            <div class="mc back"></div>
+          </div>
+        </div>
+        <div class="hi"></div>
+      </div>
+      <figcaption><b>Memory Lane</b>Card backs become the icon's card: teal, an inset line, one amber dot. Photos and emoji themes stay as they are.</figcaption>
+    </figure>
+
+    <figure>
+      <div class="phone" role="img" aria-label="Color Clash: header, instruction card with the word BLUE written in red ink next to a red circle, ten progress cards with three filled, and four colour answer cards with white shapes.">
+        <div class="sb"><span>9:41</span><span class="bat"></span></div>
+        <div class="scr col" style="--g:var(--g-clash)">
+          <div class="ghead"><span class="gl"><svg><use href="#i-back"/></svg></span><span class="t">Color Clash</span><span class="gl"><svg><use href="#i-speak"/></svg></span></div>
+          <div class="prompt">
+            <span class="ins">Tap the color of the ink, not the word</span>
+            <span class="stim" style="color:var(--s-red)">BLUE<svg><use href="#s-circle"/></svg></span>
+            <div class="pips"><i class="done"></i><i class="done"></i><i class="done"></i><i class="now"></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            <span class="pips-l">Round 4 of 10</span>
+          </div>
+          <div class="ans bottom">
+            <div class="an cc" style="background:var(--s-red)"><svg><use href="#s-circle"/></svg></div>
+            <div class="an cc" style="background:var(--s-blue)"><svg><use href="#s-tri"/></svg></div>
+            <div class="an cc" style="background:var(--s-green)"><svg><use href="#s-square"/></svg></div>
+            <div class="an cc" style="background:var(--s-orange)"><svg><use href="#s-diamond"/></svg></div>
+          </div>
+        </div>
+        <div class="hi"></div>
+      </div>
+      <figcaption><b>Color Clash</b>The game's own four inks stay pure and separate from the app palette. Shapes stay, so colour is never the only cue.</figcaption>
+    </figure>
+
+    <figure>
+      <div class="phone" role="img" aria-label="Name the Herd: header, prompt card Tap all that belong to Colors with seven progress cards, three filled, and twelve tiles, three of them marked found.">
+        <div class="sb"><span>9:41</span><span class="bat"></span></div>
+        <div class="scr" style="--g:var(--g-herd)">
+          <div class="ghead"><span class="gl"><svg><use href="#i-back"/></svg></span><span class="t">Name the Herd</span><span class="gl"><svg><use href="#i-speak"/></svg></span></div>
+          <div class="prompt">
+            <span class="ins">Tap all that belong to</span>
+            <span class="big">Colors</span>
+            <div class="pips"><i class="done"></i><i class="done"></i><i class="done"></i><i class="now"></i><i></i><i></i><i></i></div>
+            <span class="pips-l">3 of 7 found</span>
+          </div>
+          <div class="tiles">
+            <div class="tile">🟠</div><div class="tile">🐶</div><div class="tile">🍇</div>
+            <div class="tile on">🔵<span class="chk"><svg><use href="#i-check"/></svg></span></div><div class="tile on">🟡<span class="chk"><svg><use href="#i-check"/></svg></span></div><div class="tile">🟤</div>
+            <div class="tile">🟣</div><div class="tile">🐢</div><div class="tile">🍌</div>
+            <div class="tile on">🟢<span class="chk"><svg><use href="#i-check"/></svg></span></div><div class="tile">🍑</div><div class="tile">🔴</div>
+          </div>
+        </div>
+        <div class="hi"></div>
+      </div>
+      <figcaption><b>Name the Herd</b>Found tiles get the game's ink, a 3pt ring and a check. Three cues, none of them colour alone.</figcaption>
+    </figure>
+
+    <figure>
+      <div class="phone" role="img" aria-label="Number Trail: header, prompt card Tap the correct answer with 9 + 1 in large serif numerals, progress cards, and four answer cards; 10 is marked correct with a check.">
+        <div class="sb"><span>9:41</span><span class="bat"></span></div>
+        <div class="scr col" style="--g:var(--g-number)">
+          <div class="ghead"><span class="gl"><svg><use href="#i-back"/></svg></span><span class="t">Number Trail</span><span class="gl"><svg><use href="#i-speak"/></svg></span></div>
+          <div class="prompt">
+            <span class="ins">Tap the correct answer</span>
+            <span class="eq">9 + 1</span>
+            <div class="pips"><i class="done"></i><i class="now"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            <span class="pips-l">Round 2 of 10</span>
+          </div>
+          <div class="ans bottom">
+            <div class="an ok">10<span class="chk"><svg><use href="#i-check"/></svg></span></div>
+            <div class="an">12</div>
+            <div class="an">7</div>
+            <div class="an">9</div>
+          </div>
+        </div>
+        <div class="hi"></div>
+      </div>
+      <figcaption><b>Number Trail</b>The sum gets the serif, set large like a printed puzzle book. A right answer holds its check for half a second before the next round.</figcaption>
+    </figure>
+
+    <figure>
+      <div class="phone" role="img" aria-label="Quick Eyes after a miss: header, an amber note reading Almost, let's slow down a touch, the question Which one did you see?, progress cards, and four picture answers.">
+        <div class="sb"><span>9:41</span><span class="bat"></span></div>
+        <div class="scr col" style="--g:var(--g-eyes)">
+          <div class="ghead"><span class="gl"><svg><use href="#i-back"/></svg></span><span class="t">Quick Eyes</span><span class="gl"><svg><use href="#i-speak"/></svg></span></div>
+          <div class="prompt">
+            <span class="note">Almost — let's slow down a touch</span>
+            <span class="big" style="font-size:38px">Which one did you see?</span>
+            <div class="pips"><i class="done"></i><i class="done"></i><i class="done"></i><i class="done"></i><i class="now"></i><i></i><i></i><i></i><i></i><i></i></div>
+            <span class="pips-l">Round 5 of 10</span>
+          </div>
+          <div class="ans bottom">
+            <div class="an emo">🌻</div>
+            <div class="an emo">🍎</div>
+            <div class="an emo">🐟</div>
+            <div class="an emo">☂️</div>
+          </div>
+        </div>
+        <div class="hi"></div>
+      </div>
+      <figcaption><b>Quick Eyes, after a miss</b>The existing “Almost” line gets a soft amber note instead of secondary grey, so the kindest sentence on screen is also easy to read.</figcaption>
+    </figure>
+
+    <figure>
+      <div class="phone" role="img" aria-label="Remember Together: header, two progress cards, a family photo in a plum frame, the question Who is this?, and a Show me button.">
+        <div class="sb"><span>9:41</span><span class="bat"></span></div>
+        <div class="scr col" style="--g:var(--g-remember)">
+          <div class="ghead"><span class="gl"><svg><use href="#i-back"/></svg></span><span class="t">Remember Together</span><span class="gl"><svg><use href="#i-speak"/></svg></span></div>
+          <div class="pips" style="margin-top:14px"><i class="now"></i><i></i></div>
+          <div class="photo"><div class="img" role="img" aria-label="Family photo placeholder"></div></div>
+          <div class="ask">Who is this?</div>
+          <div class="a-btn solid bottom">Show me</div>
+        </div>
+        <div class="hi"></div>
+      </div>
+      <figcaption><b>Remember Together</b>The photo sits in a framed card like the game cards. The family's caption appears in the serif after “Show me”.</figcaption>
+    </figure>
+
+    <figure>
+      <div class="phone celebrate" role="img" aria-label="End of a game: a pill showing 2 of 3 today, the Name the Herd card tilted with an Added to your week stamp, and a sheet with Well done, the week board, and buttons Next: Quick Eyes and Back to the table.">
+        <div class="sb"><span>9:41</span><span class="bat"></span></div>
+        <div class="today-pill"><i class="done"></i><i class="done"></i><i></i>2 of 3 today</div>
+        <div class="bigcard"><div class="fc lg" style="--g:var(--g-herd)"><div class="art"><svg><use href="#e-herd"/></svg></div><div class="plate">Name the Herd</div></div><span class="stamp">Added to your week</span></div>
+        <div class="sheet">
+          <div class="h">Well done!</div>
+          <p class="d">You found 7 of them!</p>
+          <div class="week sm">
+            <div class="day"><span class="slot p"><i class="m" style="--g:var(--g-memory)"></i><i class="m" style="--g:var(--g-clash)"></i></span>Mon</div>
+            <div class="day"><span class="slot"></span>Tue</div>
+            <div class="day"><span class="slot p"><i class="m" style="--g:var(--g-number)"></i></span>Wed</div>
+            <div class="day"><span class="slot p"><i class="m" style="--g:var(--g-eyes)"></i><i class="m" style="--g:var(--g-memory)"></i><i class="m" style="--g:var(--g-herd)"></i></span>Thu</div>
+            <div class="day"><span class="slot"></span>Fri</div>
+            <div class="day"><span class="slot"></span>Sat</div>
+            <div class="day now"><span class="slot p"><i class="m" style="--g:var(--g-memory)"></i><i class="m" style="--g:var(--g-herd)"></i></span>Sun</div>
+          </div>
+          <div class="a-btn solid">Next: Quick Eyes <svg><use href="#i-arrow"/></svg></div>
+          <div class="a-btn line">Back to the table</div>
+        </div>
+      </div>
+      <figcaption><b>End of a game</b>The card lands on today. During today's three the main button names the next game; outside it, the button reads “Play again”.</figcaption>
+    </figure>
+
+    <figure>
+      <div class="phone" role="img" aria-label="My Week: back and share buttons, the title My Week, a summary line, a board of seven day slots with stacked cards on four days, and three progress rows.">
+        <div class="sb"><span>9:41</span><span class="bat"></span></div>
+        <div class="scr">
+          <div class="topline"><span class="gl"><svg><use href="#i-back"/></svg></span><span class="gl"><svg><use href="#i-share"/></svg></span></div>
+          <div class="wk-title">My Week</div>
+          <p class="wk-sum">You played 9 times this week! 🌟</p>
+          <div class="wk-board"><div class="week">
+            <div class="day"><span class="slot p"><i class="m" style="--g:var(--g-memory)"></i><i class="m" style="--g:var(--g-clash)"></i></span>Mon</div>
+            <div class="day"><span class="slot"></span>Tue</div>
+            <div class="day"><span class="slot p"><i class="m" style="--g:var(--g-number)"></i></span>Wed</div>
+            <div class="day"><span class="slot p"><i class="m" style="--g:var(--g-eyes)"></i><i class="m" style="--g:var(--g-memory)"></i><i class="m" style="--g:var(--g-herd)"></i></span>Thu</div>
+            <div class="day"><span class="slot"></span>Fri</div>
+            <div class="day"><span class="slot"></span>Sat</div>
+            <div class="day now"><span class="slot p"><i class="m" style="--g:var(--g-memory)"></i><i class="m" style="--g:var(--g-herd)"></i><i class="m" style="--g:var(--g-eyes)"></i></span>Sun</div>
+          </div></div>
+          <div class="a-label">Your games this week</div>
+          <div class="rows">
+            <div class="row" style="--g:var(--g-memory)"><span class="chipf"><svg><use href="#e-memory"/></svg></span><p>Memory Lane: steady and strong this week.</p></div>
+            <div class="row" style="--g:var(--g-herd)"><span class="chipf"><svg><use href="#e-herd"/></svg></span><p>Name the Herd got a little more challenging, and you're ready for it.</p></div>
+            <div class="row" style="--g:var(--g-eyes)"><span class="chipf"><svg><use href="#e-eyes"/></svg></span><p>Quick Eyes: steady and strong this week.</p></div>
+          </div>
+        </div>
+        <div class="hi"></div>
+      </div>
+      <figcaption><b>My Week</b>The board is the same one as on Home, larger. Empty days are a dashed outline, never a red mark. Progress lines are your existing strings.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section id="motion">
+  <div class="sec-head">
+    <div class="eyebrow">5 · Motion</div>
+    <h2>Three moments, each one short</h2>
+    <p class="muted">Press the buttons to play them. With Reduce Motion on, each one becomes a short fade, and these demos follow your device's setting too.</p>
+  </div>
+  <div class="motion">
+    <div class="mo">
+      <div class="mo-top"><h3>Deal</h3><button class="btn" type="button" data-replay="st-deal">Replay deal</button></div>
+      <div class="stage deal-s" id="st-deal" role="img" aria-label="Three cards rising from the table into a fan.">
+        <div class="fc c1" style="--g:var(--g-memory)"><div class="art"><svg><use href="#e-memory"/></svg></div><div class="plate">Memory Lane</div></div>
+        <div class="fc c2" style="--g:var(--g-herd)"><div class="art"><svg><use href="#e-herd"/></svg></div><div class="plate">Name the Herd</div></div>
+        <div class="fc c3" style="--g:var(--g-eyes)"><div class="art"><svg><use href="#e-eyes"/></svg></div><div class="plate">Quick Eyes</div></div>
+      </div>
+      <div class="spec-l"><span><b>When:</b> Home appears, once per day</span><span><b>How:</b> spring, 0.6s, cards 70ms apart, one light haptic</span></div>
+    </div>
+    <div class="mo">
+      <div class="mo-top"><h3>Flip</h3><button class="btn" type="button" data-flip="st-flip">Flip card</button></div>
+      <div class="stage flip-s" role="img" aria-label="A Memory Lane card turning over from its teal back to a teapot.">
+        <div class="flipcard" id="st-flip"><div class="mc back"></div><div class="mc face">🫖</div></div>
+      </div>
+      <div class="spec-l"><span><b>When:</b> a Memory Lane card is tapped</span><span><b>How:</b> turn on the Y axis, 0.32s ease-out, today it swaps instantly</span></div>
+    </div>
+    <div class="mo">
+      <div class="mo-top"><h3>Land</h3><button class="btn" type="button" data-replay="st-land">Replay landing</button></div>
+      <div class="stage land-s" id="st-land" role="img" aria-label="A finished game's card shrinking into Sunday's slot on the week board.">
+        <div class="fc fly" style="--g:var(--g-herd)"><div class="art"><svg><use href="#e-herd"/></svg></div><div class="plate">Name the Herd</div></div>
+        <div class="lw"><div class="week sm">
+          <div class="day"><span class="slot p"><i class="m" style="--g:var(--g-memory)"></i></span>Mon</div>
+          <div class="day"><span class="slot"></span>Tue</div>
+          <div class="day"><span class="slot p"><i class="m" style="--g:var(--g-number)"></i></span>Wed</div>
+          <div class="day"><span class="slot"></span>Thu</div>
+          <div class="day"><span class="slot"></span>Fri</div>
+          <div class="day"><span class="slot"></span>Sat</div>
+          <div class="day now sun"><span class="slot"><i class="m" style="--g:var(--g-herd)"></i></span>Sun</div>
+        </div></div>
+      </div>
+      <div class="spec-l"><span><b>When:</b> the end-of-game screen opens</span><span><b>How:</b> 1s ease, then the success haptic as it lands</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="build">
+  <div class="sec-head">
+    <div class="eyebrow">6 · Build spec</div>
+    <h2>Seven pieces, no dependencies</h2>
+    <p class="muted">SwiftUI and colour assets only, per conventions §1. Each piece replaces something that exists today.</p>
+  </div>
+  <div class="scrollx">
+    <table>
+      <thead><tr><th>Piece</th><th>What it is</th><th>Replaces</th></tr></thead>
+      <tbody>
+        <tr><td><code>Theme</code></td><td>Colour assets with light and dark values; <code>.fontDesign(.rounded)</code> at the root, <code>.serif</code> on greetings and titles</td><td>The nine pale blue, green and grey tints; default fonts</td></tr>
+        <tr><td><code>Emblem</code></td><td>Six small SwiftUI shape drawings, one per game</td><td><code>GameID.emoji</code></td></tr>
+        <tr><td><code>GameCard</code></td><td>One view, four sizes: hand, big, chip, week. States: ready, pressed, played today</td><td><code>GameTile</code> in HomeView</td></tr>
+        <tr><td><code>TableBackground</code></td><td>The icon gradient, light and dark</td><td>Plain background</td></tr>
+        <tr><td><code>GameHeader</code></td><td>Back, game name, read-aloud via <code>CaptionSpeaker</code>, progress cards with RoundCounter's VoiceOver label</td><td><code>.navigationTitle</code>, <code>RoundCounter</code></td></tr>
+        <tr><td><code>TodayRun</code></td><td>Pure logic: which of today's games comes next and when the day is done. Tested first, Given/When/Then</td><td>Nothing (new)</td></tr>
+        <tr><td><code>WeekBoard</code></td><td>Seven dated slots of week cards, built from <code>DayGrouping</code></td><td>Top of HistoryView's list</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>New strings, EN and ES (Spanish is a draft for review)</h3>
+  <div class="scrollx">
+    <table>
+      <thead><tr><th>Key</th><th>English</th><th>Español</th></tr></thead>
+      <tbody>
+        <tr><td><code>home.greeting.morning</code></td><td>Good morning</td><td>Buenos días</td></tr>
+        <tr><td><code>home.greeting.afternoon</code></td><td>Good afternoon</td><td>Buenas tardes</td></tr>
+        <tr><td><code>home.greeting.evening</code></td><td>Good evening</td><td>Buenas noches</td></tr>
+        <tr><td><code>home.today.ready</code></td><td>Your three games are ready.</td><td>Tus tres juegos están listos.</td></tr>
+        <tr><td><code>home.today.play</code></td><td>Play today's three</td><td>Jugar los tres de hoy</td></tr>
+        <tr><td><code>home.today.onedone</code></td><td>One down, two to go.</td><td>Uno listo, faltan dos.</td></tr>
+        <tr><td><code>home.today.twodone</code></td><td>Two down, one to go.</td><td>Dos listos, falta uno.</td></tr>
+        <tr><td><code>home.today.continue %@</code></td><td>Keep going: %@</td><td>Seguimos con: %@</td></tr>
+        <tr><td><code>home.today.done</code></td><td>Today's three are done. See you tomorrow!</td><td>¡Listos los tres de hoy! Hasta mañana.</td></tr>
+        <tr><td><code>home.week.title</code></td><td>This week</td><td>Esta semana</td></tr>
+        <tr><td><code>home.allgames</code></td><td>All games</td><td>Todos los juegos</td></tr>
+        <tr><td><code>game.celebration.added</code></td><td>Added to your week</td><td>Añadido a tu semana</td></tr>
+        <tr><td><code>game.celebration.next %@</code></td><td>Next: %@</td><td>Siguiente: %@</td></tr>
+        <tr><td><code>game.celebration.table</code></td><td>Back to the table</td><td>Volver a la mesa</td></tr>
+        <tr><td><code>game.category.found %lld %lld</code></td><td>%1$lld of %2$lld found</td><td>%1$lld de %2$lld encontrados</td></tr>
+        <tr><td><code>game.celebration.today %lld %lld</code></td><td>%1$lld of %2$lld today</td><td>%1$lld de %2$lld hoy</td></tr>
+        <tr><td><code>game.readaloud</code></td><td>Read aloud</td><td>Leer en voz alta</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Build order</h3>
+  <ol class="plan">
+    <li><h3>Theme</h3><span class="time">½ day</span><p>Colour assets, root font design, swap the nine tints. Every screen changes character in one small PR.</p></li>
+    <li><h3>Emblem and GameCard</h3><span class="time">1 day</span><p><code>GameID</code> gains an ink and an emblem. Home's tiles become cards.</p></li>
+    <li><h3>GameHeader in all six games</h3><span class="time">1 day</span><p>Large titles go; the read-aloud button and progress cards arrive. The amber “Almost” note goes in here too.</p></li>
+    <li><h3>Home: table, TodayRun, iPad</h3><span class="time">2 days</span><p>Three states, the week board, and the two-column iPad layout from <code>horizontalSizeClass</code>. TodayRun tests come first. Run <code>tools/generate_project.swift</code> for the new files.</p></li>
+    <li><h3>End of game and My Week</h3><span class="time">2 days</span><p>Card lands on today, Next button during today's three, WeekBoard on top of My Week. The share text stays as it is.</p></li>
+  </ol>
+  <p class="muted">About 6½ working days in total. Not covered yet: Settings and For family. They keep the system list style and only pick up the theme.</p>
+</section>
+
+<section id="decide">
+  <div class="sec-head">
+    <div class="eyebrow">Round 3</div>
+    <h2>Three questions before building</h2>
+  </div>
+  <ul class="qs">
+    <li><b>Framed, Paper or Index faces?</b><span class="muted">Framed is the default throughout this page.</span></li>
+    <li><b>Greet him by name?</b><span class="muted">“Buenos días, papá”: one optional field in For family.</span></li>
+    <li><b>Start with step 1?</b><span class="muted">Half a day. It changes every screen and is easy to undo.</span></li>
+  </ul>
+  <p class="muted" style="font-size:13.5px">Round 1, with the current screenshots and award references: <a href="2026-10-12-review.html">MenteViva Redesign</a>.</p>
+</section>
+
+</div>
+
+<script>
+(function(){
+  function clone(slotId, cls, label){
+    try{
+      var src=document.getElementById('home-fresh'), slot=document.getElementById(slotId);
+      if(!src||!slot) return;
+      var c=src.cloneNode(true); c.removeAttribute('id'); c.classList.add(cls); c.setAttribute('aria-label',label);
+      slot.replaceWith(c);
+    }catch(e){}
+  }
+  clone('pair-light','t-light','Home in the morning, light theme.');
+  clone('pair-dark','t-dark','Home in the morning, dark theme.');
+  document.querySelectorAll('[data-replay]').forEach(function(b){
+    b.addEventListener('click',function(){
+      var t=document.getElementById(b.getAttribute('data-replay')); if(!t) return;
+      t.classList.remove('run'); void t.offsetWidth; t.classList.add('run');
+    });
+  });
+  document.querySelectorAll('[data-flip]').forEach(function(b){
+    b.addEventListener('click',function(){
+      var t=document.getElementById(b.getAttribute('data-flip')); if(t) t.classList.toggle('on');
+    });
+  });
+})();
+</script>
+
+</html>
