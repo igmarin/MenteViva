@@ -49,8 +49,15 @@ final class SayingsDeckTests: XCTestCase {
         }
     }
 
+    /// A game played to the end: every round's saying is marked seen as it is completed.
+    private func play(seed: UInt64) -> [SayingRound] {
+        let rounds = deal(seed: seed)
+        for round in rounds { SayingsDeck.markSeen(round.saying, defaults: defaults) }
+        return rounds
+    }
+
     func testGivenSevenGamesWhenDealingThen56DifferentSayingsAndNoRepeat() {
-        let seen = (1...7).flatMap { deal(seed: UInt64($0)).map(\.saying) }
+        let seen = (1...7).flatMap { play(seed: UInt64($0)).map(\.saying) }
         XCTAssertEqual(seen.count, 56)
         XCTAssertEqual(Set(seen).count, 56)
     }
@@ -59,7 +66,7 @@ final class SayingsDeckTests: XCTestCase {
         defaults.set(Sayings.all.prefix(56).map(\.id), forKey: SayingsDeck.seenKey)
         let rounds = deal()
         XCTAssertEqual(Set(rounds.map(\.saying)).count, 8)
-        XCTAssertEqual(defaults.array(forKey: SayingsDeck.seenKey) as? [Int], rounds.map(\.saying.id))
+        XCTAssertEqual(defaults.array(forKey: SayingsDeck.seenKey) as? [Int], [])
     }
 
     func testGivenHardWhenThreeSameThemeSayingsExistThenDistractorsShareTheTheme() {
@@ -70,9 +77,29 @@ final class SayingsDeckTests: XCTestCase {
         }
     }
 
-    func testGivenADealThenSeenIDsArePersistedUnderSeenKey() {
+    func testGivenARoundCompletedWhenMarkedThenItsIDIsPersistedUnderSeenKey() {
         let rounds = deal()
-        XCTAssertEqual(defaults.array(forKey: SayingsDeck.seenKey) as? [Int], rounds.map(\.saying.id))
+        SayingsDeck.markSeen(rounds[0].saying, defaults: defaults)
+        SayingsDeck.markSeen(rounds[1].saying, defaults: defaults)
+        XCTAssertEqual(defaults.array(forKey: SayingsDeck.seenKey) as? [Int], [rounds[0].saying.id, rounds[1].saying.id])
+    }
+
+    func testGivenAGameLeftEarlyWhenDealingAgainThenUnplayedSayingsAreStillUnseen() {
+        let first = deal(seed: 1)
+        SayingsDeck.markSeen(first[0].saying, defaults: defaults)  // he finished one round, then left
+        let seen = Set(defaults.array(forKey: SayingsDeck.seenKey) as? [Int] ?? [])
+        XCTAssertEqual(seen, [first[0].saying.id])
+        // Only the finished round counts as seen; the seven he never reached stay in the pool.
+        let unplayed = Set(first.dropFirst().map(\.saying.id))
+        XCTAssertTrue(seen.isDisjoint(with: unplayed))
+        XCTAssertFalse(deal(seed: 2).map(\.saying.id).contains(first[0].saying.id))
+    }
+
+    func testGivenTheSameSayingMarkedTwiceThenItIsStoredOnce() {
+        let saying = Sayings.all[0]
+        SayingsDeck.markSeen(saying, defaults: defaults)
+        SayingsDeck.markSeen(saying, defaults: defaults)
+        XCTAssertEqual(defaults.array(forKey: SayingsDeck.seenKey) as? [Int], [saying.id])
     }
 
     func testGivenTheContentListThenSixtyUniqueIDsOneToSixty() {

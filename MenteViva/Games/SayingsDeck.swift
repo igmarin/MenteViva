@@ -27,6 +27,14 @@ enum SayingsDeck {
     static let roundsPerGame = 8
     static let seenKey = "sayings.seen"
 
+    /// Marks a saying seen once its round is completed, so a game left early doesn't
+    /// use up the sayings he never reached.
+    static func markSeen(_ saying: Saying, defaults: UserDefaults) {
+        var seen = defaults.array(forKey: seenKey) as? [Int] ?? []
+        if !seen.contains(saying.id) { seen.append(saying.id) }
+        defaults.set(seen, forKey: seenKey)
+    }
+
     static func choiceCount(for difficulty: Difficulty) -> Int {
         difficulty.pick(3, 4, 4)
     }
@@ -36,11 +44,11 @@ enum SayingsDeck {
         using generator: inout G
     ) -> [SayingRound] {
         var seen = Set(defaults.array(forKey: seenKey) as? [Int] ?? [])
-        if pool.filter({ !seen.contains($0.id) }).count < roundsPerGame { seen = [] }
+        if pool.filter({ !seen.contains($0.id) }).count < roundsPerGame {
+            seen = []
+            defaults.set([Int](), forKey: seenKey)
+        }
         let picked = pool.filter { !seen.contains($0.id) }.shuffled(using: &generator).prefix(roundsPerGame)
-        defaults.set(
-            (defaults.array(forKey: seenKey) as? [Int] ?? []).filter(seen.contains) + picked.map(\.id),
-            forKey: seenKey)
 
         let others = choiceCount(for: difficulty) - 1
         return picked.map { saying in

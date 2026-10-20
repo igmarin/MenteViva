@@ -119,6 +119,8 @@ struct SayingsView: View {
         dimmed = []
         solved = false
         showAlmost = false
+        missed = false
+        missedChoice = nil
     }
 
     private func choose(_ choice: Saying, in round: SayingRound) {
@@ -139,6 +141,7 @@ struct SayingsView: View {
 
     private func next() {
         CaptionSpeaker.stop()
+        if let round { SayingsDeck.markSeen(round.saying, defaults: .standard) }
         resetRound()
         if progress.completeRound() { finish() }
     }
