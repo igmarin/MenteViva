@@ -23,6 +23,7 @@
 		4ABB42872988EB3A0000001E /* RoundCounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF92BF2CF2BF92D800000018; };
 		C9F0638D4C5D8F2E00000019 /* Sayings.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA861EB6D0E1583C00000013; };
 		6C996EBFBA06751F0000001D /* SayingsDeck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F0F3C38239D199500000017; };
+		91BD5DE598C764EF0000001D /* SayingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C722A92D1DB44C8500000017; };
 		C7D857DBE8864C870000001E /* SudokuPuzzle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89178D58C0F95C6D00000018; };
 		7F1CAF5CBD717E560000001C /* SudokuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D87F63700842679400000016; };
 		FF53AA1B2E6FD52C0000001E /* UpOrDownDeal.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E1B8809735DB8A00000018; };
@@ -99,6 +100,7 @@
 		CF92BF2CF2BF92D800000018 /* RoundCounter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/RoundCounter.swift; sourceTree = "<group>"; };
 		FA861EB6D0E1583C00000013 /* Sayings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/Sayings.swift; sourceTree = "<group>"; };
 		9F0F3C38239D199500000017 /* SayingsDeck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/SayingsDeck.swift; sourceTree = "<group>"; };
+		C722A92D1DB44C8500000017 /* SayingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/SayingsView.swift; sourceTree = "<group>"; };
 		89178D58C0F95C6D00000018 /* SudokuPuzzle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/SudokuPuzzle.swift; sourceTree = "<group>"; };
 		D87F63700842679400000016 /* SudokuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/SudokuView.swift; sourceTree = "<group>"; };
 		C5E1B8809735DB8A00000018 /* UpOrDownDeal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/UpOrDownDeal.swift; sourceTree = "<group>"; };
@@ -203,6 +205,7 @@
 				CF92BF2CF2BF92D800000018 /* RoundCounter.swift */,
 				FA861EB6D0E1583C00000013 /* Sayings.swift */,
 				9F0F3C38239D199500000017 /* SayingsDeck.swift */,
+				C722A92D1DB44C8500000017 /* SayingsView.swift */,
 				89178D58C0F95C6D00000018 /* SudokuPuzzle.swift */,
 				D87F63700842679400000016 /* SudokuView.swift */,
 				C5E1B8809735DB8A00000018 /* UpOrDownDeal.swift */,
@@ -357,6 +360,7 @@
 				4ABB42872988EB3A0000001E /* RoundCounter.swift in Sources */,
 				C9F0638D4C5D8F2E00000019 /* Sayings.swift in Sources */,
 				6C996EBFBA06751F0000001D /* SayingsDeck.swift in Sources */,
+				91BD5DE598C764EF0000001D /* SayingsView.swift in Sources */,
 				C7D857DBE8864C870000001E /* SudokuPuzzle.swift in Sources */,
 				7F1CAF5CBD717E560000001C /* SudokuView.swift in Sources */,
 				FF53AA1B2E6FD52C0000001E /* UpOrDownDeal.swift in Sources */,

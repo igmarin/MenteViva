@@ -51,6 +51,7 @@ extension GameID {
         case .reminiscence: Color(light: 0x8C3B5A, dark: 0xEBA0BD)
         case .sudoku: Color(light: 0x1F5F7A, dark: 0x86C5DE)
         case .upOrDown: Color(light: 0x6B4F2A, dark: 0xD2B48C)
+        case .sayings: Color(light: 0x5B3F8C, dark: 0xC3A8F0)
         }
     }
 }

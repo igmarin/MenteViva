@@ -1016,6 +1016,22 @@
         }
       }
     },
+    "game.celebration.sayings %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You finished %lld sayings"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Terminaste %lld refranes"
+          }
+        }
+      }
+    },
     "game.celebration.spotted %lld %lld" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -1872,6 +1888,86 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ronda %1$lld de %2$lld"
+          }
+        }
+      }
+    },
+    "game.sayings.a11y.listen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hear the saying"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Escuchar el refrán"
+          }
+        }
+      }
+    },
+    "game.sayings.instruction" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "How does this saying end?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Cómo termina este refrán?"
+          }
+        }
+      }
+    },
+    "game.sayings.miss" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Almost — try again."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casi — inténtalo de nuevo."
+          }
+        }
+      }
+    },
+    "game.sayings.next" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Next"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Siguiente"
+          }
+        }
+      }
+    },
+    "game.sayings.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Finish the Saying"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Termina el refrán"
           }
         }
       }

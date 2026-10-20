@@ -37,8 +37,8 @@ final class DailyPolicyTests: XCTestCase {
 
     func testGivenHiddenGamesWhenPlanThenTheyAreNeverPickedAndTheMixStaysFull() {
         let p = plan(state(), hidden: [.memoryMatch, .quickEyes])
-        // Sudoku (#179) and Up or Down (#180) lead at 0.8, in GameID order.
-        XCTAssertEqual(p.games, [.sudoku, .upOrDown, .categoryFluency])
+        // The three new games (#179–#181) lead at 0.8, in GameID order.
+        XCTAssertEqual(p.games, [.sudoku, .upOrDown, .sayings])
     }
 
     func testGivenAllButOneGameHiddenWhenPlanThenOnlyThatGameIsPicked() {
@@ -147,8 +147,8 @@ final class DailyPolicyTests: XCTestCase {
         let data = try Data(contentsOf: root.appendingPathComponent("docs/jev-json/011-daily-plan.request.json"))
         struct Envelope: Decodable { let state: PlayerStateSummary }
         let summary = try JSONDecoder().decode(Envelope.self, from: data).state
-        // The payload predates the sixth to eighth games, so compare in the five-game world.
-        let p = plan(summary, hidden: [.reminiscence, .sudoku, .upOrDown])
+        // The payload predates the sixth to ninth games, so compare in the five-game world.
+        let p = plan(summary, hidden: [.reminiscence, .sudoku, .upOrDown, .sayings])
         // Jev picked quick_eyes, category_fluency, memory_match for this payload.
         XCTAssertEqual(Set(p.games), [.quickEyes, .categoryFluency, .memoryMatch])
         XCTAssertEqual(p.difficulty[.stroop], .easy)  // 0.60 accuracy, one session

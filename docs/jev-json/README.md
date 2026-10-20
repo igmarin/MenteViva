@@ -59,3 +59,9 @@ is redeployed once, after the third new game, and the live response is saved the
 `018-daily-plan.request.json` is 017 plus `include_up_or_down` and `difficulty_up_or_down` (15 keys),
 captured the same way with a new-player `up_or_down` entry. Request only, like 017.
 
+## 019 — the nine-game request (Finish the Saying, #181)
+
+`019-daily-plan.request.json` is 018 plus `include_sayings` and `difficulty_sayings` (17 keys), captured
+the same way with a new-player `sayings` entry. The worker is redeployed after this game; save its live
+answer as `019-daily-plan.response.json`.
+
