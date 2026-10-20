@@ -2,6 +2,18 @@
 
 Newest first. Format: date — decision — why — what would make us revisit.
 
+## 2026-10-19 — "No key in the binary" means the upstream key; the app secret is a gate token
+
+**Found by:** a graph trace of the key path (graphify, 2026-10-19). The Typesafe key lives only in the
+Worker env (`proxy/worker.js`). `JEV_PROXY_SECRET` is copied into `Info.plist` and sent as
+`X-MenteViva-Key` when `Local.xcconfig` configures the proxy, so it can be read from such a build.
+
+**Decision:** AGENTS.md now says the upstream key never enters the repo or the binary; the app shared
+secret is a proxy gate token that may sit in a configured build, never in the repo. No code change.
+
+Revisit when: a build with the proxy configured is shared beyond the owner's devices, or the Worker sees
+abuse. App Attest is the noted upgrade.
+
 ## 2026-10-13 — Privacy as three lines; the icon becomes a framed card
 
 **Question:** Settings' privacy paragraph was hard to read and mentioned daily suggestions, which are

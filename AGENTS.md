@@ -20,8 +20,10 @@ Instructions for AI agents (and humans in a hurry) working on MenteViva.
   it to them.
 - **No medical claims** in any copy, code comment, or doc. "Fun mental
   exercise" is the ceiling. See docs/research-2026-09.md §1.
-- **The API key never enters the repo or the binary.** Jev goes through the
-  proxy; unset proxy URL = offline fallback, which must always work.
+- **The upstream Jev API key never enters the repo or the binary.** Jev goes through the
+  proxy; unset proxy URL = offline fallback, which must always work. The app shared
+  secret (`JEV_PROXY_SECRET`) is only a proxy gate token: it may sit in a configured
+  build's Info.plist, never in the repo (`Local.xcconfig` is git-ignored).
 
 ## Where things are
 
