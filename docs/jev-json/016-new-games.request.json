@@ -1,0 +1,84 @@
+{
+  "model": "jev-latest",
+  "state": {
+    "product": "MenteViva, iOS cognitive-exercise app for older adults. Warm, no-fail, big-target design, EN+ES, offline, zero third-party dependencies, solo developer. Copy ceiling: 'fun mental exercise', no medical claims. Home deals 3 games a day chosen on the device by rules (value weight per game x days since last played); easy/medium/hard per game, step at most once per 7 days.",
+    "player": "Primary player: the owner's father, early-stage dementia, plays alone on his own iPad and iPhone. Caregiver and buyer: the adult child.",
+    "games": "Visible on his iPad: Memory Lane (pair matching, his own photos), Name the Herd (pick the items of a category), Quick Eyes (an item flashes, find it among 4), Remember Together (his photos with names, no wrong answer). Color Clash and Number Trail are hidden: they fell flat. Value weights: Memory Lane 1.0, Quick Eyes 0.8, Name the Herd 0.7, Remember Together 0.7.",
+    "playtest_findings": "Recent informal sessions: he likes the app but gets bored. Few games, very repetitive: with 4 visible games and 3 dealt a day he sees the same games daily, and some content repeats. The owner wants more variety and a higher ceiling. Before, he enjoyed newspaper puzzles (sudoku, crosswords, word search), card and table games, and sayings and quiz shows.",
+    "owner_decisions": "Add one game per hobby, each dealing fresh content every session, each with easy/medium/hard, warm misses, no timer, no visible score, targets of 60pt or more. Word search, dominoes and decade trivia were considered and set aside.",
+    "candidate_games": "sudoku: 4x4 (easy 4 blanks, medium 8) and 6x6 (hard 18 blanks), generated on the device with exactly one solution; tap a square then a big number; a number that does not fit gets a gentle 'try another'; a 'show me one' button. up_or_down: golf solitaire with big drawn cards; 4/5/6 piles of 3; tap a card one higher or lower than the open card, turn the deck when stuck; easy wraps King-Ace, lifts playable cards and is always clearable; ends on 'you cleared N cards', never a loss. finish_the_saying: the start of a familiar saying, pick the ending from 3 or 4 big buttons (hard: same-theme endings), full saying read aloud on tap; 60 sayings per language, Spanish refranes and English sayings written separately, no repeat until all are seen."
+  },
+  "questions": {
+    "fit_sudoku": {
+      "type": "score",
+      "instructions": "Score sudoku as a new game for this player: errorless fit, familiarity, adult dignity, replay variety (does it feel new each session), a real sense of challenge at the top level, and buildability by a solo developer with zero dependencies.",
+      "criteria": [
+        "0 = poor new game",
+        "1 = reasonable",
+        "2 = excellent new game"
+      ]
+    },
+    "fit_up_or_down": {
+      "type": "score",
+      "instructions": "Score up_or_down as a new game for this player: errorless fit, familiarity, adult dignity, replay variety (does it feel new each session), a real sense of challenge at the top level, and buildability by a solo developer with zero dependencies.",
+      "criteria": [
+        "0 = poor new game",
+        "1 = reasonable",
+        "2 = excellent new game"
+      ]
+    },
+    "fit_finish_the_saying": {
+      "type": "score",
+      "instructions": "Score finish_the_saying as a new game for this player: errorless fit, familiarity, adult dignity, replay variety (does it feel new each session), a real sense of challenge at the top level, and buildability by a solo developer with zero dependencies.",
+      "criteria": [
+        "0 = poor new game",
+        "1 = reasonable",
+        "2 = excellent new game"
+      ]
+    },
+    "build_first": {
+      "type": "choice",
+      "instructions": "Which of the three should be built and handed to him first?",
+      "criteria": {
+        "sudoku": "Sudoku first",
+        "up_or_down": "Up or Down first",
+        "finish_the_saying": "Finish the Saying first"
+      }
+    },
+    "daily_value_sudoku": {
+      "type": "score",
+      "instructions": "Daily-pick value weight for sudoku on the same 0-1 scale as the existing games (Memory Lane 1.0, Quick Eyes 0.8, Name the Herd 0.7).",
+      "criteria": [
+        "0 = rarely deal",
+        "0.5 = sometimes",
+        "1 = deal often"
+      ]
+    },
+    "daily_value_up_or_down": {
+      "type": "score",
+      "instructions": "Daily-pick value weight for up_or_down on the same 0-1 scale as the existing games (Memory Lane 1.0, Quick Eyes 0.8, Name the Herd 0.7).",
+      "criteria": [
+        "0 = rarely deal",
+        "0.5 = sometimes",
+        "1 = deal often"
+      ]
+    },
+    "daily_value_finish_the_saying": {
+      "type": "score",
+      "instructions": "Daily-pick value weight for finish_the_saying on the same 0-1 scale as the existing games (Memory Lane 1.0, Quick Eyes 0.8, Name the Herd 0.7).",
+      "criteria": [
+        "0 = rarely deal",
+        "0.5 = sometimes",
+        "1 = deal often"
+      ]
+    },
+    "sudoku_6x6_too_hard": {
+      "type": "noul",
+      "instructions": "Is a 6x6 sudoku with 18 blanks too hard as the top level for this player?",
+      "criteria": {
+        "true": "Cap the top level at 4x4 with more blanks",
+        "false": "6x6 is a fair ceiling; the level only rises after sustained 90%+ accuracy"
+      }
+    }
+  }
+}
