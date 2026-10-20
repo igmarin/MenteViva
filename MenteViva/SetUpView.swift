@@ -38,7 +38,9 @@ private struct CaptionTarget: Identifiable {
 /// Memory Lane photos (#110): picked with the system photo picker (no library
 /// permission), kept on this device only. Each has its own Remove button.
 private struct FamilyPhotosSection: View {
-    @State private var photos = MemoryPhotos.all()
+    @State private var photos: [URL]
+    /// Captions by photo, read when the album changes, never inside `body`.
+    @State private var captions: [URL: String]
     @State private var picked: [PhotosPickerItem] = []
     /// What the last pick did, in plain words (#120); cleared on Remove.
     @State private var note: String?
@@ -46,25 +48,35 @@ private struct FamilyPhotosSection: View {
     @State private var captioning: CaptionTarget?
     private let columns = [GridItem(.adaptive(minimum: 120), spacing: 12)]
 
+    init() {
+        let all = MemoryPhotos.all()
+        _photos = State(initialValue: all)
+        _captions = State(initialValue: Self.captions(for: all))
+    }
+
+    private static func captions(for photos: [URL]) -> [URL: String] {
+        Dictionary(
+            photos.compactMap { url in MemoryPhotos.caption(for: url).map { (url, $0) } },
+            uniquingKeysWith: { first, _ in first })
+    }
+
+    private func reload() {
+        photos = MemoryPhotos.all()
+        captions = Self.captions(for: photos)
+    }
+
     var body: some View {
         Section {
             if !photos.isEmpty {
                 LazyVGrid(columns: columns, spacing: 12) {
                     ForEach(Array(photos.enumerated()), id: \.element) { index, url in
                         VStack(spacing: 6) {
-                            if let image = UIImage(contentsOfFile: url.path) {
-                                Image(uiImage: image)
-                                    .resizable()
-                                    .scaledToFill()
-                                    .frame(width: 120, height: 120)
-                                    .clipShape(RoundedRectangle(cornerRadius: 12))
-                                    .accessibilityHidden(true)
-                            }
+                            PhotoThumb(url: url)
                             // Bordered style keeps each button separate inside one list row.
                             Button {
                                 captioning = CaptionTarget(url: url)
                             } label: {
-                                Text(MemoryPhotos.caption(for: url) ?? AppLanguage.localized("family.photos.caption.add"))
+                                Text(captions[url] ?? AppLanguage.localized("family.photos.caption.add"))
                                     .font(.body)
                                     .lineLimit(2)
                                     .multilineTextAlignment(.center)
@@ -101,24 +113,49 @@ private struct FamilyPhotosSection: View {
         }
         .sheet(item: $captioning) { target in
             FamilyPhotoCaptionSheet(photo: target.url) {
-                photos = MemoryPhotos.all()
+                reload()
                 note = nil
             }
         }
-        .onChange(of: picked) { _, items in
+        // A task, not onChange + Task: it is cancelled if Set up goes away mid-pick.
+        .task(id: picked) {
+            let items = picked
             guard !items.isEmpty else { return }
-            Task {
-                var datas: [Data?] = []
-                for item in items {
-                    datas.append(try? await item.loadTransferable(type: Data.self))
-                }
-                let result = MemoryPhotos.add(datas)
-                picked = []
-                photos = MemoryPhotos.all()
-                note = result.note
-                if let note { AccessibilityNotification.Announcement(note).post() }
+            var loaded: [Data?] = []
+            for item in items {
+                loaded.append(try? await item.loadTransferable(type: Data.self))
+            }
+            guard !Task.isCancelled else { return }
+            // Decoding, shrinking and writing up to 8 photos stays off the main actor.
+            let batch = loaded
+            let result = await Task.detached { MemoryPhotos.add(batch) }.value
+            reload()
+            note = result.note
+            picked = []
+            if let note { AccessibilityNotification.Announcement(note).post() }
+        }
+    }
+}
+
+/// One photo in the Set up grid, decoded off the main actor.
+private struct PhotoThumb: View {
+    let url: URL
+    @State private var image: UIImage?
+
+    var body: some View {
+        Group {
+            if let image {
+                Image(uiImage: image)
+                    .resizable()
+                    .scaledToFill()
+            } else {
+                Color.gray.opacity(0.12)
             }
         }
+        .frame(width: 120, height: 120)
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .accessibilityHidden(true)
+        .task(id: url) { image = await MemoryPhotos.image(at: url) }
     }
 }
 

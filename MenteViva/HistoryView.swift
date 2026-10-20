@@ -10,27 +10,44 @@ struct HistoryView: View {
     @Query(sort: \GameSession.playedAt, order: .reverse)
     private var sessions: [GameSession]
 
-    private var weekSessions: [GameSession] {
-        DayGrouping.thisWeek(sessions, date: \.playedAt).flatMap(\.items)
-    }
+    /// Everything the screen shows, derived from `sessions` once per redraw
+    /// instead of once per read (the list used to regroup the week three times).
+    private struct Snapshot {
+        let weekGroups: [(day: Date, items: [GameSession])]
+        let weekCount: Int
+        let days: [DayTally]
+        /// Only games played this week, so the list matches the board and the counts.
+        let progress: [GameProgress]
+        let summary: WeeklySummary
 
-    private var days: [DayTally] {
-        DayGrouping.tally(weekSessions, date: \.playedAt, game: \.game)
+        init(sessions: [GameSession]) {
+            weekGroups = DayGrouping.thisWeek(sessions, date: \.playedAt)
+            let week = weekGroups.flatMap(\.items)
+            weekCount = week.count
+            days = DayGrouping.tally(week, date: \.playedAt, game: \.game)
+            let played = Set(week.compactMap(\.game))
+            progress = HotPath.measure("progress.weekly") { GameProgress.weekly(sessions) }
+                .filter { played.contains($0.game) }
+            summary = WeeklySummary(playedAt: sessions.map(\.playedAt))
+        }
     }
 
     var body: some View {
+        let snapshot = Snapshot(sessions: sessions)
         Group {
-            if weekSessions.isEmpty {
+            if snapshot.weekCount == 0 {
                 emptyState
             } else {
-                sessionList
+                sessionList(snapshot)
             }
         }
         .navigationTitle(AppLanguage.localized("history.title"))
         .toolbar {
-            if !weekSessions.isEmpty {
+            if snapshot.weekCount > 0 {
                 ToolbarItem(placement: .topBarTrailing) {
-                    ShareLink(item: shareSummary) {
+                    // Family-share payload: plain text so it works over any channel
+                    // (WhatsApp, SMS, email) with no account, network, or CloudKit share.
+                    ShareLink(item: snapshot.summary.text) {
                         Label(AppLanguage.localized("history.share"), systemImage: "square.and.arrow.up")
                             .font(.title3)
                             .labelStyle(.iconOnly)
@@ -42,54 +59,40 @@ struct HistoryView: View {
         }
     }
 
-    private var progress: [GameProgress] {
-        // Only games played this week, so the list matches the board and the counts.
-        let played = Set(weekSessions.compactMap(\.game))
-        return HotPath.measure("progress.weekly") { GameProgress.weekly(sessions) }.filter { played.contains($0.game) }
-    }
-
-    private var summary: WeeklySummary { WeeklySummary(playedAt: sessions.map(\.playedAt)) }
-
-    /// Family-share payload: plain text so it works over any channel (WhatsApp,
-    /// SMS, email) with no account, network, or CloudKit share required.
-    private var shareSummary: String { summary.text }
-
     // MARK: - Content
 
-    private var sessionList: some View {
+    private func sessionList(_ snapshot: Snapshot) -> some View {
         List {
             // The week as cards (Card Table, step 5), the same board as on Home.
             Section {
                 WeekBoard(
-                    days: DayGrouping.thisWeek(sessions, date: \.playedAt).map {
-                        (day: $0.day, games: $0.items.compactMap(\.game))
-                    }
+                    days: snapshot.weekGroups.map { (day: $0.day, games: $0.items.compactMap(\.game)) }
                 )
                 .padding(.vertical, 8)
             }
 
             Section {
-                Text("history.summary \(weekSessions.count)")
+                Text("history.summary \(snapshot.weekCount)")
                     .font(.title2)
                     .multilineTextAlignment(.center)
                     .frame(maxWidth: .infinity)
                     .listRowBackground(Color.clear)
                     .accessibilityAddTraits(.isHeader)
-                Text(summary.text)
+                Text(snapshot.summary.text)
                     .font(.title3)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.vertical, 8)
             }
 
             Section {
-                ForEach(progress, id: \.game) { progressRow($0) }
+                ForEach(snapshot.progress, id: \.game) { progressRow($0) }
             } header: {
                 Text(AppLanguage.localized("history.progress.header"))
                     .font(.title3.weight(.semibold))
             }
 
             Section {
-                ForEach(days, id: \.day) { dayRow($0) }
+                ForEach(snapshot.days, id: \.day) { dayRow($0) }
             } header: {
                 Text(AppLanguage.localized("history.days.header"))
                     .font(.title3.weight(.semibold))

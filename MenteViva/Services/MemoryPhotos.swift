@@ -1,9 +1,13 @@
+import ImageIO
 import UIKit
 
 /// Family photos for Memory Lane (#110). Picked with the system photo picker
 /// (no library permission needed), shrunk to at most 600 px, and kept only in
 /// this app's own storage on this device — nothing is uploaded or shared.
-enum MemoryPhotos {
+///
+/// `nonisolated` on purpose: importing and decoding photos is file I/O and
+/// image work, so callers run it off the main actor.
+nonisolated enum MemoryPhotos {
     static let maxCount = 8  // the largest board has 8 pairs
     static let maxSide: CGFloat = 600
 
@@ -35,20 +39,32 @@ enum MemoryPhotos {
 
     static func add(_ data: Data, to folder: URL = folder) throws {
         guard all(in: folder).count < maxCount else { throw AddError.albumFull }
+        try store(data, in: folder)
+    }
+
+    private static func store(_ data: Data, in folder: URL) throws {
         try HotPath.measure("photo.downscale") { try downscale(data, into: folder) }
     }
 
     /// Decode, shrink to `maxSide`, re-encode as JPEG and store it.
+    ///
+    /// ImageIO decodes straight to the target size, so a 12-megapixel photo is
+    /// never held in memory at full size. Never upscales; honours EXIF rotation.
     private static func downscale(_ data: Data, into folder: URL) throws {
-        guard let image = UIImage(data: data) else { throw AddError.notAnImage }
-        let scale = min(1, maxSide / max(image.size.width, image.size.height))
-        let size = CGSize(width: (image.size.width * scale).rounded(), height: (image.size.height * scale).rounded())
-        let format = UIGraphicsImageRendererFormat()
-        format.scale = 1
-        let small = UIGraphicsImageRenderer(size: size, format: format).image { _ in
-            image.draw(in: CGRect(origin: .zero, size: size))
-        }
-        guard let jpeg = small.jpegData(compressionQuality: 0.8) else { throw AddError.notAnImage }
+        guard let source = CGImageSourceCreateWithData(data as CFData, nil),
+            let properties = CGImageSourceCopyPropertiesAtIndex(source, 0, nil) as? [CFString: Any],
+            let width = properties[kCGImagePropertyPixelWidth] as? CGFloat,
+            let height = properties[kCGImagePropertyPixelHeight] as? CGFloat
+        else { throw AddError.notAnImage }
+        let options: [CFString: Any] = [
+            kCGImageSourceCreateThumbnailFromImageAlways: true,
+            kCGImageSourceCreateThumbnailWithTransform: true,
+            kCGImageSourceShouldCacheImmediately: true,
+            kCGImageSourceThumbnailMaxPixelSize: min(maxSide, max(width, height)),
+        ]
+        guard let small = CGImageSourceCreateThumbnailAtIndex(source, 0, options as CFDictionary),
+            let jpeg = UIImage(cgImage: small).jpegData(compressionQuality: 0.8)
+        else { throw AddError.notAnImage }
         try prepare(folder)
         try jpeg.write(to: folder.appendingPathComponent("\(UUID().uuidString).jpg"), options: writeOptions)
     }
@@ -73,22 +89,33 @@ enum MemoryPhotos {
         // photo.downscale inside shows which photo cost what.
         HotPath.measure("photo.import") {
             var result = AddResult()
+            // Listed once for the batch, not once per photo.
+            var count = all(in: folder).count
             for data in photos {
                 guard let data else {
                     result.unreadable += 1
                     continue
                 }
-                do {
-                    try add(data, to: folder)
-                    result.added += 1
-                } catch AddError.albumFull {
+                guard count < maxCount else {
                     result.overLimit += 1
+                    continue
+                }
+                do {
+                    try store(data, in: folder)
+                    count += 1
+                    result.added += 1
                 } catch {
                     result.unreadable += 1
                 }
             }
             return result
         }
+    }
+
+    /// A stored photo, decoded off the main actor and ready to draw, so showing
+    /// it never stalls a tap or a card flip.
+    static func image(at url: URL) async -> UIImage? {
+        await UIImage(contentsOfFile: url.path)?.byPreparingForDisplay()
     }
 
     static func remove(_ url: URL) {

@@ -34,4 +34,9 @@ final class CaptionSpeakerTests: XCTestCase {
         XCTAssertEqual(CaptionSpeaker.voiceLanguage(for: .spanish), "es-MX")
         XCTAssertEqual(CaptionSpeaker.voiceLanguage(for: .english), "en-US")
     }
+
+    func testGivenSystemLanguageWhenVoiceLanguageThenItIsAHyphenatedTag() {
+        // "en_US" (the underscore form) names no voice; the tag must use a hyphen.
+        XCTAssertFalse(CaptionSpeaker.voiceLanguage(for: .system).contains("_"))
+    }
 }
