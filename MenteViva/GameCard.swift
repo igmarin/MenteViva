@@ -204,6 +204,13 @@ struct Emblem: View {
                 let square = Path(roundedRect: CGRect(x: origin.0, y: origin.1, width: 20, height: 20), cornerRadius: 4)
                 if index == 3 { context.fill(square, with: amber) } else { context.stroke(square, with: ink, style: line) }
             }
+        case .upOrDown:
+            // Two fanned cards and an amber "one up" chevron.
+            context.fill(card(x: 8, y: 16, angle: -10), with: .color(game.ink.opacity(0.35)))
+            context.fill(card(x: 22, y: 14, angle: 8), with: ink)
+            var chevron = Path()
+            chevron.addLines([CGPoint(x: 44, y: 16), CGPoint(x: 52, y: 7), CGPoint(x: 60, y: 16)])
+            context.stroke(chevron, with: amber, style: StrokeStyle(lineWidth: 4.5, lineCap: .round, lineJoin: .round))
         }
     }
 

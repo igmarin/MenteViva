@@ -5,6 +5,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 ## [Unreleased]
 
 ### Added
+- **Up or Down (#180):** an eighth game, a solitaire with big cards. Tap a card one higher
+  or one lower than the open card; turn the deck when none fits. A new deal every time; the
+  easy level lifts the cards that fit and always clears. It ends on the cards you cleared.
 - **Sudoku (#179):** a seventh game. A 4×4 or 6×6 number square, new every time.
   A number that doesn't fit gets a gentle "try another number"; "Show me one" fills a
   square when you're stuck. Hard is 6×6, or a fuller 4×4 on small iPhones.

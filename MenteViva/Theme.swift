@@ -50,6 +50,7 @@ extension GameID {
         case .quickEyes: Color(light: 0x93601A, dark: 0xEDBE6E)
         case .reminiscence: Color(light: 0x8C3B5A, dark: 0xEBA0BD)
         case .sudoku: Color(light: 0x1F5F7A, dark: 0x86C5DE)
+        case .upOrDown: Color(light: 0x6B4F2A, dark: 0xD2B48C)
         }
     }
 }
