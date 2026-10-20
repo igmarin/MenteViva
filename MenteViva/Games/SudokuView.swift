@@ -7,9 +7,6 @@ import SwiftUI
 struct SudokuView: View {
     @Environment(\.modelContext) private var modelContext
 
-    /// Space between squares; the 60pt rule in `SudokuPuzzle.layout` leaves room for it.
-    private static let gap = 2.0
-
     @ScaledMetric(relativeTo: .largeTitle) private var digitSize: CGFloat = 36
 
     @State private var difficulty = Difficulty.stored(.sudoku)
@@ -60,7 +57,10 @@ struct SudokuView: View {
         } action: { width in
             guard width > 0 else { return }
             boardWidth = width
-            if puzzle == nil { deal() }
+            // A 6×6 board that no longer fits (turned to portrait on a small iPhone)
+            // is dealt again at a size that does: the squares never drop under 60pt.
+            if let puzzle, puzzle.fits(width: width) { return }
+            restart()
         }
         .padding()
         .fitOrScroll()
@@ -72,8 +72,8 @@ struct SudokuView: View {
 
     private func board(_ puzzle: SudokuPuzzle) -> some View {
         let n = puzzle.size
-        let side = min(100, (boardWidth - Self.gap * Double(n - 1)) / Double(n))
-        return Grid(horizontalSpacing: Self.gap, verticalSpacing: Self.gap) {
+        let side = min(100, (boardWidth - SudokuPuzzle.gap * Double(n - 1)) / Double(n))
+        return Grid(horizontalSpacing: SudokuPuzzle.gap, verticalSpacing: SudokuPuzzle.gap) {
             ForEach(0..<n, id: \.self) { row in
                 GridRow {
                     ForEach(0..<n, id: \.self) { column in

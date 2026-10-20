@@ -43,6 +43,22 @@ final class SudokuPuzzleTests: XCTestCase {
         XCTAssertEqual(SudokuPuzzle.layout(for: .hard, width: Self.iPhoneSE).blanks, 10)
     }
 
+    func testGivenAWidthThatFitsSixSquaresButNotTheirGapsWhenHardLayoutThenFourByFour() {
+        // (365 - 5 gaps × 2pt) / 6 = 59.2pt: under the floor once the gaps count.
+        XCTAssertEqual(SudokuPuzzle.layout(for: .hard, width: 365).size, 4)
+        // (370 - 10) / 6 = 60pt: just fits.
+        XCTAssertEqual(SudokuPuzzle.layout(for: .hard, width: 370).size, 6)
+    }
+
+    func testGivenASixBySixBoardWhenTheScreenNarrowsThenItNoLongerFits() {
+        // Dealt in landscape on an iPhone SE, then turned to portrait.
+        var generator = SeededGenerator(state: 1)
+        let board = SudokuPuzzle.make(difficulty: .hard, width: 600, using: &generator)
+        XCTAssertEqual(board.size, 6)
+        XCTAssertTrue(board.fits(width: 600))
+        XCTAssertFalse(board.fits(width: Self.iPhoneSE))
+    }
+
     func testGivenFiftySeedsWhenMakeThenEverySolutionIsAValidGrid() {
         for (difficulty, width) in Self.cases {
             for puzzle in puzzles(difficulty, width: width) {

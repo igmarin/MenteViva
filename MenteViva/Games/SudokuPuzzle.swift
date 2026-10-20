@@ -11,6 +11,8 @@ nonisolated struct SudokuPuzzle: Equatable {
 
     /// Smallest square the player taps, in points (conventions §4).
     static let minTarget = 60.0
+    /// Space between squares on screen; it counts against the width too.
+    static let gap = 2.0
     private static let attempts = 20
 
     /// Board size and blanks for a level. Hard is 6×6 only where its squares keep 60pt;
@@ -19,7 +21,7 @@ nonisolated struct SudokuPuzzle: Equatable {
         switch difficulty {
         case .easy: (4, 4)
         case .medium: (4, 8)
-        case .hard: width / 6 >= minTarget ? (6, 18) : (4, 10)
+        case .hard: squaresFit(6, in: width) ? (6, 18) : (4, 10)
         }
     }
 
@@ -52,12 +54,20 @@ nonisolated struct SudokuPuzzle: Equatable {
         return best!.puzzle
     }
 
+    /// Whether this board's squares keep 60pt at `width`. A 6×6 board dealt in landscape
+    /// on a small iPhone stops fitting when the phone turns to portrait.
+    func fits(width: Double) -> Bool { Self.squaresFit(size, in: width) }
+
+    private static func squaresFit(_ count: Int, in width: Double) -> Bool {
+        (width - gap * Double(count - 1)) / Double(count) >= minTarget
+    }
+
     /// Solutions of a partly filled grid, counting no further than `limit`.
     static func solutionCount(_ grid: [Int?], size: Int, boxRows: Int, boxColumns: Int, limit: Int) -> Int {
         guard let empty = grid.firstIndex(of: nil) else { return 1 }
         var grid = grid
         var count = 0
-        for digit in 1...size where fits(digit, at: empty, in: grid, size: size, boxRows: boxRows, boxColumns: boxColumns) {
+        for digit in 1...size where allows(digit, at: empty, in: grid, size: size, boxRows: boxRows, boxColumns: boxColumns) {
             grid[empty] = digit
             count += solutionCount(grid, size: size, boxRows: boxRows, boxColumns: boxColumns, limit: limit - count)
             if count >= limit { break }
@@ -65,7 +75,7 @@ nonisolated struct SudokuPuzzle: Equatable {
         return count
     }
 
-    private static func fits(
+    private static func allows(
         _ digit: Int, at index: Int, in grid: [Int?], size: Int, boxRows: Int, boxColumns: Int
     ) -> Bool {
         let row = index / size
