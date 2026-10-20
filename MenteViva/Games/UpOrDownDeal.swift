@@ -61,7 +61,9 @@ nonisolated struct UpOrDownDeal: Equatable {
         let count = pileCount(for: difficulty, width: width)
         var made = deal(piles: count, wraps: difficulty != .hard, using: &generator)
         guard difficulty == .easy else { return made }
-        for _ in 1..<easyTries where !greedyClears(made) {
+        // Every candidate is checked before it is returned.
+        for _ in 0..<easyTries {
+            if greedyClears(made) { return made }
             made = deal(piles: count, wraps: true, using: &generator)
         }
         return made
