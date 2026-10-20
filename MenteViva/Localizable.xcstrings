@@ -100,6 +100,7 @@
       }
     },
     "family.caption.field" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -116,6 +117,7 @@
       }
     },
     "family.caption.placeholder" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -132,6 +134,7 @@
       }
     },
     "family.caption.privacy" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -148,6 +151,7 @@
       }
     },
     "family.caption.save" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -164,6 +168,7 @@
       }
     },
     "family.caption.save.problem" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -180,6 +185,7 @@
       }
     },
     "family.caption.title" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -264,6 +270,7 @@
       }
     },
     "family.game.nolevel" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -405,6 +412,7 @@
       }
     },
     "family.photos.caption.a11y %lld" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -421,6 +429,7 @@
       }
     },
     "family.photos.caption.add" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -816,6 +825,7 @@
       }
     },
     "game.celebration.added" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -866,6 +876,7 @@
       }
     },
     "game.celebration.next %@" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1024,6 +1035,7 @@
       }
     },
     "game.celebration.today %lld %lld" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1345,6 +1357,7 @@
       }
     },
     "game.math.operator.dividedBy" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1361,6 +1374,7 @@
       }
     },
     "game.math.operator.minus" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1377,6 +1391,7 @@
       }
     },
     "game.math.operator.plus" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1393,6 +1408,7 @@
       }
     },
     "game.math.operator.times" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1610,6 +1626,7 @@
       }
     },
     "game.readaloud" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1626,6 +1643,7 @@
       }
     },
     "game.readaloud.hint" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1642,6 +1660,7 @@
       }
     },
     "game.reminiscence.a11y.object" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1658,6 +1677,7 @@
       }
     },
     "game.reminiscence.a11y.photo" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1674,6 +1694,7 @@
       }
     },
     "game.reminiscence.hear" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1690,6 +1711,7 @@
       }
     },
     "game.reminiscence.next" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1706,6 +1728,7 @@
       }
     },
     "game.reminiscence.prompt.object" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1722,6 +1745,7 @@
       }
     },
     "game.reminiscence.prompt.photo" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1738,6 +1762,7 @@
       }
     },
     "game.reminiscence.show" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1770,6 +1795,7 @@
       }
     },
     "game.reminiscence.together" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1843,6 +1869,7 @@
       }
     },
     "history.days.header" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2102,6 +2129,7 @@
       }
     },
     "home.allgames" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2135,6 +2163,7 @@
       }
     },
     "home.greeting.afternoon" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2151,6 +2180,7 @@
       }
     },
     "home.greeting.evening" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2167,6 +2197,7 @@
       }
     },
     "home.greeting.morning" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2200,6 +2231,7 @@
       }
     },
     "home.today.continue %@" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2216,6 +2248,7 @@
       }
     },
     "home.today.done" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2232,6 +2265,7 @@
       }
     },
     "home.today.label" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2248,6 +2282,7 @@
       }
     },
     "home.today.play" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2264,6 +2299,7 @@
       }
     },
     "home.today.played" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2337,6 +2373,7 @@
       }
     },
     "home.week.title" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2353,6 +2390,7 @@
       }
     },
     "object.book" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2369,6 +2407,7 @@
       }
     },
     "object.chair" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2385,6 +2424,7 @@
       }
     },
     "object.clock" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2401,6 +2441,7 @@
       }
     },
     "object.cup" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2417,6 +2458,7 @@
       }
     },
     "object.house" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2433,6 +2475,7 @@
       }
     },
     "object.key" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2449,6 +2492,7 @@
       }
     },
     "object.lamp" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2465,6 +2509,7 @@
       }
     },
     "object.umbrella" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2583,6 +2628,7 @@
       }
     },
     "progress.accuracy %lld" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2599,6 +2645,7 @@
       }
     },
     "progress.days %lld" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2615,6 +2662,7 @@
       }
     },
     "progress.empty" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2631,6 +2679,7 @@
       }
     },
     "progress.intro" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2647,6 +2696,7 @@
       }
     },
     "progress.level %@" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2663,6 +2713,7 @@
       }
     },
     "progress.open.hint" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2719,6 +2770,7 @@
       }
     },
     "progress.share %lld" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2735,6 +2787,7 @@
       }
     },
     "progress.share.header" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2751,6 +2804,7 @@
       }
     },
     "progress.title" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2815,6 +2869,7 @@
       }
     },
     "progress.trend.first" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2831,6 +2886,7 @@
       }
     },
     "progress.trend.level.down %@" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2847,6 +2903,7 @@
       }
     },
     "progress.trend.level.up %@" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2863,6 +2920,7 @@
       }
     },
     "progress.trend.wait %lld" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2964,6 +3022,7 @@
       }
     },
     "settings.privacy.backup %@" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2980,6 +3039,7 @@
       }
     },
     "settings.privacy.device %@" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2996,6 +3056,7 @@
       }
     },
     "settings.privacy.noaccount" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -3012,6 +3073,7 @@
       }
     },
     "settings.privacy.photos" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -3028,6 +3090,7 @@
       }
     },
     "settings.privacy.suggestions" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -3095,6 +3158,7 @@
       }
     },
     "settings.speak" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -3111,6 +3175,7 @@
       }
     },
     "settings.speak.hint" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -3178,6 +3243,7 @@
       }
     },
     "setup.open.hint" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -3194,6 +3260,7 @@
       }
     },
     "setup.title" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

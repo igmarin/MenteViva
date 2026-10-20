@@ -50,7 +50,7 @@ actor JevService {
 
     /// True only in builds with a proxy URL (Local.xcconfig): then anonymous
     /// totals leave the device and Settings says so; otherwise nothing does.
-    var sendsSummaries: Bool { proxyURL != nil }
+    nonisolated var sendsSummaries: Bool { proxyURL != nil }
 
     // MARK: - Public API
 

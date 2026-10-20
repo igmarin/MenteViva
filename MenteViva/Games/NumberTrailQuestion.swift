@@ -39,8 +39,14 @@ nonisolated struct NumberTrailQuestion: Equatable {
     var text: String { "\(left) \(operation.symbol) \(right)" }
 
     /// "7 minus 3" / "7 menos 3": symbols alone are not read reliably in Spanish.
-    func spoken(localize: (String) -> String = { AppLanguage.localized($0) }) -> String {
+    func spoken(localize: (String) -> String) -> String {
         "\(left) \(localize(operation.spokenKey)) \(right)"
+    }
+
+    /// Same, in the app's chosen language. `AppLanguage` is main-actor isolated.
+    @MainActor
+    func spoken() -> String {
+        spoken(localize: { AppLanguage.localized($0) })
     }
 
     static func operations(for difficulty: Difficulty) -> [Operation] {
