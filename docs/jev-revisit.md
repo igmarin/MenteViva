@@ -295,3 +295,10 @@ Reads:
    optional field, kept on the device, with the time-of-day greeting as the default.
 4. **The week board is the weakest yes (0.65).** The risk is empty days reading
    as missed days. Watch for it in the next playtest before adding anything to it.
+
+## 016 — Three new games — 2026-10-19
+
+Request written (`jev-json/016-new-games.request.json`): fit scores for Sudoku, Up or Down and
+Finish the Saying, which to build first, their daily-pick weights, and whether 6×6 Sudoku is too
+hard. **Not sent:** the session's key was refused (401). The owner decided without it
+(decisions.md 2026-10-19). Send it as is when a Jev key is available and record the answer here.

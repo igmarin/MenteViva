@@ -9,7 +9,7 @@ const UPSTREAM_TIMEOUT_MS = 8000;
 const MODELS = new Set(["jev-latest"]);
 // Mirrors GameID in MenteViva/Models/GameID.swift — keep in sync.
 // LEVELLESS mirrors GameID.hasLevels: those games send no difficulty_ key.
-const GAMES = ["memory_match", "stroop", "category_fluency", "math_streaks", "quick_eyes", "reminiscence"];
+const GAMES = ["memory_match", "stroop", "category_fluency", "math_streaks", "quick_eyes", "reminiscence", "sudoku"];
 const LEVELLESS = new Set(["reminiscence"]);
 const QUESTION_KEYS = new Set(
   GAMES.flatMap((g) => (LEVELLESS.has(g) ? [`include_${g}`] : [`include_${g}`, `difficulty_${g}`])),

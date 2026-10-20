@@ -1017,6 +1017,22 @@
         }
       }
     },
+    "game.celebration.squares %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You filled %lld squares"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Llenaste %lld cuadros"
+          }
+        }
+      }
+    },
     "game.celebration.streak %lld" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -1824,6 +1840,134 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ronda %1$lld de %2$lld"
+          }
+        }
+      }
+    },
+    "game.sudoku.a11y.cell %lld %lld %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Row %1$lld, column %2$lld, %3$lld"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fila %1$lld, columna %2$lld, %3$lld"
+          }
+        }
+      }
+    },
+    "game.sudoku.a11y.empty %lld %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Row %1$lld, column %2$lld, empty"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fila %1$lld, columna %2$lld, vacío"
+          }
+        }
+      }
+    },
+    "game.sudoku.a11y.put %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Put %lld"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Poner %lld"
+          }
+        }
+      }
+    },
+    "game.sudoku.a11y.selected" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selected"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seleccionado"
+          }
+        }
+      }
+    },
+    "game.sudoku.instruction" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tap a square, then a number."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toca un cuadro y luego un número."
+          }
+        }
+      }
+    },
+    "game.sudoku.miss" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Almost — try another number."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casi — prueba otro número."
+          }
+        }
+      }
+    },
+    "game.sudoku.showme" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show me one"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Muéstrame uno"
+          }
+        }
+      }
+    },
+    "game.sudoku.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sudoku"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sudoku"
           }
         }
       }

@@ -27,6 +27,27 @@ untested), and a self-hosted runner on the owner's Mac (no minutes, but the Mac 
 Revisit when: billed minutes pass ~2,000 in a month (move macOS to label-only or self-hosted), or lint
 disagrees between the runner's Xcode and the local one.
 
+## 2026-10-19 — Three new games: Sudoku, Up or Down, Finish the Saying
+
+**Question:** dad likes the app but gets bored: "few games, very repetitive". He sees 4 games
+(Color Clash and Number Trail hidden) and Home deals 3 of them every day. What do we add?
+Decided by the owner from the hobbies dad had (newspaper puzzles, cards, sayings) and the wish for
+more variety and a higher ceiling. Jev 016 was written (`jev-json/016-new-games.request.json`) but
+not asked: the session had no Jev key. Owner decision; ask it when a key is at hand.
+
+**Decision:** one game per hobby, one PR each, in this order:
+
+- **Sudoku (#179):** 4×4 easy/medium, 6×6 hard, generated with exactly one solution.
+- **Up or Down (#180):** golf solitaire with big drawn cards; easy deals always clear.
+- **Finish the Saying (#181):** 60 sayings per language, written separately in EN and ES, no repeats.
+
+Each deals fresh content every session; misses stay warm; no timer, no visible score. Word search
+(letters under 60pt on iPhone), dominoes (twice the build) and decade trivia (facts vary by country)
+were set aside. This reopens 2026-10-01 "no new games yet", whose revisit trigger was the owner's
+own game ideas. Spec: `superpowers/specs/2026-10-19-three-new-games-design.md`.
+
+Revisit when: one of the three is unplayed for two weeks on dad's iPad.
+
 ## 2026-10-19 — "No key in the binary" means the upstream key; the app secret is a gate token
 
 **Found by:** a graph trace of the key path (graphify, 2026-10-19). The Typesafe key lives only in the

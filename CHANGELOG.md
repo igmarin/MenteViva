@@ -5,6 +5,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 ## [Unreleased]
 
 ### Added
+- **Sudoku (#179):** a seventh game. A 4×4 or 6×6 number square, new every time.
+  A number that doesn't fit gets a gentle "try another number"; "Show me one" fills a
+  square when you're stuck. Hard is 6×6, or a fuller 4×4 on small iPhones.
 - **Remember Together (#139):** a sixth game. Your family's photos appear one at a
   time with "Who is this?"; "Show me" reveals the name you gave the photo. Nothing
   can be answered wrongly, and with no photos it shows everyday objects. Names are

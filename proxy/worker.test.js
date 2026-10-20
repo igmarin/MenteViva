@@ -71,24 +71,24 @@ test("unknown question key -> 400", async () => {
   assert.equal((await worker.fetch(req(b), env)).status, 400);
 });
 
-// Archived live pair (docs/jev-json/014): the exact bytes JevService built, captured
+// Archived request (docs/jev-json/017, seven games): the exact bytes JevService built, captured
 // through a stubbed URLSession. Replaying them here means the allow-list can never
 // drift from the app again without a test going red.
-test("archived 014 request body -> 200, forwarded verbatim", async () => {
-  const path = fileURLToPath(new URL("../docs/jev-json/014-daily-plan.request.json", import.meta.url));
+test("archived 017 request body -> 200, forwarded verbatim", async () => {
+  const path = fileURLToPath(new URL("../docs/jev-json/017-daily-plan.request.json", import.meta.url));
   const raw = readFileSync(path, "utf8");
   const body = JSON.parse(raw);
-  assert.equal(Object.keys(body.questions).length, 11);
+  assert.equal(Object.keys(body.questions).length, 13);
   const r = await worker.fetch(req(raw), env);
   assert.equal(r.status, 200);
   assert.equal(upstreamCalls.length, 1);
   assert.deepEqual(JSON.parse(upstreamCalls[0].init.body), body);
 });
 
-test("real app payload: include_ for all 6 games, difficulty_ only for levelled ones -> 200", async () => {
+test("real app payload: include_ for all 7 games, difficulty_ only for levelled ones -> 200", async () => {
   // What JevService.makeRequest actually sends: include_ per GameID.allCases,
   // difficulty_ only where GameID.hasLevels is true (reminiscence is false).
-  const games = ["memory_match", "stroop", "category_fluency", "math_streaks", "quick_eyes", "reminiscence"];
+  const games = ["memory_match", "stroop", "category_fluency", "math_streaks", "quick_eyes", "reminiscence", "sudoku"];
   const b = good();
   b.questions = {};
   for (const g of games) {

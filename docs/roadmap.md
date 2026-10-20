@@ -23,8 +23,10 @@ progress instead of points (#45).
 4. **Done 2026-09-30:** VoiceOver and 100pt-target check on the iPad (#64),
    History/day-grouping tests and plumbing dedupe (#65, #57).
 
-Still open, waiting for evidence: Quick Eyes untimed redesign (#46). New games stay
-deferred (#18; ranking in `jev-revisit.md` §012).
+Still open, waiting for evidence: Quick Eyes untimed redesign (#46).
+
+**Three new games (decided 2026-10-19), one PR each, in order:** Sudoku (#179), Up or Down
+(#180), Finish the Saying (#181). Spec: `superpowers/specs/2026-10-19-three-new-games-design.md`.
 
 Exit criteria: dad picks it up unprompted, twice in one week (docs/mvp.md G1b).
 

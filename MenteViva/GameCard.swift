@@ -198,6 +198,12 @@ struct Emblem: View {
             hills.closeSubpath()
             context.fill(hills, with: ink)
             context.fill(circle(44, 22, 4.5), with: amber)
+        case .sudoku:
+            // A 2×2 board, one square filled in amber.
+            for (index, origin) in [(10.0, 10.0), (34, 10), (10, 34), (34, 34)].enumerated() {
+                let square = Path(roundedRect: CGRect(x: origin.0, y: origin.1, width: 20, height: 20), cornerRadius: 4)
+                if index == 3 { context.fill(square, with: amber) } else { context.stroke(square, with: ink, style: line) }
+            }
         }
     }
 
