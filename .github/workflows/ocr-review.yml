@@ -21,6 +21,11 @@ jobs:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    env:
+      # The pinned CLI is older than npm latest, so `ocr config` starts a detached
+      # npm self-update that removes the binary before `ocr review` runs: exit 127
+      # (alibaba/open-code-review#703). Keep the pinned version for the whole job.
+      OCR_NO_UPDATE: '1'
     steps:
       # The action does its own full-depth checkout of the PR, so no checkout here.
       - name: Run ocr review
