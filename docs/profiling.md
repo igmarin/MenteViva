@@ -92,9 +92,9 @@ future change makes either of them expensive.
 and shared macOS runners make simulator timings noise rather than signal. A timing gate that
 flakes gets skipped, not fixed. Read it off a trace from step 2 instead.
 
-Two things *are* enforced automatically, both deterministic, and both by the pre-push hook
-(`.githooks/pre-push`) rather than by CI — the GitHub Actions minutes are out, so
-`swift.yml` is manual-dispatch only. Install the hook once:
+Two things *are* enforced automatically, both deterministic: by the pre-push hook
+(`.githooks/pre-push`) and again on every PR by CI (`checks.yml`, `swift.yml`; AGENTS.md
+Workflow 5). Install the hook once:
 
 ```
 git config core.hooksPath .githooks

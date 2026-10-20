@@ -1,0 +1,33 @@
+# Cheap checks on Linux (1x minutes) for every PR to main: no Xcode needed.
+# The macOS build + test lives in swift.yml and only runs when Swift changes.
+# Local twin: .githooks/pre-push (AGENTS.md Workflow 5).
+
+name: Checks
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Signposts match docs/profiling.md
+        run: ./tools/check_signposts.sh
+
+      - name: Project file lists every .swift file
+        run: ./tools/check_project_files.sh
+
+      - name: Proxy tests
+        run: node --test proxy/*.test.js

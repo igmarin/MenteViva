@@ -1,34 +1,50 @@
-# Build and test MenteViva on a macOS runner.
+# Build, lint and test MenteViva on macOS. macOS minutes bill at 10x Linux and
+# ran out once (decisions.md 2026-10-20), so this runs only when a non-draft PR
+# to main touches the app, tests, project or tools. A green run is ~2 minutes
+# (~20 billed). Everything without Xcode runs in checks.yml on Linux.
+# Local twin: .githooks/pre-push (AGENTS.md Workflow 5).
 #
-# NOTE: the stock "Swift" template runs `swift build` / `swift test` — those are
-# SwiftPM commands and this project has no Package.swift, so it fails every run.
-# We use xcodebuild against the generated project instead.
-#
-# Cost warning: macOS runners bill at a much higher rate than Linux and this is a
-# private repo, and the minutes ran out. The automatic triggers are therefore OFF:
-# this runs only when started by hand from the Actions tab.
-#
-# `.githooks/pre-push` runs the same checks locally and is what actually guards
-# `main` today. Install it once: git config core.hooksPath .githooks
-# To turn CI back on when there are minutes again, restore:
-#   pull_request:
-#   push:
-#     branches: [ "main" ]
+# NOTE: the stock "Swift" template runs `swift build` / `swift test` — SwiftPM
+# commands, and this project has no Package.swift. We use xcodebuild instead.
 
 name: Build and test
 
 on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - "MenteViva/**"
+      - "MenteVivaTests/**"
+      - "MenteViva.xcodeproj/**"
+      - "tools/**"
+      - ".swift-format"
+      - ".github/workflows/swift.yml"
   workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
 
 jobs:
   test:
-    runs-on: macos-latest
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.draft == false
+    runs-on: macos-26
+    # A hung simulator would otherwise bill up to 6 h at 10x.
+    timeout-minutes: 20
 
     steps:
     - uses: actions/checkout@v4
 
-    - name: Show toolchain
-      run: xcodebuild -version
+    # The image's default Xcode can lag the one we develop with, and
+    # swift-format --strict differs between versions. Take the newest installed.
+    - name: Select newest Xcode
+      run: |
+        sudo xcode-select -s "$(ls -d /Applications/Xcode_*.app | sort -V | tail -1)"
+        xcodebuild -version
 
     - name: Regenerate project
       run: swift tools/generate_project.swift
@@ -43,9 +59,6 @@ jobs:
     - name: Lint (Apple swift-format, ships with Xcode)
       run: xcrun swift-format lint --strict --recursive MenteViva MenteVivaTests tools
 
-    - name: Signposts match docs/profiling.md
-      run: ./tools/check_signposts.sh
-
     - name: Pick an available iPhone simulator
       id: sim
       run: |
@@ -54,14 +67,8 @@ jobs:
         echo "udid=$SIM_UDID" >> "$GITHUB_OUTPUT"
         echo "Using simulator $SIM_UDID"
 
-    - name: Build
-      run: |
-        xcodebuild build \
-          -project MenteViva.xcodeproj \
-          -scheme MenteViva \
-          -destination "id=${{ steps.sim.outputs.udid }}"
-
-    - name: Test
+    # `test` builds first, so no separate build step (it compiled twice).
+    - name: Build and test
       run: |
         xcodebuild test \
           -project MenteViva.xcodeproj \
