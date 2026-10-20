@@ -5,6 +5,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 ## [Unreleased]
 
 ### Added
+- **Finish the Saying (#181):** a ninth game. The start of a familiar saying; pick the
+  ending from big buttons and hear the whole saying read aloud. Sixty sayings in each
+  language, English sayings and Spanish refranes chosen separately, none repeated until
+  all have been seen.
 - **Up or Down (#180):** an eighth game, a solitaire with big cards. Tap a card one higher
   or one lower than the open card; turn the deck when none fits. A new deal every time; the
   easy level lifts the cards that fit and always clears. It ends on the cards you cleared.

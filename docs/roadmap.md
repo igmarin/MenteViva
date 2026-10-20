@@ -25,8 +25,9 @@ progress instead of points (#45).
 
 Still open, waiting for evidence: Quick Eyes untimed redesign (#46).
 
-**Three new games (decided 2026-10-19), one PR each, in order:** Sudoku (#179), Up or Down
-(#180), Finish the Saying (#181). Spec: `superpowers/specs/2026-10-19-three-new-games-design.md`.
+**Three new games (decided 2026-10-19), shipped one PR each:** Sudoku (#179), Up or Down
+(#180), Finish the Saying (#181). Left: redeploy the Jev worker for nine games, a native ES
+review of the refranes, and a week with dad. Spec: `superpowers/specs/2026-10-19-three-new-games-design.md`.
 
 Exit criteria: dad picks it up unprompted, twice in one week (docs/mvp.md G1b).
 
