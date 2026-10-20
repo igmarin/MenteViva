@@ -8,11 +8,11 @@ No third-party tools: `os_signpost` (via `HotPath.measure`) plus Instruments.
 |---|---|---|
 | `plan.today` | `HomeView.refreshPlan` | 14-day fetch, then the plan — a network call when Jev is on |
 | `photo.import` | `MemoryPhotos.add([Data?])` | the whole batch the family waits on after the picker |
-| `photo.downscale` | `MemoryPhotos.add` | decode + redraw + JPEG encode of a full photo |
+| `photo.downscale` | `MemoryPhotos.add` | ImageIO downsample + JPEG encode of a full photo (off the main actor) |
 | `photo.caption` | `MemoryPhotos.caption` | Set up reads it per photo inside a `ForEach` body |
 | `memory.deal` | `MemoryMatchView.deal` | reads the album and decodes up to 8 photos |
 | `reminiscence.deal` | `ReminiscenceView.deal` | reads the album and one caption file per photo |
-| `reminiscence.photo` | `ReminiscenceView` `PhotoCard` | decodes one full photo per card, on every card |
+| `reminiscence.photo` | `ReminiscenceView` `PhotoCard` | loads one photo per card, off the main actor, on every card |
 | `session.save` | `ModelContext.record` | synchronous SwiftData save after every game |
 | `progress.weekly` | `HistoryView` | recomputed on every redraw of My Week |
 | `progress.rates` | `MyProgressView` | recomputed on every redraw of My progress (#141) |
@@ -77,7 +77,9 @@ device before deciding, since a simulator number is not a device number.
   Home being able to star today's games. The 14-day `FetchDescriptor`, `PlayerStateSummary`
   and the plan all run before anything is shown.
 - **`reminiscence.photo`, ~120 ms on the first card** (1.3 ms on later ones — the first
-  decode pays for the cold file cache). `PhotoCard` decodes on the main actor inside `.task`.
+  decode pays for the cold file cache). Measured while `PhotoCard` decoded on the main actor;
+  it now loads through `MemoryPhotos.image(at:)` off the main actor, so the interval is a wait,
+  not a stall. Re-measure on a device before removing this entry.
 
 Measured and fine, recorded so nobody re-measures them: `photo.caption` 0.05 ms a read,
 `progress.weekly` 0.30 ms median / 7.62 ms worst, `reminiscence.deal` 7.85 ms.

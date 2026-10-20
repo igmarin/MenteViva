@@ -17,17 +17,22 @@ enum CaptionSpeaker {
         switch language {
         case .spanish: "es-MX"
         case .english: "en-US"
-        case .system: Locale.current.identifier
+        // BCP-47 ("en-US"); `identifier` gives "en_US", which names no voice.
+        case .system: Locale.current.identifier(.bcp47)
         }
     }
 
     private static let synthesizer = AVSpeechSynthesizer()
     private static let sessionEnder = SessionEnder()
 
+    /// True while a name is being read, so other audio code leaves the session alone.
+    static var isSpeaking: Bool { synthesizer.isSpeaking }
+
     /// Gives other audio its volume back (ducking ends when the session deactivates)
     /// once the voice has finished or been cut off. Skipped when a newer utterance
     /// is already speaking, so replacing one name with another is never cut short.
-    private final class SessionEnder: NSObject, AVSpeechSynthesizerDelegate {
+    /// `nonisolated`: AVFoundation calls the delegate off the main thread.
+    nonisolated private final class SessionEnder: NSObject, AVSpeechSynthesizerDelegate {
         func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
             end(synthesizer)
         }
@@ -58,7 +63,10 @@ enum CaptionSpeaker {
         try? configureSession()
         try? AVAudioSession.sharedInstance().setActive(true)
         let utterance = AVSpeechUtterance(string: text)
-        utterance.voice = AVSpeechSynthesisVoice(language: voiceLanguage(for: AppLanguage.selected()))
+        // A language with no installed voice still speaks, in English, not silently.
+        utterance.voice =
+            AVSpeechSynthesisVoice(language: voiceLanguage(for: AppLanguage.selected()))
+            ?? AVSpeechSynthesisVoice(language: "en-US")
         synthesizer.delegate = sessionEnder
         synthesizer.speak(utterance)
     }

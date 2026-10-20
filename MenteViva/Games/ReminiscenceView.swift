@@ -168,7 +168,7 @@ private struct PhotoCard: View {
                 Image(systemName: "photo").font(.system(size: 80)).foregroundStyle(.secondary)
             }
         }
-        .task { image = HotPath.measure("reminiscence.photo") { UIImage(contentsOfFile: url.path) } }
+        .task { image = await HotPath.measure("reminiscence.photo") { await MemoryPhotos.image(at: url) } }
     }
 }
 

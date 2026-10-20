@@ -73,7 +73,7 @@ struct FamilyPhotoCaptionSheet: View {
                         .bigTapTarget()
                 }
             }
-            .task { image = UIImage(contentsOfFile: photo.path) }
+            .task { image = await MemoryPhotos.image(at: photo) }
         }
     }
 

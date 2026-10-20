@@ -18,6 +18,9 @@ struct HomeView: View {
     /// Today's picks in plan order. Empty until the on-device policy has run (a
     /// local fetch, so effectively instant); nothing here waits on the network.
     @State private var plan: [GameID] = []
+    /// The day `plan` was made for; a new day (seen when the app comes back) re-plans.
+    @State private var planDay = PlanStore.dayStamp()
+    @Environment(\.scenePhase) private var scenePhase
     /// Games the family hid on this device (#108).
     @AppStorage(FamilySettings.hiddenKey) private var hiddenGames = ""
 
@@ -71,10 +74,16 @@ struct HomeView: View {
                 }
             }
             .navigationDestination(for: GameID.self) { destination(for: $0) }
-            .task { await refreshPlan() }
             .sheet(isPresented: $showSettings) {
                 SettingsView()
             }
+        }
+        // On the stack, not its root: the root disappears on every push, which
+        // restarted the plan (a fetch and possibly the Jev call) on every Back.
+        // Keyed by day, it runs at launch and again when the day rolls over.
+        .task(id: planDay) { await refreshPlan() }
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .active { planDay = PlanStore.dayStamp() }
         }
         .environment(path)
     }

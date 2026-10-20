@@ -7,7 +7,7 @@ import OSLog
 ///     let small = HotPath.measure("photo.downscale") { ... }
 ///
 /// How to read the results: docs/profiling.md.
-enum HotPath {
+nonisolated enum HotPath {
     private static let signposter = OSSignposter(subsystem: "com.igmarin.MenteViva", category: .pointsOfInterest)
 
     /// Runs `body` inside a signpost interval named `name`.

@@ -60,9 +60,7 @@ enum SoundPlayer {
     /// - Parameter event: The moment whose tone to play.
     static func play(_ event: Feedback.Event) {
         guard isEnabled else { return }
-        // .ambient respects the silent switch and mixes with other audio.
-        let session = AVAudioSession.sharedInstance()
-        try? session.setCategory(.ambient, options: [.mixWithOthers])
+        configureSession()
 
         if engine == nil {
             let e = AVAudioEngine()
@@ -71,7 +69,7 @@ enum SoundPlayer {
         guard let engine else { return }
 
         guard let format = AVAudioFormat(standardFormatWithSampleRate: 44100, channels: 1),
-            let buffer = Self.buffer(for: event, format: format)
+            let buffer = cachedBuffer(for: event, format: format)
         else { return }
 
         if playerNode == nil {
@@ -82,8 +80,8 @@ enum SoundPlayer {
         }
         guard let playerNode else { return }
 
-        engine.prepare()
         if !engine.isRunning {
+            engine.prepare()
             try? engine.start()
         }
 
@@ -91,6 +89,27 @@ enum SoundPlayer {
         // without requiring graph mutation from the audio render thread.
         playerNode.scheduleBuffer(buffer, at: nil, options: .interrupts)
         playerNode.play()
+    }
+
+    /// .ambient respects the silent switch and mixes with other audio. Set only
+    /// when it isn't already, and never while a name is being spoken: that
+    /// session is .playback, and flipping it mid-utterance would drop the voice
+    /// below the silent switch and end its ducking.
+    private static func configureSession() {
+        let session = AVAudioSession.sharedInstance()
+        guard session.category != .ambient, !CaptionSpeaker.isSpeaking else { return }
+        try? session.setCategory(.ambient, options: [.mixWithOthers])
+    }
+
+    /// Each tone is synthesized once, then reused: four short buffers, so a tap
+    /// never pays for rendering sine waves.
+    private static var buffers: [Feedback.Event: AVAudioPCMBuffer] = [:]
+
+    private static func cachedBuffer(for event: Feedback.Event, format: AVAudioFormat) -> AVAudioPCMBuffer? {
+        if let cached = buffers[event] { return cached }
+        let rendered = buffer(for: event, format: format)
+        buffers[event] = rendered
+        return rendered
     }
 
     private static func buffer(for event: Feedback.Event, format: AVAudioFormat) -> AVAudioPCMBuffer? {
