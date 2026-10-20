@@ -49,8 +49,21 @@ enum MemoryPhotos {
             image.draw(in: CGRect(origin: .zero, size: size))
         }
         guard let jpeg = small.jpegData(compressionQuality: 0.8) else { throw AddError.notAnImage }
+        try prepare(folder)
+        try jpeg.write(to: folder.appendingPathComponent("\(UUID().uuidString).jpg"), options: writeOptions)
+    }
+
+    /// Photos and captions are written atomically and locked while the device is.
+    private static let writeOptions: Data.WritingOptions = [.atomic, .completeFileProtection]
+
+    /// Creates the folder and keeps it out of iCloud and device backups, so the
+    /// "stays on this device" promise holds for the photos and captions in it.
+    private static func prepare(_ folder: URL) throws {
         try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
-        try jpeg.write(to: folder.appendingPathComponent("\(UUID().uuidString).jpg"))
+        var folder = folder
+        var values = URLResourceValues()
+        values.isExcludedFromBackup = true
+        try folder.setResourceValues(values)
     }
 
     /// Adds each photo in order; one that can't be used never stops the rest.
@@ -113,7 +126,7 @@ enum MemoryPhotos {
             guard FileManager.default.fileExists(atPath: file.path) else { return }
             try FileManager.default.removeItem(at: file)
         } else {
-            try caption.write(to: file, atomically: true, encoding: .utf8)
+            try Data(caption.utf8).write(to: file, options: writeOptions)
         }
     }
 }
