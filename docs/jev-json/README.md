@@ -54,3 +54,8 @@ pick the 400s had been suppressing.
 the same way, with 014's sample state plus a new-player `sudoku` entry. **Request only:** the worker
 is redeployed once, after the third new game, and the live response is saved then.
 
+## 018 — the eight-game request (Up or Down, #180)
+
+`018-daily-plan.request.json` is 017 plus `include_up_or_down` and `difficulty_up_or_down` (15 keys),
+captured the same way with a new-player `up_or_down` entry. Request only, like 017.
+
