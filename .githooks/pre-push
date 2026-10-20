@@ -1,7 +1,8 @@
 #!/bin/bash
-# What .github/workflows/swift.yml used to do, on this machine, because the
-# GitHub Actions minutes ran out. Keep the two in step: a check added here
-# belongs there too, for whenever the workflow runs again.
+# The local twin of CI (.github/workflows/checks.yml + swift.yml): the same
+# checks, run before every push so CI rarely has anything to catch. Keep them in
+# step: a check added here belongs in one of the workflows too (AGENTS.md
+# Workflow 5).
 #
 # Install once:   git config core.hooksPath .githooks
 # Skip one push:  git push --no-verify
@@ -31,18 +32,6 @@ run() {
     fi
 }
 
-# Every .swift file on disk is in the project file, and nothing extra is.
-# "sourcecode.swift" is Xcode's file-type token, not a file.
-project_lists_every_file() {
-    diff \
-        <(grep -oE '[A-Za-z0-9_]+\.swift' MenteViva.xcodeproj/project.pbxproj \
-            | grep -v '^sourcecode\.swift$' | sort -u) \
-        <(find MenteViva MenteVivaTests -name '*.swift' -exec basename {} \; | sort -u) || {
-        echo "Close Xcode, run 'swift tools/generate_project.swift', commit the result."
-        return 1
-    }
-}
-
 simulator() {
     if [ -n "${MENTEVIVA_SIMULATOR:-}" ]; then
         echo "$MENTEVIVA_SIMULATOR"
@@ -62,7 +51,12 @@ simulator() {
 echo "Pre-push checks (git push --no-verify to skip):"
 run "lint" xcrun swift-format lint --strict -r MenteViva MenteVivaTests tools
 run "signposts vs docs" ./tools/check_signposts.sh
-run "project file" project_lists_every_file
+run "project file" ./tools/check_project_files.sh
+if command -v node > /dev/null; then
+    run "proxy tests" node --test proxy/*.test.js
+else
+    printf '  %-22s%s\n' "proxy tests" "skipped (no node)"
+fi
 
 udid="$(simulator)"
 if [ -n "$udid" ]; then

@@ -43,7 +43,7 @@ MenteVivaTests/       unit tests (Given/When/Then names)
 proxy/worker.js       Cloudflare Worker that holds the Jev key
 tools/                generate_project.swift (the only way to edit the Xcode project)
 docs/                 start at docs/README.md
-.github/workflows/    swift.yml: build + test, manual dispatch only (see Workflow 5)
+.github/workflows/    checks.yml (Linux) + swift.yml (macOS): CI on PRs to main (Workflow 5)
 ```
 
 ## Current status
@@ -104,9 +104,18 @@ docs/                 start at docs/README.md
    NOT verification. **A pre-push hook runs all of this for you** — install it
    once with `git config core.hooksPath .githooks`; `git push --no-verify`
    skips it. It tests on the first booted simulator; when several agents work
-   in parallel, each pushes with its own: `MENTEVIVA_SIMULATOR=<udid> git push`. `.github/workflows/swift.yml` holds the same checks but is
-   manual-dispatch only while the Actions minutes are out, so the hook is the
-   thing that actually runs. The same `core.hooksPath` also enables a
+   in parallel, each pushes with its own: `MENTEVIVA_SIMULATOR=<udid> git push`.
+   It also runs the signpost and project-file checks and the proxy tests
+   (`node --test proxy/*.test.js`).
+   **CI runs the same checks on every PR to `main`**, split by cost (macOS
+   minutes bill at 10× Linux; decisions.md 2026-10-20): `checks.yml` on Linux
+   always runs signposts, project file and proxy tests (~1 billed min);
+   `swift.yml` on macOS runs generator drift, lint and `xcodebuild test` only
+   when a non-draft PR touches `MenteViva/`, `MenteVivaTests/`, the project,
+   `tools/` or `.swift-format` (~20 billed min). Open PRs as drafts while
+   iterating; marking ready runs the macOS job. Pushes cancel the run they
+   supersede. A check added to the hook goes into one of the workflows too.
+   The same `core.hooksPath` also enables a
    **pre-commit hook** that runs `ocr review` on the staged changes and blocks
    the commit on critical/high findings (needs `OPENAI_API_KEY` in your shell and
    `npm i -g @alibaba-group/open-code-review`; without them it warns and skips;

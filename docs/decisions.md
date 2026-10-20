@@ -2,6 +2,31 @@
 
 Newest first. Format: date — decision — why — what would make us revisit.
 
+## 2026-10-20 — CI on PRs to main, split by cost: Linux always, macOS only for Swift
+
+**Found:** `swift.yml` was manual-only after the minutes ran out (early October); until billing was
+fixed on 2026-10-20 every job, Linux included, was refused ("spending limit needs to be increased"). The workflow also had no timeout (a hung simulator could bill 6 h at 10×), no
+cancel of superseded runs, built twice (`build` then `test`), and used `macos-latest`'s Xcode (26.6)
+while the hook runs 27.1, so `swift-format --strict` could disagree. The hook never ran the proxy tests.
+
+**Decision (owner, from three options):** hosted runners, path-filtered.
+
+- `checks.yml` (Linux, every PR to main): signposts, project file, `node --test proxy/*.test.js`.
+- `swift.yml` (macOS 26, newest Xcode on the image; 26.6 on 2026-10-20, lint still agreed with
+  local 27.1): generator drift, lint, `xcodebuild test` — only
+  when a non-draft PR touches the app, tests, project, `tools/` or `.swift-format`. 20-minute timeout,
+  concurrency cancel. No caching: zero dependencies, nothing worth restoring.
+- No run on push to `main`: the PR already ran it. `workflow_dispatch` stays for a manual run.
+- The pre-push hook stays the local twin and now runs the proxy tests too; the project-file check moved
+  to `tools/check_project_files.sh` so both share it.
+
+The first green run (#177) took 1 min 44 s on macOS (2 billed min × 10 = 20); the Team plan's 3,000 included minutes cover ~150
+of them a month. Set aside: macOS only on label / ready-for-review (cheaper, but later pushes go
+untested), and a self-hosted runner on the owner's Mac (no minutes, but the Mac must be on).
+
+Revisit when: billed minutes pass ~2,000 in a month (move macOS to label-only or self-hosted), or lint
+disagrees between the runner's Xcode and the local one.
+
 ## 2026-10-19 — "No key in the binary" means the upstream key; the app secret is a gate token
 
 **Found by:** a graph trace of the key path (graphify, 2026-10-19). The Typesafe key lives only in the
