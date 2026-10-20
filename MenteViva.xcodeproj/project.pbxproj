@@ -21,6 +21,7 @@
 		AD020DC30561DD5000000022 /* ReminiscenceDeck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A9D512184D7D07E0000001C; };
 		A87005C5B52DA39800000022 /* ReminiscenceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11EA4E85E31685D60000001C; };
 		4ABB42872988EB3A0000001E /* RoundCounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF92BF2CF2BF92D800000018; };
+		C7D857DBE8864C870000001E /* SudokuPuzzle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89178D58C0F95C6D00000018; };
 		EE94290C1D7CE37100000017 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F548AF03C8043700000011; };
 		2A7F83F1E2F186E800000014 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C04053E45A48AC460000000E; };
 		6866AB30C9E6CF9000000018 /* MenteVivaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65242C715F07923E00000012; };
@@ -68,6 +69,7 @@
 		8014E3CE95A477CB00000036 /* ReminiscenceDeckTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AC3CFEA0009500100000030; };
 		F54A8747C07E0F3800000039 /* ReminiscenceSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE180630A87047600000033; };
 		F3781E2CF00E20FA00000033 /* RoundProgressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690FA2BE3DFB9D180000002D; };
+		C41E87AF625987A200000032 /* SudokuPuzzleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD3387532B6DCD100000002C; };
 		854BEF814FB113CF0000002E /* TodayRunTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92F4CC37A2FE5BE500000028; };
 		0EEED9F3112B457400000033 /* WeeklySummaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2CB27B32AF72D220000002D; };
 
@@ -87,6 +89,7 @@
 		7A9D512184D7D07E0000001C /* ReminiscenceDeck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/ReminiscenceDeck.swift; sourceTree = "<group>"; };
 		11EA4E85E31685D60000001C /* ReminiscenceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/ReminiscenceView.swift; sourceTree = "<group>"; };
 		CF92BF2CF2BF92D800000018 /* RoundCounter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/RoundCounter.swift; sourceTree = "<group>"; };
+		89178D58C0F95C6D00000018 /* SudokuPuzzle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/SudokuPuzzle.swift; sourceTree = "<group>"; };
 		E1F548AF03C8043700000011 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
 		C04053E45A48AC460000000E /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		65242C715F07923E00000012 /* MenteVivaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaApp.swift; sourceTree = "<group>"; };
@@ -134,6 +137,7 @@
 		6AC3CFEA0009500100000030 /* ReminiscenceDeckTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/ReminiscenceDeckTests.swift; sourceTree = SOURCE_ROOT; };
 		4BE180630A87047600000033 /* ReminiscenceSessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/ReminiscenceSessionTests.swift; sourceTree = SOURCE_ROOT; };
 		690FA2BE3DFB9D180000002D /* RoundProgressTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/RoundProgressTests.swift; sourceTree = SOURCE_ROOT; };
+		CD3387532B6DCD100000002C /* SudokuPuzzleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/SudokuPuzzleTests.swift; sourceTree = SOURCE_ROOT; };
 		92F4CC37A2FE5BE500000028 /* TodayRunTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/TodayRunTests.swift; sourceTree = SOURCE_ROOT; };
 		A2CB27B32AF72D220000002D /* WeeklySummaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/WeeklySummaryTests.swift; sourceTree = SOURCE_ROOT; };
 		5D90A9FDEC5CFCA50000000D /* MenteViva.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MenteViva.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -181,6 +185,7 @@
 				7A9D512184D7D07E0000001C /* ReminiscenceDeck.swift */,
 				11EA4E85E31685D60000001C /* ReminiscenceView.swift */,
 				CF92BF2CF2BF92D800000018 /* RoundCounter.swift */,
+				89178D58C0F95C6D00000018 /* SudokuPuzzle.swift */,
 				E1F548AF03C8043700000011 /* HistoryView.swift */,
 				C04053E45A48AC460000000E /* HomeView.swift */,
 				65242C715F07923E00000012 /* MenteVivaApp.swift */,
@@ -241,6 +246,7 @@
 				6AC3CFEA0009500100000030 /* ReminiscenceDeckTests.swift */,
 				4BE180630A87047600000033 /* ReminiscenceSessionTests.swift */,
 				690FA2BE3DFB9D180000002D /* RoundProgressTests.swift */,
+				CD3387532B6DCD100000002C /* SudokuPuzzleTests.swift */,
 				92F4CC37A2FE5BE500000028 /* TodayRunTests.swift */,
 				A2CB27B32AF72D220000002D /* WeeklySummaryTests.swift */,
 			);
@@ -325,6 +331,7 @@
 				AD020DC30561DD5000000022 /* ReminiscenceDeck.swift in Sources */,
 				A87005C5B52DA39800000022 /* ReminiscenceView.swift in Sources */,
 				4ABB42872988EB3A0000001E /* RoundCounter.swift in Sources */,
+				C7D857DBE8864C870000001E /* SudokuPuzzle.swift in Sources */,
 				EE94290C1D7CE37100000017 /* HistoryView.swift in Sources */,
 				2A7F83F1E2F186E800000014 /* HomeView.swift in Sources */,
 				6866AB30C9E6CF9000000018 /* MenteVivaApp.swift in Sources */,
@@ -380,6 +387,7 @@
 				8014E3CE95A477CB00000036 /* ReminiscenceDeckTests.swift in Sources */,
 				F54A8747C07E0F3800000039 /* ReminiscenceSessionTests.swift in Sources */,
 				F3781E2CF00E20FA00000033 /* RoundProgressTests.swift in Sources */,
+				C41E87AF625987A200000032 /* SudokuPuzzleTests.swift in Sources */,
 				854BEF814FB113CF0000002E /* TodayRunTests.swift in Sources */,
 				0EEED9F3112B457400000033 /* WeeklySummaryTests.swift in Sources */,
 			);
