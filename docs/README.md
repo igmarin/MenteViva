@@ -7,6 +7,7 @@ screen of real content, split it — long docs don't get read.
 |---|---|---|
 | [product-brief.md](product-brief.md) | What are we building, for whom, and why | Current |
 | [conventions.md](conventions.md) | Rules every commit must follow | Current |
+| [how-it-works.md](how-it-works.md) | How the app works: a day in it, the pieces, how games are chosen, how to add one | Current |
 | [jev-integration.md](jev-integration.md) | The on-device daily policy, and how optional Jev/TypeSafe fits | Policy is the default; Jev optional, verified live (2026-09-30) |
 | [decision-model-spike-2026-09-30.md](decision-model-spike-2026-09-30.md) | Nimble and Laya tested as Jev replacements, with numbers | Snapshot |
 | [jev-revisit.md](jev-revisit.md) | Jev judgments 001–015: early decisions, audience, games, segments, progress, Card Table | Living, to 2026-10-13 |
