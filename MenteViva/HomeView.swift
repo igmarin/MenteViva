@@ -293,6 +293,7 @@ struct HomeView: View {
         case .reminiscence: ReminiscenceView()
         case .sudoku: SudokuView()
         case .upOrDown: UpOrDownView()
+        case .sayings: SayingsView()
         }
     }
 }

@@ -109,7 +109,7 @@ final class JevServiceTests: XCTestCase {
         XCTAssertNil(StubURLProtocol.requests.last?.value(forHTTPHeaderField: "X-MenteViva-Key"))
     }
 
-    // MARK: - Archived pairs (docs/jev-json/011, 014, 018): pin the real wire contract
+    // MARK: - Archived pairs (docs/jev-json/011, 014, 019): pin the real wire contract
 
     private func archived(_ name: String) throws -> Data {
         let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
@@ -150,7 +150,7 @@ final class JevServiceTests: XCTestCase {
     }
 
     func testGivenAppRequestWhenSentThenQuestionKeysMatchArchivedLiveRequest() async throws {
-        let archivedRequest = try JSONSerialization.jsonObject(with: archived("018-daily-plan.request.json")) as? [String: Any]
+        let archivedRequest = try JSONSerialization.jsonObject(with: archived("019-daily-plan.request.json")) as? [String: Any]
         let archivedKeys = Set((archivedRequest?["questions"] as? [String: Any] ?? [:]).keys)
         StubURLProtocol.handler = { _ in (200, Data("{\"answers\":{}}".utf8)) }
         _ = await service().dailyPlan(state: state, currentDifficulty: medium)
@@ -170,10 +170,10 @@ final class JevServiceTests: XCTestCase {
                     return d
                 })
         let sent = try JSONSerialization.jsonObject(with: body) as? [String: Any]
-        // 018 is the current contract: include_ for all eight games, difficulty_ only for the
-        // seven with levels (Remember Together has none), so 15 keys and no compensation here.
+        // 019 is the current contract: include_ for all nine games, difficulty_ only for the
+        // eight with levels (Remember Together has none), so 17 keys and no compensation here.
         XCTAssertEqual(Set((sent?["questions"] as? [String: Any] ?? [:]).keys), archivedKeys)
-        XCTAssertEqual(archivedKeys.count, 15)
+        XCTAssertEqual(archivedKeys.count, 17)
         XCTAssertEqual(sent?["model"] as? String, "jev-latest")
     }
 }

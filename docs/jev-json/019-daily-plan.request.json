@@ -1,0 +1,212 @@
+{
+  "model": "jev-latest",
+  "questions": {
+    "difficulty_category_fluency": {
+      "criteria": [
+        "Easy \u2014 player is struggling or accuracy dropped recently; reduce cognitive load",
+        "Medium \u2014 player is steady; maintain current challenge",
+        "Hard \u2014 player consistently succeeds quickly; increase challenge"
+      ],
+      "instructions": "What difficulty should category_fluency be set to today?",
+      "type": "score"
+    },
+    "difficulty_math_streaks": {
+      "criteria": [
+        "Easy \u2014 player is struggling or accuracy dropped recently; reduce cognitive load",
+        "Medium \u2014 player is steady; maintain current challenge",
+        "Hard \u2014 player consistently succeeds quickly; increase challenge"
+      ],
+      "instructions": "What difficulty should math_streaks be set to today?",
+      "type": "score"
+    },
+    "difficulty_memory_match": {
+      "criteria": [
+        "Easy \u2014 player is struggling or accuracy dropped recently; reduce cognitive load",
+        "Medium \u2014 player is steady; maintain current challenge",
+        "Hard \u2014 player consistently succeeds quickly; increase challenge"
+      ],
+      "instructions": "What difficulty should memory_match be set to today?",
+      "type": "score"
+    },
+    "difficulty_quick_eyes": {
+      "criteria": [
+        "Easy \u2014 player is struggling or accuracy dropped recently; reduce cognitive load",
+        "Medium \u2014 player is steady; maintain current challenge",
+        "Hard \u2014 player consistently succeeds quickly; increase challenge"
+      ],
+      "instructions": "What difficulty should quick_eyes be set to today?",
+      "type": "score"
+    },
+    "difficulty_sayings": {
+      "criteria": [
+        "Easy \u2014 player is struggling or accuracy dropped recently; reduce cognitive load",
+        "Medium \u2014 player is steady; maintain current challenge",
+        "Hard \u2014 player consistently succeeds quickly; increase challenge"
+      ],
+      "instructions": "What difficulty should sayings be set to today?",
+      "type": "score"
+    },
+    "difficulty_stroop": {
+      "criteria": [
+        "Easy \u2014 player is struggling or accuracy dropped recently; reduce cognitive load",
+        "Medium \u2014 player is steady; maintain current challenge",
+        "Hard \u2014 player consistently succeeds quickly; increase challenge"
+      ],
+      "instructions": "What difficulty should stroop be set to today?",
+      "type": "score"
+    },
+    "difficulty_sudoku": {
+      "criteria": [
+        "Easy \u2014 player is struggling or accuracy dropped recently; reduce cognitive load",
+        "Medium \u2014 player is steady; maintain current challenge",
+        "Hard \u2014 player consistently succeeds quickly; increase challenge"
+      ],
+      "instructions": "What difficulty should sudoku be set to today?",
+      "type": "score"
+    },
+    "difficulty_up_or_down": {
+      "criteria": [
+        "Easy \u2014 player is struggling or accuracy dropped recently; reduce cognitive load",
+        "Medium \u2014 player is steady; maintain current challenge",
+        "Hard \u2014 player consistently succeeds quickly; increase challenge"
+      ],
+      "instructions": "What difficulty should up_or_down be set to today?",
+      "type": "score"
+    },
+    "include_category_fluency": {
+      "criteria": {
+        "false": "Played very recently and repeatedly, or the player consistently disengages from it",
+        "true": "Keeps the day varied, matches recent engagement, or the game has been rested too long"
+      },
+      "instructions": "Should category_fluency be in today's recommended mix for this player?",
+      "type": "noul"
+    },
+    "include_math_streaks": {
+      "criteria": {
+        "false": "Played very recently and repeatedly, or the player consistently disengages from it",
+        "true": "Keeps the day varied, matches recent engagement, or the game has been rested too long"
+      },
+      "instructions": "Should math_streaks be in today's recommended mix for this player?",
+      "type": "noul"
+    },
+    "include_memory_match": {
+      "criteria": {
+        "false": "Played very recently and repeatedly, or the player consistently disengages from it",
+        "true": "Keeps the day varied, matches recent engagement, or the game has been rested too long"
+      },
+      "instructions": "Should memory_match be in today's recommended mix for this player?",
+      "type": "noul"
+    },
+    "include_quick_eyes": {
+      "criteria": {
+        "false": "Played very recently and repeatedly, or the player consistently disengages from it",
+        "true": "Keeps the day varied, matches recent engagement, or the game has been rested too long"
+      },
+      "instructions": "Should quick_eyes be in today's recommended mix for this player?",
+      "type": "noul"
+    },
+    "include_reminiscence": {
+      "criteria": {
+        "false": "Played very recently and repeatedly, or the player consistently disengages from it",
+        "true": "Keeps the day varied, matches recent engagement, or the game has been rested too long"
+      },
+      "instructions": "Should reminiscence be in today's recommended mix for this player?",
+      "type": "noul"
+    },
+    "include_sayings": {
+      "criteria": {
+        "false": "Played very recently and repeatedly, or the player consistently disengages from it",
+        "true": "Keeps the day varied, matches recent engagement, or the game has been rested too long"
+      },
+      "instructions": "Should sayings be in today's recommended mix for this player?",
+      "type": "noul"
+    },
+    "include_stroop": {
+      "criteria": {
+        "false": "Played very recently and repeatedly, or the player consistently disengages from it",
+        "true": "Keeps the day varied, matches recent engagement, or the game has been rested too long"
+      },
+      "instructions": "Should stroop be in today's recommended mix for this player?",
+      "type": "noul"
+    },
+    "include_sudoku": {
+      "criteria": {
+        "false": "Played very recently and repeatedly, or the player consistently disengages from it",
+        "true": "Keeps the day varied, matches recent engagement, or the game has been rested too long"
+      },
+      "instructions": "Should sudoku be in today's recommended mix for this player?",
+      "type": "noul"
+    },
+    "include_up_or_down": {
+      "criteria": {
+        "false": "Played very recently and repeatedly, or the player consistently disengages from it",
+        "true": "Keeps the day varied, matches recent engagement, or the game has been rested too long"
+      },
+      "instructions": "Should up_or_down be in today's recommended mix for this player?",
+      "type": "noul"
+    }
+  },
+  "state": {
+    "games": {
+      "category_fluency": {
+        "currentDifficulty": 1,
+        "daysSinceLastPlayed": 2,
+        "meanAccuracy": 0.85,
+        "meanRoundsCompleted": 3,
+        "sessionsLast14Days": 3
+      },
+      "math_streaks": {
+        "currentDifficulty": 1,
+        "daysSinceLastPlayed": 14,
+        "meanRoundsCompleted": 0,
+        "sessionsLast14Days": 0
+      },
+      "memory_match": {
+        "currentDifficulty": 1,
+        "daysSinceLastPlayed": 1,
+        "meanAccuracy": 0.78,
+        "meanRoundsCompleted": 8,
+        "sessionsLast14Days": 6
+      },
+      "quick_eyes": {
+        "currentDifficulty": 1,
+        "daysSinceLastPlayed": 3,
+        "meanAccuracy": 0.7,
+        "meanRoundsCompleted": 12,
+        "sessionsLast14Days": 4
+      },
+      "reminiscence": {
+        "currentDifficulty": 1,
+        "daysSinceLastPlayed": 4,
+        "meanAccuracy": 0.9,
+        "meanRoundsCompleted": 5,
+        "sessionsLast14Days": 2
+      },
+      "sayings": {
+        "currentDifficulty": 1,
+        "daysSinceLastPlayed": 14,
+        "meanRoundsCompleted": 0,
+        "sessionsLast14Days": 0
+      },
+      "stroop": {
+        "currentDifficulty": 0,
+        "daysSinceLastPlayed": 9,
+        "meanAccuracy": 0.6,
+        "meanRoundsCompleted": 10,
+        "sessionsLast14Days": 1
+      },
+      "sudoku": {
+        "currentDifficulty": 1,
+        "daysSinceLastPlayed": 14,
+        "meanRoundsCompleted": 0,
+        "sessionsLast14Days": 0
+      },
+      "up_or_down": {
+        "currentDifficulty": 1,
+        "daysSinceLastPlayed": 14,
+        "meanRoundsCompleted": 0,
+        "sessionsLast14Days": 0
+      }
+    }
+  }
+}

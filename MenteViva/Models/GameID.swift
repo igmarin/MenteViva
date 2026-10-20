@@ -10,6 +10,7 @@ nonisolated enum GameID: String, CaseIterable, Codable {
     case reminiscence = "reminiscence"
     case sudoku = "sudoku"
     case upOrDown = "up_or_down"
+    case sayings = "sayings"
 
     var emoji: String {
         switch self {
@@ -21,6 +22,7 @@ nonisolated enum GameID: String, CaseIterable, Codable {
         case .reminiscence: "📷"
         case .sudoku: "✏️"
         case .upOrDown: "🃏"
+        case .sayings: "💬"
         }
     }
 
@@ -34,6 +36,7 @@ nonisolated enum GameID: String, CaseIterable, Codable {
         case .reminiscence: "game.reminiscence.title"
         case .sudoku: "game.sudoku.title"
         case .upOrDown: "game.upordown.title"
+        case .sayings: "game.sayings.title"
         }
     }
 

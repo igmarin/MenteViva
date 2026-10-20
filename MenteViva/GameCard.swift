@@ -211,6 +211,15 @@ struct Emblem: View {
             var chevron = Path()
             chevron.addLines([CGPoint(x: 44, y: 16), CGPoint(x: 52, y: 7), CGPoint(x: 60, y: 16)])
             context.stroke(chevron, with: amber, style: StrokeStyle(lineWidth: 4.5, lineCap: .round, lineJoin: .round))
+        case .sayings:
+            // A speech bubble with three dots, the last one amber.
+            var bubble = Path(roundedRect: CGRect(x: 8, y: 12, width: 48, height: 32), cornerRadius: 10)
+            bubble.move(to: CGPoint(x: 18, y: 44))
+            bubble.addLines([CGPoint(x: 14, y: 54), CGPoint(x: 28, y: 44)])
+            context.stroke(bubble, with: ink, style: line)
+            context.fill(circle(21, 28, 3.5), with: ink)
+            context.fill(circle(32, 28, 3.5), with: ink)
+            context.fill(circle(43, 28, 3.5), with: amber)
         }
     }
 

@@ -32,7 +32,7 @@ MenteViva/            app (SwiftUI + SwiftData)
   MenteVivaApp.swift  entry; LOCAL_ONLY picks the store
   HomeView, OnboardingView, SettingsView, HistoryView,
   MyProgressView (rates, #141), SetUpView (hide/pin/photos)
-  Games/              one file per game (6) + CelebrationView, MissCue, FitOrScroll
+  Games/              one file per game (9) + CelebrationView, MissCue, FitOrScroll
   Models/             GameSession, GameID, Difficulty, RoundProgress
   Services/           DailyPolicy (on-device plan), PlanStore (saved plan + levels),
                       JevService (optional Jev client), FamilySettings, MemoryPhotos,
@@ -48,15 +48,16 @@ docs/                 start at docs/README.md
 
 ## Current status
 
-- 6 games shipped (Memory Lane, Color Clash, Name the Herd, Number Trail, Remember Together,
-  Quick Eyes); ES/EN complete; local-only build is the default.
+- 9 games shipped (Memory Lane, Color Clash, Name the Herd, Number Trail, Remember Together,
+  Quick Eyes, Sudoku, Up or Down, Finish the Saying); ES/EN complete; local-only build is the default.
 - **Daily picks and difficulty are decided on the device** (`DailyPolicy`, #101): no model,
   no network, no cost. Jev is an optional override, wired and verified live (proxy deployed #63,
   payload archived `docs/jev-json/014`), used only when `MenteViva/Config/Local.xcconfig`
   (git-ignored; copy the `.example`) sets the proxy URL and secret (#91). Open-model
   alternatives were tested and rejected for the app: `docs/decision-model-spike-2026-09-30.md`.
 - Dad playtest #6 ran (findings on #6); its follow-ups #106–#110 and Remember Together (#139)
-  shipped. New games stay deferred (#18).
+  shipped. Three new games followed from the owner's playtests (decisions.md 2026-10-19):
+  Sudoku (#179), Up or Down (#180), Finish the Saying (#181).
 - **Card Table redesign shipped** (#154–#159, decisions.md 2026-10-12, Jev 015): each game is a
   framed card in its own colour (`GameCard.swift`, palette in `Theme.swift`), Home deals today's
   three, every game shares one header, and the end of a game adds its card to the week board.
