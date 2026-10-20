@@ -22,6 +22,7 @@
 		A87005C5B52DA39800000022 /* ReminiscenceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11EA4E85E31685D60000001C; };
 		4ABB42872988EB3A0000001E /* RoundCounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF92BF2CF2BF92D800000018; };
 		C7D857DBE8864C870000001E /* SudokuPuzzle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89178D58C0F95C6D00000018; };
+		7F1CAF5CBD717E560000001C /* SudokuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D87F63700842679400000016; };
 		EE94290C1D7CE37100000017 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F548AF03C8043700000011; };
 		2A7F83F1E2F186E800000014 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C04053E45A48AC460000000E; };
 		6866AB30C9E6CF9000000018 /* MenteVivaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65242C715F07923E00000012; };
@@ -90,6 +91,7 @@
 		11EA4E85E31685D60000001C /* ReminiscenceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/ReminiscenceView.swift; sourceTree = "<group>"; };
 		CF92BF2CF2BF92D800000018 /* RoundCounter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/RoundCounter.swift; sourceTree = "<group>"; };
 		89178D58C0F95C6D00000018 /* SudokuPuzzle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/SudokuPuzzle.swift; sourceTree = "<group>"; };
+		D87F63700842679400000016 /* SudokuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/SudokuView.swift; sourceTree = "<group>"; };
 		E1F548AF03C8043700000011 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
 		C04053E45A48AC460000000E /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		65242C715F07923E00000012 /* MenteVivaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaApp.swift; sourceTree = "<group>"; };
@@ -186,6 +188,7 @@
 				11EA4E85E31685D60000001C /* ReminiscenceView.swift */,
 				CF92BF2CF2BF92D800000018 /* RoundCounter.swift */,
 				89178D58C0F95C6D00000018 /* SudokuPuzzle.swift */,
+				D87F63700842679400000016 /* SudokuView.swift */,
 				E1F548AF03C8043700000011 /* HistoryView.swift */,
 				C04053E45A48AC460000000E /* HomeView.swift */,
 				65242C715F07923E00000012 /* MenteVivaApp.swift */,
@@ -332,6 +335,7 @@
 				A87005C5B52DA39800000022 /* ReminiscenceView.swift in Sources */,
 				4ABB42872988EB3A0000001E /* RoundCounter.swift in Sources */,
 				C7D857DBE8864C870000001E /* SudokuPuzzle.swift in Sources */,
+				7F1CAF5CBD717E560000001C /* SudokuView.swift in Sources */,
 				EE94290C1D7CE37100000017 /* HistoryView.swift in Sources */,
 				2A7F83F1E2F186E800000014 /* HomeView.swift in Sources */,
 				6866AB30C9E6CF9000000018 /* MenteVivaApp.swift in Sources */,

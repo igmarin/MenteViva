@@ -1,6 +1,6 @@
 import Foundation
 
-/// The six games, by the stable IDs stored in sessions and sent (anonymized) to Jev.
+/// The games, by the stable IDs stored in sessions and sent (anonymized) to Jev.
 nonisolated enum GameID: String, CaseIterable, Codable {
     case memoryMatch = "memory_match"
     case stroop = "stroop"
@@ -8,6 +8,7 @@ nonisolated enum GameID: String, CaseIterable, Codable {
     case mathStreaks = "math_streaks"
     case quickEyes = "quick_eyes"
     case reminiscence = "reminiscence"
+    case sudoku = "sudoku"
 
     var emoji: String {
         switch self {
@@ -17,6 +18,7 @@ nonisolated enum GameID: String, CaseIterable, Codable {
         case .mathStreaks: "🔢"
         case .quickEyes: "👀"
         case .reminiscence: "📷"
+        case .sudoku: "✏️"
         }
     }
 
@@ -28,6 +30,7 @@ nonisolated enum GameID: String, CaseIterable, Codable {
         case .mathStreaks: "game.math.title"
         case .quickEyes: "game.quickeyes.title"
         case .reminiscence: "game.reminiscence.title"
+        case .sudoku: "game.sudoku.title"
         }
     }
 

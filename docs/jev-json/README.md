@@ -47,3 +47,10 @@ response is still the fixture the plan-ranking test replays.
 2026-10-04: HTTP 200, model `jev-1.13.0`, 11 answers for 11 questions. Jev put
 Remember Together second in the mix (`include_reminiscence` 0.75), which is the
 pick the 400s had been suppressing.
+
+## 017 — the seven-game request (Sudoku, #179)
+
+`017-daily-plan.request.json` is 014 plus `include_sudoku` and `difficulty_sudoku` (13 keys), captured
+the same way, with 014's sample state plus a new-player `sudoku` entry. **Request only:** the worker
+is redeployed once, after the third new game, and the live response is saved then.
+

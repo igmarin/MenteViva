@@ -291,6 +291,7 @@ struct HomeView: View {
         case .mathStreaks: MathStreakView()
         case .quickEyes: QuickEyesView()
         case .reminiscence: ReminiscenceView()
+        case .sudoku: SudokuView()
         }
     }
 }

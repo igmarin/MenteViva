@@ -21,7 +21,7 @@ nonisolated enum DailyPolicy {
     /// family can now hide a game instead (#47, #108), and hidden games are never picked.
     static let value: [GameID: Double] = [
         .memoryMatch: 1.0, .quickEyes: 0.8, .categoryFluency: 0.7, .stroop: 0.3, .mathStreaks: 0.3,
-        .reminiscence: 0.7,
+        .reminiscence: 0.7, .sudoku: 0.8,
     ]
     static let gamesPerDay = 3
     /// Days a difficulty stays put after it changes. The 14-day accuracy window

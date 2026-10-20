@@ -37,8 +37,8 @@ final class DailyPolicyTests: XCTestCase {
 
     func testGivenHiddenGamesWhenPlanThenTheyAreNeverPickedAndTheMixStaysFull() {
         let p = plan(state(), hidden: [.memoryMatch, .quickEyes])
-        // Remember Together (#139) is the sixth game and ties Name the Herd's value.
-        XCTAssertEqual(p.games, [.categoryFluency, .reminiscence, .stroop])
+        // Sudoku (#179, 0.8) leads; Remember Together (#139) ties Name the Herd's value.
+        XCTAssertEqual(p.games, [.sudoku, .categoryFluency, .reminiscence])
     }
 
     func testGivenAllButOneGameHiddenWhenPlanThenOnlyThatGameIsPicked() {
@@ -55,7 +55,8 @@ final class DailyPolicyTests: XCTestCase {
     // MARK: Mix
 
     func testGivenBrandNewPlayerWhenPlanThenMostWorthwhileGamesLead() {
-        XCTAssertEqual(plan(state()).games, [.memoryMatch, .quickEyes, .categoryFluency])
+        // Sudoku ties Quick Eyes at 0.8; the tie keeps GameID order.
+        XCTAssertEqual(plan(state()).games, [.memoryMatch, .quickEyes, .sudoku])
     }
 
     func testGivenAnyStateWhenPlanThenExactlyThreeDistinctGames() {
@@ -81,7 +82,7 @@ final class DailyPolicyTests: XCTestCase {
 
     func testGivenGameMissingFromStateWhenPlanThenTreatedAsNeverPlayed() {
         let p = DailyPolicy.plan(state: PlayerStateSummary(games: [:]), dayStamp: "2026-09-30")
-        XCTAssertEqual(p.games, [.memoryMatch, .quickEyes, .categoryFluency])
+        XCTAssertEqual(p.games, [.memoryMatch, .quickEyes, .sudoku])
         XCTAssertTrue(GameID.allCases.allSatisfy { p.difficulty[$0] == .medium })
     }
 
@@ -146,8 +147,8 @@ final class DailyPolicyTests: XCTestCase {
         let data = try Data(contentsOf: root.appendingPathComponent("docs/jev-json/011-daily-plan.request.json"))
         struct Envelope: Decodable { let state: PlayerStateSummary }
         let summary = try JSONDecoder().decode(Envelope.self, from: data).state
-        // The payload predates the sixth game, so compare in the five-game world.
-        let p = plan(summary, hidden: [.reminiscence])
+        // The payload predates the sixth and seventh games, so compare in the five-game world.
+        let p = plan(summary, hidden: [.reminiscence, .sudoku])
         // Jev picked quick_eyes, category_fluency, memory_match for this payload.
         XCTAssertEqual(Set(p.games), [.quickEyes, .categoryFluency, .memoryMatch])
         XCTAssertEqual(p.difficulty[.stroop], .easy)  // 0.60 accuracy, one session
