@@ -93,6 +93,7 @@ actor JevService {
                     dayStamp: stamp,
                     gamesPerDay: gamesPerDay,
                     confidenceFloor: difficultyConfidenceThreshold,
+                    lastChange: PlanStore.lastDifficultyChange(defaults: defaults),
                     pinned: pinned, hidden: hidden)
             } catch {
                 Self.log.info("Jev unavailable, using the on-device plan: \(String(describing: error), privacy: .public)")
@@ -149,6 +150,7 @@ actor JevService {
         dayStamp: String,
         gamesPerDay: Int,
         confidenceFloor: Double,
+        lastChange: [GameID: String] = [:],
         pinned: [GameID: Difficulty] = [:],
         hidden: Set<GameID> = []
     ) -> DailyPlan {
@@ -158,14 +160,23 @@ actor JevService {
         let ranked = GameID.allCases.filter { !hidden.contains($0) }.sorted {
             (answers["include_\($0.rawValue)"]?.noul ?? -1) > (answers["include_\($1.rawValue)"]?.noul ?? -1)
         }
-        // Difficulty: apply only confident scores; otherwise keep current.
+        // Difficulty: apply only confident scores; otherwise keep current. Jev
+        // obeys the same safety rules as DailyPolicy: one level at a time, and
+        // none while the last change is still inside its hold period.
         var difficulty = current
         for game in GameID.allCases {
-            if case .score(let score, let confidence)? = answers["difficulty_\(game.rawValue)"],
+            guard case .score(let score, let confidence)? = answers["difficulty_\(game.rawValue)"],
                 confidence >= confidenceFloor
+            else { continue }
+            if let changedOn = lastChange[game],
+                DailyPolicy.daysBetween(changedOn, dayStamp) < DailyPolicy.holdDays
             {
-                difficulty[game] = Difficulty(jevScore: score)
+                continue
             }
+            let from = current[game] ?? .medium
+            let target = Difficulty(jevScore: score).rawValue
+            let step = min(max(target, from.rawValue - 1), from.rawValue + 1)
+            difficulty[game] = Difficulty(rawValue: step) ?? from
         }
         difficulty.merge(pinned) { _, pin in pin }
         let count = min(max(gamesPerDay, 0), ranked.count)

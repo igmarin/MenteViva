@@ -108,30 +108,29 @@ enum SoundPlayer {
         }
 
         let sampleRate = 44100.0
-        var totalDuration = 0.0
-        for note in notes { totalDuration += note.1 }
-
-        let totalFrames = AVAudioFrameCount(totalDuration * sampleRate)
+        // Truncate per note, then sum: sizing from the summed duration can come
+        // out a frame short of what the loop below writes.
+        let noteFrames = notes.map { Int(sampleRate * $0.1) }
+        let totalFrames = AVAudioFrameCount(noteFrames.reduce(0, +))
         guard let buffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: totalFrames),
             let channel = buffer.floatChannelData?[0]
         else { return nil }
         buffer.frameLength = totalFrames
 
         var offset = 0
-        for note in notes {
+        for (note, frames) in zip(notes, noteFrames) {
             let freq = note.0
             let duration = note.1
             let amplitude = note.2
-            let frames = AVAudioFrameCount(sampleRate * duration)
             let attack = 0.01
-            for i in 0..<Int(frames) {
+            for i in 0..<frames {
                 let t = Double(i) / sampleRate
                 let attackEnv = min(t / attack, 1.0)
                 let decayEnv = max(1.0 - t / (duration * 0.25), 0.0)
                 let envelope = Float(attackEnv * decayEnv)
                 channel[offset + i] = Float(sin(2.0 * Double.pi * freq * t)) * envelope * amplitude
             }
-            offset += Int(frames)
+            offset += frames
         }
         return buffer
     }

@@ -16,13 +16,41 @@ final class JevPlanPolicyTests: XCTestCase {
         _ answers: [String: JevAnswer],
         gamesPerDay: Int = 3,
         floor: Double = 0.6,
+        current: [GameID: Difficulty]? = nil,
+        lastChange: [GameID: String] = [:],
         pinned: [GameID: Difficulty] = [:],
         hidden: Set<GameID> = []
     ) -> DailyPlan {
         JevService.makePlan(
-            from: answers, current: current, dayStamp: stamp,
+            from: answers, current: current ?? self.current, dayStamp: stamp,
             gamesPerDay: gamesPerDay, confidenceFloor: floor,
-            pinned: pinned, hidden: hidden)
+            lastChange: lastChange, pinned: pinned, hidden: hidden)
+    }
+
+    // MARK: Safety rules shared with DailyPolicy
+
+    func testGivenEasyGameWhenJevScoresHardThenItMovesOnlyOneLevel() {
+        let answers: [String: JevAnswer] = ["difficulty_stroop": .score(score: 2.0, confidence: 0.95)]
+        let plan = makePlan(answers, current: [.stroop: .easy])
+        XCTAssertEqual(plan.difficulty[.stroop], .medium)
+    }
+
+    func testGivenHardGameWhenJevScoresEasyThenItMovesOnlyOneLevel() {
+        let answers: [String: JevAnswer] = ["difficulty_stroop": .score(score: 0, confidence: 0.95)]
+        let plan = makePlan(answers, current: [.stroop: .hard])
+        XCTAssertEqual(plan.difficulty[.stroop], .medium)
+    }
+
+    func testGivenRecentChangeWhenJevIsConfidentThenTheLevelHolds() {
+        let answers: [String: JevAnswer] = ["difficulty_stroop": .score(score: 2.0, confidence: 0.95)]
+        let plan = makePlan(answers, lastChange: [.stroop: "2026-03-04"])  // 3 days ago
+        XCTAssertEqual(plan.difficulty[.stroop], .medium)
+    }
+
+    func testGivenChangeOlderThanHoldWhenJevIsConfidentThenTheLevelMoves() {
+        let answers: [String: JevAnswer] = ["difficulty_stroop": .score(score: 2.0, confidence: 0.95)]
+        let plan = makePlan(answers, lastChange: [.stroop: "2026-02-28"])  // 7 days ago
+        XCTAssertEqual(plan.difficulty[.stroop], .hard)
     }
 
     // MARK: Family settings (#108)

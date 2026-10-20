@@ -52,6 +52,8 @@ struct OnboardingView: View {
             .buttonStyle(.plain)
             .accessibilityHint(AppLanguage.localized("onboarding.start.hint"))
         }
+        // At the largest text sizes the screen scrolls, so Start is always reachable.
+        .fitOrScroll()
         .padding(24)
     }
 
