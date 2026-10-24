@@ -4,7 +4,8 @@ For #6 (family playtest) and #33 (non-family seniors). Same method for both —
 the only difference is who is holding the iPad. For the #6 session itself,
 print [playtest-session-1.md](playtest-session-1.md): it maps each observation
 to the issue it unblocks (#44, #46, #47). Session #2, on the Card Table redesign,
-uses [playtest-session-2.md](playtest-session-2.md).
+uses [playtest-session-2.md](playtest-session-2.md); session #3, on the three new games,
+uses [playtest-session-3.md](playtest-session-3.md).
 
 ## The one rule
 
