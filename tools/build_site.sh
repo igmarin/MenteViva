@@ -8,14 +8,18 @@ set -euo pipefail
 cd "$(git rev-parse --show-toplevel)"
 
 email="${1:-}"
-case "$email" in
-    *?@?*.?*) ;;
-    *) echo "usage: tools/build_site.sh <support email>" >&2; exit 1 ;;
-esac
+# A strict allowlist: no character here means anything to sed or to HTML, so the
+# address needs no escaping.
+if ! [[ "$email" =~ ^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$ ]]; then
+    echo "usage: tools/build_site.sh <support email>" >&2
+    exit 1
+fi
 
 rm -rf site-out
 cp -R site site-out
-find site-out -name '*.html' -exec sed -i '' "s/SUPPORT_EMAIL/$email/g" {} +
+# `-i.bak` is the one in-place form both BSD (macOS) and GNU (Linux) sed accept.
+find site-out -name '*.html' -exec sed -i.bak "s/SUPPORT_EMAIL/$email/g" {} +
+find site-out -name '*.bak' -delete
 
 if grep -rq 'SUPPORT_EMAIL\|TODO' site-out; then
     echo "placeholder left in site-out/" >&2
