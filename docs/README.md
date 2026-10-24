@@ -30,7 +30,7 @@ screen of real content, split it — long docs don't get read.
 | [question-audit.md](question-audit.md) | The real questions, checked (against wrong questions) | Living |
 | [roadmap.md](roadmap.md) | What happens next, in order | Living |
 | [store-listing.md](store-listing.md) | App Store copy + screenshots (EN/ES), drafted early | Draft |
-| [privacy-policy.md](privacy-policy.md) | Privacy policy draft — local-first, what leaves the device (#34) | Draft — needs hosting + contact |
+| [privacy-policy.md](privacy-policy.md) | Privacy policy — local-first, what leaves the device (#34) | Pages built in `site/` (EN + ES); needs a host + contact |
 | [support.md](support.md) | Support page draft — 7-day expiry, language, progress (#34) | Draft — needs hosting + contact |
 
 ## Writing rules for these docs

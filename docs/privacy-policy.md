@@ -1,8 +1,8 @@
 # Privacy policy — draft (#34)
 
-Plain language, for players and their families. Host this verbatim once a
-public URL exists; the App Store "App Privacy" label must match it.
-Spanish translation lands when hosted (docs/README rule 5).
+Plain language, for players and their families. The published copy is
+`site/en/privacy.html` (Spanish: `site/es/privacy.html`, #34); keep all three in step when the
+policy changes. The App Store "App Privacy" label must match it.
 
 ---
 
@@ -55,8 +55,8 @@ children. We collect no age information from anyone.
 **Changes.** If this policy changes, the new version replaces this one at the
 same address, with the date updated above.
 
-**Contact.** Questions or requests: **[TODO-owner: support email before
-hosting]**. We answer in English or Spanish.
+**Contact.** Questions or requests: **the support email** (`site/` takes it as a
+build argument, `tools/build_site.sh`). We answer in English or Spanish.
 
 ---
 

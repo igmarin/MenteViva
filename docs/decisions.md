@@ -27,6 +27,22 @@ untested), and a self-hosted runner on the owner's Mac (no minutes, but the Mac 
 Revisit when: billed minutes pass ~2,000 in a month (move macOS to label-only or self-hosted), or lint
 disagrees between the runner's Xcode and the local one.
 
+## 2026-10-23 — Privacy and support pages: static files in `site/`, hosted on a free public host (#34)
+
+**Question:** how do we host the privacy policy and support page for free? GitHub Pages on this private
+repo needs a paid plan (decisions 2026-09-20).
+
+**Decision:** the pages live in the repo as plain static HTML, English and Spanish (`site/en`, `site/es`),
+no JavaScript, large text, light and dark. `tools/build_site.sh <email>` fills in the support address
+and writes `site-out/`, which any free static host can serve. The address is never committed, and the
+script refuses to build without one, so a placeholder can't be published. The host itself (a small public
+repo's GitHub Pages, or Cloudflare Pages) and the address are the owner's choice.
+
+**Not done by this change:** the in-app link in Settings and the App Store Connect URLs (both need the
+final URL, #34), and a native-speaker pass over the Spanish pages (the #12 process).
+
+Revisit when: the paid Developer Program arrives and the repo can go public, or the policy text changes.
+
 ## 2026-10-19 — Three new games: Sudoku, Up or Down, Finish the Saying
 
 **Question:** dad likes the app but gets bored: "few games, very repetitive". He sees 4 games
