@@ -19,3 +19,4 @@ MenteViva/Config/Local.xcconfig
 node_modules/
 .omc/
 .atl/
+site-out/

@@ -1,21 +1,21 @@
-# Privacy policy — draft (#34)
+# Privacy policy (#34)
 
-Plain language, for players and their families. Host this verbatim once a
-public URL exists; the App Store "App Privacy" label must match it.
-Spanish translation lands when hosted (docs/README rule 5).
+Plain language, for players and their families. The published copy is
+`site/en/privacy.html` (Spanish: `site/es/privacy.html`, #34); keep all three in step when the
+policy changes. The App Store "App Privacy" label must match it.
 
 ---
 
 **Mente Viva — Privacy Policy**
-Last updated: 2026-10-01
+Last updated: 2026-10-23
 
-**The short version:** Mente Viva collects nothing about you. No account, no
-name, no email, no ads, no tracking. Your games stay on your device.
+**The short version:** Mente Viva does not receive your personal data. No account,
+no ads, no tracking. Your games, your photos and any names you add stay on your device.
 
 **What is stored, and where.** Your game sessions (which games you played,
 how rounds went, how long they took) are stored only on your iPhone or iPad,
 in the app's private storage. We never see them. They are not synced anywhere.
-Deleting the app deletes them completely.
+Deleting the app removes them from your device; a backup of your device that you made earlier may still hold a copy, which belongs to you and which you control in Apple's Settings.
 
 **Photos for Memory Lane.** If you add photos for Memory Lane, you pick them
 with Apple's photo picker, which gives the app only the photos you choose — no
@@ -37,7 +37,7 @@ its daily game suggestion is worked out on your device. There is one optional
 variant of that suggestion that, *only if it is turned on in a given build*, sends a small summary to our suggestion service:
 counts and averages only (for example "played 4 sessions this fortnight,
 average accuracy 0.8"), per game. It contains no name, no device ID, no dates,
-no location — nothing that identifies you. The summary goes through our proxy
+no location — nothing in it identifies you. Like any request over the internet, it comes from your device's IP address; the proxy (hosted on Cloudflare) uses that only to limit how often one device can ask, and we do not store it. The summary goes through our proxy
 to the suggestion provider (TypeSafe AI, api.typesafe.ai), which answers the
 suggestion. Current builds ship
 with this feature **off**; when off, the app makes no network requests at all.
@@ -55,8 +55,8 @@ children. We collect no age information from anyone.
 **Changes.** If this policy changes, the new version replaces this one at the
 same address, with the date updated above.
 
-**Contact.** Questions or requests: **[TODO-owner: support email before
-hosting]**. We answer in English or Spanish.
+**Contact.** Questions or requests: **the support email** (`site/` takes it as a
+build argument, `tools/build_site.sh`). We answer in English or Spanish.
 
 ---
 
@@ -79,8 +79,8 @@ hosting]**. We answer in English or Spanish.
   no network request, so **Data Not Collected** holds with no caveats.
 - **Before any build turns the optional Jev backend on:** the proxy rate-limits by client IP
   (`proxy/worker.js`), so Cloudflare sees the device IP on each daily request even though we store
-  nothing and the payload has no identifiers. Decide with Apple's App Privacy definitions whether
-  the label still holds, and add one plain sentence about the IP to the published text above.
+  nothing and the payload has no identifiers. The IP sentence is now in the published text; still decide with
+  Apple's App Privacy definitions whether the label holds before any build turns the backend on.
   In-app `settings.privacy.suggestions` (shown only when a proxy is set) says "only anonymous totals"; the payload also
   carries each game's current difficulty and days since last play (numbers, not dates).
 - Hosting: the repo is private and GitHub Pages on private repos needs a paid
