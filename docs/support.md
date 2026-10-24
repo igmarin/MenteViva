@@ -1,4 +1,4 @@
-# Support page — draft (#34)
+# Support page (#34)
 
 Short on purpose. Published copy: `site/en/support.html` and `site/es/support.html` (#34),
 hosted next to the privacy policy; link from Settings and App Store Connect's support URL field.

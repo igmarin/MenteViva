@@ -1,4 +1,4 @@
-# Privacy policy — draft (#34)
+# Privacy policy (#34)
 
 Plain language, for players and their families. The published copy is
 `site/en/privacy.html` (Spanish: `site/es/privacy.html`, #34); keep all three in step when the
@@ -7,7 +7,7 @@ policy changes. The App Store "App Privacy" label must match it.
 ---
 
 **Mente Viva — Privacy Policy**
-Last updated: 2026-10-01
+Last updated: 2026-10-23
 
 **The short version:** Mente Viva does not receive your personal data. No account,
 no ads, no tracking. Your games, your photos and any names you add stay on your device.
