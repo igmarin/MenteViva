@@ -22,6 +22,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
   aloud", speaks the name on its own (off by default); the speaker button always works.
 
 ### Changed
+- **Memory Lane turns its cards (#237):** a card turns over like a real card, and a
+  missed pair turns back the moment you pick the next card, so the board never holds
+  more than it should. With Reduce Motion the cards cross-fade instead of turning.
 - **Sudoku celebrates finished rows (#239):** finishing a row, column or box washes it
   in the game's ink and names it aloud, and each placed number pops gently onto its
   square. The finished board keeps its usual celebration and nothing else.
