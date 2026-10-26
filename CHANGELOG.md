@@ -22,6 +22,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
   aloud", speaks the name on its own (off by default); the speaker button always works.
 
 ### Changed
+- **A clear, honest introduction (#227):** onboarding and store copy now use
+  "Fun mental exercise" / "Ejercicio mental divertido" and describe games as
+  exercising memory and attention, without promising cognitive outcomes.
 - MenteViva no longer connects to the internet; today's games are always chosen on your device (#195).
 - **Privacy you can read (Settings):** the long paragraph is now three short lines with
   icons: your games stay on this iPad, no account or ads or tracking, and your photos and

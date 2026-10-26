@@ -5,15 +5,15 @@ Developer Program (#37). Before submitting, re-verify category names, keyword
 rules and screenshot dimensions against the current App Store Connect — those
 change, and this draft may sit for a while.
 
-Claim ceiling everywhere (research §1, FTC/FDA): **"fun mental exercise"**.
-No treatment, no prevention, no diagnosis, no "improves memory" outcome claims.
+Claim ceiling everywhere (research §1, FTC/FDA): **"Fun mental exercise / Ejercicio mental divertido"**.
+No treatment or diagnosis, and no outcome claims: games exercise memory and attention.
 
 ## Metadata
 
 | Field | Value |
 |---|---|
 | Name | Mente Viva |
-| Subtitle | Warm games for an active mind |
+| Subtitle | Fun mental exercise |
 | Category | **Games → Puzzle** (not Medical/Health — keeps it out of medical scrutiny) |
 | Age rating | 4+ |
 | Price | one-time $12.99 (decided-for-beta, #21) |
@@ -27,13 +27,15 @@ No treatment, no prevention, no diagnosis, no "improves memory" outcome claims.
 
 The **adult child** reads this page (Jev 009: buyer = caregiver; the player
 never sees a pitch). Speak to them about someone they love. In-app copy speaks
-to the player. Every line must pass statistics-rationale §4 (no outcome, no
-prevention, no "sharpen"). Screenshots avoid Color Clash (lowest Jev scores,
+to the player. Every line must pass statistics-rationale §4 (exercise, never
+outcomes). Screenshots avoid Color Clash (lowest Jev scores,
 008/010).
 
 ## Description — English
 
 Simple, warm games for someone you love — at their own pace, with no pressure.
+
+Fun mental exercise.
 
 Mente Viva has five gentle games, each a different kind of thinking: memory, attention, words, numbers and quick looks. Big buttons, calm colors, and no countdown clock. When an answer isn't right, it says "try again" — never "wrong". Set it up once, pick the language, and they can play on their own.
 
@@ -43,11 +45,13 @@ Mente Viva has five gentle games, each a different kind of thinking: memory, att
 • Big text and buttons, easy on the eyes
 • Progress stays on the device
 
-Mente Viva is entertainment and mental exercise. It is not a medical device and does not diagnose, treat or prevent any condition. If you have concerns about a loved one's memory, talk to their doctor.
+Mente Viva is entertainment and mental exercise. It is not a medical device and does not diagnose or treat any condition. If you have concerns about a loved one's memory, talk to their doctor.
 
 ## Description — Spanish
 
 Juegos sencillos y amables para alguien a quien quieres — a su ritmo y sin presión.
+
+Ejercicio mental divertido.
 
 Mente Viva tiene cinco juegos suaves, cada uno para un tipo distinto de pensamiento: memoria, atención, palabras, números y miradas rápidas. Botones grandes, colores tranquilos y sin cuenta regresiva. Si una respuesta no es correcta, dice «inténtalo otra vez», nunca «mal». Lo configuras una vez, eliges el idioma y puede jugar solo.
 
@@ -57,7 +61,7 @@ Mente Viva tiene cinco juegos suaves, cada uno para un tipo distinto de pensamie
 • Texto y botones grandes, fáciles de leer
 • El progreso se queda en el dispositivo
 
-Mente Viva es entretenimiento y ejercicio mental. No es un dispositivo médico y no diagnostica, trata ni previene ninguna enfermedad. Si te preocupa la memoria de un ser querido, consulta a su médico.
+Mente Viva es entretenimiento y ejercicio mental. No es un dispositivo médico y no diagnostica ni trata ninguna enfermedad. Si te preocupa la memoria de un ser querido, consulta a su médico.
 
 ## Screenshots (5 per locale, captured from a simulator)
 
