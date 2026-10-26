@@ -13,8 +13,17 @@ if [ -e "$response" ]; then
     exit 1
 fi
 
-curl -sS --fail-with-body https://api.typesafe.ai/v1/systemone \
-    -H "Content-Type: application/json" \
-    -H "Authorization: Bearer $TYPESAFE_API_KEY" \
-    --data-binary "@$request" -o "$response"
+# Download to a private temp file, then claim the final name atomically: `ln` fails if it
+# exists, so concurrent runs can't overwrite each other and a cut-off transfer leaves nothing.
+tmp="$(mktemp "$response.XXXXXX")"
+trap 'rm -f "$tmp"' EXIT
+# The key goes to curl on stdin (-K -), not argv, so it never shows in process listings.
+printf 'header = "Authorization: Bearer %s"\n' "$TYPESAFE_API_KEY" |
+    curl -sS --fail-with-body https://api.typesafe.ai/v1/systemone -K - \
+        -H "Content-Type: application/json" \
+        --data-binary "@$request" -o "$tmp"
+if ! ln "$tmp" "$response" 2>/dev/null; then
+    echo "$response appeared meanwhile; numbers are never reused." >&2
+    exit 1
+fi
 echo "Saved $response"
