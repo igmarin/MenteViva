@@ -22,6 +22,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
   aloud", speaks the name on its own (off by default); the speaker button always works.
 
 ### Changed
+- **Copy says "exercises", never "improves" (#227):** the welcome screen now shows the tagline
+  "Fun mental exercise / Ejercicio mental divertido" under the title. Store listing, README and
+  product brief lose the words that promised outcomes or medical effects; a check in
+  `tools/check_claims.sh` now fails the pre-push hook and CI if they come back.
 - **Privacy you can read (Settings):** the long paragraph is now three short lines with
   icons: your games stay on this iPad, no account or ads or tracking, and your photos and
   their names never leave it. The backup note follows in smaller text. The line about daily

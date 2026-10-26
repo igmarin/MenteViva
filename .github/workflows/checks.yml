@@ -29,5 +29,8 @@ jobs:
       - name: Project file lists every .swift file
         run: ./tools/check_project_files.sh
 
+      - name: No claim words in user-facing copy
+        run: ./tools/check_claims.sh
+
       - name: Proxy tests
         run: node --test proxy/*.test.js

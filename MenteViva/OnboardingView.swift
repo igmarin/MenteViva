@@ -20,9 +20,15 @@ struct OnboardingView: View {
                 .font(.system(size: 88))
                 .accessibilityHidden(true)
 
-            Text(AppLanguage.localized("app.title"))
-                .font(.largeTitle.weight(.bold))
-                .fontDesign(.serif)
+            VStack(spacing: 6) {
+                Text(AppLanguage.localized("app.title"))
+                    .font(.largeTitle.weight(.bold))
+                    .fontDesign(.serif)
+
+                Text(AppLanguage.localized("onboarding.tagline"))
+                    .font(.title3)
+                    .foregroundStyle(.secondary)
+            }
 
             VStack(spacing: 12) {
                 line(AppLanguage.localized("onboarding.line1"))

@@ -3315,6 +3315,22 @@
         }
       }
     },
+    "onboarding.tagline" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fun mental exercise"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ejercicio mental divertido"
+          }
+        }
+      }
+    },
     "progress.accuracy %lld" : {
       "extractionState" : "stale",
       "localizations" : {

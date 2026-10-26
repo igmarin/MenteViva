@@ -1,5 +1,7 @@
 # Mente Viva 🧠
 
+**Fun mental exercise / Ejercicio mental divertido.**
+
 Warm, bilingual (ES/EN) cognitive games for older adults — built for one dad
 first, designed for every family like his.
 
@@ -76,4 +78,4 @@ research (audience evidence, licensing, pricing), roadmap.
 This is **not** a medical app. The science (see docs/research-2026-09.md):
 brain games alone show weak transfer to daily life; they work best as one
 ingredient of an engaged, active life. Our copy says "fun mental exercise" —
-never "prevents decline". That's the honest position and the legally safe one.
+never a claim about how memory changes with age. That's the honest position and the legally safe one.

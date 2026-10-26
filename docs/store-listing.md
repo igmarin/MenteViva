@@ -6,7 +6,7 @@ rules and screenshot dimensions against the current App Store Connect — those
 change, and this draft may sit for a while.
 
 Claim ceiling everywhere (research §1, FTC/FDA): **"fun mental exercise"**.
-No treatment, no prevention, no diagnosis, no "improves memory" outcome claims.
+No treatment, no medical claims, no diagnosis, no outcome claims about memory.
 
 ## Metadata
 
@@ -28,10 +28,12 @@ No treatment, no prevention, no diagnosis, no "improves memory" outcome claims.
 The **adult child** reads this page (Jev 009: buyer = caregiver; the player
 never sees a pitch). Speak to them about someone they love. In-app copy speaks
 to the player. Every line must pass statistics-rationale §4 (no outcome, no
-prevention, no "sharpen"). Screenshots avoid Color Clash (lowest Jev scores,
+medical claims, no language about keeping the mind sharp). Screenshots avoid Color Clash (lowest Jev scores,
 008/010).
 
 ## Description — English
+
+Fun mental exercise.
 
 Simple, warm games for someone you love — at their own pace, with no pressure.
 
@@ -43,9 +45,11 @@ Mente Viva has five gentle games, each a different kind of thinking: memory, att
 • Big text and buttons, easy on the eyes
 • Progress stays on the device
 
-Mente Viva is entertainment and mental exercise. It is not a medical device and does not diagnose, treat or prevent any condition. If you have concerns about a loved one's memory, talk to their doctor.
+Mente Viva is entertainment and mental exercise. It is not a medical device and makes no medical claims. It does not diagnose or treat any condition. If you have concerns about a loved one's memory, talk to their doctor.
 
 ## Description — Spanish
+
+Ejercicio mental divertido.
 
 Juegos sencillos y amables para alguien a quien quieres — a su ritmo y sin presión.
 
@@ -57,7 +61,7 @@ Mente Viva tiene cinco juegos suaves, cada uno para un tipo distinto de pensamie
 • Texto y botones grandes, fáciles de leer
 • El progreso se queda en el dispositivo
 
-Mente Viva es entretenimiento y ejercicio mental. No es un dispositivo médico y no diagnostica, trata ni previene ninguna enfermedad. Si te preocupa la memoria de un ser querido, consulta a su médico.
+Mente Viva es entretenimiento y ejercicio mental. No es un dispositivo médico y no hace afirmaciones médicas. No diagnostica ni trata ninguna enfermedad. Si te preocupa la memoria de un ser querido, consulta a su médico.
 
 ## Screenshots (5 per locale, captured from a simulator)
 
