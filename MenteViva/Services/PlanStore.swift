@@ -1,12 +1,32 @@
 import Foundation
 
 /// Today's plan and each game's level, kept on this device in UserDefaults
-/// (#121: moved out of JevService, which now only talks to Jev). The key names
-/// predate the move and stay, so stored levels and week-long holds survive it.
+/// (#121). Plans are always decided on the device by `DailyPolicy`.
 nonisolated enum PlanStore {
+    // The "jev." key names are historical (an outside service once helped pick the plan).
+    // They stay so levels and week-long holds saved by earlier versions are still read.
     private static let planKey = "jev.dailyPlan"
     private static let difficultyKey = "jev.difficulty"
     private static let changeKey = "jev.difficultyChangedOn"
+
+    /// Today's plan: the one saved for today if there is one, otherwise a fresh
+    /// `DailyPolicy` plan, saved so the day keeps one plan. Nothing leaves the device.
+    static func todaysPlan(
+        state: PlayerStateSummary,
+        now: Date = .now,
+        defaults: UserDefaults = .standard
+    ) -> DailyPlan {
+        let stamp = dayStamp(now)
+        if let cached = cachedPlan(defaults: defaults), cached.dayStamp == stamp { return cached }
+        let plan = DailyPolicy.plan(
+            state: state,
+            lastChange: lastDifficultyChange(defaults: defaults),
+            dayStamp: stamp,
+            pinned: FamilySettings.pinned(defaults: defaults),
+            hidden: FamilySettings.hidden(defaults: defaults))
+        cache(plan, defaults: defaults)
+        return plan
+    }
 
     /// The last plan saved, whatever its day; callers check `dayStamp`.
     static func cachedPlan(defaults: UserDefaults = .standard) -> DailyPlan? {

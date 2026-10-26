@@ -9,7 +9,7 @@ games, big targets, no fail shame. Sold to families, played by a parent.
 
 ## Who it's for
 
-**Player: older adults 60+, including early cognitive decline.** Dad is the
+**Player: older adults 60+, including people experiencing early cognitive changes.** Dad is the
 design floor: errorless, familiar, calm. Mom and the owner are equal floors
 (healthy 60+, healthy 40+); per-person game libraries are the north star,
 per-device today (decisions 2026-09-20, 2026-09-22). Mental-health and general
@@ -29,8 +29,9 @@ install it with nobody explaining it: self-serve onboarding, in-app settings
 assets, one-time $12.99 with Family Sharing (decided for beta, #21).
 Publishing waits on the paid Developer Program (decisions 2026-09-20).
 
-**Marketing ceiling: "fun mental exercise".** Never memory-loss reversal,
-prevention, treatment or screening (research §1; `statistics-rationale.md` §4).
+**Marketing ceiling: "Fun mental exercise".** Games exercise memory and attention;
+never promise restored memory, clinical outcomes, treatment or screening
+(research §1; `statistics-rationale.md` §4).
 
 ## Design pillars
 

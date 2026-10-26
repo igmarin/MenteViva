@@ -12,8 +12,6 @@ nonisolated struct DailyPlan: Codable, Equatable {
 /// - Mix: the most worthwhile games first, nudged toward games not touched lately.
 /// - Difficulty: errorless-first. Moves one level at a time, only with evidence,
 ///   then holds for a week so it never shifts under the player.
-///
-/// Jev (when a proxy is configured) can still override this plan; see JevService.
 nonisolated enum DailyPolicy {
     /// How worthwhile each game is for the target player (Jev 008/010 utility
     /// matrix). The star marks "best for today", not a schedule, so the two

@@ -1,3 +1,6 @@
+> **The app no longer calls Jev, 2026-10-26** (#195). Everything below is historical: it records
+> how the optional integration worked. `docs/jev-json/` stays as the evidence archive.
+
 # Jev integration — MenteViva
 
 **Decided 2026-09-30 (#101):** the daily plan (today's picks and each game's difficulty) is

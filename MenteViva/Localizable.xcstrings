@@ -3284,13 +3284,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Short games to keep your mind active."
+            "value" : "Fun mental exercise."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Juegos cortos para mantener tu mente activa."
+            "value" : "Ejercicio mental divertido."
           }
         }
       }
@@ -5741,23 +5741,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tus fotos y sus nombres nunca salen de aquí."
-          }
-        }
-      }
-    },
-    "settings.privacy.suggestions" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Daily suggestions send only anonymous totals: which games, how many, how well. Never your name."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Las sugerencias diarias solo envían totales anónimos: qué juegos, cuántos y qué tan bien. Nunca tu nombre."
           }
         }
       }
