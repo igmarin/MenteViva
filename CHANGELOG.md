@@ -22,6 +22,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
   aloud", speaks the name on its own (off by default); the speaker button always works.
 
 ### Changed
+- **Sudoku celebrates finished rows (#239):** finishing a row, column or box washes it
+  in the game's ink and names it aloud, and each placed number pops gently onto its
+  square. The finished board keeps its usual celebration and nothing else.
 - **Privacy you can read (Settings):** the long paragraph is now three short lines with
   icons: your games stay on this iPad, no account or ads or tracking, and your photos and
   their names never leave it. The backup note follows in smaller text. The line about daily
