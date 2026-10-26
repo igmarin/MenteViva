@@ -25,6 +25,12 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 - **Warm celebrations (#242):** the end of a game says one of five warm headlines ("Well done!",
   "Lovely work!", "That was great!", "Beautifully done!", "Nicely played!"), never the same one
   twice in a row. Nothing in them mentions a score or speed.
+- **Name the Herd enjoys each finished category (#238):** every check stays visible for a
+  moment with a warm completion note before the next category arrives, and VoiceOver hears
+  the new category's name.
+- **Memory Lane turns its cards (#237):** a card turns over like a real card, and a
+  missed pair turns back the moment you pick the next card, so the board never holds
+  more than it should. With Reduce Motion the cards cross-fade instead of turning.
 - **Sudoku celebrates finished rows (#239):** finishing a row, column or box washes it
   in the game's ink and names it aloud, and each placed number pops gently onto its
   square. The finished board keeps its usual celebration and nothing else.
@@ -91,6 +97,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
   week board. The confetti is gone; the card is the celebration.
 
 ### Fixed
+- **Finish the Saying speaks the solution (#245):** completing a saying now reads it aloud when
+  automatic speech is on, or announces it once to VoiceOver when automatic speech is off.
 - **My progress froze on iOS 17 (#169):** opening it from Settings on an iPad with
   iOS 17 locked the app. It now reads every play and keeps the days it needs in code,
   the way the old For family screen did. Checked on the iPad (iOS 17.7).

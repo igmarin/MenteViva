@@ -130,6 +130,11 @@ struct SayingsView: View {
             solved = true
             showAlmost = false
             Feedback.play(.success)
+            if CaptionSpeaker.autoSpeaks() {
+                CaptionSpeaker.speak(whole(round.saying))
+            } else if UIAccessibility.isVoiceOverRunning {
+                AccessibilityNotification.Announcement(whole(round.saying)).post()
+            }
         } else {
             dimmed.insert(choice)
             missedChoice = choice
