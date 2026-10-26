@@ -16,8 +16,8 @@ struct MemoryBoard {
         case matched(pair: [Int], found: Set<Int>)
         /// Two different cards; the pair stays up until the view turns it back.
         case missed(pair: [Int])
-        /// A tap arrived while a missed pair was showing: the pair turned back
-        /// at once, and only the new card is face up.
+        /// A different card tapped while a missed pair was showing: the pair
+        /// turned back at once, and only the new card is face up.
         case missedBackThenUp(turnedBack: [Int], up: Int)
     }
 
@@ -41,7 +41,12 @@ struct MemoryBoard {
     var isComplete: Bool { !pairs.isEmpty && matched.count == pairs.count }
 
     mutating func tap(_ index: Int) -> Tap {
-        guard pairs.indices.contains(index), !matched.contains(index), !faceUp.contains(index) else {
+        // Cards of the showing miss ignore taps, as they did before the board
+        // existed; only a different card turns the pair back. Found cards and
+        // the card already up ignore taps too.
+        guard pairs.indices.contains(index), !matched.contains(index), !faceUp.contains(index),
+            !pendingMiss.contains(index)
+        else {
             return .ignored
         }
         if !pendingMiss.isEmpty {

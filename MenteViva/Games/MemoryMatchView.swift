@@ -169,7 +169,10 @@ struct MemoryMatchView: View {
     }
 
     private func isShown(_ card: Card) -> Bool {
-        board.faceUp.contains(card.id) || board.matched.contains(card.id)
+        // A missed pair stays face up in `pendingMiss` until the timer or the
+        // next tap turns it back; the board clears `faceUp` on a miss.
+        board.faceUp.contains(card.id) || board.pendingMiss.contains(card.id)
+            || board.matched.contains(card.id)
     }
 
     /// The calm teal back with a small leaf, the same in light and dark.

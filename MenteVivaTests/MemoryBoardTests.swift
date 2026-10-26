@@ -53,4 +53,13 @@ final class MemoryBoardTests: XCTestCase {
         XCTAssertEqual(board.tap(0), .ignored)
         XCTAssertEqual(board.matched, [0, 2])
     }
+
+    func testGivenMissedPairCardWhenTappedThenIgnoredAndMissStaysShowing() {
+        _ = board.tap(0)
+        _ = board.tap(1)
+
+        XCTAssertEqual(board.tap(0), .ignored)
+        XCTAssertEqual(board.pendingMiss, [0, 1])
+        XCTAssertTrue(board.faceUp.isEmpty)
+    }
 }
