@@ -2,6 +2,51 @@
 
 Newest first. Format: date — decision — why — what would make us revisit.
 
+## 2026-10-26 — Direction to v1.0: an App Store game worth buying, built by several agents
+
+**Question:** what does MenteViva need to be a paid App Store app, and how do we build it fast
+without losing quality? Asked while entering the Meta Global AI Developer Hackathon (Indie track,
+accepted with this project; its Meta Model API credit pays for Muse Code as one more coding agent).
+The hackathon is fuel, not the goal. Owner decisions, made in one planning session; Jev 020
+(`jev-json/020-v03-direction.request.json`) is written and asked from the dev machine with
+`tools/ask_jev.sh`. Jev is evidence; if it disagrees, we revisit here.
+
+**Decision:**
+
+1. **Jev leaves the app.** On-device `DailyPolicy` already returned the same top 3 as Jev on the
+   real payload, so Jev cost a proxy, a secret and 265 lines for no change. `JevService`, its tests,
+   the plist keys, the xcconfig and `proxy/` are removed; git history keeps them. Jev stays a
+   **dev-machine tool for validating product ideas** (`TYPESAFE_API_KEY`, `tools/ask_jev.sh`).
+   Nothing leaves the device any more.
+2. **Audience: anyone who wants an active mind**, with the reference player still the owner's
+   father. The design stays dementia-friendly (it helps everyone). Copy: "Ejercicio mental
+   divertido / Fun mental exercise". **A game *exercises* memory or attention; copy never says it
+   *improves* them.** No medical claims, unchanged.
+3. **Levels 1–10 per game**, replacing easy/medium/hard (migrated easy→2, medium→4, hard→6). A
+   staircase between sessions, never mid-game: a perfect session +1, two in a row +2, accuracy
+   under 65% −1 (never more). A perfect session ends with "Shall we try the next level?"
+   (Yes / Keep it as it is). Every change is explained in one warm line. The family can pin a level.
+   One rule for both kinds of player: it follows how someone plays, never a health question.
+4. **Onboarding asks at most four things**, all skippable: who it is for, what to exercise, minutes a
+   day (2/3/5 games), how to start (calm/normal/challenge = level 2/4/6). **No age.** An optional
+   warm-up sets starting levels quietly and **never shows a score, result or "brain age"**
+   (research §1: that is diagnosis territory).
+5. **A "Why these games" section**: balanced and sourced (including the 2014 Stanford consensus),
+   no promise per game, "educational information, not medical advice".
+6. **Four new games, public-domain mechanics, own names and art:** Repeat the Sequence (Corsi,
+   working memory: the domain no game covers), Tangram, Tile Pairs (mahjong-solitaire style),
+   Sliding Blocks (Huarong Dao style). Avoided names: Simon, Shanghai, Klotski, KenKen, Picross,
+   Wordle, 24 Game. Every game passes `docs/ip-clearance.md`; a one-hour IP lawyer review happens
+   before the paid release.
+7. **Apple Developer Program gets paid (owner, 2026-10-27).** Revisits 2026-09-20: TestFlight,
+   CloudKit and the App Store are no longer blocked on money.
+8. **Many agents, one bar.** Muse Code, Cline and Claude take tickets in parallel; Claude reviews
+   every PR; the owner merges. Tickets are self-contained briefs; quality rules live in AGENTS.md
+   "Definition of done". Agents never copy code from other projects.
+
+Revisit when: Jev 020 disagrees on levels, onboarding or the warm-up; a playtest shows the staircase
+moving too fast for dad; or the lawyer flags a game or name.
+
 ## 2026-10-20 — CI on PRs to main, split by cost: Linux always, macOS only for Swift
 
 **Found:** `swift.yml` was manual-only after the minutes ran out (early October); until billing was

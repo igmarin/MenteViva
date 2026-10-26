@@ -7,7 +7,20 @@ starts, not before — no fantasy deadlines.
 and any paid-developer-account work wait until the app feels right in dad's
 hands. Beta is a *distribution* step, not a QA step.
 
-## Now — v0.2.0 Polish + Speed (G1b, G2)
+## Now — v0.3 More games, more range, then v1.0 App Store (decided 2026-10-26)
+
+Supersedes the order below: the owner pays the Apple Developer Program, and several agents build in
+parallel (AGENTS.md "Several agents at once"). Four epics, tracked as issues labelled `epic`:
+
+1. **Simpler core:** Jev leaves the app; nothing leaves the device.
+2. **Levels 1–10:** a staircase for every kind of player, explained to them, offered after a perfect game.
+3. **Onboarding with goals:** who, what to exercise, minutes a day, how to start; optional warm-up;
+   "Why these games".
+4. **Four new games:** Repeat the Sequence, Tangram, Tile Pairs, Sliding Blocks.
+
+Then **v1.0 App Store:** IP review, copy audit, price and purchase, TestFlight, playtests, listing.
+
+## Before — v0.2.0 Polish + Speed (G1b, G2)
 
 Shipped and off this list: app icon and launch screen, home screen (#27), sound
 and haptics (#26), first-run onboarding (#31), Memory Lane warmth (#43),
