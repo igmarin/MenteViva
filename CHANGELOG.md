@@ -22,6 +22,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
   aloud", speaks the name on its own (off by default); the speaker button always works.
 
 ### Changed
+- **Name the Herd enjoys each finished category (#238):** every check stays visible for a
+  moment with a warm completion note before the next category arrives, and VoiceOver hears
+  the new category's name.
 - **Memory Lane turns its cards (#237):** a card turns over like a real card, and a
   missed pair turns back the moment you pick the next card, so the board never holds
   more than it should. With Reduce Motion the cards cross-fade instead of turning.

@@ -740,6 +740,23 @@
         }
       }
     },
+    "game.category.complete %@" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All the %@ found!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Encontraste todos: %@!"
+          }
+        }
+      }
+    },
     "game.category.found %lld %lld" : {
       "extractionState" : "stale",
       "localizations" : {
