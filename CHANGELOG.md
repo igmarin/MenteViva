@@ -22,6 +22,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
   aloud", speaks the name on its own (off by default); the speaker button always works.
 
 ### Changed
+- **Warm celebrations (#242):** the end of a game says one of five warm headlines ("Well done!",
+  "Lovely work!", "That was great!", "Beautifully done!", "Nicely played!"), never the same one
+  twice in a row. Nothing in them mentions a score or speed.
 - **Privacy you can read (Settings):** the long paragraph is now three short lines with
   icons: your games stay on this iPad, no account or ads or tracking, and your photos and
   their names never leave it. The backup note follows in smaller text. The line about daily

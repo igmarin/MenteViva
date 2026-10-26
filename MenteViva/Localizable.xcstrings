@@ -824,6 +824,91 @@
         }
       }
     },
+    "game.celebration.headline.1" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Well done!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Muy bien!"
+          }
+        }
+      }
+    },
+    "game.celebration.headline.2" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lovely work!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Qué buen trabajo!"
+          }
+        }
+      }
+    },
+    "game.celebration.headline.3" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "That was great!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Estuvo genial!"
+          }
+        }
+      }
+    },
+    "game.celebration.headline.4" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beautifully done!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Lo hiciste muy bien!"
+          }
+        }
+      }
+    },
+    "game.celebration.headline.5" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nicely played!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Bien jugado!"
+          }
+        }
+      }
+    },
     "game.celebration.added" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -1382,23 +1467,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ROJO"
-          }
-        }
-      }
-    },
-    "game.common.welldone" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Well done! 🎉"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "¡Muy bien! 🎉"
           }
         }
       }
