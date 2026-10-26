@@ -287,7 +287,7 @@ struct MemoryMatchView: View {
     private func finish() {
         let elapsed = Int(Date.now.timeIntervalSince(startedAt))
         let score = Self.score(pairCount: faces.count, moves: moves)
-        // Score stays in the model as anonymous telemetry for Jev (#45); the
+        // Score stays in the model as a record of how the round went (#45); the
         // player sees progress, not points.
         modelContext.record(
             GameSession(

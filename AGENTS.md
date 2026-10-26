@@ -20,10 +20,9 @@ Instructions for AI agents (and humans in a hurry) working on MenteViva.
   it to them.
 - **No medical claims** in any copy, code comment, or doc. "Fun mental
   exercise" is the ceiling. See docs/research-2026-09.md §1.
-- **The upstream Jev API key never enters the repo or the binary.** Jev goes through the
-  proxy; unset proxy URL = offline fallback, which must always work. The app shared
-  secret (`JEV_PROXY_SECRET`) is only a proxy gate token: it may sit in a configured
-  build's Info.plist, never in the repo (`Local.xcconfig` is git-ignored).
+- **The app makes no network calls.** Today's plan is decided on the device (`DailyPolicy`);
+  the app has no service client, key or server (decisions.md 2026-10-26). No keys in the repo,
+  plist or binary.
 
 ## Where things are
 
@@ -35,12 +34,11 @@ MenteViva/            app (SwiftUI + SwiftData)
   Games/              one file per game (9) + CelebrationView, MissCue, FitOrScroll
   Models/             GameSession, GameID, Difficulty, RoundProgress
   Services/           DailyPolicy (on-device plan), PlanStore (saved plan + levels),
-                      JevService (optional Jev client), FamilySettings, MemoryPhotos,
+                      FamilySettings, MemoryPhotos,
                       PlayerStateSummary, WeeklySummary, ProgressRates, AppLanguage, SoundPlayer, HotPath (signposts),
                       CaptionSpeaker, EverydayObjects
   Localizable.xcstrings  every string, EN + ES
 MenteVivaTests/       unit tests (Given/When/Then names)
-proxy/worker.js       Cloudflare Worker that holds the Jev key
 tools/                generate_project.swift (the only way to edit the Xcode project)
 docs/                 start at docs/README.md
 .github/workflows/    checks.yml (Linux) + swift.yml (macOS): CI on PRs to main (Workflow 5)
@@ -51,10 +49,8 @@ docs/                 start at docs/README.md
 - 9 games shipped (Memory Lane, Color Clash, Name the Herd, Number Trail, Remember Together,
   Quick Eyes, Sudoku, Up or Down, Finish the Saying); ES/EN complete; local-only build is the default.
 - **Daily picks and difficulty are decided on the device** (`DailyPolicy`, #101): no model,
-  no network, no cost. Jev is an optional override, wired and verified live (proxy deployed #63,
-  payload archived `docs/jev-json/014`), used only when `MenteViva/Config/Local.xcconfig`
-  (git-ignored; copy the `.example`) sets the proxy URL and secret (#91). Open-model
-  alternatives were tested and rejected for the app: `docs/decision-model-spike-2026-09-30.md`.
+  no network, no cost. The app no longer calls Jev (#195); `docs/jev-json/` stays as the
+  evidence archive and `docs/jev-integration.md` as history.
 - Dad playtest #6 ran (findings on #6); its follow-ups #106–#110 and Remember Together (#139)
   shipped. Three new games followed from the owner's playtests (decisions.md 2026-10-19):
   Sudoku (#179), Up or Down (#180), Finish the Saying (#181).
@@ -62,9 +58,10 @@ docs/                 start at docs/README.md
   framed card in its own colour (`GameCard.swift`, palette in `Theme.swift`), Home deals today's
   three, every game shares one header, and the end of a game adds its card to the week board.
   Spec: `docs/design/2026-10-12-card-table.html`.
-- Next: dad playtest #2 (`docs/playtest-session-2.md`), then the v0.2.0 progress issues
-  (#140 My Week per day, #141 My progress + Set up).
-- Live state is in the [milestones](https://github.com/nebulaideas/MenteViva/milestones), not here.
+- **Next: v0.3 then v1.0 on the App Store** (decisions.md 2026-10-26): Jev out of the app, levels
+  1–10, onboarding with goals, four new games, then release work. Built by several agents in
+  parallel; see "Several agents at once" below. The epics are the open issues labelled `epic`.
+- Live state is in the [issues](https://github.com/nebulaideas/MenteViva/issues), not here.
 
 ## Signing
 
@@ -106,11 +103,10 @@ docs/                 start at docs/README.md
    once with `git config core.hooksPath .githooks`; `git push --no-verify`
    skips it. It tests on the first booted simulator; when several agents work
    in parallel, each pushes with its own: `MENTEVIVA_SIMULATOR=<udid> git push`.
-   It also runs the signpost and project-file checks and the proxy tests
-   (`node --test proxy/*.test.js`).
+   It also runs the signpost and project-file checks.
    **CI runs the same checks on every PR to `main`**, split by cost (macOS
    minutes bill at 10× Linux; decisions.md 2026-10-20): `checks.yml` on Linux
-   always runs signposts, project file and proxy tests (~1 billed min);
+   always runs signposts and the project-file check (~1 billed min);
    `swift.yml` on macOS runs generator drift, lint and `xcodebuild test` only
    when a non-draft PR touches `MenteViva/`, `MenteVivaTests/`, the project,
    `tools/` or `.swift-format` (~20 billed min). Open PRs as drafts while
@@ -139,9 +135,8 @@ docs/                 start at docs/README.md
 3. **Product decisions get a Jev judgment first.** Archive request + response in
    `docs/jev-json/` (next number, never reused), then log in
    `docs/decisions.md`. Jev is evidence; the owner decides.
-4. **Two different keys.** `TYPESAFE_API_KEY` = dev-machine classifier.
-   `TYPESAFE_AI_KEY` = the proxy's secret (`wrangler secret put`). Neither ever
-   enters the repo, plist, or binary.
+4. **Keys.** `TYPESAFE_API_KEY` = dev-machine classifier only. It never enters the
+   repo, plist, or binary.
 5. **Code questions:** if `.codegraph/` exists use `codegraph explore "<query>"`;
    if `graphify-out/` exists query it (`/graphify`). Both are gitignored and
    regenerable; fall back to grep when absent.
@@ -158,13 +153,52 @@ docs/                 start at docs/README.md
    copied. Zero-dependency still applies. Set `XERJ_DISABLE_FEEDBACK=true`; never send
    field reports or `rerank`/`--embed-mode proxy` (they send text off the machine).
 
+## Several agents at once (decisions.md 2026-10-26)
+
+Muse Code, Cline and Claude work tickets in parallel. The owner decides and merges; Claude is the
+lead and reviews every PR; no agent merges.
+
+1. **Take only an issue labelled `ready` whose "Depends on" issues are all closed.** One issue, one
+   agent, one branch (`agent/<issue>-<slug>`), one PR with `Closes #<issue>`. Label the issue
+   `review` when the PR is up.
+2. **The issue is the brief.** Do what it asks, nothing else. If it is unclear or wrong, comment on
+   the issue and stop; don't guess.
+3. **Hot files** (several tickets touch them): `Localizable.xcstrings`, `GameID.swift`, `Theme.swift`,
+   `HomeView.swift`, `DailyPolicy.swift`. Merge `main` into your branch right before opening the PR.
+   Never hand-merge `project.pbxproj`: take `main`'s and run `swift tools/generate_project.swift`.
+4. **Never copy code, puzzles, art, sounds or text from another project, site or repo**, whatever
+   its license. Read for ideas, then write your own from the issue's spec. Any asset needs its source
+   and license recorded in `docs/ip-clearance.md`.
+5. **Labels.** Type: `game`, `feature`, `design`, `research`, `infra`, `docs`, `decision`.
+   Priority: `p0` (blocks the App Store), `p1`, `p2`. Size: `size:S` (<2 h), `size:M` (half a day),
+   `size:L` (split before taking). Who: `agent:muse`, `agent:cline`, `agent:claude`, `owner`.
+   State: `ready`, `review`, `blocked`. Epics are parent issues; tickets are their sub-issues.
+
+## Definition of done (every PR)
+
+Speed without quality is not progress. A PR is done when:
+
+- **Logic lives outside views.** Rules, scoring, generation and policy are small pure types (a
+  "service object": one job, plain inputs, no UI), in `Services/` or next to the game as
+  `<Game>Deal.swift` / `<Game>Puzzle.swift` (see `SudokuPuzzle`, `UpOrDownDeal`). Views show state
+  and forward taps. Dependencies (`UserDefaults`, today's date, the random generator) come in as
+  parameters, so tests control them; generated content takes a seed. Still no base classes or
+  protocols until a third use proves the pattern (conventions §2).
+- **Tests come first for logic** (conventions §9, Given/When/Then names). A bug fix starts with a
+  failing test. Generated puzzles are tested for solvability and for difficulty rising with the level.
+- **Every type and every non-obvious function has a `///` comment** saying why it exists or why it
+  works this way, not what the next line does.
+- **The checks pass:** build, tests and lint (Workflow 5); strings EN + ES (§3); accessibility floor
+  (§4); warm copy (§5); `CHANGELOG.md` for anything a player can see; no keys; no medical claims.
+- **Small:** one issue per PR; past ~400 changed lines (strings and pbxproj aside), split it.
+
 ## Patterns
 
 - One file per game in `MenteViva/Games/`; copy `MemoryMatchView.swift`'s
   shape (View + @State + `modelContext.record(GameSession(...))` on finish, #106).
   No game engine, no base classes, no protocol ceremony.
-- The daily plan is `Services/DailyPolicy.swift` (pure, tested). Jev judgments, when enabled, live
-  in `Services/JevService.swift`; policy stays in code, never in the model. See docs/jev-integration.md.
+- The daily plan is `Services/DailyPolicy.swift` (pure, tested). Policy stays in code,
+  never in a model. Past Jev judgments are history: docs/jev-integration.md.
 
 ## When unsure
 

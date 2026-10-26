@@ -8,7 +8,7 @@ screen of real content, split it — long docs don't get read.
 | [product-brief.md](product-brief.md) | What are we building, for whom, and why | Current |
 | [conventions.md](conventions.md) | Rules every commit must follow | Current |
 | [how-it-works.md](how-it-works.md) | How the app works: a day in it, the pieces, how games are chosen, how to add one | Current |
-| [jev-integration.md](jev-integration.md) | The on-device daily policy, and how optional Jev/TypeSafe fits | Policy is the default; Jev optional, verified live (2026-09-30) |
+| [jev-integration.md](jev-integration.md) | History: the optional Jev integration, removed from the app 2026-10-26 | Historical |
 | [decision-model-spike-2026-09-30.md](decision-model-spike-2026-09-30.md) | Nimble and Laya tested as Jev replacements, with numbers | Snapshot |
 | [jev-revisit.md](jev-revisit.md) | Jev judgments 001–015: early decisions, audience, games, segments, progress, Card Table | Living, to 2026-10-13 |
 | [jev-json/](jev-json/) | Raw Jev request/response archive (audit trail); 011 is the app's real daily request | Growing |
@@ -30,6 +30,8 @@ screen of real content, split it — long docs don't get read.
 | [es-review-packet.md](es-review-packet.md) | Spanish strings for the native-speaker review (#12) | Current |
 | [question-audit.md](question-audit.md) | The real questions, checked (against wrong questions) | Living |
 | [roadmap.md](roadmap.md) | What happens next, in order | Living |
+| [review-2026-10-gamefeel.md](review-2026-10-gamefeel.md) | Game feel and UX of the nine games, against the gamedev skills (#230) | Snapshot |
+| [ip-clearance.md](ip-clearance.md) | Can we use this game, name or asset? The per-game checklist | Living |
 | [store-listing.md](store-listing.md) | App Store copy + screenshots (EN/ES), drafted early | Draft |
 | [privacy-policy.md](privacy-policy.md) | Privacy policy — local-first, what leaves the device (#34) | Pages built in `site/` (EN + ES); needs a host + contact |
 | [support.md](support.md) | Support page — 7-day expiry, language, progress (#34) | Pages built in `site/` (EN + ES); needs a host + contact |

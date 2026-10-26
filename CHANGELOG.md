@@ -25,6 +25,13 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 - **Memory Lane turns its cards (#237):** a card turns over like a real card, and a
   missed pair turns back the moment you pick the next card, so the board never holds
   more than it should. With Reduce Motion the cards cross-fade instead of turning.
+- **Sudoku celebrates finished rows (#239):** finishing a row, column or box washes it
+  in the game's ink and names it aloud, and each placed number pops gently onto its
+  square. The finished board keeps its usual celebration and nothing else.
+- **A clear, honest introduction (#227):** onboarding and store copy now use
+  "Fun mental exercise" / "Ejercicio mental divertido" and describe games as
+  exercising memory and attention, without promising cognitive outcomes.
+- MenteViva no longer connects to the internet; today's games are always chosen on your device (#195).
 - **Privacy you can read (Settings):** the long paragraph is now three short lines with
   icons: your games stay on this iPad, no account or ads or tracking, and your photos and
   their names never leave it. The backup note follows in smaller text. The line about daily

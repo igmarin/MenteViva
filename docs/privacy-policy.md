@@ -32,15 +32,8 @@ names may be included in your own iPhone or iPad backup (for example iCloud
 Backup), which belongs to you and which you control in Apple's Settings. Optionally the app can read a name aloud using your
 device's built-in voice; that happens on the device.
 
-**What leaves the device: normally, nothing.** The app works fully offline, and
-its daily game suggestion is worked out on your device. There is one optional
-variant of that suggestion that, *only if it is turned on in a given build*, sends a small summary to our suggestion service:
-counts and averages only (for example "played 4 sessions this fortnight,
-average accuracy 0.8"), per game. It contains no name, no device ID, no dates,
-no location — nothing in it identifies you. Like any request over the internet, it comes from your device's IP address; the proxy (hosted on Cloudflare) uses that only to limit how often one device can ask, and we do not store it. The summary goes through our proxy
-to the suggestion provider (TypeSafe AI, api.typesafe.ai), which answers the
-suggestion. Current builds ship
-with this feature **off**; when off, the app makes no network requests at all.
+**What leaves the device: nothing.** The app works fully offline, and its daily game
+suggestion is worked out on your device. The app makes no network requests at all.
 
 **Sharing is your choice.** The "share your week" button uses the standard
 iOS share sheet — something leaves your device only when you choose to send
@@ -69,20 +62,10 @@ build argument, `tools/build_site.sh`). We answer in English or Spanish.
   Collected; re-check that against Apple's definitions before the App Store submission (#37).
   To switch: set `isExcludedFromBackup` on `MemoryPhotos.folder` and drop the backup sentences.
 
-- Matches the App Privacy label draft in [store-listing.md](store-listing.md):
-  **Data Not Collected** while the proxy is off; re-audit if it ships on.
-- Code facts backing every sentence: `PlayerStateSummary` in
-  `Services/JevService.swift` is the entire outgoing payload (counts/ratios,
-  no identifiers, no dates); `proxyURL == nil` ⇒ zero network calls; SwiftData
-  store is app-local; no third-party dependencies exist in the project.
-- **Default builds (Jev off, #101):** today's picks are computed on the device and the app makes
-  no network request, so **Data Not Collected** holds with no caveats.
-- **Before any build turns the optional Jev backend on:** the proxy rate-limits by client IP
-  (`proxy/worker.js`), so Cloudflare sees the device IP on each daily request even though we store
-  nothing and the payload has no identifiers. The IP sentence is now in the published text; still decide with
-  Apple's App Privacy definitions whether the label holds before any build turns the backend on.
-  In-app `settings.privacy.suggestions` (shown only when a proxy is set) says "only anonymous totals"; the payload also
-  carries each game's current difficulty and days since last play (numbers, not dates).
+- Matches the App Privacy label draft in [store-listing.md](store-listing.md): **Data Not Collected**.
+- Code facts backing every sentence: the app makes no network request (decisions.md 2026-10-26,
+  #195); today's picks are computed on the device by `DailyPolicy`; SwiftData store is app-local;
+  no third-party dependencies exist in the project.
 - Hosting: the repo is private and GitHub Pages on private repos needs a paid
   plan, so use a tiny public policy repo or Cloudflare Pages (decisions
   2026-09-20). Then link it in-app (Settings) and in App Store Connect — that
