@@ -20,6 +20,17 @@ parallel (AGENTS.md "Several agents at once"). Four epics, tracked as issues lab
 
 Then **v1.0 App Store:** IP review, copy audit, price and purchase, TestFlight, playtests, listing.
 
+**Waves.** Everything in a wave can run in parallel; a wave starts when what it depends on is merged.
+Each issue names its own "Depends on".
+
+| Wave | Issues | Who |
+|---|---|---|
+| 0 — now, no code dependencies | #195 remove Jev · #196 ask Jev 020 · #224 Apple account · #225 name search · #227 copy audit · #228 price · #230 game-feel review · #210 "Why" text · #233 agent setup | Cline, owner, Claude |
+| 1 — after #195 | #197 level type · #215 register new games | Claude |
+| 2 — after #197 / #215 | #198 staircase · #199–#206 ten steps per game (8 in parallel) · #208 Set up picker · #216 #218 #220 #222 new-game logic (4 in parallel) · #229 TestFlight (after #224) | Muse, Cline, Claude |
+| 3 — after wave 2 | #207 level lines + offer · #211 profile · #217 #219 #221 #223 new-game screens (4 in parallel) · #209 remove bridge · #214 "Why" screen | Muse, Cline, Claude |
+| 4 — after wave 3 | #212 onboarding screens · #213 warm-up · #232 store listing · #226 lawyer · #231 playtest with dad | Cline, Claude, owner |
+
 ## Before — v0.2.0 Polish + Speed (G1b, G2)
 
 Shipped and off this list: app icon and launch screen, home screen (#27), sound
