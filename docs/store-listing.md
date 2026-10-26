@@ -80,9 +80,7 @@ iPhone and 12.9" iPad). Localize the overlay text, not just the screenshot.
 
 App Privacy in Connect will show **Data Not Collected** — the app is local-first,
 no account, no ads, no analytics. Today's picks are computed on the device and
-shipped builds make no network request (#101). The optional Jev backend would send only
-anonymized aggregates and is **off** by default; if it is ever turned on in a shipped build,
-re-audit the label (the proxy sees the device IP).
+the app makes no network request (#101, #195).
 
 ## Todo before submission (fast, last-minute)
 

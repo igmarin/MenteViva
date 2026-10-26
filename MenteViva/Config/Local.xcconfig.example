@@ -1,6 +1,0 @@
-// Copy to Local.xcconfig (git-ignored) and fill in. Never commit real values.
-//
-// xcconfig treats "//" as a comment, so write URLs with the $() trick:
-//   https:/$()/host/path   ->   https://host/path
-JEV_PROXY_URL = https:/$()/menteviva-jev-proxy.ismael-marin.workers.dev/jev
-JEV_PROXY_SECRET = REPLACE_WITH_APP_SHARED_SECRET

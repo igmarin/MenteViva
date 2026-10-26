@@ -69,13 +69,11 @@ let resID = oid("Resources")
 let fwID = oid("Frameworks")
 let pbxID = oid("proj")
 let tgtID = oid("target")
-let plistID = oid("Info.plist")
 let catID = oid("xcstrings")
 let catBuildID = oid("xcstrings.build")
 let assetsID = oid("Assets.xcassets")
 let assetsBuildID = oid("Assets.xcassets.build")
 let entID = oid("entitlements")
-let xcfgID = oid("Base.xcconfig")
 
 // Test-target IDs (salted so they can never collide with app file hashes).
 let testsProductID = oid("MenteVivaTests.xctest")
@@ -138,10 +136,6 @@ p += buildFiles + tests.builds + "\n" + fileRefs + tests.refs
 p +=
     "\t\t\(appID) /* MenteViva.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MenteViva.app; sourceTree = BUILT_PRODUCTS_DIR; };\n"
 p +=
-    "\t\t\(plistID) /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = \"<group>\"; };\n"
-p +=
-    "\t\t\(xcfgID) /* Base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config/Base.xcconfig; sourceTree = \"<group>\"; };\n"
-p +=
     "\t\t\(catID) /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = \"<group>\"; };\n\n"
 if !localOnly {
     p +=
@@ -170,7 +164,7 @@ p +=
     "\t\t\(productsGrpID) /* Products */ = {\n\t\t\tisa = PBXGroup;\n\t\t\tchildren = (\n\(productsChildren)\t\t\t);\n\t\t\tname = Products;\n\t\t\tsourceTree = \"<group>\";\n\t\t};\n\n"
 
 p +=
-    "\t\t\(grpID) /* MenteViva */ = {\n\t\t\tisa = PBXGroup;\n\t\t\tchildren = (\n\(children)\t\t\t\t\(plistID) /* Info.plist */,\n\t\t\t\t\(xcfgID) /* Base.xcconfig */,\n"
+    "\t\t\(grpID) /* MenteViva */ = {\n\t\t\tisa = PBXGroup;\n\t\t\tchildren = (\n\(children)"
     + (localOnly ? "" : "\t\t\t\t\(entID) /* MenteViva.entitlements */,\n")
     + "\t\t\t\t\(catID) /* Localizable.xcstrings */,\n\t\t\t\t\(assetsID) /* Assets.xcassets */,\n"
 if hasTests { p += "\t\t\t\t\(testsGrpID) /* MenteVivaTests */,\n" }
@@ -223,9 +217,8 @@ if hasTests {
 // MARK: Build configurations
 
 /// One XCBuildConfiguration block. Values are emitted verbatim — quote at call site.
-func configBlock(_ name: String, owner: String, settings: [(String, String)], base: String? = nil) -> String {
+func configBlock(_ name: String, owner: String, settings: [(String, String)]) -> String {
     var s = "\t\t\(oid("cfg:\(owner):\(name)")) /* \(name) */ = {\n\t\t\tisa = XCBuildConfiguration;\n"
-    if let base { s += "\t\t\tbaseConfigurationReference = \(base) /* Base.xcconfig */;\n" }
     s += "\t\t\tbuildSettings = {\n"
     for (k, v) in settings { s += "\t\t\t\t\(k) = \(v);\n" }
     s += "\t\t\t};\n\t\t\tname = \(name);\n\t\t};\n"
@@ -307,7 +300,6 @@ let appSettings =
         ("SWIFT_ACTIVE_COMPILATION_CONDITIONS", localOnly ? "\"$(inherited) LOCAL_ONLY\"" : "\"$(inherited)\""),
         ("CURRENT_PROJECT_VERSION", "1"),
         ("GENERATE_INFOPLIST_FILE", "YES"),
-        ("INFOPLIST_FILE", "MenteViva/Info.plist"),
         ("INFOPLIST_KEY_CFBundleDisplayName", "\"Mente Viva\""),
         ("INFOPLIST_KEY_UIApplicationSceneManifest_Generation", "YES"),
         ("INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents", "YES"),
@@ -348,10 +340,10 @@ p += configBlock("Debug", owner: "proj", settings: projectDebug)
 p += configBlock("Release", owner: "proj", settings: projectRelease)
 p += configBlock(
     "Debug", owner: "app",
-    settings: localOnly ? appSettings.filter { $0.0 != "CODE_SIGN_ENTITLEMENTS" } : appSettings, base: xcfgID)
+    settings: localOnly ? appSettings.filter { $0.0 != "CODE_SIGN_ENTITLEMENTS" } : appSettings)
 p += configBlock(
     "Release", owner: "app",
-    settings: localOnly ? appSettings.filter { $0.0 != "CODE_SIGN_ENTITLEMENTS" } : appSettings, base: xcfgID)
+    settings: localOnly ? appSettings.filter { $0.0 != "CODE_SIGN_ENTITLEMENTS" } : appSettings)
 if hasTests {
     p += configBlock("Debug", owner: "tests", settings: testSettings)
     p += configBlock("Release", owner: "tests", settings: testSettings)

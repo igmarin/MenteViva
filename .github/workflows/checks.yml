@@ -31,6 +31,3 @@ jobs:
 
       - name: Project file lists every .swift file
         run: ./tools/check_project_files.sh
-
-      - name: Proxy tests
-        run: node --test proxy/*.test.js

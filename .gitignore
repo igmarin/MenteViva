@@ -10,9 +10,6 @@ xcuserdata/
 # Derived, regenerable
 graphify-out/
 .codegraph/
-proxy/.dev.vars
-proxy/.wrangler/
-proxy/.env
 MenteViva/Config/Local.xcconfig
 
 # Local tooling state
