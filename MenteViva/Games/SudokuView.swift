@@ -184,7 +184,10 @@ struct SudokuView: View {
             let finishes = openSquares.count == 1
             fill(index, with: digit)
             if finishes {
-                finish()  // only the celebration: no extra wash or tone
+                // Only the celebration plays: no wash, no tone. The finished
+                // units are still announced, once, like any other placement.
+                if !units.isEmpty { announceAll(units) }
+                finish()
             } else {
                 // One tone even when several units finish together.
                 Feedback.play(.success)
@@ -209,6 +212,7 @@ struct SudokuView: View {
         fill(index, with: digit)
         // A shown square earns the wash and the announcement, never a tone.
         if finishes {
+            if !units.isEmpty { announceAll(units) }
             finish()
         } else if !units.isEmpty {
             reward(units, in: puzzle)
@@ -235,6 +239,11 @@ struct SudokuView: View {
             guard !Task.isCancelled else { return }
             withAnimation(.easeOut(duration: 0.2)) { washed = [] }
         }
+        announceAll(units)
+    }
+
+    /// Names each finished unit once for VoiceOver.
+    private func announceAll(_ units: [SudokuPuzzle.Unit]) {
         let message = units.map { announce($0) }.joined(separator: ", ")
         UIAccessibility.post(notification: .announcement, argument: message)
     }
