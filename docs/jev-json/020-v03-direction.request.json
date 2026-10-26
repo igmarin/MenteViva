@@ -1,0 +1,65 @@
+{
+  "model": "jev-latest",
+  "state": {
+    "product": "MenteViva, iOS app of mini games for an active mind. Warm, no-fail, big-target design, EN+ES, fully offline, zero third-party dependencies, solo developer, aiming at a paid App Store release (one-time purchase). Copy ceiling: 'fun mental exercise'; copy says a game exercises memory or attention, never that it improves them; no medical claims.",
+    "players": "Two kinds of player share one product: (a) older adults with early cognitive decline, the owner's father being the reference player, who need small steps and no pressure; (b) anyone who wants to keep their mind active, who may master a level in one session and want to climb fast. The app never asks about health conditions.",
+    "games_today": "Nine games: Memory Lane (pairs, own photos), Color Clash, Name the Herd (category), Number Trail (sums), Quick Eyes (find the flashed item), Remember Together (own photos, no wrong answer), Sudoku (4x4 and 6x6), Up or Down (golf solitaire), Finish the Saying. Each has easy/medium/hard except Remember Together. Home deals 3 games a day, chosen on the device by rules.",
+    "levels_proposal": "Replace easy/medium/hard with levels 1-10 per game. Existing levels migrate easy=2, medium=4, hard=6. Staircase between sessions, never mid-game: one perfect session raises 1 level, two perfect sessions in a row raise 2, accuracy under 65% lowers 1 (never more than 1 at a time). After a perfect session the end screen offers 'Shall we try the next level?' with Yes / Keep it as it is. Every level change is explained to the player in one warm line at the start of the next game. The family can still pin a level.",
+    "onboarding_proposal": "First run asks at most 4 things, each skippable, big buttons: who is it for (me / a family member), what to exercise (memory, attention, numbers, words, just have fun; several allowed), how long a day (5, 10 or 15 minutes, meaning 2, 3 or 5 games), how to start (calm, normal, challenge, meaning starting level 2, 4 or 6). No age question. Optional 3-minute warm-up of 3 short games that quietly sets starting levels and never shows a score, a result or a 'brain age'. Everything stays on the device.",
+    "education_proposal": "A separate 'Why these games' section: a balanced, sourced summary of what research says about cognitive games (including the 2014 Stanford consensus that there is no compelling evidence they improve everyday life), what each game exercises, no promises per game, labelled 'educational information, not medical advice'.",
+    "new_games_proposal": "Four new games, public-domain mechanics, own art and own names: Repeat the Sequence (light-up tiles to repeat, Corsi paradigm, working memory, the domain no current game covers), Tangram (rebuild a silhouette with 7 pieces; tap a piece, tap rotate, generous snap), Tile Pairs (mahjong-solitaire style: remove free matching pairs of big tiles, deals always solvable), Sliding Blocks (Huarong Dao style: move blocks to free the big one, layouts generated and solver-checked). Each with levels 1-10."
+  },
+  "questions": {
+    "levels_staircase_fit": {
+      "type": "score",
+      "instructions": "Score the levels 1-10 staircase as one rule serving both kinds of player: fast climbers are not held back, the reference player is never pushed or shamed, and changes are understandable.",
+      "criteria": ["0 = poor rule", "1 = reasonable", "2 = excellent rule"]
+    },
+    "offer_next_level": {
+      "type": "noul",
+      "instructions": "Should a perfect session end with an offer to try the next level, in addition to the automatic staircase?",
+      "criteria": {
+        "true": "Yes, the offer gives agency to fast climbers and is easy to decline",
+        "false": "No, it adds a decision that could pressure the reference player"
+      }
+    },
+    "onboarding_fit": {
+      "type": "score",
+      "instructions": "Score the onboarding proposal for a stranger who installs the app alone and has nobody to ask: short enough, respectful, useful for setting up the daily plan, free of anything that looks clinical.",
+      "criteria": ["0 = poor onboarding", "1 = reasonable", "2 = excellent onboarding"]
+    },
+    "warm_up_risk": {
+      "type": "noul",
+      "instructions": "Does an optional warm-up that silently sets starting levels risk feeling like a cognitive test to the reference player, even with no score shown?",
+      "criteria": {
+        "true": "Yes: default it off for 'a family member' and frame it as play",
+        "false": "No: framed as play and skippable, it is fine for everyone"
+      }
+    },
+    "education_section_risk": {
+      "type": "score",
+      "instructions": "Score the regulatory and trust risk of the balanced 'Why these games' section for an App Store wellness app (FTC substantiation, App Store 1.4.1).",
+      "criteria": ["0 = low risk", "1 = manageable with the stated rules", "2 = high risk, leave it out"]
+    },
+    "build_first": {
+      "type": "choice",
+      "instructions": "Which new game should ship first?",
+      "criteria": {
+        "repeat_sequence": "Repeat the Sequence",
+        "tangram": "Tangram",
+        "tile_pairs": "Tile Pairs",
+        "sliding_blocks": "Sliding Blocks"
+      }
+    },
+    "hardest_to_make_accessible": {
+      "type": "choice",
+      "instructions": "Which new game is hardest to make work with VoiceOver and with 100pt targets for a player with a tremor?",
+      "criteria": {
+        "repeat_sequence": "Repeat the Sequence",
+        "tangram": "Tangram",
+        "tile_pairs": "Tile Pairs",
+        "sliding_blocks": "Sliding Blocks"
+      }
+    }
+  }
+}
