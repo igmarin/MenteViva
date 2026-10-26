@@ -19,6 +19,8 @@ struct CelebrationView: View {
     @Query(GameSession.thisWeek()) private var sessions: [GameSession]
     @AppStorage(FamilySettings.hiddenKey) private var hiddenGames = ""
     @State private var arrived = false
+    /// This celebration's warm headline, picked once when it appears (#242).
+    @State private var headline: String?
 
     /// Today's games from the plan saved for today; nil before there is one.
     private var today: TodayRun? {
@@ -49,7 +51,7 @@ struct CelebrationView: View {
             Spacer(minLength: 0)
 
             VStack(spacing: 14) {
-                Text(AppLanguage.localized("game.common.welldone"))
+                Text(headline ?? "")
                     .font(.largeTitle.bold())
                     .fontDesign(.serif)
                     .multilineTextAlignment(.center)
@@ -81,6 +83,10 @@ struct CelebrationView: View {
         }
         .background(.table)
         .onAppear {
+            if headline == nil {
+                var generator = SystemRandomNumberGenerator()
+                headline = CelebrationHeadline.pick(using: &generator)
+            }
             Feedback.play(.complete)
             withAnimation(.spring(duration: 0.55, bounce: 0.3).delay(0.1)) { arrived = true }
         }
