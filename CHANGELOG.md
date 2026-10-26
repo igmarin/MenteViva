@@ -22,6 +22,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
   aloud", speaks the name on its own (off by default); the speaker button always works.
 
 ### Changed
+- **Name the Herd enjoys each finished category (#238):** every check stays visible for a
+  moment with a warm completion note before the next category arrives, and VoiceOver hears
+  the new category's name.
 - **Sudoku celebrates finished rows (#239):** finishing a row, column or box washes it
   in the game's ink and names it aloud, and each placed number pops gently onto its
   square. The finished board keeps its usual celebration and nothing else.

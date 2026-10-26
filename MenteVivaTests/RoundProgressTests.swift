@@ -68,6 +68,27 @@ final class RoundProgressTests: XCTestCase {
     }
 }
 
+/// The category board decides when to hold its finished state before advancing.
+final class CategoryCompletionTests: XCTestCase {
+    func testGivenLastItemPickedWhenTappedThenRoundEndsAfterBeat() {
+        XCTAssertEqual(
+            CategoryFluencyView.completion(found: 7, total: 7, hasNextRound: true),
+            .showBeatThenNextCategory)
+    }
+
+    func testGivenLastItemOfLastCategoryWhenTappedThenSessionEndsAfterBeat() {
+        XCTAssertEqual(
+            CategoryFluencyView.completion(found: 7, total: 7, hasNextRound: false),
+            .showBeatThenFinish)
+    }
+
+    func testGivenItemsStillToFindWhenTappedThenPlayContinues() {
+        XCTAssertEqual(
+            CategoryFluencyView.completion(found: 6, total: 7, hasNextRound: true),
+            .keepPlaying)
+    }
+}
+
 /// Scoring tests keep the formulas independent from SwiftUI rendering and
 /// protect the values shown in the celebration screen.
 final class GameScoringTests: XCTestCase {
