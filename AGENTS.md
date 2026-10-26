@@ -149,7 +149,8 @@ docs/                 start at docs/README.md
    algorithm, search how others solved it. Needs a local node
    (`xerj --insecure --data-dir ~/xerj-data`, data dir outside the repo) and
    `export PATH="$HOME/.local/bin:$PATH"`. Prefixes: `menteviva` (this repo; re-run
-   `xerj autoindex . --prefix menteviva` after big changes), plus one per clone in
+   `xerj autoindex . --prefix menteviva` after big changes; `.githooks/post-merge`
+   does it after a `git pull` on main), plus one per clone in
    `~/refs/` (`mysudoku` MIT, `imoofs-sudoku` Apache-2.0). Search is lexical, so use
    the identifiers the code uses: `xerj search --prefix <name> "<words>"`.
    Clone references **outside** the repo (`~/refs/<name>`), index each under its own

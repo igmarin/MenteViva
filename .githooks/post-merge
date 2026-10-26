@@ -1,0 +1,23 @@
+#!/bin/bash
+# Refresh the local XERJ reference index after `git pull` lands changes on main
+# (AGENTS.md, Agent workflow 6). Optional and best-effort: it never fails a pull,
+# and skips quietly when xerj is missing or the node is not running.
+#
+# Install once:   git config core.hooksPath .githooks
+# Skip:           XERJ_SKIP_REINDEX=1 git pull
+set -uo pipefail
+
+[ -n "${XERJ_SKIP_REINDEX:-}" ] && exit 0
+[ "$(git rev-parse --abbrev-ref HEAD)" = "main" ] || exit 0
+
+export PATH="$HOME/.local/bin:$PATH"
+command -v xerj >/dev/null 2>&1 || exit 0
+curl -s -m 2 -o /dev/null localhost:9200 || exit 0
+
+# Background: autoindex resumes and skips duplicates, and a pull should not wait.
+(
+  cd "$(git rev-parse --show-toplevel)" || exit 0
+  XERJ_DISABLE_FEEDBACK=true xerj autoindex . --prefix menteviva \
+    >"${TMPDIR:-/tmp}/xerj-reindex.log" 2>&1
+) &
+exit 0
