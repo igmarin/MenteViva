@@ -86,19 +86,13 @@ struct SettingsView: View {
                     .accessibilityHint(AppLanguage.localized("setup.open.hint"))
                 }
 
-                // Three short promises he can read at a glance, true for this
-                // build: the suggestions line only when totals really leave.
+                // Short promises he can read at a glance.
                 Section {
                     privacyLine(
                         String(format: AppLanguage.localized("settings.privacy.device %@"), device),
                         systemImage: device == "iPad" ? "ipad" : "iphone")
                     privacyLine(AppLanguage.localized("settings.privacy.noaccount"), systemImage: "nosign")
                     privacyLine(AppLanguage.localized("settings.privacy.photos"), systemImage: "photo.on.rectangle")
-                    if JevService.shared.sendsSummaries {
-                        Text(AppLanguage.localized("settings.privacy.suggestions"))
-                            .font(.body)
-                            .foregroundStyle(.secondary)
-                    }
                     Text(String(format: AppLanguage.localized("settings.privacy.backup %@"), device))
                         .font(.body)
                         .foregroundStyle(.secondary)

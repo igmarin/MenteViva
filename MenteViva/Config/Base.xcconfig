@@ -1,6 +1,0 @@
-// Jev proxy settings. Empty = Jev off (offline fallback), which always works.
-// Real values go in Local.xcconfig (git-ignored); see Local.xcconfig.example.
-JEV_PROXY_URL =
-JEV_PROXY_SECRET =
-
-#include? "Local.xcconfig"

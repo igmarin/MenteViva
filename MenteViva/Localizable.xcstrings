@@ -5697,23 +5697,6 @@
         }
       }
     },
-    "settings.privacy.suggestions" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Daily suggestions send only anonymous totals: which games, how many, how well. Never your name."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Las sugerencias diarias solo envían totales anónimos: qué juegos, cuántos y qué tan bien. Nunca tu nombre."
-          }
-        }
-      }
-    },
     "settings.privacy.title" : {
       "extractionState" : "stale",
       "localizations" : {

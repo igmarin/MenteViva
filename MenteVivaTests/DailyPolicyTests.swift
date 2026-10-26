@@ -155,4 +155,38 @@ final class DailyPolicyTests: XCTestCase {
         XCTAssertEqual(p.difficulty[.mathStreaks], .medium)  // no sessions: no evidence, no change
         XCTAssertEqual(p.difficulty[.memoryMatch], .medium)
     }
+
+    // MARK: Today's plan, saved (PlanStore.todaysPlan)
+
+    func testGivenNewDayWhenTodaysPlanThenPolicyPlanSavedAndChangeRecorded() {
+        let defaults = UserDefaults(suiteName: "DailyPolicyTests.todaysPlan")!
+        defaults.removePersistentDomain(forName: "DailyPolicyTests.todaysPlan")
+        let struggling = Stats(
+            sessionsLast14Days: 2, meanAccuracy: 0.4,
+            meanRoundsCompleted: 10, daysSinceLastPlayed: 1, currentDifficulty: .medium)
+        let state = PlayerStateSummary(games: [GameID.stroop.rawValue: struggling])
+
+        let plan = PlanStore.todaysPlan(
+            state: state, now: Date(timeIntervalSince1970: 1_790_000_000), defaults: defaults)
+
+        XCTAssertEqual(plan, DailyPolicy.plan(state: state, dayStamp: plan.dayStamp))
+        XCTAssertEqual(plan.difficulty[.stroop], .easy)
+        XCTAssertEqual(PlanStore.cachedPlan(defaults: defaults), plan)
+        XCTAssertEqual(PlanStore.storedDifficulty(defaults: defaults)[.stroop], .easy)
+        XCTAssertEqual(PlanStore.lastDifficultyChange(defaults: defaults)[.stroop], plan.dayStamp)
+        XCTAssertNil(PlanStore.lastDifficultyChange(defaults: defaults)[.memoryMatch])
+    }
+
+    func testGivenPlanSavedTodayWhenTodaysPlanAgainThenSamePlanEvenIfStateChanged() {
+        let defaults = UserDefaults(suiteName: "DailyPolicyTests.todaysPlanCached")!
+        defaults.removePersistentDomain(forName: "DailyPolicyTests.todaysPlanCached")
+        let now = Date(timeIntervalSince1970: 1_790_000_000)
+        let first = PlanStore.todaysPlan(state: PlayerStateSummary(games: [:]), now: now, defaults: defaults)
+        let struggling = Stats(
+            sessionsLast14Days: 2, meanAccuracy: 0.4,
+            meanRoundsCompleted: 10, daysSinceLastPlayed: 1, currentDifficulty: .medium)
+        let changed = PlayerStateSummary(games: [GameID.stroop.rawValue: struggling])
+
+        XCTAssertEqual(PlanStore.todaysPlan(state: changed, now: now, defaults: defaults), first)
+    }
 }
