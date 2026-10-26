@@ -22,6 +22,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
   aloud", speaks the name on its own (off by default); the speaker button always works.
 
 ### Changed
+- **Memory Lane turns its cards (#237):** a card turns over like a real card, and a
+  missed pair turns back the moment you pick the next card, so the board never holds
+  more than it should. With Reduce Motion the cards cross-fade instead of turning.
 - **Privacy you can read (Settings):** the long paragraph is now three short lines with
   icons: your games stay on this iPad, no account or ads or tracking, and your photos and
   their names never leave it. The backup note follows in smaller text. The line about daily

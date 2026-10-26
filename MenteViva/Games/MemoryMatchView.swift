@@ -31,8 +31,8 @@ struct MemoryMatchView: View {
     @State private var photoImages: [URL: UIImage] = [:]
 
     @State private var cards: [Card] = []
-    @State private var flipped: [Int] = []
-    @State private var matched = 0
+    /// Which cards are face up after each tap (#237); the view animates it.
+    @State private var board = MemoryBoard(pairs: [])
     @State private var moves = 0
     @State private var startedAt = Date.now
     @State private var showCelebration = false
@@ -46,10 +46,9 @@ struct MemoryMatchView: View {
     }
 
     struct Card: Identifiable {
+        /// The card's index into the board; `MemoryBoard` taps by this id.
         let id: Int
         let face: Face
-        var isFaceUp = false
-        var isMatched = false
     }
 
     /// The board's pairs: photos first (already shuffled by the caller), then
@@ -109,12 +108,12 @@ struct MemoryMatchView: View {
                         }
                         .buttonStyle(.plain)
                         .accessibilityLabel(
-                            card.isFaceUp || card.isMatched
+                            isShown(card)
                                 ? label(card.face)
                                 : AppLanguage.localized("game.memory.card.hidden")
                         )
                         .accessibilityHint(
-                            card.isMatched
+                            board.matched.contains(card.id)
                                 ? AppLanguage.localized("game.memory.a11y.matched")
                                 : String(
                                     format: AppLanguage.localized("game.memory.a11y.position %lld %lld"),
@@ -127,47 +126,86 @@ struct MemoryMatchView: View {
         .padding()
         .gameHeader(.memoryMatch, instruction: AppLanguage.localized("game.memory.instruction"))
         .onAppear(perform: deal)
-        .onDisappear { flipBackTask?.cancel() }
+        .onDisappear {
+            flipBackTask?.cancel()
+            flipBackTask = nil
+        }
         .celebration(isPresented: $showCelebration, game: .memoryMatch, detail: finalDetail, onPlayAgain: deal)
     }
 
+    /// A card turns over in 0.25 s, eased in and out, the face swapping at the
+    /// halfway point; with Reduce Motion it cross-fades in 0.2 s instead.
     /// Face up: a paper card with the picture. Face down: the teal back with a
     /// small leaf. Matched pairs get a soft wash of the game's ink and the checkmark.
     private func face(_ card: Card, size: CGSize) -> some View {
-        let shown = card.isFaceUp || card.isMatched
+        let shown = isShown(card)
+        let found = board.matched.contains(card.id)
+        // Both layers swap at the halfway point of the turn, when the card is
+        // edge-on and invisible; Reduce Motion fades without turning.
+        let swap: Animation =
+            reduceMotion
+            ? .easeInOut(duration: 0.2) : .easeInOut(duration: 0.12).delay(0.13)
         return ZStack {
+            cardBack(size: size)
+                .opacity(shown ? 0 : 1)
+                .animation(swap, value: shown)
+            cardFront(card, size: size, found: found)
+                .opacity(shown ? 1 : 0)
+                .animation(swap, value: shown)
+        }
+        .frame(width: size.width, height: size.height)
+        .shadow(color: .black.opacity(0.15), radius: 4, y: 2)
+        .rotation3DEffect(
+            .degrees(shown && !reduceMotion ? 180 : 0), axis: (x: 0, y: 1, z: 0)
+        )
+        .animation(reduceMotion ? nil : .easeInOut(duration: 0.25), value: shown)
+        // Non-color cue: matched pairs keep a checkmark (WCAG 1.4.1).
+        .overlay(alignment: .topTrailing) {
+            if found { CheckBadge() }
+        }
+        // Gentle bloom on the moment a pair is found.
+        .scaleEffect(found && !reduceMotion ? 1.03 : 1)
+        .animation(.spring(duration: 0.35), value: found)
+    }
+
+    private func isShown(_ card: Card) -> Bool {
+        board.faceUp.contains(card.id) || board.matched.contains(card.id)
+    }
+
+    /// The calm teal back with a small leaf, the same in light and dark.
+    private func cardBack(size: CGSize) -> some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 18)
+                .fill(AnyShapeStyle(Self.cardBack.gradient))
+            Image(systemName: "leaf.fill")
+                .font(.system(size: min(size.width, size.height) * 0.22))
+                .foregroundStyle(.white.opacity(0.35))
+        }
+    }
+
+    /// The paper front with the picture; pre-turned so it reads upright when
+    /// the card has turned over, while it is still hidden mid-turn.
+    private func cardFront(card: Card, size: CGSize, found: Bool) -> some View {
+        ZStack {
             RoundedRectangle(cornerRadius: 18)
                 .fill(
-                    shown
-                        ? (card.isMatched ? AnyShapeStyle(.tint.opacity(0.16)) : AnyShapeStyle(Color(.systemBackground)))
-                        : AnyShapeStyle(Self.cardBack.gradient)
-                )
-                .shadow(color: .black.opacity(0.15), radius: 4, y: 2)
+                    found
+                        ? AnyShapeStyle(.tint.opacity(0.16)) : AnyShapeStyle(Color(.systemBackground)))
             RoundedRectangle(cornerRadius: 18)
-                .strokeBorder(.black.opacity(shown ? 0.12 : 0), lineWidth: 1)
-            if shown, case .photo(let url) = card.face, let image = photoImages[url] {
+                .strokeBorder(.black.opacity(0.12), lineWidth: 1)
+            if case .photo(let url) = card.face, let image = photoImages[url] {
                 Image(uiImage: image)
                     .resizable()
                     .scaledToFill()
                     .frame(width: size.width - 10, height: size.height - 10)
                     .clipShape(RoundedRectangle(cornerRadius: 14))
-            } else if shown, case .emoji(let emoji) = card.face {
+            } else if case .emoji(let emoji) = card.face {
                 Text(emoji)
                     .font(.system(size: min(size.width, size.height) * 0.5))
-            } else if !shown {
-                Image(systemName: "leaf.fill")
-                    .font(.system(size: min(size.width, size.height) * 0.22))
-                    .foregroundStyle(.white.opacity(0.35))
             }
         }
-        .frame(width: size.width, height: size.height)
-        // Non-color cue: matched pairs keep a checkmark (WCAG 1.4.1).
-        .overlay(alignment: .topTrailing) {
-            if card.isMatched { CheckBadge() }
-        }
-        // Gentle bloom on the moment a pair is found.
-        .scaleEffect(card.isMatched && !reduceMotion ? 1.03 : 1)
-        .animation(.spring(duration: 0.35), value: card.isMatched)
+        .rotation3DEffect(
+            .degrees(reduceMotion ? 0 : 180), axis: (x: 0, y: 1, z: 0))
     }
 
     private func deal() {
@@ -176,6 +214,7 @@ struct MemoryMatchView: View {
 
     private func dealCards() {
         flipBackTask?.cancel()
+        flipBackTask = nil
         let photos = MemoryPhotos.all().shuffled()
         faces = Self.faces(
             photos: photos, theme: Self.themes.randomElement() ?? Self.themes[0],
@@ -185,10 +224,12 @@ struct MemoryMatchView: View {
                 guard case .photo(let url) = face, let image = UIImage(contentsOfFile: url.path) else { return nil }
                 return (url, image)
             })
-        cards = (faces + faces).shuffled().enumerated().map { Card(id: $0, face: $1) }
+        let shuffled = (faces + faces).shuffled()
+        cards = shuffled.enumerated().map { Card(id: $0, face: $1) }
+        // The board taps by card id; each face occurs exactly twice, so its
+        // first position is the pair identity both copies share.
+        board.deal(pairs: shuffled.map { faces.firstIndex(of: $0) ?? 0 })
         cardPositions = Dictionary(uniqueKeysWithValues: cards.indices.map { (cards[$0].id, $0 + 1) })
-        flipped = []
-        matched = 0
         moves = 0
         startedAt = .now
     }
@@ -208,33 +249,35 @@ struct MemoryMatchView: View {
     private func flip(_ cardID: Int) {
         // Face-up and found cards ignore taps here rather than via .disabled,
         // so the system never greys out the pictures he needs to read.
-        guard let i = cards.firstIndex(where: { $0.id == cardID }),
-            !cards[i].isFaceUp, !cards[i].isMatched
-        else { return }
-        cards[i].isFaceUp = true
-        flipped.append(i)
-        guard flipped.count == 2 else { return }
-        moves += 1
-        let (a, b) = (flipped[0], flipped[1])
-        if cards[a].face == cards[b].face {
-            cards[a].isMatched = true
-            cards[b].isMatched = true
-            matched += 1
-            flipped = []
+        guard let index = cards.firstIndex(where: { $0.id == cardID }) else { return }
+        switch board.tap(index) {
+        case .ignored, .turnedUp:
+            break
+        case .matched:
+            moves += 1
             Feedback.play(.success)
-            if matched == faces.count { finish() }
-        } else {
+            if board.isComplete { finish() }
+        case .missed:
+            moves += 1
             Feedback.play(.miss)
-            let pair = flipped
-            flipped = []
-            flipBackTask = Task { @MainActor in
-                try? await Task.sleep(for: .seconds(1.2))
-                guard !Task.isCancelled,
-                    pair.allSatisfy({ cards.indices.contains($0) })
-                else { return }
-                cards[pair[0]].isFaceUp = false
-                cards[pair[1]].isFaceUp = false
-            }
+            scheduleTurnBack()
+        case .missedBackThenUp:
+            // The missed pair turns back at once and only the new card turns
+            // up; no timer is left behind.
+            flipBackTask?.cancel()
+            flipBackTask = nil
+        }
+    }
+
+    /// One pending turn-back at a time: scheduling a new one cancels the old,
+    /// and a stale timer can never touch a newer board (#237).
+    private func scheduleTurnBack() {
+        flipBackTask?.cancel()
+        let generation = board.generation
+        flipBackTask = Task { @MainActor in
+            try? await Task.sleep(for: .seconds(1.2))
+            guard !Task.isCancelled else { return }
+            _ = board.resolveMiss(generation: generation)
         }
     }
 
