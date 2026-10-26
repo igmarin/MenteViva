@@ -145,6 +145,17 @@ docs/                 start at docs/README.md
 5. **Code questions:** if `.codegraph/` exists use `codegraph explore "<query>"`;
    if `graphify-out/` exists query it (`/graphify`). Both are gitignored and
    regenerable; fall back to grep when absent.
+6. **Reference coding (optional, XERJ).** Before writing a new game or a tricky
+   algorithm, search how others solved it. Needs a local node
+   (`xerj --insecure --data-dir ~/xerj-data`, data dir outside the repo) and
+   `export PATH="$HOME/.local/bin:$PATH"`. Prefixes: `menteviva` (this repo; re-run
+   `xerj autoindex . --prefix menteviva` after big changes), plus one per clone in
+   `~/refs/` (`mysudoku` MIT, `imoofs-sudoku` Apache-2.0). Search is lexical, so use
+   the identifiers the code uses: `xerj search --prefix <name> "<words>"`.
+   Clone references **outside** the repo (`~/refs/<name>`), index each under its own
+   prefix, and check the licence first: unlicensed code is read-only reference, never
+   copied. Zero-dependency still applies. Set `XERJ_DISABLE_FEEDBACK=true`; never send
+   field reports or `rerank`/`--embed-mode proxy` (they send text off the machine).
 
 ## Patterns
 
