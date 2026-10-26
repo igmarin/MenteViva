@@ -58,6 +58,52 @@ nonisolated struct SudokuPuzzle: Equatable {
     /// on a small iPhone stops fitting when the phone turns to portrait.
     func fits(width: Double) -> Bool { Self.squaresFit(size, in: width) }
 
+    /// A finished row, column or box (#239). Indices are 0-based.
+    enum Unit: Equatable {
+        case row(Int)
+        case column(Int)
+        case box(Int)
+    }
+
+    /// Every square of a unit, row-major.
+    func squares(of unit: Unit) -> [Int] {
+        switch unit {
+        case .row(let row):
+            return (0..<size).map { row * size + $0 }
+        case .column(let column):
+            return (0..<size).map { $0 * size + column }
+        case .box(let box):
+            let across = size / boxColumns
+            let top = (box / across) * boxRows
+            let left = (box % across) * boxColumns
+            return (0..<boxRows).flatMap { row in
+                (0..<boxColumns).map { column in (top + row) * size + left + column }
+            }
+        }
+    }
+
+    /// The units that the entry at `index` just finished. `entries` holds every
+    /// filled square (givens plus placed); a unit counts when all its squares
+    /// hold their solution digit. Only the row, column and box through `index`
+    /// can be new, so only those are reported, in that order.
+    func completedUnits(after index: Int, entries: [Int: Int]) -> [Unit] {
+        guard solution.indices.contains(index) else { return [] }
+        let row = index / size
+        let column = index % size
+        let box = (row / boxRows) * (size / boxColumns) + column / boxColumns
+        func finished(_ squares: [Int]) -> Bool {
+            squares.allSatisfy { square in
+                guard let placed = entries[square] else { return false }
+                return placed == solution[square]
+            }
+        }
+        var units: [Unit] = []
+        if finished(squares(of: .row(row))) { units.append(.row(row)) }
+        if finished(squares(of: .column(column))) { units.append(.column(column)) }
+        if finished(squares(of: .box(box))) { units.append(.box(box)) }
+        return units
+    }
+
     private static func squaresFit(_ count: Int, in width: Double) -> Bool {
         (width - gap * Double(count - 1)) / Double(count) >= minTarget
     }

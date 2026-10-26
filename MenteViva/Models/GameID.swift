@@ -1,6 +1,6 @@
 import Foundation
 
-/// The games, by the stable IDs stored in sessions and sent (anonymized) to Jev.
+/// The games, by the stable IDs stored in sessions.
 nonisolated enum GameID: String, CaseIterable, Codable {
     case memoryMatch = "memory_match"
     case stroop = "stroop"

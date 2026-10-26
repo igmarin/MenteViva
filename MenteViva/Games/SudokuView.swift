@@ -1,11 +1,13 @@
 import SwiftData
 import SwiftUI
+import UIKit
 
 /// Sudoku (#179): a 4×4 or 6×6 board made fresh each game (`SudokuPuzzle`). Tap a
 /// square, then a big number. A number that doesn't fit gets a gentle "try another";
 /// "Show me one" fills the square when he's stuck. No timer.
 struct SudokuView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     @ScaledMetric(relativeTo: .largeTitle) private var digitSize: CGFloat = 36
 
@@ -20,6 +22,9 @@ struct SudokuView: View {
     @State private var startedAt = Date.now
     @State private var missed = false
     @State private var missedSquare: Int?
+    /// Squares of just-finished units, wearing the game's ink wash (#239).
+    @State private var washed: Set<Int> = []
+    @State private var washTask: Task<Void, Never>?
     @State private var showAlmost = false
     @State private var showCelebration = false
     @State private var finalDetail = ""
@@ -98,11 +103,16 @@ struct SudokuView: View {
             )
             .minimumScaleFactor(0.5)
             .frame(width: side, height: side)
-            .background(GameID.sudoku.ink.opacity(shaded ? 0.14 : 0.05), in: .rect(cornerRadius: 8))
+            .background(
+                GameID.sudoku.ink.opacity(washed.contains(index) ? 0.35 : (shaded ? 0.14 : 0.05)),
+                in: .rect(cornerRadius: 8))
 
         if let value {
             face.accessibilityLabel(
-                String(format: AppLanguage.localized("game.sudoku.a11y.cell %lld %lld %lld"), row + 1, column + 1, value))
+                String(format: AppLanguage.localized("game.sudoku.a11y.cell %lld %lld %lld"), row + 1, column + 1, value)
+            )
+            // Each placed digit pops gently; Reduce Motion fades it in.
+            .transition(reduceMotion ? .opacity : .scale(scale: 1.12).combined(with: .opacity))
         } else {
             Button {
                 selected = index
@@ -153,6 +163,9 @@ struct SudokuView: View {
     }
 
     private func restart() {
+        washTask?.cancel()
+        washTask = nil
+        washed = []
         entries = [:]
         shown = []
         correct = 0
@@ -167,8 +180,19 @@ struct SudokuView: View {
         attempts += 1
         if puzzle.solution[index] == digit {
             correct += 1
+            let units = puzzle.completedUnits(after: index, entries: filled(putting: digit, at: index, in: puzzle))
+            let finishes = openSquares.count == 1
             fill(index, with: digit)
-            Feedback.play(.success)
+            if finishes {
+                // Only the celebration plays: no wash, no tone. The finished
+                // units are still announced, once, like any other placement.
+                if !units.isEmpty { announceAll(units) }
+                finish()
+            } else {
+                // One tone even when several units finish together.
+                Feedback.play(.success)
+                if !units.isEmpty { reward(units, in: puzzle) }
+            }
         } else {
             missedSquare = index
             missed = true
@@ -182,15 +206,71 @@ struct SudokuView: View {
         guard let puzzle, let index = selected, entries[index] == nil else { return }
         attempts += 1
         shown.insert(index)
-        fill(index, with: puzzle.solution[index])
+        let digit = puzzle.solution[index]
+        let units = puzzle.completedUnits(after: index, entries: filled(putting: digit, at: index, in: puzzle))
+        let finishes = openSquares.count == 1
+        fill(index, with: digit)
+        // A shown square earns the wash and the announcement, never a tone.
+        if finishes {
+            if !units.isEmpty { announceAll(units) }
+            finish()
+        } else if !units.isEmpty {
+            reward(units, in: puzzle)
+        }
     }
 
+    /// Every filled square after putting `digit` at `index`: givens plus entries.
+    private func filled(putting digit: Int, at index: Int, in puzzle: SudokuPuzzle) -> [Int: Int] {
+        var filled = entries
+        for given in puzzle.givens { filled[given] = puzzle.solution[given] }
+        filled[index] = digit
+        return filled
+    }
+
+    /// A finished unit's small reward: the game's ink washes over its squares
+    /// for 0.6 s, and VoiceOver names each finished unit once.
+    private func reward(_ units: [SudokuPuzzle.Unit], in puzzle: SudokuPuzzle) {
+        washTask?.cancel()
+        withAnimation(.easeIn(duration: 0.15)) {
+            washed = Set(units.flatMap { puzzle.squares(of: $0) })
+        }
+        washTask = Task { @MainActor in
+            try? await Task.sleep(for: .seconds(0.6))
+            guard !Task.isCancelled else { return }
+            withAnimation(.easeOut(duration: 0.2)) { washed = [] }
+        }
+        announceAll(units)
+    }
+
+    /// Names each finished unit once for VoiceOver.
+    private func announceAll(_ units: [SudokuPuzzle.Unit]) {
+        let message = units.map { announce($0) }.joined(separator: ", ")
+        UIAccessibility.post(notification: .announcement, argument: message)
+    }
+
+    private func announce(_ unit: SudokuPuzzle.Unit) -> String {
+        switch unit {
+        case .row(let row):
+            String(format: AppLanguage.localized("game.sudoku.done.row %lld"), row + 1)
+        case .column(let column):
+            String(format: AppLanguage.localized("game.sudoku.done.column %lld"), column + 1)
+        case .box(let box):
+            String(format: AppLanguage.localized("game.sudoku.done.box %lld"), box + 1)
+        }
+    }
+
+    /// Fills one square; the callers decide the finish from their `finishes`
+    /// flag, so this never finishes twice.
     private func fill(_ index: Int, with digit: Int) {
-        entries[index] = digit
+        // The spring animates the placed digit's pop; Reduce Motion fades it.
+        withAnimation(.spring(duration: 0.25)) {
+            entries[index] = digit
+        }
         showAlmost = false
         let open = openSquares
-        guard !open.isEmpty else { return finish() }
-        selected = open.first { $0 > index } ?? open.first
+        if !open.isEmpty {
+            selected = open.first { $0 > index } ?? open.first
+        }
     }
 
     private func finish() {

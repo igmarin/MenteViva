@@ -23,11 +23,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: User-facing copy makes no prohibited claims
+        run: ./tools/check_claims.sh
+
       - name: Signposts match docs/profiling.md
         run: ./tools/check_signposts.sh
 
       - name: Project file lists every .swift file
         run: ./tools/check_project_files.sh
-
-      - name: Proxy tests
-        run: node --test proxy/*.test.js

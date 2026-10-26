@@ -23,10 +23,8 @@ and [GitHub milestones](https://github.com/nebulaideas/MenteViva/milestones).
 | 👀 Quick Eyes | Processing speed | Shrinking display-time discrimination |
 
 Home marks today's picks and each game reads the daily difficulty. Both are
-decided by a small rule policy on the device (no network, no cost). Jev
-([TypeSafe](https://typesafe.ai)) is an optional override when a proxy is
-configured, so everything works without it.
-Design and status: [docs/jev-integration.md](docs/jev-integration.md).
+decided by a small rule policy on the device (no network, no cost).
+Design history: [docs/jev-integration.md](docs/jev-integration.md).
 
 ## Build
 
@@ -60,8 +58,7 @@ MenteViva/
   HomeView.swift          # game picker
   Models/                 # SwiftData: GameSession, RoundProgress
   Games/                  # one file per game; MemoryMatchView is the reference
-  Services/               # DailyPolicy (on-device plan), JevService (optional TypeSafe client), SoundPlayer
-proxy/worker.js           # Cloudflare Worker holding the Jev key
+  Services/               # DailyPolicy (on-device plan), SoundPlayer
 docs/                     # product & design docs — start at docs/README.md
 tools/generate_project.swift
 ```
@@ -75,5 +72,5 @@ research (audience evidence, licensing, pricing), roadmap.
 
 This is **not** a medical app. The science (see docs/research-2026-09.md):
 brain games alone show weak transfer to daily life; they work best as one
-ingredient of an engaged, active life. Our copy says "fun mental exercise" —
-never "prevents decline". That's the honest position and the legally safe one.
+ingredient of an engaged, active life. Our copy says "fun mental exercise" and
+never promises cognitive outcomes. That's the honest position and the legally safe one.

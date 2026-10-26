@@ -10,7 +10,7 @@ launch
   RootView (MenteVivaApp.swift)      first run → OnboardingView, otherwise HomeView
   HomeView.refreshPlan()             reads the last 14 days of sessions
     PlayerStateSummary.build         turns them into per-game numbers
-    JevService.dailyPlan             today's three games + each game's level
+    PlanStore.todaysPlan             today's three games + each game's level (DailyPolicy)
   player taps "Play today's three"   games run back to back
   a game ends
     modelContext.record(GameSession) one row saved, then the celebration
@@ -28,7 +28,7 @@ launch
 | Levels | `Models/Difficulty.swift` | easy / medium / hard. Each game turns a level into its own knobs with `pick(easy, medium, hard)`. |
 | Saved play | `Models/GameSession.swift` | One row per finished game: rounds, attempts, correct, duration, level. No scores on screen. |
 | Daily plan | `Services/DailyPolicy.swift` | Pure rules: which three games, and each game's level. No network. |
-| Plan cache | `Services/PlanStore.swift`, `JevService.swift` | The plan is cached for the day. Jev can override it, but only when a proxy is configured. |
+| Plan cache | `Services/PlanStore.swift` | The plan is saved for the day, with each game's level and when it last changed. |
 | Progress | `Services/WeeklySummary.swift`, `ProgressRates.swift` | Rates, never sums: accuracy per play, level reached, days played. Feeds My Week and My progress. |
 | Family screens | `SetUpView.swift`, `MyProgressView.swift`, `Services/FamilySettings.swift` | Per device: hide a game, pin a level, choose Memory Lane photos. |
 | Strings | `Localizable.xcstrings` | Every word, English and Spanish. |
@@ -55,13 +55,6 @@ score = value[game] × (0.5 + 0.5 × daysSinceLastPlayed / 7)     (days capped a
 - **Levels** move one step at a time and only with evidence: below 65% accuracy → easier; 90%+ over at
   least 3 sessions → harder; then the level holds for 7 days so it never shifts under the player. A pinned
   level (Set up) wins over the rules.
-
-## Jev: optional, and never in the binary
-
-Jev is a hosted judgment service. It is off unless `MenteViva/Config/Local.xcconfig` (git-ignored) sets a proxy
-URL. When on, `JevService` sends only anonymous per-game numbers (play counts, accuracy, days since played)
-to a Cloudflare Worker (`proxy/worker.js`), which holds the real API key. Any failure, or no proxy, falls
-back to `DailyPolicy`: the app must always work offline. See [jev-integration.md](jev-integration.md).
 
 ## Saved data
 
@@ -129,34 +122,14 @@ How the numbers are kept honest:
 - **Tests** are in `MenteVivaTests/`, named Given/When/Then. Pure logic is written test-first; SwiftUI layout is
   not tested. Tests never touch `UserDefaults.standard`; they use their own suite.
 - **Before every push**, `.githooks/pre-push` runs lint (`swift-format --strict`), the signpost and project-file
-  checks, the proxy tests, and `xcodebuild test`. Install it once with `git config core.hooksPath .githooks`.
+  checks, and `xcodebuild test`. Install it once with `git config core.hooksPath .githooks`.
 - **CI on pull requests to `main`**, split by cost (macOS minutes bill at 10 times Linux):
   - `checks.yml` on Linux, always: signposts match `docs/profiling.md`, the project file lists every `.swift`
-    file, and the proxy tests. About 1 billed minute.
+    file. About 1 billed minute.
   - `swift.yml` on macOS, only for a non-draft PR that touches the app, tests, project or tools: regenerate the
     project, lint, `xcodebuild test`. About 20 billed minutes. Open a PR as a draft while iterating.
   - `ocr-review.yml` posts an automated code review on the PR.
 - **Installing on a device** with a free Apple ID expires after 7 days; see [install-runbook.md](install-runbook.md).
-
-## The Jev proxy and what it sees
-
-`proxy/worker.js` is a Cloudflare Worker with no state and no logging. For each `POST /jev` it:
-
-1. checks the app's shared secret (`X-MenteViva-Key`), a gate token and not real authentication;
-2. rate-limits by IP and rejects bodies over 16 KB;
-3. accepts only the known model (`jev-latest`) and only question keys built from the game list
-   (`include_<game>`, plus `difficulty_<game>` for games with levels);
-4. forwards the body to the Jev API with the real key added on the server, then relays the answer, or a warm
-   502 if Jev is slow (8 s limit).
-
-The request carries only per-game numbers: sessions in the last 14 days, mean accuracy, rounds, days since last
-played, current level. No names, photos, dates or identifiers. Jev answers a score per question; the app turns
-the scores into a mix and levels, and a low-confidence answer is ignored.
-
-**The game list is in three places that must agree:** `GameID`, `GAMES` in `proxy/worker.js`, and the archived
-request in `docs/jev-json/`. `JevServiceTests` and `proxy/worker.test.js` both replay that archived request, so
-adding a game without updating the others turns a test red. The live worker is redeployed by the owner
-(`wrangler deploy`); until then a configured build gets a 400 and falls back to the on-device rules.
 
 ## Adding a game
 
@@ -165,11 +138,8 @@ adding a game without updating the others turns a test red. The live worker is r
 3. `GameID` case, ink colour in `Theme.swift`, emblem in `GameCard.swift`, route in `HomeView.destination`,
    weight in `DailyPolicy.value`.
 4. Strings in `Localizable.xcstrings`, EN + ES, in the same commit.
-5. Jev contract: add the ID to `GAMES` in `proxy/worker.js`, capture the app's new request in
-   `docs/jev-json/`, point `JevServiceTests` and `worker.test.js` at it.
-6. `swift tools/generate_project.swift`, then build, test and lint (AGENTS.md Workflow 5).
+5. `swift tools/generate_project.swift`, then build, test and lint (AGENTS.md Workflow 5).
 
 ## What leaves the device
 
 Nothing by default. No account, no ads, no tracking. Photos and their names never leave the device.
-With a proxy configured, anonymous totals go to the Worker (see above).

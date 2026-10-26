@@ -79,9 +79,9 @@ struct HomeView: View {
             }
         }
         // On the stack, not its root: the root disappears on every push, which
-        // restarted the plan (a fetch and possibly the Jev call) on every Back.
+        // restarted the plan (a fetch) on every Back.
         // Keyed by day, it runs at launch and again when the day rolls over.
-        .task(id: planDay) { await refreshPlan() }
+        .task(id: planDay) { refreshPlan() }
         .onChange(of: scenePhase) { _, phase in
             if phase == .active { planDay = PlanStore.dayStamp() }
         }
@@ -266,10 +266,9 @@ struct HomeView: View {
     // MARK: - Plan
 
     /// Everything Home waits on before it can deal today's games: a 14-day
-    /// SwiftData fetch, the summary, and the plan — which, with a Jev proxy
-    /// configured, includes a network call with a 10 s timeout.
-    private func refreshPlan() async {
-        await HotPath.measure("plan.today") {
+    /// SwiftData fetch, the summary, and the plan.
+    private func refreshPlan() {
+        HotPath.measure("plan.today") {
             let since = Calendar.current.date(byAdding: .day, value: -14, to: .now) ?? .distantPast
             let recent =
                 (try? modelContext.fetch(
@@ -277,7 +276,7 @@ struct HomeView: View {
                         predicate: #Predicate { $0.playedAt >= since }))) ?? []
             let difficulty = PlanStore.storedDifficulty()
             let state = PlayerStateSummary.build(from: recent, difficulty: difficulty)
-            let plan = await JevService.shared.dailyPlan(state: state, currentDifficulty: difficulty)
+            let plan = PlanStore.todaysPlan(state: state)
             self.plan = plan.games
         }
     }

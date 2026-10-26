@@ -6,11 +6,6 @@ nonisolated enum Difficulty: Int, Codable {
     case medium = 1
     case hard = 2
 
-    init(jevScore: Double) {
-        let clamped = min(max(jevScore, 0), 2)
-        self = Difficulty(rawValue: Int(clamped.rounded())) ?? .medium
-    }
-
     /// Today's difficulty for a game: the family's pin if set (#108), else the
     /// rules' level, medium for a new player. Games read it once when they open,
     /// so it never shifts under the player mid-game.
