@@ -22,6 +22,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
   aloud", speaks the name on its own (off by default); the speaker button always works.
 
 ### Changed
+- **Sudoku celebrates finished rows (#239):** finishing a row, column or box washes it
+  in the game's ink and names it aloud, and each placed number pops gently onto its
+  square. The finished board keeps its usual celebration and nothing else.
 - **A clear, honest introduction (#227):** onboarding and store copy now use
   "Fun mental exercise" / "Ejercicio mental divertido" and describe games as
   exercising memory and attention, without promising cognitive outcomes.

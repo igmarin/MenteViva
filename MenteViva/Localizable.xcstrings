@@ -2036,6 +2036,54 @@
         }
       }
     },
+    "game.sudoku.done.box %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Box %lld done"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bloque %lld completo"
+          }
+        }
+      }
+    },
+    "game.sudoku.done.column %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Column %lld done"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Columna %lld completa"
+          }
+        }
+      }
+    },
+    "game.sudoku.done.row %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Row %lld done"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fila %lld completa"
+          }
+        }
+      }
+    },
     "game.sudoku.instruction" : {
       "localizations" : {
         "en" : {

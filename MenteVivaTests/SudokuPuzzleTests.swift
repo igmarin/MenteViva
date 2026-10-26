@@ -116,4 +116,41 @@ final class SudokuPuzzleTests: XCTestCase {
         let empty = [Int?](repeating: nil, count: 16)
         XCTAssertEqual(SudokuPuzzle.solutionCount(empty, size: 4, boxRows: 2, boxColumns: 2, limit: 2), 2)
     }
+
+    // MARK: - #239: a small reward for every finished row, column and box
+
+    /// A valid 4×4 solution; these tests fill its rows and boxes by hand.
+    private static let tinySolution = [1, 2, 3, 4, 3, 4, 1, 2, 2, 1, 4, 3, 4, 3, 2, 1]
+
+    private func tinyPuzzle() -> SudokuPuzzle {
+        SudokuPuzzle(size: 4, boxRows: 2, boxColumns: 2, solution: Self.tinySolution, givens: [])
+    }
+
+    func testGivenLastSquareOfRowWhenPlacedThenRowCompleted() {
+        let entries = [0: 1, 1: 2, 2: 3, 3: 4]
+        XCTAssertEqual(tinyPuzzle().completedUnits(after: 3, entries: entries), [.row(0)])
+    }
+
+    func testGivenPlacementCompletingRowAndBoxWhenPlacedThenBothReported() {
+        // Square 1 finishes row 0 {0, 1, 2, 3} and box 0 {0, 1, 4, 5} together.
+        let entries = [0: 1, 1: 2, 2: 3, 3: 4, 4: 3, 5: 4]
+        XCTAssertEqual(tinyPuzzle().completedUnits(after: 1, entries: entries), [.row(0), .box(0)])
+    }
+
+    func testGivenWrongDigitWhenPlacedThenNoUnitCompleted() {
+        let entries = [0: 1, 1: 2, 2: 3, 3: 1]
+        XCTAssertEqual(tinyPuzzle().completedUnits(after: 3, entries: entries), [])
+    }
+
+    func testGivenUnitDoneKeysWhenCatalogReadThenEveryKeyHasEnglishAndSpanish() throws {
+        let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
+        let data = try Data(contentsOf: root.appendingPathComponent("MenteViva/Localizable.xcstrings"))
+        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
+        let strings = try XCTUnwrap(json["strings"] as? [String: Any])
+        for key in ["game.sudoku.done.row %lld", "game.sudoku.done.column %lld", "game.sudoku.done.box %lld"] {
+            let localizations = (strings[key] as? [String: Any])?["localizations"] as? [String: Any]
+            XCTAssertNotNil(localizations?["en"], "\(key) has no English")
+            XCTAssertNotNil(localizations?["es"], "\(key) has no Spanish")
+        }
+    }
 }
