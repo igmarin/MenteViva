@@ -91,6 +91,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
   week board. The confetti is gone; the card is the celebration.
 
 ### Fixed
+- **Finish the Saying speaks the solution (#245):** completing a saying now reads it aloud when
+  automatic speech is on, or announces it once to VoiceOver when automatic speech is off.
 - **My progress froze on iOS 17 (#169):** opening it from Settings on an iPad with
   iOS 17 locked the app. It now reads every play and keeps the days it needs in code,
   the way the old For family screen did. Checked on the iPad (iOS 17.7).
