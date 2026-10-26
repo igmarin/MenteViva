@@ -62,9 +62,10 @@ docs/                 start at docs/README.md
   framed card in its own colour (`GameCard.swift`, palette in `Theme.swift`), Home deals today's
   three, every game shares one header, and the end of a game adds its card to the week board.
   Spec: `docs/design/2026-10-12-card-table.html`.
-- Next: dad playtest #2 (`docs/playtest-session-2.md`), then the v0.2.0 progress issues
-  (#140 My Week per day, #141 My progress + Set up).
-- Live state is in the [milestones](https://github.com/nebulaideas/MenteViva/milestones), not here.
+- **Next: v0.3 then v1.0 on the App Store** (decisions.md 2026-10-26): Jev out of the app, levels
+  1–10, onboarding with goals, four new games, then release work. Built by several agents in
+  parallel; see "Several agents at once" below. The epics are the open issues labelled `epic`.
+- Live state is in the [issues](https://github.com/nebulaideas/MenteViva/issues), not here.
 
 ## Signing
 
@@ -157,6 +158,45 @@ docs/                 start at docs/README.md
    prefix, and check the licence first: unlicensed code is read-only reference, never
    copied. Zero-dependency still applies. Set `XERJ_DISABLE_FEEDBACK=true`; never send
    field reports or `rerank`/`--embed-mode proxy` (they send text off the machine).
+
+## Several agents at once (decisions.md 2026-10-26)
+
+Muse Code, Cline and Claude work tickets in parallel. The owner decides and merges; Claude is the
+lead and reviews every PR; no agent merges.
+
+1. **Take only an issue labelled `ready` whose "Depends on" issues are all closed.** One issue, one
+   agent, one branch (`agent/<issue>-<slug>`), one PR with `Closes #<issue>`. Label the issue
+   `review` when the PR is up.
+2. **The issue is the brief.** Do what it asks, nothing else. If it is unclear or wrong, comment on
+   the issue and stop; don't guess.
+3. **Hot files** (several tickets touch them): `Localizable.xcstrings`, `GameID.swift`, `Theme.swift`,
+   `HomeView.swift`, `DailyPolicy.swift`. Merge `main` into your branch right before opening the PR.
+   Never hand-merge `project.pbxproj`: take `main`'s and run `swift tools/generate_project.swift`.
+4. **Never copy code, puzzles, art, sounds or text from another project, site or repo**, whatever
+   its license. Read for ideas, then write your own from the issue's spec. Any asset needs its source
+   and license recorded in `docs/ip-clearance.md`.
+5. **Labels.** Type: `game`, `feature`, `design`, `research`, `infra`, `docs`, `decision`.
+   Priority: `p0` (blocks the App Store), `p1`, `p2`. Size: `size:S` (<2 h), `size:M` (half a day),
+   `size:L` (split before taking). Who: `agent:muse`, `agent:cline`, `agent:claude`, `owner`.
+   State: `ready`, `review`, `blocked`. Epics are parent issues; tickets are their sub-issues.
+
+## Definition of done (every PR)
+
+Speed without quality is not progress. A PR is done when:
+
+- **Logic lives outside views.** Rules, scoring, generation and policy are small pure types (a
+  "service object": one job, plain inputs, no UI), in `Services/` or next to the game as
+  `<Game>Deal.swift` / `<Game>Puzzle.swift` (see `SudokuPuzzle`, `UpOrDownDeal`). Views show state
+  and forward taps. Dependencies (`UserDefaults`, today's date, the random generator) come in as
+  parameters, so tests control them; generated content takes a seed. Still no base classes or
+  protocols until a third use proves the pattern (conventions §2).
+- **Tests come first for logic** (conventions §9, Given/When/Then names). A bug fix starts with a
+  failing test. Generated puzzles are tested for solvability and for difficulty rising with the level.
+- **Every type and every non-obvious function has a `///` comment** saying why it exists or why it
+  works this way, not what the next line does.
+- **The checks pass:** build, tests and lint (Workflow 5); strings EN + ES (§3); accessibility floor
+  (§4); warm copy (§5); `CHANGELOG.md` for anything a player can see; no keys; no medical claims.
+- **Small:** one issue per PR; past ~400 changed lines (strings and pbxproj aside), split it.
 
 ## Patterns
 
