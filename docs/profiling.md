@@ -6,7 +6,7 @@ No third-party tools: `os_signpost` (via `HotPath.measure`) plus Instruments.
 
 | Signpost | Where | Why it can be slow |
 |---|---|---|
-| `plan.today` | `HomeView.refreshPlan` | 14-day fetch, then the plan — a network call when Jev is on |
+| `plan.today` | `HomeView.refreshPlan` | 14-day fetch, then the plan |
 | `photo.import` | `MemoryPhotos.add([Data?])` | the whole batch the family waits on after the picker |
 | `photo.downscale` | `MemoryPhotos.add` | ImageIO downsample + JPEG encode of a full photo (off the main actor) |
 | `photo.caption` | `MemoryPhotos.caption` | Set up reads it per photo inside a `ForEach` body |
@@ -23,8 +23,8 @@ Add one only around work that can be slow or runs per redraw (conventions §8: n
 Memory Lane decodes every photo up front inside `memory.deal`; Remember Together decodes
 one at a time, which is why it needs its own per-card signpost.
 
-`plan.today` is the only one that covers `await`, through `HotPath.measure`'s async overload —
-the suspensions are the point there, since the slow case is waiting on the proxy.
+`reminiscence.photo` is the only one that covers `await`, through `HotPath.measure`'s async overload —
+the suspensions are the point there, since the slow case is waiting on the photo decode.
 
 `photo.caption` is marked for its **run count**, not its duration. Each read is well under a
 millisecond; what a trace shows is how many of them one redraw of Set up costs.
@@ -72,8 +72,8 @@ That threshold is what `tools/profile.sh` flags; pass a different one as
 Both measured on an iPhone 18 Pro simulator, 2026-10-04. Neither is fixed; measure on a
 device before deciding, since a simulator number is not a device number.
 
-- **`plan.today`, ~300 ms** (299 and 302 ms on two cold starts) — and that is the *offline*
-  path, with no Jev proxy set, so no network is involved. It is the gap between launch and
+- **`plan.today`, ~300 ms** (299 and 302 ms on two cold starts) — there is no network
+  involved. It is the gap between launch and
   Home being able to star today's games. The 14-day `FetchDescriptor`, `PlayerStateSummary`
   and the plan all run before anything is shown.
 - **`reminiscence.photo`, ~120 ms on the first card** (1.3 ms on later ones — the first

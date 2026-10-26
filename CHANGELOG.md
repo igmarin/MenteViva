@@ -22,6 +22,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
   aloud", speaks the name on its own (off by default); the speaker button always works.
 
 ### Changed
+- MenteViva no longer connects to the internet; today's games are always chosen on your device (#195).
 - **Privacy you can read (Settings):** the long paragraph is now three short lines with
   icons: your games stay on this iPad, no account or ads or tracking, and your photos and
   their names never leave it. The backup note follows in smaller text. The line about daily

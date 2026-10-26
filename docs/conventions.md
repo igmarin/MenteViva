@@ -8,14 +8,13 @@ Lazy-senior rules. Read before writing code.
 4. **Accessibility floor:** touch targets ≥ 60pt (we aim for 100pt), VoiceOver labels on every interactive element, Dynamic Type friendly fonts (`.title2` minimum for instructions).
 5. **Tone of failure:** the app never says "wrong/error/failed". Copy is warm: "Almost — try again" / "Casi — inténtalo de nuevo".
 6. **After adding a `.swift` file**, run `swift tools/generate_project.swift` and commit the regenerated pbxproj.
-7. **Jev key hygiene:** never commit keys, and the key never enters the app or its plist. It lives only in the proxy as the `TYPESAFE_AI_KEY` secret (`wrangler secret put`; local dev: environment variable). Unset `JEV_PROXY_URL` = offline fallback. The dev-machine classifier uses a different variable, `TYPESAFE_API_KEY` (see AGENTS.md).
+7. **No keys, no network:** never commit keys; the app makes no network calls and holds no key. The dev-machine classifier uses `TYPESAFE_API_KEY` (see AGENTS.md); it never enters the repo, plist or binary.
 8. **Review flow:** PRs to `main`. Before opening: build, tests and lint pass (AGENTS.md Workflow 5), strings in EN + ES (§3), `CHANGELOG.md` updated, no keys (§7), no medical claims.
 9. **Tests: TDD for logic, BDD for flows.** New pure logic (scoring, policy,
    plan composition, adaptivity) is written test-first in `MenteVivaTests/`,
    with Given/When/Then method names (`testGivenXWhenYThenZ`). User-flow tests
    (XCUITest, when they exist) read as Given/When/Then steps. Do **not** test
-   SwiftUI layout trivia or Codable wire shapes — the wire contract is pinned by
-   the archived pairs in `docs/jev-json/`. Verify with
+   SwiftUI layout trivia or Codable wire shapes. Verify with
    `xcodebuild test -scheme MenteViva -destination 'platform=iOS Simulator,name=<device>'`
    (a simulator name alone may not resolve — pass `id=<UDID>` from
    `xcrun simctl list devices available` when in doubt).
