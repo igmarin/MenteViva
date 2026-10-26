@@ -25,7 +25,7 @@ Each issue names its own "Depends on".
 
 | Wave | Issues | Who |
 |---|---|---|
-| 0 — now, no code dependencies | #195 remove Jev · #196 ask Jev 020 · #224 Apple account · #225 name search · #227 copy audit · #228 price · #230 game-feel review · #210 "Why" text · #233 agent setup · review fixes #235–#243 | Cline, Muse, owner, Claude |
+| 0 — now, no code dependencies | #195 remove Jev · #196 ask Jev 020 · #224 Apple account · #225 name search · #227 copy audit · #228 price · #230 game-feel review · #210 "Why" text · #233 agent setup · review fixes #235–#243, #245 | Cline, Muse, owner, Claude |
 | 1 — after #195 | #197 level type · #215 register new games | Claude |
 | 2 — after #197 / #215 | #198 staircase · #199–#206 ten steps per game (8 in parallel) · #208 Set up picker · #216 #218 #220 #222 new-game logic (4 in parallel) · #229 TestFlight (after #224) | Muse, Cline, Claude |
 | 3 — after wave 2 | #207 level lines + offer · #211 profile · #217 #219 #221 #223 new-game screens (4 in parallel) · #209 remove bridge · #214 "Why" screen | Muse, Cline, Claude |

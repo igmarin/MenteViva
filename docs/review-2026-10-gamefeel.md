@@ -79,8 +79,11 @@ Reduce Motion honoured. "Juice" here means soft, clear, consistent feedback, not
 - An "Undo last card" in Up or Down (skill `puzzle`: undo for thinking puzzles).
 - A soft cross-fade between photos in Remember Together.
 - Separate toggles for sound and for vibration (one toggle today, by design in `docs/jev-sounds.md`).
-- Finish the Saying: read the whole saying aloud on a right answer when "Read names aloud" is on, and
-  announce it to VoiceOver.
+- ~~Finish the Saying: read the whole saying aloud on a right answer when "Read names aloud" is on, and
+  announce it to VoiceOver.~~ Moved to a ticket (#245): the VoiceOver part is an accessibility gap, not polish.
+
+The rest wait for the playtest with dad (#231): what he misses or what bothers him becomes a ticket
+with evidence.
 
 ## Not adopted from the skills
 
