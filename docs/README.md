@@ -35,6 +35,7 @@ screen of real content, split it — long docs don't get read.
 | [store-listing.md](store-listing.md) | App Store copy + screenshots (EN/ES), drafted early | Draft |
 | [privacy-policy.md](privacy-policy.md) | Privacy policy — local-first, what leaves the device (#34) | Pages built in `site/` (EN + ES); needs a host + contact |
 | [support.md](support.md) | Support page — 7-day expiry, language, progress (#34) | Pages built in `site/` (EN + ES); needs a host + contact |
+| [agent-setup.md](agent-setup.md) | Which coding agent reads which rules, MCP and skills, and what the owner sets up once | Living |
 
 ## Writing rules for these docs
 
