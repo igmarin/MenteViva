@@ -149,7 +149,7 @@ struct MemoryMatchView: View {
             cardBack(size: size)
                 .opacity(shown ? 0 : 1)
                 .animation(swap, value: shown)
-            cardFront(card, size: size, found: found)
+            cardFront(card: card, size: size, found: found)
                 .opacity(shown ? 1 : 0)
                 .animation(swap, value: shown)
         }
