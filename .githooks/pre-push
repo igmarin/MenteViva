@@ -50,6 +50,7 @@ simulator() {
 
 echo "Pre-push checks (git push --no-verify to skip):"
 run "lint" xcrun swift-format lint --strict -r MenteViva MenteVivaTests tools
+run "claims" ./tools/check_claims.sh
 run "signposts vs docs" ./tools/check_signposts.sh
 run "project file" ./tools/check_project_files.sh
 if command -v node > /dev/null; then

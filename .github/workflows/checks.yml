@@ -23,6 +23,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: User-facing copy makes no prohibited claims
+        run: ./tools/check_claims.sh
+
       - name: Signposts match docs/profiling.md
         run: ./tools/check_signposts.sh
 
