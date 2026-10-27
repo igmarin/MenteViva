@@ -2,7 +2,7 @@ import SwiftData
 import SwiftUI
 
 /// Name the Herd: pick the 7 items that belong to the shown category
-/// from a grid of big emoji tiles (3 / 5 / 7 decoys by difficulty). 3 categories per session.
+/// from a grid of big picture tiles (3 / 5 / 7 decoys by difficulty). 3 categories per session.
 struct CategoryFluencyView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -18,7 +18,7 @@ struct CategoryFluencyView: View {
 
     struct Tile: Identifiable {
         let id: Int
-        let emoji: String
+        let picture: GamePicture
         let belongs: Bool
         var isPicked = false
     }
@@ -88,8 +88,7 @@ struct CategoryFluencyView: View {
                             Button {
                                 tap(tile.id)
                             } label: {
-                                Text(tile.emoji)
-                                    .font(.system(size: 52))
+                                PictureView(picture: tile.picture, size: 52)
                             }
                             .buttonStyle(
                                 AnswerTileStyle(strength: tile.isPicked ? 0.32 : 0.12, minHeight: 100)
@@ -105,7 +104,7 @@ struct CategoryFluencyView: View {
                                         get: { missedTile == tile.id },
                                         set: { if !$0 { missedTile = nil } }))
                             )
-                            .accessibilityLabel(tile.emoji)
+                            .accessibilityLabel(AppLanguage.localized(tile.picture.nameKey))
                             .accessibilityHint(
                                 tile.isPicked
                                     ? AppLanguage.localized("game.category.a11y.picked")
@@ -158,7 +157,7 @@ struct CategoryFluencyView: View {
     /// Lays out the tiles of the round in play; the deal already shuffled them.
     private func dealRound() {
         guard let round = currentRound else { return }
-        tiles = round.tiles.enumerated().map { Tile(id: $0, emoji: $1.emoji, belongs: $1.belongs) }
+        tiles = round.tiles.enumerated().map { Tile(id: $0, picture: $1.picture, belongs: $1.belongs) }
         tilePositions = Dictionary(uniqueKeysWithValues: tiles.indices.map { (tiles[$0].id, $0 + 1) })
         found = 0
     }

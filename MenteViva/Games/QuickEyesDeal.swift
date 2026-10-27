@@ -4,16 +4,18 @@ import Foundation
 /// choose among. Pure, with the generator passed in, so a test can seed a
 /// round; the view keeps the flash timing, the rounds and the answer beat.
 nonisolated enum QuickEyesDeal {
-    /// The pictures the game draws from: familiar everyday things. Emoji carry
-    /// their own VoiceOver names, so they need no extra strings.
-    static let pictures = ["🌻", "🐢", "🍎", "🎸", "🌙", "☕️", "🦋", "🍊", "🚗", "⭐", "🐝", "🌵"]
+    /// The pictures the game draws from: familiar everyday things, bold enough
+    /// to read in a short flash.
+    static let pictures = GamePictures.named([
+        "sunflower", "turtle", "apple", "guitar", "moon", "coffee", "butterfly", "orange", "car", "star", "bee", "cactus",
+    ])
     /// How many pictures a round offers, the target among them.
     static let optionsPerRound = 4
 
     /// One round: the picture to flash, and the pictures offered afterwards.
     nonisolated struct Round: Equatable {
-        let target: String
-        let options: [String]
+        let target: GamePicture
+        let options: [GamePicture]
     }
 
     /// Deals one round: a target, three other pictures, and the four shuffled.

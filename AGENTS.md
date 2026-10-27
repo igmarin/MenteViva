@@ -36,7 +36,7 @@ MenteViva/            app (SwiftUI + SwiftData)
   Services/           DailyPolicy (on-device plan), PlanStore (saved plan + levels),
                       FamilySettings, PlayerProfile (onboarding answers), MemoryPhotos,
                       PlayerStateSummary, WeeklySummary, ProgressRates, AppLanguage, SoundPlayer, HotPath (signposts),
-                      CaptionSpeaker, EverydayObjects
+                      CaptionSpeaker, EverydayObjects, GamePictures (one catalogue of game pictures)
   Localizable.xcstrings  every string, EN + ES
 MenteVivaTests/       unit tests (Given/When/Then names)
 tools/                generate_project.swift (the only way to edit the Xcode project)

@@ -231,9 +231,8 @@ struct MemoryMatchView: View {
                     .scaledToFill()
                     .frame(width: size.width - 10, height: size.height - 10)
                     .clipShape(RoundedRectangle(cornerRadius: 14))
-            } else if case .emoji(let emoji) = card.face {
-                Text(emoji)
-                    .font(.system(size: min(size.width, size.height) * 0.5))
+            } else if case .picture(let picture) = card.face {
+                PictureView(picture: picture, size: min(size.width, size.height) * 0.5)
             }
         }
         .rotation3DEffect(
@@ -266,11 +265,11 @@ struct MemoryMatchView: View {
         startedAt = .now
     }
 
-    /// Emoji carry their own VoiceOver names; photos are numbered so a pair can
-    /// still be matched by ear.
+    /// Pictures say their name in the app's language (#324); photos are
+    /// numbered so a pair can still be matched by ear.
     private func label(_ face: MemoryFace) -> String {
         switch face {
-        case .emoji(let emoji): emoji
+        case .picture(let picture): AppLanguage.localized(picture.nameKey)
         case .photo:
             String(
                 format: AppLanguage.localized("game.memory.photo %lld"),
