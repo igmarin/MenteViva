@@ -204,7 +204,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
   replay).
 
 ### Fixed
-- **Higher levels never get easier (#264):** at levels 7–10, Up or Down dealt the easier King–Ace
+- **Higher levels never get easier (#267):** at levels 7–10, Up or Down dealt the easier King–Ace
   wrap again and Finish the Saying dropped its closer endings; at levels 1 and 3 Up or Down no longer
   promised a deal you can clear. Each game now reads its level as a band (1–3, 4–5, 6–10) until it gets
   its own ten steps.
