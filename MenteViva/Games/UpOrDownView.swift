@@ -26,6 +26,9 @@ struct UpOrDownView: View {
 
     var body: some View {
         VStack(spacing: 24) {
+            LevelExplainBanner(
+                change: PlanStore.cachedPlan()?.changes[GameID.upOrDown], game: GameID.upOrDown,
+                hasStarted: played > 0 || taps > 0)
             Text(AppLanguage.localized("game.upordown.instruction"))
                 .font(.title2)
                 .multilineTextAlignment(.center)

@@ -6031,6 +6031,108 @@
           }
         }
       }
+    },
+    "level.explain.raised1" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "We made it a little harder: you've been doing great."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lo subimos un poquito: te ha ido muy bien."
+          }
+        }
+      }
+    },
+    "level.explain.raised2" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Two steps up: you're flying!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Subimos dos pasos: ¡vas volando!"
+          }
+        }
+      }
+    },
+    "level.explain.eased" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "We made it a little calmer, so you enjoy it more."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lo pusimos más tranquilo para que lo disfrutes más."
+          }
+        }
+      }
+    },
+    "level.offer.prompt" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "That was perfect. Shall we try the next level?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Te salió perfecto! ¿Probamos el siguiente nivel?"
+          }
+        }
+      }
+    },
+    "level.offer.yes" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yes, let's try"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sí, probemos"
+          }
+        }
+      }
+    },
+    "level.offer.keep" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keep it as it is"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Así está bien"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"
