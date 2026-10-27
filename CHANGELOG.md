@@ -4,6 +4,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 
 ## [Unreleased]
 
+### Docs
+- **IP clearance for all names (#225):** `docs/ip-clearance.md` now lists the 2026-10-27 search for MenteViva and the 13 game names in EN and ES (USPTO + EUIPO + IMPI + App Store, classes 9/41), with per-name risk (none/low) and sources, plus the asset check (system fonts only, emoji as Apple glyphs, synthesized tones, no third-party images/sounds/code). No rename needed; two alternatives are recorded for each name. Still needs the one-hour lawyer review before the paid release.
 ### Added
 - **A gentle nudge after a strong game and a one-line level note (#207):** when the rules move a game up by one, by two, or ease it, the first time you open it that day you see one warm line under the header ("We made it a little harder: you've been doing great.", "Two steps up: you're flying!", "We made it a little calmer, so you enjoy it more.") in `.title2`, read by VoiceOver, gone once the first round starts and only once per day; never mentions misses or accuracy. When you finish a strong game below level 10 and the game isn't pinned, the celebration asks once that day "That was perfect. Shall we try the next level?" with two 100pt buttons "Yes, let's try" / "Keep it as it is" (equally prominent, neither default) — Yes lifts the level by one now with reason `.chosen` so the staircase counts from there.
 
