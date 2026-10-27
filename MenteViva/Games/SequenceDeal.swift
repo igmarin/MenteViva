@@ -93,16 +93,16 @@ nonisolated enum SequenceDeal {
         /// miss (so caller can replay), second miss moves on warmly.
         mutating func record(tapped: [Int]) -> Result {
             guard let expected = current else { return .correct }
+            // Partial prefix still needs more taps — not a completed attempt.
+            if expected.starts(with: tapped), tapped.count < expected.count {
+                return .keepGoing
+            }
             attempts += 1
             if tapped == expected {
                 correct += 1
                 index += 1
                 needsReplay = false
                 return .correct
-            }
-            // Partial prefix still needs more taps.
-            if expected.starts(with: tapped), tapped.count < expected.count {
-                return .keepGoing
             }
             if !needsReplay {
                 needsReplay = true
