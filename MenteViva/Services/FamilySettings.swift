@@ -46,8 +46,8 @@ nonisolated enum FamilySettings {
                 let old = defaults.object(forKey: legacyPinKey(game)) as? Int,
                 old != auto
             else { continue }
-            let level = (0...2).contains(old) ? [2, 4, 6][old] : max(1, old)
-            defaults.set(level, forKey: pinKey(game))
+            let mapped = (0...2).contains(old) ? [2, 4, 6][old] : old
+            defaults.set(Difficulty(level: mapped).level, forKey: pinKey(game))
         }
     }
 
