@@ -6327,6 +6327,22 @@
         }
       }
     },
+    "guide.colorclash.example %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The ink is %@: tap that color."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La tinta es de color %@: toca ese color."
+          }
+        }
+      }
+    },
     "guide.gotit" : {
       "localizations" : {
         "en" : {
