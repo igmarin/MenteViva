@@ -16,7 +16,7 @@ No treatment or diagnosis, and no outcome claims: games exercise memory and atte
 | Subtitle | Fun mental exercise |
 | Category | **Games → Puzzle** (not Medical/Health — keeps it out of medical scrutiny) |
 | Age rating | 4+ |
-| Price | one-time $12.99 (decided-for-beta, #21) |
+| Price | free, no in-app purchase (decisions.md 2026-10-27, #228) |
 | Languages | English (US) + Spanish (ES) |
 
 ## Keywords (EN, ≤100 chars)

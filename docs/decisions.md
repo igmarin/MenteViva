@@ -2,6 +2,29 @@
 
 Newest first. Format: date — decision — why — what would make us revisit.
 
+## 2026-10-27 — v1.0 is free; support stays outside the app (#228)
+
+**Decision (owner):** MenteViva ships **free** on the App Store, with no price and no in-app
+purchase. The project stays open (Apache-2.0) during the hackathon and with Muse. Anyone who wants
+to support it does so through a link **outside the app** only: the README and the support site.
+This replaces the one-time $12.99 lean (2026-09-20, Jev 003).
+
+- **Free + nothing to pay inside the app**: zero StoreKit code, no Paid Apps Agreement for v1.0,
+  and no App Review risk. A link inside the app to Ko-fi, PayPal or GitHub Sponsors is the risky
+  case: developers report rejections under guideline 3.1.1 even when the tip unlocks nothing.
+- **Never "donation"**: that word belongs to registered charities (guideline 3.2.2). The README
+  and site say "support MenteViva" or "leave a tip".
+- **A player never sees a payment prompt**: it fits the warm, no-pressure tone for an older
+  player on their own.
+- **Still needed**: the Apple Developer Program (#224) costs $99 a year for a free app too.
+  App Privacy stays "Data Not Collected"; the listing (#232) shows the price as free.
+- **Earlier entries stand**: the Apache-2.0 entry (2026-10-27) already lets anyone, the owner
+  included, sell builds later; this entry decides only how v1.0 is offered.
+
+Revisit when: support outside the app doesn't cover the yearly $99, or players ask for a way to
+tip inside the app. Then an in-app tip jar (a consumable in-app purchase, one Settings row, never
+during play) becomes a ticket; it needs the Paid Apps Agreement and StoreKit code.
+
 ## 2026-10-27 — The reference player is "an older family member"; no diagnosis in the repo
 
 **Decision (owner):** the docs no longer name the reference player's diagnosis or tie a health

@@ -87,7 +87,7 @@ postponed until the trigger in decisions.md 2026-09-20):**
       never "prevents/treats dementia" (research §1, App Store 1.4.1).
 - [ ] Privacy policy page (what leaves the device: jev-integration.md §privacy).
 - [ ] Age rating + positioning decision.
-- [ ] Business model final call with beta data (one-time $12.99 lean).
+- [x] Business model: v1.0 is free; support links live outside the app (decisions.md 2026-10-27, #228).
 - [ ] ES/EN native review sign-off.
 - [ ] App Store screenshots + description in both languages.
 
