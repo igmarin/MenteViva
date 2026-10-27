@@ -21,7 +21,12 @@ concurrency:
 
 jobs:
   review:
-    if: github.event.pull_request.draft == false
+    # Fork PRs are skipped: GitHub gives them no secrets (no OPENAI_API_KEY) and a
+    # read-only token, so the review could neither run nor post. Their authors get
+    # the Claude review and the maintainer's; never switch this to pull_request_target.
+    if: >-
+      github.event.pull_request.draft == false &&
+      github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
