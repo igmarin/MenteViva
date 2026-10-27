@@ -6353,7 +6353,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Toca una carta un número más alta o más baja que esta"
+            "value" : "Toca una carta que sea uno más o uno menos que esta"
           }
         }
       }
@@ -6401,7 +6401,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Busca una carta un número más alta o más baja que la carta abierta."
+            "value" : "Busca una carta que sea uno más o uno menos que la carta abierta."
           }
         }
       }
