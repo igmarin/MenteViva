@@ -204,6 +204,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
   replay).
 
 ### Fixed
+- **Pinning a game at Level 2 keeps it at Level 2:** Set up saved the pin correctly, but reading it treated
+  1 and 2 as old easy/medium values, so "Level 2" became Level 6, the hardest. Old pins from before levels
+  1–10 still move over once as 2/4/6.
 - **Higher levels never get easier (#267):** at levels 7–10, Up or Down dealt the easier King–Ace
   wrap again and Finish the Saying dropped its closer endings; at levels 1 and 3 Up or Down no longer
   promised a deal you can clear. Each game now reads its level as a band (1–3, 4–5, 6–10) until it gets

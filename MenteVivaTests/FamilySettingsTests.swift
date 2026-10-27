@@ -39,4 +39,23 @@ final class FamilySettingsTests: XCTestCase {
         defaults.set(4, forKey: FamilySettings.pinKey(.quickEyes))
         XCTAssertEqual(Difficulty.stored(.quickEyes, defaults: defaults), Difficulty(level: 4))
     }
+
+    // MARK: New-key pins are true levels; 0/1/2 mapping is for legacy pins only (#197)
+
+    func testGivenAPinOfLevelTwoUnderTheNewKeyWhenReadThenItIsLevelTwo() {
+        // Set up saves "Level 2" as 2; it used to read back as 6 ([2, 4, 6][2]).
+        defaults.set(2, forKey: FamilySettings.pinKey(.sudoku))
+        defaults.set(1, forKey: FamilySettings.pinKey(.sayings))
+        XCTAssertEqual(
+            FamilySettings.pinned(defaults: defaults), [.sudoku: Difficulty(level: 2), .sayings: Difficulty(level: 1)])
+    }
+
+    func testGivenLegacyPinsWhenMigratedThenEasyMediumHardBecomeTwoFourSix() {
+        defaults.set(0, forKey: FamilySettings.legacyPinKey(.sudoku))
+        defaults.set(1, forKey: FamilySettings.legacyPinKey(.sayings))
+        defaults.set(2, forKey: FamilySettings.legacyPinKey(.upOrDown))
+        XCTAssertEqual(
+            FamilySettings.pinned(defaults: defaults),
+            [.sudoku: Difficulty(level: 2), .sayings: Difficulty(level: 4), .upOrDown: Difficulty(level: 6)])
+    }
 }
