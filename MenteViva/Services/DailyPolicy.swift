@@ -49,11 +49,13 @@ nonisolated struct DailyPlan: Codable, Equatable {
 ///   since the last change is the hold (#198).
 nonisolated enum DailyPolicy {
     /// How worthwhile each game is for the target player (Jev 008/010 utility
-    /// matrix). The star marks "best for today", not a schedule, so the two
-    /// low-value games rarely get one. Playtest #6 kept these values; the
-    /// family can now hide a game instead (#47, #108), and hidden games are never picked.
+    /// matrix). The star marks "best for today", not a schedule. Color Clash and
+    /// Number Trail sat at 0.3, which never won a place in the daily three. At 0.55
+    /// each is dealt about 2 days in 14, with no profile and with any one focus area
+    /// (0.5 was enough without a profile, but a focus crowded them out again; #277).
+    /// The family can hide a game instead (#47, #108); hidden games are never picked.
     static let value: [GameID: Double] = [
-        .memoryMatch: 1.0, .quickEyes: 0.8, .categoryFluency: 0.7, .stroop: 0.3, .mathStreaks: 0.3,
+        .memoryMatch: 1.0, .quickEyes: 0.8, .categoryFluency: 0.7, .stroop: 0.55, .mathStreaks: 0.55,
         .reminiscence: 0.7, .sudoku: 0.8, .upOrDown: 0.8, .sayings: 0.8,
         .repeatSequence: 0.8, .tangram: 0.8, .tilePairs: 0.8, .slidingBlocks: 0.8,
     ]
