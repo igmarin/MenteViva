@@ -379,6 +379,7 @@ final class DailyPolicyTests: XCTestCase {
             .memoryMatch: stats(days: 0), .stroop: stats(days: 6), .mathStreaks: stats(days: 5),
             .quickEyes: stats(days: 2), .categoryFluency: stats(days: 1), .reminiscence: stats(days: 4),
             .sudoku: stats(days: 3), .upOrDown: stats(days: 1), .sayings: stats(days: 2),
+            .repeatSequence: stats(days: 2),
         ])
         XCTAssertEqual(plan(recent).games, [.sudoku, .reminiscence, .quickEyes], "the ranking alone")
         // A brand-new player has every game equally rested: the ranked deal stands.
