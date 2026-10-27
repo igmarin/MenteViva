@@ -704,6 +704,39 @@
         }
       }
     },
+    "game.answer.right" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "That's it!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Eso es!"
+          }
+        }
+      }
+    },
+    "game.answer.was %@" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The answer was %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La respuesta era %@"
+          }
+        }
+      }
+    },
     "game.category.a11y.picked" : {
       "extractionState" : "stale",
       "localizations" : {
