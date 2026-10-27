@@ -17,6 +17,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 ### Changed
 - **Up or Down, ten levels (#202):** tables now grow from 3 piles to 7, King–Ace stops wrapping from level 6, and only the first three levels always clear. Levels 2, 4 and 6 deal exactly the old easy, medium and hard games.
 - **Sudoku, ten levels (#201):** boards now grow from 4×4 to 6×6 to a classic 9×9 with more blanks at every step. Levels 2, 4 and 6 deal exactly the old easy, medium and hard boards; where the wanted board doesn't fit, a fuller smaller board steps in.
+- **Memory Lane, ten levels (#199):** the board now grows one pair at a time from 3 pairs (level 1) to 12 (level 10). Levels 2, 4 and 6 deal exactly the old easy, medium and hard boards; on a small screen the board caps itself so every card stays big enough to tap.
 
 ### Added
 - **"Let me show you" first-play guide (#243):** the first time you open Sudoku, Up or Down or Color Clash, a calm card says the one-line instruction (in big type, read aloud), highlights one example move with a soft pulse and an arrow (just the highlight with Reduce Motion), and offers two 100pt buttons, "Got it" and "Show me again". VoiceOver treats it as a modal with the example described in words. Settings has a new row, "Show the game guides again".

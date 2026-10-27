@@ -83,6 +83,7 @@
 		1C320C298D4269F400000036 /* GameSessionStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE35901B6A0B75A200000030; };
 		EE07AD69390E5FDA00000032 /* LevelExplainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65152AEC3FEF3E780000002C; };
 		578160CE8C24557000000031 /* MemoryBoardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2EEF523201AB21E0000002B; };
+		A34345BFC3478D0200000037 /* MemoryMatchLevelsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CECEA05CC9D6BF000000031; };
 		19A5511F2D9320B700000032 /* MemoryPhotosTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982802FDA721007D0000002C; };
 		4E437CEEEEB1E47600000039 /* NumberTrailQuestionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B15A3FA40FC93B400000033; };
 		288A7358D7C5AA1900000033 /* PlayerProfileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B056BE6CAA0C14F0000002D; };
@@ -178,6 +179,7 @@
 		DE35901B6A0B75A200000030 /* GameSessionStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/GameSessionStoreTests.swift; sourceTree = SOURCE_ROOT; };
 		65152AEC3FEF3E780000002C /* LevelExplainTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/LevelExplainTests.swift; sourceTree = SOURCE_ROOT; };
 		A2EEF523201AB21E0000002B /* MemoryBoardTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/MemoryBoardTests.swift; sourceTree = SOURCE_ROOT; };
+		5CECEA05CC9D6BF000000031 /* MemoryMatchLevelsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/MemoryMatchLevelsTests.swift; sourceTree = SOURCE_ROOT; };
 		982802FDA721007D0000002C /* MemoryPhotosTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/MemoryPhotosTests.swift; sourceTree = SOURCE_ROOT; };
 		7B15A3FA40FC93B400000033 /* NumberTrailQuestionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/NumberTrailQuestionTests.swift; sourceTree = SOURCE_ROOT; };
 		5B056BE6CAA0C14F0000002D /* PlayerProfileTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/PlayerProfileTests.swift; sourceTree = SOURCE_ROOT; };
@@ -310,6 +312,7 @@
 				DE35901B6A0B75A200000030 /* GameSessionStoreTests.swift */,
 				65152AEC3FEF3E780000002C /* LevelExplainTests.swift */,
 				A2EEF523201AB21E0000002B /* MemoryBoardTests.swift */,
+				5CECEA05CC9D6BF000000031 /* MemoryMatchLevelsTests.swift */,
 				982802FDA721007D0000002C /* MemoryPhotosTests.swift */,
 				7B15A3FA40FC93B400000033 /* NumberTrailQuestionTests.swift */,
 				5B056BE6CAA0C14F0000002D /* PlayerProfileTests.swift */,
@@ -478,6 +481,7 @@
 				1C320C298D4269F400000036 /* GameSessionStoreTests.swift in Sources */,
 				EE07AD69390E5FDA00000032 /* LevelExplainTests.swift in Sources */,
 				578160CE8C24557000000031 /* MemoryBoardTests.swift in Sources */,
+				A34345BFC3478D0200000037 /* MemoryMatchLevelsTests.swift in Sources */,
 				19A5511F2D9320B700000032 /* MemoryPhotosTests.swift in Sources */,
 				4E437CEEEEB1E47600000039 /* NumberTrailQuestionTests.swift in Sources */,
 				288A7358D7C5AA1900000033 /* PlayerProfileTests.swift in Sources */,
