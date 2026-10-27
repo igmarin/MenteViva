@@ -209,6 +209,99 @@ final class TangramPuzzleTests: XCTestCase {
         XCTAssertEqual(Set(keys).count, 30)
     }
 
+    // MARK: - Table helpers (#219)
+
+    func testGivenTurnWhenAppliedEightTimesThenBackToStart() {
+        let start = TangramShapes.all[0].placements[0]
+        let cycled = (0..<8).reduce(start) { acc, _ in TangramPuzzle.turned(acc) }
+        XCTAssertEqual(cycled.rotation, start.rotation)
+        XCTAssertEqual(cycled.flipped, start.flipped)
+        XCTAssertEqual(
+            TangramPuzzle.turned(
+                TangramPlacement(
+                    piece: .square, position: .zero, rotation: 7, flipped: false)
+            ).rotation, 0)
+    }
+
+    func testGivenFlipWhenAppliedTwiceThenBackToStart() {
+        let start = TangramShapes.all[0].placements[0]
+        let flipped = TangramPuzzle.mirrored(TangramPuzzle.mirrored(start))
+        XCTAssertEqual(flipped.flipped, start.flipped)
+        XCTAssertEqual(flipped.rotation, start.rotation)
+    }
+
+    func testGivenTilesOutOfPlaceWhenFirstIndexThenFirstOne() {
+        let shape = TangramShapes.all[0]
+        XCTAssertEqual(
+            TangramPuzzle.firstMisplacedIndex(
+                placed: Array(repeating: shape.placements[0], count: shape.placements.count),
+                in: shape, matchRotation: false, matchFlip: false), 1)
+        XCTAssertNil(
+            TangramPuzzle.firstMisplacedIndex(
+                placed: shape.placements, in: shape,
+                matchRotation: true, matchFlip: true))
+    }
+
+    func testGivenBoxWhenFittedThenTapRoundTrips() {
+        let box = TangramPuzzle.boundingBox(of: TangramShapes.all[0])
+        XCTAssertGreaterThan(box.width, 0)
+        XCTAssertGreaterThan(box.height, 0)
+        for size in [CGSize(width: 300, height: 300), CGSize(width: 200, height: 400)] {
+            let fit = TangramPuzzle.fitTransform(box: box, in: size)
+            XCTAssertEqual(fit.scale, min(size.width / box.width, size.height / box.height))
+            for point in [
+                CGPoint(x: box.minX, y: box.minY), CGPoint(x: box.maxX, y: box.maxY),
+                CGPoint(x: (box.minX + box.maxX) / 2, y: (box.minY + box.maxY) / 2),
+            ] {
+                let screen = TangramPuzzle.toScreen(point, scale: fit.scale, origin: fit.origin)
+                XCTAssertGreaterThanOrEqual(screen.x, 0)
+                XCTAssertLessThanOrEqual(screen.x, size.width)
+                XCTAssertGreaterThanOrEqual(screen.y, 0)
+                XCTAssertLessThanOrEqual(screen.y, size.height)
+                let back = TangramPuzzle.fromScreen(
+                    screen, scale: fit.scale, origin: fit.origin)
+                XCTAssertEqual(back.x, point.x, accuracy: 0.000_001)
+                XCTAssertEqual(back.y, point.y, accuracy: 0.000_001)
+            }
+        }
+    }
+
+    func testGivenEveryRegionWhenSlotInitThenAllNine() {
+        let rows: [TangramSlot.Row] = [.top, .middle, .bottom]
+        let columns: [TangramSlot.Column] = [.left, .middle, .right]
+        let slots = rows.flatMap { row in columns.map { TangramSlot(row: row, column: $0) } }
+        XCTAssertEqual(slots.count, 9)
+        XCTAssertEqual(Set(slots.map(\.keySuffix)).count, 9)
+    }
+
+    func testGivenSquareWhenCentroidThenMiddle() {
+        let middle = TangramPuzzle.centroidOffset(
+            of: TangramPlacement(piece: .square, position: .zero, rotation: 0, flipped: false))
+        XCTAssertEqual(middle.x, sqrt(2.0), accuracy: 0.000_001)
+        XCTAssertEqual(middle.y, sqrt(2.0), accuracy: 0.000_001)
+    }
+
+    func testGivenTilesWhenGrabbedThenBiggerTilesForgiveMore() {
+        XCTAssertGreaterThan(TangramPuzzle.grabRadius(of: .large), 0)
+        XCTAssertGreaterThan(
+            TangramPuzzle.grabRadius(of: .large), TangramPuzzle.grabRadius(of: .small))
+    }
+
+    func testGivenTilesWhenNamedThenPairsShareAKey() {
+        XCTAssertEqual(TangramPiece.large.nameKey, TangramPiece.large2.nameKey)
+        XCTAssertEqual(TangramPiece.small.nameKey, TangramPiece.small2.nameKey)
+        XCTAssertEqual(
+            Set(TangramPiece.allCases.map(\.nameKey)).count, 5)
+    }
+
+    func testGivenLibraryWhenSlottedThenTilesSpreadAcrossRegions() {
+        let regions = Set(
+            TangramShapes.all.flatMap { shape in
+                shape.placements.map { TangramPuzzle.slot(of: $0, in: shape) }
+            }.map(\.keySuffix))
+        XCTAssertGreaterThanOrEqual(regions.count, 3)
+    }
+
     // MARK: - Helpers
 
     private func area(of poly: [CGPoint]) -> Double {

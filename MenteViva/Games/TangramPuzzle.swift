@@ -106,4 +106,147 @@ nonisolated struct TangramPuzzle: Sendable {
         let unseen = shapes.filter { !seen.contains($0.key) }
         return (unseen.isEmpty ? shapes : unseen).randomElement(using: &generator) ?? shapes[0]
     }
+
+    // MARK: - Table helpers (#219)
+
+    /// One step clockwise for the Turn button: 45°, wrapping around.
+    static func turned(_ placement: TangramPlacement) -> TangramPlacement {
+        TangramPlacement(
+            piece: placement.piece, position: placement.position,
+            rotation: (placement.rotation + 1) % 8, flipped: placement.flipped)
+    }
+
+    /// Mirror toggle for the Flip button.
+    static func mirrored(_ placement: TangramPlacement) -> TangramPlacement {
+        TangramPlacement(
+            piece: placement.piece, position: placement.position,
+            rotation: placement.rotation, flipped: !placement.flipped)
+    }
+
+    /// The first tile still out of place, for "Show me one"; nil when done.
+    static func firstMisplacedIndex(
+        placed: [TangramPlacement], in shape: TangramShape,
+        matchRotation: Bool, matchFlip: Bool
+    ) -> Int? {
+        for index in placed.indices where index < shape.placements.count {
+            if !snapped(
+                placed[index], to: shape.placements[index],
+                matchRotation: matchRotation, matchFlip: matchFlip)
+            {
+                return index
+            }
+        }
+        return nil
+    }
+
+    /// The silhouette's frame in authoring units, for fitting it on screen.
+    static func boundingBox(of shape: TangramShape) -> CGRect {
+        let points = shape.placements.flatMap {
+            TangramPiece.placedCorners(
+                $0.piece, position: $0.position, rotation: $0.rotation, flipped: $0.flipped)
+        }
+        let xs = points.map(\.x)
+        let ys = points.map(\.y)
+        guard let minX = xs.min(), let maxX = xs.max(), let minY = ys.min(),
+            let maxY = ys.max()
+        else { return .zero }
+        return CGRect(x: minX, y: minY, width: maxX - minX, height: maxY - minY)
+    }
+
+    /// Maps authoring units (y up) into a screen rect (y down), scaled to fit
+    /// and centred; the inverse maps a tap back. One transform both ways, so a
+    /// tile drawn through `toScreen` is hit through `fromScreen`.
+    static func fitTransform(box: CGRect, in size: CGSize) -> (scale: CGFloat, origin: CGPoint) {
+        guard box.width > 0, box.height > 0, size.width > 0, size.height > 0 else {
+            return (1, .zero)
+        }
+        let scale = min(size.width / box.width, size.height / box.height)
+        let origin = CGPoint(
+            x: (size.width - box.width * scale) / 2 - box.minX * scale,
+            y: (size.height + box.height * scale) / 2 + box.minY * scale)
+        return (scale, origin)
+    }
+
+    static func toScreen(
+        _ point: CGPoint, scale: CGFloat, origin: CGPoint
+    ) -> CGPoint {
+        CGPoint(x: origin.x + point.x * scale, y: origin.y - point.y * scale)
+    }
+
+    static func fromScreen(
+        _ point: CGPoint, scale: CGFloat, origin: CGPoint
+    ) -> CGPoint {
+        CGPoint(x: (point.x - origin.x) / scale, y: (origin.y - point.y) / scale)
+    }
+
+    /// The tile's middle relative to its origin: taps place tiles by the
+    /// middle, not the corner, so tapping a ghost's body lands the tile on it.
+    static func centroidOffset(of placement: TangramPlacement) -> CGPoint {
+        let corners = TangramPiece.placedCorners(
+            placement.piece, position: .zero,
+            rotation: placement.rotation, flipped: placement.flipped)
+        return CGPoint(
+            x: corners.map(\.x).reduce(0, +) / CGFloat(corners.count),
+            y: corners.map(\.y).reduce(0, +) / CGFloat(corners.count))
+    }
+
+    /// How close a tap must land to a tile's middle to pick it up: half the
+    /// tile's diagonal, generous on purpose.
+    static func grabRadius(of piece: TangramPiece) -> CGFloat {
+        let xs = piece.corners.map(\.x)
+        let ys = piece.corners.map(\.y)
+        return hypot((xs.max() ?? 0) - (xs.min() ?? 0), (ys.max() ?? 0) - (ys.min() ?? 0)) / 2
+    }
+
+    /// Where a tile's target sits in the figure, for VoiceOver slot actions:
+    /// thirds of the silhouette, top meaning visually on top.
+    static func slot(of placement: TangramPlacement, in shape: TangramShape) -> TangramSlot {
+        let box = boundingBox(of: shape)
+        let offset = centroidOffset(of: placement)
+        let middle = CGPoint(
+            x: placement.position.x + offset.x, y: placement.position.y + offset.y)
+        let across: TangramSlot.Column =
+            middle.x < box.minX + box.width / 3 ? .left : middle.x > box.maxX - box.width / 3 ? .right : .middle
+        let down: TangramSlot.Row =
+            middle.y > box.maxY - box.height / 3 ? .top : middle.y < box.minY + box.height / 3 ? .bottom : .middle
+        return TangramSlot(row: down, column: across)
+    }
+}
+
+/// Nine regions of the silhouette, naming the VoiceOver slot actions (#219).
+/// The view localizes each case; the logic only places tiles in thirds.
+nonisolated enum TangramSlot: Sendable {
+    enum Row: Sendable { case top, middle, bottom }
+    enum Column: Sendable { case left, middle, right }
+
+    case topLeft, top, topRight, left, middle, right, bottomLeft, bottom, bottomRight
+
+    init(row: Row, column: Column) {
+        switch (row, column) {
+        case (.top, .left): self = .topLeft
+        case (.top, .middle): self = .top
+        case (.top, .right): self = .topRight
+        case (.middle, .left): self = .left
+        case (.middle, .middle): self = .middle
+        case (.middle, .right): self = .right
+        case (.bottom, .left): self = .bottomLeft
+        case (.bottom, .middle): self = .bottom
+        case (.bottom, .right): self = .bottomRight
+        }
+    }
+
+    /// The string key suffix, so the view reads one key per region.
+    var keySuffix: String {
+        switch self {
+        case .topLeft: "top.left"
+        case .top: "top"
+        case .topRight: "top.right"
+        case .left: "left"
+        case .middle: "middle"
+        case .right: "right"
+        case .bottomLeft: "bottom.left"
+        case .bottom: "bottom"
+        case .bottomRight: "bottom.right"
+        }
+    }
 }

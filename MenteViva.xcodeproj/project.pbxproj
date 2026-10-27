@@ -31,6 +31,7 @@
 		8B420A94EF3D39A30000001F /* TangramPieces.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED97DEB4ADDB300900000019; };
 		92C3ECF5853D7BF80000001F /* TangramPuzzle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD6C4EDE546FDB600000019; };
 		F656BBEB4803A57A0000001F /* TangramShapes.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA6448BC2E1459800000019; };
+		F6DA6BEBCC67CA090000001D /* TangramView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFB495AB4A581F5F00000017; };
 		FF53AA1B2E6FD52C0000001E /* UpOrDownDeal.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E1B8809735DB8A00000018; };
 		3F24DDA3A363333B0000001E /* UpOrDownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF25634A0D7E259100000018; };
 		EE94290C1D7CE37100000017 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F548AF03C8043700000011; };
@@ -121,6 +122,7 @@
 		ED97DEB4ADDB300900000019 /* TangramPieces.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/TangramPieces.swift; sourceTree = "<group>"; };
 		2CD6C4EDE546FDB600000019 /* TangramPuzzle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/TangramPuzzle.swift; sourceTree = "<group>"; };
 		EDA6448BC2E1459800000019 /* TangramShapes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/TangramShapes.swift; sourceTree = "<group>"; };
+		CFB495AB4A581F5F00000017 /* TangramView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/TangramView.swift; sourceTree = "<group>"; };
 		C5E1B8809735DB8A00000018 /* UpOrDownDeal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/UpOrDownDeal.swift; sourceTree = "<group>"; };
 		BF25634A0D7E259100000018 /* UpOrDownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/UpOrDownView.swift; sourceTree = "<group>"; };
 		E1F548AF03C8043700000011 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
@@ -237,6 +239,7 @@
 				ED97DEB4ADDB300900000019 /* TangramPieces.swift */,
 				2CD6C4EDE546FDB600000019 /* TangramPuzzle.swift */,
 				EDA6448BC2E1459800000019 /* TangramShapes.swift */,
+				CFB495AB4A581F5F00000017 /* TangramView.swift */,
 				C5E1B8809735DB8A00000018 /* UpOrDownDeal.swift */,
 				BF25634A0D7E259100000018 /* UpOrDownView.swift */,
 				E1F548AF03C8043700000011 /* HistoryView.swift */,
@@ -403,6 +406,7 @@
 				8B420A94EF3D39A30000001F /* TangramPieces.swift in Sources */,
 				92C3ECF5853D7BF80000001F /* TangramPuzzle.swift in Sources */,
 				F656BBEB4803A57A0000001F /* TangramShapes.swift in Sources */,
+				F6DA6BEBCC67CA090000001D /* TangramView.swift in Sources */,
 				FF53AA1B2E6FD52C0000001E /* UpOrDownDeal.swift in Sources */,
 				3F24DDA3A363333B0000001E /* UpOrDownView.swift in Sources */,
 				EE94290C1D7CE37100000017 /* HistoryView.swift in Sources */,

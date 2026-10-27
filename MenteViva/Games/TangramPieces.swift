@@ -33,6 +33,18 @@ nonisolated enum TangramPiece: Int, CaseIterable, Sendable {
     /// itself, so flip constrains nothing for them at levels 9–10.
     var showsFlip: Bool { self == .parallelogram }
 
+    /// The string key naming the tile for VoiceOver (#219); the two large and
+    /// the two small tiles share a shape, so each pair shares a name.
+    var nameKey: String {
+        switch self {
+        case .large, .large2: "game.tangram.piece.large"
+        case .medium: "game.tangram.piece.medium"
+        case .small, .small2: "game.tangram.piece.small"
+        case .square: "game.tangram.piece.square"
+        case .parallelogram: "game.tangram.piece.parallelogram"
+        }
+    }
+
     /// The tile's corners after the placement motion: mirror across the
     /// vertical axis when flipped, then `rotation` steps of 45°, then move to
     /// `position`. The authoring tool (`/tmp/tangram`, not in the repo) uses
