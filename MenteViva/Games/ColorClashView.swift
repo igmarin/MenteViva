@@ -99,7 +99,9 @@ struct ColorClashView: View {
     @State private var startedAt = Date.now
     @State private var showCelebration = false
     @State private var finalDetail = ""
-    @State private var missed = false
+    /// The answer beat (#235): set by a tap, cleared when the next word is dealt.
+    @State private var beat: AnswerBeat<Ink>?
+    @State private var beatTask: Task<Void, Never>?
 
     private var stimulusLabel: String {
         String(format: AppLanguage.localized("game.colorclash.a11y.stimulus %@ %@"), ink.label, ink.shapeName)
@@ -130,7 +132,6 @@ struct ColorClashView: View {
                     .font(.system(size: shapeSize, weight: .bold))
                     .foregroundStyle(ink.color)
             }
-            .modifier(MissCue(active: $missed))
             .accessibilityElement(children: .ignore)
             .accessibilityLabel(stimulusLabel)
             .accessibilityHint(AppLanguage.localized("game.colorclash.a11y.stimulus.hint"))
@@ -152,6 +153,7 @@ struct ColorClashView: View {
                             }
                     }
                     .buttonStyle(.plain)
+                    .answerMark(beat?.mark(for: candidate) ?? .plain)
                     .accessibilityLabel(candidate.label)
                     .accessibilityHint(candidate.shapeName)
                 }
@@ -166,10 +168,13 @@ struct ColorClashView: View {
             startedAt = .now
             deal()
         }
+        .onDisappear { beatTask?.cancel() }
         .celebration(isPresented: $showCelebration, game: .stroop, detail: finalDetail, onPlayAgain: restart)
     }
 
     private func restart() {
+        beatTask?.cancel()
+        beat = nil
         progress.reset()
         correct = 0
         startedAt = .now
@@ -184,19 +189,29 @@ struct ColorClashView: View {
         AccessibilityNotification.Announcement(stimulusLabel).post()
     }
 
+    /// Shows the answer for a beat (#235), ignoring taps meanwhile, then deals the next word.
     private func tap(_ candidate: Ink) {
-        guard !progress.isFinished else { return }
-        if candidate == ink {
+        guard beat == nil, !progress.isFinished else { return }
+        let answer = AnswerBeat(tapped: candidate, right: ink)
+        beat = answer
+        if answer.isRight {
             correct += 1
             Feedback.play(.success)
         } else {
             Feedback.play(.miss)
-            missed = true
+            AccessibilityNotification.Announcement(
+                String(format: AppLanguage.localized("game.answer.was %@"), ink.label)
+            ).post()
         }
-        if progress.completeRound() {
-            finish()
-        } else {
-            deal()
+        beatTask = Task { @MainActor in
+            try? await Task.sleep(for: .seconds(answer.duration(voiceOver: UIAccessibility.isVoiceOverRunning)))
+            guard !Task.isCancelled else { return }
+            beat = nil
+            if progress.completeRound() {
+                finish()
+            } else {
+                deal()
+            }
         }
     }
 

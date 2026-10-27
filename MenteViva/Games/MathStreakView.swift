@@ -24,7 +24,9 @@ struct MathStreakView: View {
     @State private var startedAt = Date.now
     @State private var showCelebration = false
     @State private var finalDetail = ""
-    @State private var missed = false
+    /// The answer beat (#235): set by a tap, cleared when the next sum is dealt.
+    @State private var beat: AnswerBeat<Int>?
+    @State private var beatTask: Task<Void, Never>?
 
     static func score(correct: Int, bestStreak: Int) -> Int {
         correct * 10 + bestStreak * 2
@@ -44,7 +46,6 @@ struct MathStreakView: View {
                 .lineLimit(1)
                 .minimumScaleFactor(0.5)
                 .accessibilityLabel(question.spoken())
-                .modifier(MissCue(active: $missed))
 
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
                 ForEach(options, id: \.self) { option in
@@ -57,6 +58,7 @@ struct MathStreakView: View {
                             .minimumScaleFactor(0.5)
                     }
                     .buttonStyle(AnswerTileStyle())
+                    .answerMark(beat?.mark(for: option) ?? .plain)
                     .accessibilityLabel("\(option)")
                 }
             }
@@ -67,10 +69,13 @@ struct MathStreakView: View {
         .fitOrScroll()
         .gameHeader(.mathStreaks, instruction: AppLanguage.localized("game.math.instruction") + " " + question.spoken())
         .onAppear(perform: deal)
+        .onDisappear { beatTask?.cancel() }
         .celebration(isPresented: $showCelebration, game: .mathStreaks, detail: finalDetail, onPlayAgain: restart)
     }
 
     private func restart() {
+        beatTask?.cancel()
+        beat = nil
         progress.reset()
         streak = 0
         bestStreak = 0
@@ -85,9 +90,12 @@ struct MathStreakView: View {
         options = NumberTrailQuestion.options(for: question.answer, using: &generator)
     }
 
+    /// Shows the answer for a beat (#235), ignoring taps meanwhile, then deals the next sum.
     private func tap(_ option: Int) {
-        guard !progress.isFinished else { return }
-        if option == question.answer {
+        guard beat == nil, !progress.isFinished else { return }
+        let answer = AnswerBeat(tapped: option, right: question.answer)
+        beat = answer
+        if answer.isRight {
             streak += 1
             bestStreak = max(bestStreak, streak)
             correct += 1
@@ -95,12 +103,19 @@ struct MathStreakView: View {
         } else {
             streak = 0
             Feedback.play(.miss)
-            missed = true
+            AccessibilityNotification.Announcement(
+                String(format: AppLanguage.localized("game.answer.was %@"), "\(question.answer)")
+            ).post()
         }
-        if progress.completeRound() {
-            finish()
-        } else {
-            deal()
+        beatTask = Task { @MainActor in
+            try? await Task.sleep(for: .seconds(answer.duration(voiceOver: UIAccessibility.isVoiceOverRunning)))
+            guard !Task.isCancelled else { return }
+            beat = nil
+            if progress.completeRound() {
+                finish()
+            } else {
+                deal()
+            }
         }
     }
 
