@@ -1,3 +1,4 @@
+import CoreGraphics
 import Foundation
 
 /// The classic seven Tangram tiles (#218): 2 large right triangles, 1 medium,

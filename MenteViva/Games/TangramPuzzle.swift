@@ -1,3 +1,4 @@
+import CoreGraphics
 import Foundation
 
 /// One tile placed in a shape: which tile, where its origin sits, how many
