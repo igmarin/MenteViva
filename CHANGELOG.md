@@ -8,6 +8,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 - **Repeat the Sequence — watch and repeat the lit tiles (#216/#217):** a new game with levels 1–10 (grid 2×2 to 3×3, sequence 2–8, light 1.0s→0.55s; on a narrow screen a 3×3 falls back to 2×3). Five sequences per game; miss once and it says "Almost — watch again" and replays, then moves on warmly.
 - **Levels 1–10 for four games (#203–#206):** Name the Herd (2–11 decoys), Finish the Saying (2–5 choices, same-theme from level 6), Number Trail (ops and caps per level, cap 120 at 10), Color Clash (matching chance 0.85→0 and 6 colours/shapes at levels 9–10).
 
+### Changed
+- **Warmer tones an iPhone speaker can play (#240):** the sounds now fade in over 10 ms and die away gently instead of stopping after a fraction of the note, with a soft second harmonic for warmth. The "not quite" tone moves up from 180 Hz to 280 Hz, still the lowest and softest, so a phone speaker actually plays it. The tone maker is now a pure `ToneSynth`, tested for headroom and pitch.
+
 ### Fixed
 - **One migration at launch, reads stay pure (#264):** pre-level pins and plan levels used to migrate inside every `pinned()` / `storedDifficulty()` read (Home renders, the plan, Set up). Now `LevelMigration.runOnce` batches both at launch behind one `level.migration.done` flag and reads do not write.
 
@@ -88,6 +91,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
   game emoji + score, warm weekly summary line, gentle empty state.
 
 ### Changed
+- **Every game comes round at least once a week (#279):** a game left out of today's games for a week takes the last place, whatever the minutes or focus chosen; the first places stay as they were.
+- **Color Clash and Number Trail come round too (#277):** they used to be left out of today's three every day; now each is dealt about two days in fourteen, and Memory Lane still comes up most.
 - **Quick Eyes has ten levels (#200):** the picture flashes from 2 seconds at level 1 down to a 0.16-second floor at level 10. Levels 2, 4 and 6 play exactly as easy, medium and hard did.
 - **A gentler staircase, still in one day's plan (#198):** levels 1–10 climb one after a strong game, two after two strong in a row, and ease one when the latest game was hard going; once a day, never mid-game, clamped to 1...10. Memory Lane's strong/weak thresholds (0.65/0.45) are lowered because its accuracy counts moves (pairs / moves) so even good play sits near 0.6. The old 7-day hold is gone — the window since the last change is the hold now.
 - **Sudoku and Finish the Saying are easier to tap (#236):** every answer button
