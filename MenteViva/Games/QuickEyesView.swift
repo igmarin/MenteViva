@@ -178,7 +178,7 @@ struct QuickEyesView: View {
             missedLastRound = true
             Feedback.play(.miss)
             AccessibilityNotification.Announcement(
-                String(format: AppLanguage.localized("game.answer.was %@"), target)
+                String(format: AppLanguage.localized("game.answer.was %@"), name(of: target))
             ).post()
             // Relax one step after a miss so the next round feels kinder.
             displayTime = min(startDisplayTime, displayTime / shrinkFactor)
