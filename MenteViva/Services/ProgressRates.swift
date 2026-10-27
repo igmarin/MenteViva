@@ -37,9 +37,9 @@ struct ProgressRates: Equatable {
         let earlier = Dictionary(
             grouping: sessions.filter { $0.playedAt >= since(now: now, calendar: calendar) && $0.playedAt < start }
         ) { $0.game }
-        let total = GameID.allCases.reduce(0) { $0 + (byGame[$1]?.count ?? 0) }
+        let total = GameID.released.reduce(0) { $0 + (byGame[$1]?.count ?? 0) }
 
-        return GameID.allCases.compactMap { game in
+        return GameID.released.compactMap { game in
             guard let mine = byGame[game], !mine.isEmpty else { return nil }
             let before = earlier[game] ?? []
             let accuracy = mine.meanAccuracy

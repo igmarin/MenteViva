@@ -8,7 +8,7 @@ struct SetUpView: View {
     var body: some View {
         List {
             Section {
-                ForEach(GameID.allCases, id: \.self) { game in
+                ForEach(GameID.released, id: \.self) { game in
                     NavigationLink {
                         FamilyGameView(game: game)
                     } label: {
@@ -223,7 +223,7 @@ private struct FamilyGameView: View {
 
     private var hidden: Set<GameID> { FamilySettings.hidden(from: hiddenGames) }
     /// The last game on Home can't be hidden: the app must always have one to play.
-    private var isLastVisible: Bool { !hidden.contains(game) && hidden.count == GameID.allCases.count - 1 }
+    private var isLastVisible: Bool { !hidden.contains(game) && hidden.count == GameID.released.count - 1 }
 
     var body: some View {
         List {

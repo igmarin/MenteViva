@@ -220,6 +220,41 @@ struct Emblem: View {
             context.fill(circle(21, 28, 3.5), with: ink)
             context.fill(circle(32, 28, 3.5), with: ink)
             context.fill(circle(43, 28, 3.5), with: amber)
+        case .repeatSequence:
+            // A 2×2 grid with one amber tile lit.
+            for (index, origin) in [(10.0, 10.0), (34, 10), (10, 34), (34, 34)].enumerated() {
+                let square = Path(roundedRect: CGRect(x: origin.0, y: origin.1, width: 20, height: 20), cornerRadius: 4)
+                if index == 1 { context.fill(square, with: amber) } else { context.stroke(square, with: ink, style: line) }
+            }
+        case .tangram:
+            // A square split into triangles, one piece amber.
+            let square = CGRect(x: 10, y: 10, width: 44, height: 44)
+            var cuts = Path(roundedRect: square, cornerRadius: 4)
+            cuts.move(to: CGPoint(x: 10, y: 10))
+            cuts.addLine(to: CGPoint(x: 54, y: 54))
+            cuts.move(to: CGPoint(x: 54, y: 10))
+            cuts.addLine(to: CGPoint(x: 32, y: 32))
+            context.stroke(cuts, with: ink, style: line)
+            var piece = Path()
+            piece.addLines([CGPoint(x: 54, y: 10), CGPoint(x: 54, y: 54), CGPoint(x: 32, y: 32)])
+            piece.closeSubpath()
+            context.fill(piece, with: amber)
+        case .tilePairs:
+            // Two stacked tiles and an amber dot.
+            context.stroke(Path(roundedRect: CGRect(x: 12, y: 6, width: 40, height: 24), cornerRadius: 6), with: ink, style: line)
+            context.stroke(
+                Path(roundedRect: CGRect(x: 12, y: 34, width: 40, height: 24), cornerRadius: 6), with: ink, style: line)
+            context.fill(circle(32, 46, 5), with: amber)
+        case .slidingBlocks:
+            // A frame with blocks and an amber block at the exit.
+            var frame = Path()
+            frame.addLines([CGPoint(x: 8, y: 36), CGPoint(x: 8, y: 8), CGPoint(x: 56, y: 8), CGPoint(x: 56, y: 22)])
+            frame.move(to: CGPoint(x: 56, y: 40))
+            frame.addLines([CGPoint(x: 56, y: 56), CGPoint(x: 8, y: 56), CGPoint(x: 8, y: 44)])
+            context.stroke(frame, with: ink, style: line)
+            context.fill(Path(roundedRect: CGRect(x: 14, y: 14, width: 16, height: 16), cornerRadius: 3), with: ink)
+            context.fill(Path(roundedRect: CGRect(x: 14, y: 36, width: 28, height: 14), cornerRadius: 3), with: ink)
+            context.fill(Path(roundedRect: CGRect(x: 36, y: 22, width: 16, height: 16), cornerRadius: 3), with: amber)
         }
     }
 

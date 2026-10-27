@@ -33,6 +33,18 @@ final class DailyPolicyTests: XCTestCase {
         DailyPolicy.plan(state: s, lastChange: lastChange, dayStamp: day, pinned: pinned, hidden: hidden)
     }
 
+    // MARK: Unreleased games (#215)
+
+    func testGivenUnreleasedGamesWhenPlanMadeThenNeverDealt() {
+        var dealt = Set<GameID>()
+        for day in 1...14 {
+            // Unreleased games have never been played, so they look the most overdue.
+            let p = plan(state(), day: String(format: "2026-10-%02d", day))
+            dealt.formUnion(p.games)
+        }
+        XCTAssertTrue(dealt.isDisjoint(with: GameID.unreleased))
+    }
+
     // MARK: Family settings (#108)
 
     func testGivenHiddenGamesWhenPlanThenTheyAreNeverPickedAndTheMixStaysFull() {

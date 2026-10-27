@@ -66,7 +66,7 @@ struct GameProgress: Equatable {
         let previousStart = calendar.date(byAdding: .day, value: -7, to: start) ?? start
         let thisWeek = sessions.filter { $0.playedAt >= start }
         let lastWeek = sessions.filter { $0.playedAt >= previousStart && $0.playedAt < start }
-        return GameID.allCases.compactMap { game in
+        return GameID.released.compactMap { game in
             let mine = thisWeek.filter { $0.game == game }
             let before = lastWeek.filter { $0.game == game }
             guard !mine.isEmpty || !before.isEmpty else { return nil }
