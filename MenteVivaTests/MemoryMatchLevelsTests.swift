@@ -28,6 +28,17 @@ final class MemoryMatchLevelsTests: XCTestCase {
         }
     }
 
+    func testGivenSmallScreenAtLevelSixWhenPairCountThenTheOldHardBoardStillFits() {
+        // Migrated "hard" players keep their 8 pairs on a small iPhone.
+        XCTAssertEqual(MemoryMatchView.cappedPairs(for: Difficulty(level: 6), in: Self.smallBoard), 8)
+    }
+
+    func testGivenNoRoomEvenForLevelOneWhenPairCountThenLevelOnesBoardIsTheFloor() {
+        let tiny = CGSize(width: 100, height: 100)
+        XCTAssertEqual(MemoryMatchView.cappedPairs(for: Difficulty(level: 10), in: tiny), 3)
+        XCTAssertEqual(MemoryMatchView.cappedPairs(for: Difficulty(level: 1), in: .zero), 3)
+    }
+
     func testGivenSmallScreenAtLevelTenWhenPairCountThenCappedToFit() {
         let pairs = MemoryMatchView.cappedPairs(for: Difficulty(level: 10), in: Self.smallBoard)
         XCTAssertLessThan(pairs, 12)

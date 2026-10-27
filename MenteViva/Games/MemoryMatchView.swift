@@ -76,9 +76,13 @@ struct MemoryMatchView: View {
 
     /// Pairs actually dealt at `difficulty` in a board of `size`: the table
     /// value, capped down until `gridFit` keeps every card at its minimum.
+    /// Never below level 1's board: on a space too small even for that (a
+    /// first layout pass, an extreme split screen) a small real game beats a
+    /// one-pair board, and the cards still shrink to fit.
     static func cappedPairs(for difficulty: Difficulty, in size: CGSize) -> Int {
+        let floor = pairsPerLevel[0]
         var pairs = pairCount(for: difficulty)
-        while pairs > 1 && !cardsFit(pairs: pairs, in: size) { pairs -= 1 }
+        while pairs > floor && !cardsFit(pairs: pairs, in: size) { pairs -= 1 }
         return pairs
     }
 
@@ -149,16 +153,20 @@ struct MemoryMatchView: View {
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .onAppear {
+                    boardSize = geometry.size
+                    if cards.isEmpty { deal(size: geometry.size) }
+                }
                 .onGeometryChange(for: CGSize.self) {
                     $0.size
                 } action: { size in
                     guard size.width > 0, size.height > 0 else { return }
                     boardSize = size
-                    // The first size report deals the board; a board dealt for a
-                    // bigger screen is dealt again only when the pair count
-                    // changes, so turning the phone never resets a game that
-                    // still fits. Cards never drop under 60pt.
-                    if cards.count != Self.cappedPairs(for: difficulty, in: size) * 2 {
+                    // Re-deal for the real size only before the first move. After it the
+                    // board can still grow (the level note above goes away) or turn with
+                    // the phone; the cards already dealt just resize, so a game in
+                    // progress is never thrown away.
+                    if moves == 0, cards.count != Self.cappedPairs(for: difficulty, in: size) * 2 {
                         deal(size: size)
                     }
                 }
