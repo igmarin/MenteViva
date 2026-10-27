@@ -26,15 +26,17 @@ final class FamilySettingsTests: XCTestCase {
     }
 
     func testGivenAPinAndAnAutoEntryWhenReadingPinsThenOnlyThePinCounts() {
-        defaults.set(Difficulty.easy.rawValue, forKey: FamilySettings.pinKey(.quickEyes))
+        // Under the 1...10 bridge 2 still reads as a level, not a legacy easy→2 mapping.
+        defaults.set(6, forKey: FamilySettings.pinKey(.quickEyes))
         defaults.set(FamilySettings.auto, forKey: FamilySettings.pinKey(.stroop))
-        XCTAssertEqual(FamilySettings.pinned(defaults: defaults), [.quickEyes: .easy])
+        XCTAssertEqual(
+            FamilySettings.pinned(defaults: defaults), [.quickEyes: Difficulty(level: 6)])
     }
 
     func testGivenAPinWhenStoredDifficultyThenThePinWinsOverAuto() {
-        defaults.set(try! JSONEncoder().encode(["quick_eyes": Difficulty.hard.rawValue]), forKey: "jev.difficulty")
-        XCTAssertEqual(Difficulty.stored(.quickEyes, defaults: defaults), .hard)
-        defaults.set(Difficulty.easy.rawValue, forKey: FamilySettings.pinKey(.quickEyes))
-        XCTAssertEqual(Difficulty.stored(.quickEyes, defaults: defaults), .easy)
+        defaults.set(try! JSONEncoder().encode(["quick_eyes": 2]), forKey: "jev.difficulty")
+        XCTAssertEqual(Difficulty.stored(.quickEyes, defaults: defaults), Difficulty(level: 6))
+        defaults.set(4, forKey: FamilySettings.pinKey(.quickEyes))
+        XCTAssertEqual(Difficulty.stored(.quickEyes, defaults: defaults), Difficulty(level: 4))
     }
 }
