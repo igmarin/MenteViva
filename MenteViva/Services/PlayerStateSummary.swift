@@ -1,7 +1,7 @@
 import Foundation
 
-/// Aggregated, anonymized gameplay stats — the entire state that leaves the device:
-/// counts and ratios only, no identifiers, no dates, English field names.
+/// Aggregated gameplay stats per game, built on the device for `DailyPolicy`: counts and ratios only.
+/// Nothing leaves the device (#195); it stays Codable so the archived Jev payloads still decode in tests.
 nonisolated struct PlayerStateSummary: Codable {
     struct GameStats: Codable, Equatable {
         let sessionsLast14Days: Int
@@ -68,8 +68,7 @@ nonisolated struct PlayerStateSummary: Codable {
             let last = mine.map(\.playedAt).max()
             let current = difficulty[game] ?? Difficulty(level: 4)
             let accuracies = recentAccuracies(
-                for: game, sessions: sessions, current: current,
-                lastChange: lastChange[game], calendar: calendar)
+                for: game, sessions: sessions, current: current, lastChange: lastChange[game])
             games[game.rawValue] = GameStats(
                 sessionsLast14Days: mine.count,
                 meanAccuracy: mine.meanAccuracy,
@@ -84,8 +83,7 @@ nonisolated struct PlayerStateSummary: Codable {
     /// Accuracies of sessions at `current` since `lastChange`, newest first.
     /// Legacy sessions without accuracy are skipped (#198).
     private static func recentAccuracies(
-        for game: GameID, sessions: [GameSession], current: Difficulty,
-        lastChange: String?, calendar _: Calendar
+        for game: GameID, sessions: [GameSession], current: Difficulty, lastChange: String?
     ) -> [Double] {
         let changeDate = lastChange.flatMap { PlanStore.day(fromStamp: $0) }
         let candidates = sessions.filter { session in

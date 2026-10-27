@@ -33,20 +33,16 @@ struct CelebrationView: View {
     }
 
     /// Offer context for #207 2: strong game, not pinned, below 10, once per day.
+    /// The view only gathers the inputs; `LevelExplainPolicy.shouldOffer` decides.
     private var shouldShowOffer: Bool {
         guard !offerAnswered else { return false }
-        guard !LevelOfferStore.hasOfferedToday(for: game, today: PlanStore.dayStamp()) else { return false }
-        guard FamilySettings.pinned()[game] == nil else { return false }
-        guard game.hasLevels else { return false }
         let todaySessions = sessions.filter { $0.game == game && Calendar.current.isDate($0.playedAt, inSameDayAs: .now) }
-        guard let last = todaySessions.max(by: { $0.playedAt < $1.playedAt }),
-            let accuracy = last.accuracy
-        else { return false }
-        let level = last.resolvedLevel ?? PlanStore.storedDifficulty()[game] ?? Difficulty(level: 4)
-        guard level.level < 10 else { return false }
+        guard let last = todaySessions.max(by: { $0.playedAt < $1.playedAt }) else { return false }
         return LevelExplainPolicy.shouldOffer(
-            accuracy: accuracy, game: game, level: level, isPinned: false,
-            alreadyOfferedToday: false)
+            accuracy: last.accuracy, game: game,
+            level: last.resolvedLevel ?? PlanStore.storedDifficulty()[game] ?? Difficulty(level: 4),
+            isPinned: FamilySettings.pinned()[game] != nil,
+            alreadyOfferedToday: LevelOfferStore.hasOfferedToday(for: game, today: PlanStore.dayStamp()))
     }
 
     private var offerSection: some View {
@@ -57,16 +53,10 @@ struct CelebrationView: View {
                 .accessibilityAddTraits(.isHeader)
             HStack(spacing: 12) {
                 Button {
-                    // Guard: UserDefaults is not observed, and the tap can
-                    // race a double-tap — check before lifting the level so
-                    // only one tap per day can raise it.
-                    let today = PlanStore.dayStamp()
-                    guard !LevelOfferStore.hasOfferedToday(for: game, today: today) else {
-                        offerAnswered = true
-                        return
-                    }
+                    // A double tap reaches here twice; `applyChosen` itself allows one raise a day.
                     guard !offerAnswered else { return }
                     offerAnswered = true
+                    let today = PlanStore.dayStamp()
                     LevelOfferStore.applyChosen(for: game, today: today)
                     LevelOfferStore.markOffered(for: game, today: today)
                     Feedback.play(.success)
@@ -121,11 +111,14 @@ struct CelebrationView: View {
             Spacer(minLength: 0)
 
             VStack(spacing: 14) {
-                Text(headline ?? "")
-                    .font(.largeTitle.bold())
-                    .fontDesign(.serif)
-                    .multilineTextAlignment(.center)
-                    .accessibilityAddTraits(.isHeader)
+                // Picked in onAppear; until then nothing, so VoiceOver never lands on an empty header.
+                if let headline {
+                    Text(headline)
+                        .font(.largeTitle.bold())
+                        .fontDesign(.serif)
+                        .multilineTextAlignment(.center)
+                        .accessibilityAddTraits(.isHeader)
+                }
                 Text(detail)
                     .font(.title2.weight(.semibold))
                     .multilineTextAlignment(.center)

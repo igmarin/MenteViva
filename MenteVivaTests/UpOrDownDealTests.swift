@@ -80,6 +80,28 @@ final class UpOrDownDealTests: XCTestCase {
         XCTAssertFalse(deal(.hard).wraps)
     }
 
+    // MARK: The three-level bridge reads bands, not exact levels (#197)
+
+    func testGivenLevelsSixToTenWhenMakeThenNoneWraps() {
+        for level in 6...10 {
+            XCTAssertFalse(deal(Difficulty(level: level)).wraps, "level \(level)")
+        }
+    }
+
+    func testGivenLevelsOneToThreeWhenMakeThenEveryDealGreedyClears() {
+        for level in 1...3 {
+            for seed in 1...20 {
+                let made = deal(Difficulty(level: level), seed: UInt64(seed))
+                XCTAssertTrue(UpOrDownDeal.greedyClears(made), "level \(level) seed \(seed)")
+            }
+        }
+    }
+
+    func testGivenEachLevelWhenAskedThenOnlyTheEasyBandLiftsPlayableCards() {
+        let lifts = (1...10).map { UpOrDownDeal.liftsPlayableCards(at: Difficulty(level: $0)) }
+        XCTAssertEqual(lifts, [true, true, true, false, false, false, false, false, false, false])
+    }
+
     func testGivenAFittingTopWhenPlayThenItBecomesTheOpenCardAndLeavesThePile() throws {
         var d = deal(.easy)
         while playableIndices(d).fits == nil { XCTAssertTrue(d.turn()) }

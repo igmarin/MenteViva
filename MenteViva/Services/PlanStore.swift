@@ -38,20 +38,59 @@ nonisolated enum PlanStore {
     }
 
     /// Saves the plan, its levels as the stored ones, and the day each level
-    /// that moved changed on (DailyPolicy holds a change for a week).
+    /// that moved changed on (the staircase counts sessions from that day, #198).
     static func cache(_ plan: DailyPlan, defaults: UserDefaults = .standard) {
-        if let data = try? JSONEncoder().encode(plan) {
-            defaults.set(data, forKey: planKey)
-        }
+        save(plan: plan, defaults: defaults)
         let before = storedDifficulty(defaults: defaults)
         var changed = lastDifficultyChange(defaults: defaults)
         for (game, level) in plan.difficulty where before[game] != level { changed[game] = plan.dayStamp }
-        if let data = try? JSONEncoder().encode(Dictionary(uniqueKeysWithValues: changed.map { ($0.key.rawValue, $0.value) })) {
+        save(changes: changed, defaults: defaults)
+        save(levels: plan.difficulty, defaults: defaults)
+    }
+
+    /// The player's own "Yes, let's try" (#207): one level up right now, recorded like a staircase
+    /// change with reason `.chosen`, so the staircase counts from the new level. Today's saved plan is
+    /// patched in place so Home and the next open agree. Returns the new level, or nil at level 10.
+    /// Lives here because only `PlanStore` knows its keys.
+    @discardableResult
+    static func raiseByChoice(_ game: GameID, today: String, defaults: UserDefaults = .standard) -> Difficulty? {
+        var levels = storedDifficulty(defaults: defaults)
+        let current = levels[game] ?? Difficulty(level: 4)
+        guard current.level < Difficulty.range.upperBound else { return nil }
+        let next = Difficulty(level: current.level + 1)
+        levels[game] = next
+        save(levels: levels, defaults: defaults)
+        var changed = lastDifficultyChange(defaults: defaults)
+        changed[game] = today
+        save(changes: changed, defaults: defaults)
+        if let cached = cachedPlan(defaults: defaults), cached.dayStamp == today {
+            var difficulty = cached.difficulty
+            difficulty[game] = next
+            var changes = cached.changes
+            changes[game] = LevelChange(previous: current, reason: .chosen)
+            save(
+                plan: DailyPlan(dayStamp: today, games: cached.games, difficulty: difficulty, changes: changes),
+                defaults: defaults)
+        }
+        return next
+    }
+
+    private static func save(plan: DailyPlan, defaults: UserDefaults) {
+        if let data = try? JSONEncoder().encode(plan) {
+            defaults.set(data, forKey: planKey)
+        }
+    }
+
+    private static func save(changes: [GameID: String], defaults: UserDefaults) {
+        let raw = Dictionary(uniqueKeysWithValues: changes.map { ($0.key.rawValue, $0.value) })
+        if let data = try? JSONEncoder().encode(raw) {
             defaults.set(data, forKey: changeKey)
         }
-        if let data = try? JSONEncoder().encode(
-            Dictionary(uniqueKeysWithValues: plan.difficulty.map { ($0.key.rawValue, $0.value.level) }))
-        {
+    }
+
+    private static func save(levels: [GameID: Difficulty], defaults: UserDefaults) {
+        let raw = Dictionary(uniqueKeysWithValues: levels.map { ($0.key.rawValue, $0.value.level) })
+        if let data = try? JSONEncoder().encode(raw) {
             defaults.set(data, forKey: levelKey)
         }
     }
