@@ -4,6 +4,15 @@ import XCTest
 
 /// Tangram logic (#218): tiles, the 30-shape library, levels and snapping.
 final class TangramPuzzleTests: XCTestCase {
+    /// Deterministic generator so the property runs never flake.
+    private struct SeededGenerator: RandomNumberGenerator {
+        var state: UInt64
+        mutating func next() -> UInt64 {
+            state = state &* 6_364_136_223_846_793_005 &+ 1_442_695_040_888_963_407
+            return state
+        }
+    }
+
     // MARK: - Tiles
 
     func testGivenSevenTilesWhenAreasThenClassicSizes() {
