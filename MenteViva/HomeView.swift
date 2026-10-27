@@ -295,8 +295,9 @@ struct HomeView: View {
         case .sudoku: SudokuView()
         case .upOrDown: UpOrDownView()
         case .sayings: SayingsView()
+        case .repeatSequence: RepeatSequenceView()
         // Placeholders: unreachable while the game is in `GameID.unreleased`.
-        case .repeatSequence, .tangram, .tilePairs, .slidingBlocks: Text("")
+        case .tangram, .tilePairs, .slidingBlocks: Text("")
         }
     }
 }

@@ -43,6 +43,18 @@ final class SudokuPuzzleTests: XCTestCase {
         XCTAssertEqual(SudokuPuzzle.layout(for: .hard, width: Self.iPhoneSE).blanks, 10)
     }
 
+    func testGivenTopLevelsOnAnIPhoneSEWidthWhenLayoutThenFourByFourThatFits() {
+        // 9×9 wants 9×60 + 8×2 = 556pt and the 6×6 fallback wants 370pt:
+        // neither fits 343pt, so levels 9–10 step down to a 4×4 that does
+        // ((343 − 3×2) / 4 = 84pt a square).
+        for level in [9, 10] {
+            let layout = SudokuPuzzle.layout(
+                for: Difficulty(level: level), width: Self.iPhoneSE)
+            XCTAssertEqual(layout.size, 4, "level \(level)")
+            XCTAssertEqual(layout.blanks, 12, "level \(level)")
+        }
+    }
+
     func testGivenAWidthThatFitsSixSquaresButNotTheirGapsWhenHardLayoutThenFourByFour() {
         // (365 - 5 gaps × 2pt) / 6 = 59.2pt: under the floor once the gaps count.
         XCTAssertEqual(SudokuPuzzle.layout(for: .hard, width: 365).size, 4)
@@ -115,6 +127,48 @@ final class SudokuPuzzleTests: XCTestCase {
     func testGivenAnEmptyFourByFourWhenCountingWithLimitTwoThenItStopsAtTwo() {
         let empty = [Int?](repeating: nil, count: 16)
         XCTAssertEqual(SudokuPuzzle.solutionCount(empty, size: 4, boxRows: 2, boxColumns: 2, limit: 2), 2)
+    }
+
+    // MARK: - #201: ten levels
+
+    func testGivenLevelsTwoFourSixWhenLayoutThenMatchesOldEasyMediumHard() {
+        let wide = [2, 4, 6].map { SudokuPuzzle.layout(for: Difficulty(level: $0), width: Self.wide) }
+        XCTAssertEqual(wide.map(\.size), [4, 4, 6])
+        XCTAssertEqual(wide.map(\.blanks), [4, 8, 18])
+        let narrow = [2, 4, 6].map { SudokuPuzzle.layout(for: Difficulty(level: $0), width: Self.iPhoneSE) }
+        XCTAssertEqual(narrow.map(\.size), [4, 4, 4])
+        XCTAssertEqual(narrow.map(\.blanks), [4, 8, 10])
+    }
+
+    func testGivenRisingLevelsWhenLayoutThenNeverEasier() {
+        let layouts = (1...10).map { SudokuPuzzle.layout(for: Difficulty(level: $0), width: Self.wide) }
+        XCTAssertEqual(layouts.map(\.size), [4, 4, 4, 4, 4, 6, 6, 6, 9, 9])
+        for pair in zip(layouts.map(\.blanks), layouts.map(\.blanks).dropFirst()) {
+            XCTAssertLessThanOrEqual(pair.0, pair.1)
+        }
+    }
+
+    func testGivenMidWidthAtLevelNineWhenLayoutThenFallsBackToSixBySix() {
+        // 400pt fits the 6×6 fallback (6×60 + 5×2 = 370pt) but not 9×9 (556pt).
+        XCTAssertEqual(SudokuPuzzle.layout(for: Difficulty(level: 9), width: 400).size, 6)
+        XCTAssertEqual(SudokuPuzzle.layout(for: Difficulty(level: 9), width: 400).blanks, 26)
+    }
+
+    func testGivenNineByNineSeedsWhenGeneratedThenExactlyOneSolutionAndFullBlanks() {
+        for seed in 1...3 {
+            var generator = SeededGenerator(state: UInt64(seed))
+            let puzzle = SudokuPuzzle.make(
+                difficulty: Difficulty(level: 10), width: Self.wide, using: &generator)
+            XCTAssertEqual(puzzle.size, 9)
+            XCTAssertEqual(puzzle.size * puzzle.size - puzzle.givens.count, 46)
+            let grid = puzzle.solution.indices.map {
+                puzzle.givens.contains($0) ? puzzle.solution[$0] : nil
+            }
+            XCTAssertEqual(
+                SudokuPuzzle.solutionCount(
+                    grid, size: 9, boxRows: 3, boxColumns: 3, limit: 2),
+                1)
+        }
     }
 
     // MARK: - #239: a small reward for every finished row, column and box
