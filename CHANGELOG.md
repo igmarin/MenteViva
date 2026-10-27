@@ -7,6 +7,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 ### Fixed
 - **One migration at launch, reads stay pure (#264):** pre-level pins and plan levels used to migrate inside every `pinned()` / `storedDifficulty()` read (Home renders, the plan, Set up). Now `LevelMigration.runOnce` batches both at launch behind one `level.migration.done` flag and reads do not write.
 
+### Changed
+- **Sudoku, ten levels (#201):** boards now grow from 4×4 to 6×6 to a classic 9×9 with more blanks at every step. Levels 2, 4 and 6 deal exactly the old easy, medium and hard boards; where the wanted board doesn't fit, a fuller smaller board steps in.
+
 ### Added
 - **Set up: pin a game at any level 1–10 (#208):** each game with levels now has an "Automatic" switch and, when it is off, two big 100pt buttons (− / +) around "Level 4". At level 1 and 10 the button is dimmed and a line says it is the lowest or highest level. VoiceOver reads it as one adjustable control: swipe up or down to change the level.
 - **A gentle nudge after a strong game and a one-line level note (#207):** when the rules move a game up by one, by two, or ease it, the first time you open it that day you see one warm line under the header ("We made it a little harder: you've been doing great.", "Two steps up: you're flying!", "We made it a little calmer, so you enjoy it more.") in `.title2`, read by VoiceOver, gone once the first round starts and only once per day; never mentions misses or accuracy. When you finish a strong game below level 10 and the game isn't pinned, the celebration asks once that day "That was perfect. Shall we try the next level?" with two 100pt buttons "Yes, let's try" / "Keep it as it is" (equally prominent, neither default) — Yes lifts the level by one now with reason `.chosen` so the staircase counts from there.
