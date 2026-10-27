@@ -102,29 +102,29 @@ final class GameProgressTests: XCTestCase {
 
     func testGivenHigherLevelThisWeekWhenWeeklyThenLevelTrendIsUp() {
         let p = weekly([
-            session(.memoryMatch, daysAgo: 1, level: .hard),
-            session(.memoryMatch, daysAgo: 4, level: .medium),
-            session(.memoryMatch, daysAgo: 10, level: .medium),
+            session(.memoryMatch, daysAgo: 1, level: Difficulty(level: 6)),
+            session(.memoryMatch, daysAgo: 4, level: Difficulty(level: 4)),
+            session(.memoryMatch, daysAgo: 10, level: Difficulty(level: 4)),
         ]).first
-        XCTAssertEqual(p?.level, .hard)  // latest this week
-        XCTAssertEqual(p?.previousLevel, .medium)
+        XCTAssertEqual(p?.level, Difficulty(level: 6))  // latest this week
+        XCTAssertEqual(p?.previousLevel, Difficulty(level: 4))
         XCTAssertEqual(p?.levelTrend, .up)
     }
 
     func testGivenLowerLevelThisWeekWhenWeeklyThenLevelTrendIsDown() {
         let p = weekly([
-            session(.quickEyes, daysAgo: 2, level: .easy),
-            session(.quickEyes, daysAgo: 8, level: .medium),
+            session(.quickEyes, daysAgo: 2, level: Difficulty(level: 2)),
+            session(.quickEyes, daysAgo: 8, level: Difficulty(level: 4)),
         ]).first
         XCTAssertEqual(p?.levelTrend, .down)
     }
 
     func testGivenLegacySessionsWithoutLevelWhenWeeklyThenNoLevelTrend() {
         let p = weekly([
-            session(.quickEyes, daysAgo: 2, level: .hard),
+            session(.quickEyes, daysAgo: 2, level: Difficulty(level: 6)),
             session(.quickEyes, daysAgo: 8),
         ]).first
-        XCTAssertEqual(p?.level, .hard)
+        XCTAssertEqual(p?.level, Difficulty(level: 6))
         XCTAssertNil(p?.previousLevel)
         XCTAssertNil(p?.levelTrend)
     }

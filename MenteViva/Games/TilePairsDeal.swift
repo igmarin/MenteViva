@@ -108,7 +108,16 @@ nonisolated struct TilePairsDeal {
             }
             pairSyms.shuffle(using: &g)
         }
-        return false
+        // Deterministic fallback keeps the multiset and guarantees free tiles (spaced line).
+        let spaced: [(x: Int, y: Int, layer: Int)] = (0..<tiles.count).map { i in (x: i * 2, y: 0, layer: 0) }
+        let fallbackTiles = spaced.enumerated().map { idx, p in
+            TilePairsTile(id: idx, symbol: pairSyms[idx / 2 % pairSyms.count], x: p.x, y: p.y, layer: p.layer)
+        }
+        let pairs = tiles.count / 2
+        let fallbackOrder = (0..<pairs).map { i in [i * 2, i * 2 + 1] }
+        tiles = fallbackTiles
+        pairOrder = fallbackOrder
+        return true
     }
     func clearsWithRecordedOrder() -> Bool {
         var rem = tiles
@@ -145,10 +154,13 @@ nonisolated struct TilePairsDeal {
             }
             pairSyms.shuffle(using: &g)
         }
-        let fallback = pos.enumerated().map { idx, p in
+        // Deterministic guaranteed-clearing fallback: spaced single-layer line where every tile is free.
+        let spaced: [(x: Int, y: Int, layer: Int)] = (0..<count).map { i in (x: i * 2, y: 0, layer: 0) }
+        let fallbackTiles = spaced.enumerated().map { idx, p in
             TilePairsTile(id: idx, symbol: pairSyms[idx / 2 % pairSyms.count], x: p.x, y: p.y, layer: p.layer)
         }
-        return TilePairsDeal(tiles: fallback, layers: layers, pairOrder: [])
+        let fallbackOrder = (0..<pairs).map { i in [i * 2, i * 2 + 1] }
+        return TilePairsDeal(tiles: fallbackTiles, layers: 1, pairOrder: fallbackOrder)
     }
     private static func build<G: RandomNumberGenerator>(
         tiles count: Int, layers: Int, pairSymbols: [TilePairsSymbol], positions pos: [(x: Int, y: Int, layer: Int)],

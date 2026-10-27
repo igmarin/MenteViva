@@ -18,7 +18,8 @@ final class SudokuPuzzleTests: XCTestCase {
 
     /// Every level on both widths: easy, medium, hard (6×6) and hard on a narrow screen (4×4).
     private static let cases: [(Difficulty, Double)] = [
-        (.easy, wide), (.medium, wide), (.hard, wide), (.hard, iPhoneSE),
+        (Difficulty(level: 2), wide), (Difficulty(level: 4), wide), (Difficulty(level: 6), wide),
+        (Difficulty(level: 6), iPhoneSE),
     ]
 
     private func puzzles(_ difficulty: Difficulty, width: Double, count: Int = 50) -> [SudokuPuzzle] {
@@ -29,18 +30,18 @@ final class SudokuPuzzleTests: XCTestCase {
     }
 
     func testGivenEachLevelOnAWideScreenWhenLayoutThenSizeAndBlanksMatchSpec() {
-        XCTAssertEqual(SudokuPuzzle.layout(for: .easy, width: Self.wide).size, 4)
-        XCTAssertEqual(SudokuPuzzle.layout(for: .easy, width: Self.wide).blanks, 4)
-        XCTAssertEqual(SudokuPuzzle.layout(for: .medium, width: Self.wide).size, 4)
-        XCTAssertEqual(SudokuPuzzle.layout(for: .medium, width: Self.wide).blanks, 8)
-        XCTAssertEqual(SudokuPuzzle.layout(for: .hard, width: Self.wide).size, 6)
-        XCTAssertEqual(SudokuPuzzle.layout(for: .hard, width: Self.wide).blanks, 18)
+        XCTAssertEqual(SudokuPuzzle.layout(for: Difficulty(level: 2), width: Self.wide).size, 4)
+        XCTAssertEqual(SudokuPuzzle.layout(for: Difficulty(level: 2), width: Self.wide).blanks, 4)
+        XCTAssertEqual(SudokuPuzzle.layout(for: Difficulty(level: 4), width: Self.wide).size, 4)
+        XCTAssertEqual(SudokuPuzzle.layout(for: Difficulty(level: 4), width: Self.wide).blanks, 8)
+        XCTAssertEqual(SudokuPuzzle.layout(for: Difficulty(level: 6), width: Self.wide).size, 6)
+        XCTAssertEqual(SudokuPuzzle.layout(for: Difficulty(level: 6), width: Self.wide).blanks, 18)
     }
 
     func testGivenHardOnAnIPhoneSEWidthWhenLayoutThenItFallsBackToFourByFourWithTenBlanks() {
         // 343 / 6 = 57pt, under the 60pt floor.
-        XCTAssertEqual(SudokuPuzzle.layout(for: .hard, width: Self.iPhoneSE).size, 4)
-        XCTAssertEqual(SudokuPuzzle.layout(for: .hard, width: Self.iPhoneSE).blanks, 10)
+        XCTAssertEqual(SudokuPuzzle.layout(for: Difficulty(level: 6), width: Self.iPhoneSE).size, 4)
+        XCTAssertEqual(SudokuPuzzle.layout(for: Difficulty(level: 6), width: Self.iPhoneSE).blanks, 10)
     }
 
     func testGivenTopLevelsOnAnIPhoneSEWidthWhenLayoutThenFourByFourThatFits() {
@@ -57,15 +58,15 @@ final class SudokuPuzzleTests: XCTestCase {
 
     func testGivenAWidthThatFitsSixSquaresButNotTheirGapsWhenHardLayoutThenFourByFour() {
         // (365 - 5 gaps × 2pt) / 6 = 59.2pt: under the floor once the gaps count.
-        XCTAssertEqual(SudokuPuzzle.layout(for: .hard, width: 365).size, 4)
+        XCTAssertEqual(SudokuPuzzle.layout(for: Difficulty(level: 6), width: 365).size, 4)
         // (370 - 10) / 6 = 60pt: just fits.
-        XCTAssertEqual(SudokuPuzzle.layout(for: .hard, width: 370).size, 6)
+        XCTAssertEqual(SudokuPuzzle.layout(for: Difficulty(level: 6), width: 370).size, 6)
     }
 
     func testGivenASixBySixBoardWhenTheScreenNarrowsThenItNoLongerFits() {
         // Dealt in landscape on an iPhone SE, then turned to portrait.
         var generator = SeededGenerator(state: 1)
-        let board = SudokuPuzzle.make(difficulty: .hard, width: 600, using: &generator)
+        let board = SudokuPuzzle.make(difficulty: Difficulty(level: 6), width: 600, using: &generator)
         XCTAssertEqual(board.size, 6)
         XCTAssertTrue(board.fits(width: 600))
         XCTAssertFalse(board.fits(width: Self.iPhoneSE))
@@ -117,11 +118,13 @@ final class SudokuPuzzleTests: XCTestCase {
     }
 
     func testGivenTheSameSeedWhenMakeTwiceThenPuzzlesAreEqual() {
-        XCTAssertEqual(puzzles(.hard, width: Self.wide, count: 3), puzzles(.hard, width: Self.wide, count: 3))
+        XCTAssertEqual(
+            puzzles(Difficulty(level: 6), width: Self.wide, count: 3),
+            puzzles(Difficulty(level: 6), width: Self.wide, count: 3))
     }
 
     func testGivenDifferentSeedsWhenMakeThenBoardsVary() {
-        XCTAssertGreaterThan(Set(puzzles(.medium, width: Self.wide).map(\.solution)).count, 10)
+        XCTAssertGreaterThan(Set(puzzles(Difficulty(level: 4), width: Self.wide).map(\.solution)).count, 10)
     }
 
     func testGivenAnEmptyFourByFourWhenCountingWithLimitTwoThenItStopsAtTwo() {

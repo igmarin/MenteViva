@@ -1,7 +1,7 @@
 # ES review packet — for the native-speaker pass (#12)
 
 Hand this whole file to the reviewer. Generated from `Localizable.xcstrings`
-(361 user-facing strings; keys that are only format specifiers are omitted).
+(476 user-facing strings; keys that are only format specifiers are omitted).
 Rows already signed off on #12 are pre-marked ✅.
 Regenerate after any string change: `python3 tools/generate_es_packet.py`.
 
@@ -25,7 +25,7 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | Key | English | Español | Used in | ✓ |
 |---|---|---|---|---|
 | `app.title` | Mente Viva | Mente Viva | HomeView, OnboardingView |  |
-| `difficulty.level` | Level %lld | Nivel %lld | — |  |
+| `difficulty.level` | Level %lld | Nivel %lld | SetUpView, UpOrDownDeal |  |
 | `family.auto` | set automatically | ajustado automáticamente | SetUpView |  |
 | `family.caption.field` | A name or a few words | Un nombre o unas palabras | FamilyPhotoCaptionSheet |  |
 | `family.caption.placeholder` | Mom's house | La casa de mamá | FamilyPhotoCaptionSheet |  |
@@ -42,6 +42,10 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `family.games.header` | Games on this device | Juegos en este dispositivo | SetUpView |  |
 | `family.hidden` | Hidden from home | Oculto en el inicio | SetUpView |  |
 | `family.level %@ %@` | Next game: %1$@ (%2$@) | Próximo juego: %1$@ (%2$@) | SetUpView |  |
+| `family.level.higher` | Higher level | Subir de nivel | SetUpView |  |
+| `family.level.lower` | Lower level | Bajar de nivel | SetUpView |  |
+| `family.level.max` | This is the highest level | Es el nivel más alto | SetUpView |  |
+| `family.level.min` | This is the lowest level | Es el nivel más bajo | SetUpView |  |
 | `family.photos.add` | Add photos | Añadir fotos | MemoryMatchView, SetUpView |  |
 | `family.photos.added %lld` | one: Added %lld photo. / other: Added %lld photos. | one: Se agregó %lld foto. / other: Se agregaron %lld fotos. | MemoryMatchView, SetUpView |  |
 | `family.photos.caption.a11y %lld` | Photo %lld: add or change its name | Foto %lld: poner o cambiar su nombre | SetUpView |  |
@@ -58,6 +62,8 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `family.share.title` | MenteViva — how each game went this week | MenteViva — cómo fue cada juego esta semana | MyProgressView |  |
 | `family.show` | Show on home | Mostrar en el inicio | SetUpView |  |
 | `family.show.last` | At least one game always stays on home. | Al menos un juego siempre queda en el inicio. | SetUpView |  |
+| `game.answer.right` | That's it! | ¡Eso es! | ColorClashView, MathStreakView, QuickEyesView |  |
+| `game.answer.was %@` | The answer was %@ | La respuesta era %@ | ColorClashView, MathStreakView, QuickEyesView |  |
 | `game.category.a11y.picked` | Already picked | Ya elegido | CategoryFluencyView |  |
 | `game.category.a11y.position %lld %lld` | Tile %lld of %lld | Ficha %lld de %lld | CategoryFluencyView |  |
 | `game.category.animals` | Animals | Animales | CategoryFluencyView |  |
@@ -82,7 +88,7 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `game.celebration.playagain` | Play again | Jugar de nuevo | CelebrationView |  |
 | `game.celebration.questions %lld` | You answered all %lld questions! | ¡Respondiste las %lld preguntas! | MathStreakView |  |
 | `game.celebration.reminiscence %lld` | one: You looked at %lld picture today / other: You looked at %lld pictures today | one: Miraste %lld imagen hoy / other: Miraste %lld imágenes hoy | ReminiscenceView |  |
-| `game.celebration.rounds %lld` | You finished all %lld rounds! | ¡Terminaste las %lld rondas! | ColorClashView |  |
+| `game.celebration.rounds %lld` | You finished all %lld rounds! | ¡Terminaste las %lld rondas! | ColorClashView, RepeatSequenceView |  |
 | `game.celebration.sayings %lld` | You finished %lld sayings | Terminaste %lld refranes | SayingsView |  |
 | `game.celebration.spotted %lld %lld` | You spotted %1$lld of %2$lld! | ¡Viste %1$lld de %2$lld! | QuickEyesView |  |
 | `game.celebration.squares %lld` | You filled %lld squares | Llenaste %lld cuadros | SudokuView |  |
@@ -94,17 +100,23 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `game.colorclash.color.blue` | Blue | Azul | ColorClashView |  |
 | `game.colorclash.color.green` | Green | Verde | ColorClashView |  |
 | `game.colorclash.color.orange` | Orange | Naranja | ColorClashView |  |
+| `game.colorclash.color.purple` | Purple | Morado | ColorClashView |  |
 | `game.colorclash.color.red` | Red | Rojo | ColorClashView |  |
+| `game.colorclash.color.yellow` | Yellow | Amarillo | ColorClashView |  |
 | `game.colorclash.instruction` | Tap the color of the ink, not the word | Toca el color de la tinta, no la palabra | ColorClashView |  |
 | `game.colorclash.shape.circle` | Circle | Círculo | ColorClashView |  |
 | `game.colorclash.shape.diamond` | Diamond | Rombo | ColorClashView |  |
+| `game.colorclash.shape.hexagon` | Hexagon | Hexágono | ColorClashView |  |
 | `game.colorclash.shape.square` | Square | Cuadrado | ColorClashView |  |
+| `game.colorclash.shape.star` | Star | Estrella | ColorClashView |  |
 | `game.colorclash.shape.triangle` | Triangle | Triángulo | ColorClashView |  |
 | `game.colorclash.title` | Color Clash | Choque de Colores | GameID |  |
 | `game.colorclash.word.blue` | BLUE | AZUL | ColorClashView |  |
 | `game.colorclash.word.green` | GREEN | VERDE | ColorClashView |  |
 | `game.colorclash.word.orange` | ORANGE | NARANJA | ColorClashView |  |
+| `game.colorclash.word.purple` | PURPLE | MORADO | ColorClashView |  |
 | `game.colorclash.word.red` | RED | ROJO | ColorClashView |  |
+| `game.colorclash.word.yellow` | YELLOW | AMARILLO | ColorClashView |  |
 | `game.math.instruction` | Tap the correct answer | Toca la respuesta correcta | MathStreakView |  |
 | `game.math.operator.dividedBy` | divided by | entre | NumberTrailQuestion |  |
 | `game.math.operator.minus` | minus | menos | NumberTrailQuestion |  |
@@ -139,7 +151,21 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `game.sayings.miss` | Almost — try again. | Casi — inténtalo de nuevo. | SayingsView |  |
 | `game.sayings.next` | Next | Siguiente | SayingsView |  |
 | `game.sayings.title` | Finish the Saying | Termina el refrán | GameID |  |
+| `game.sequence.a11y.hint` | Tap to repeat the sequence | Toca para repetir la secuencia | RepeatSequenceView |  |
+| `game.sequence.almost` | Almost — watch again | Casi — míralo otra vez | RepeatSequenceView |  |
+| `game.sequence.instruction` | Watch, then tap the same tiles in order. | Mira y luego toca las mismas fichas en orden. | RepeatSequenceView |  |
+| `game.sequence.shape.circle` | Circle | Círculo | RepeatSequenceView |  |
+| `game.sequence.shape.drop` | Drop | Gota | RepeatSequenceView |  |
+| `game.sequence.shape.heart` | Heart | Corazón | RepeatSequenceView |  |
+| `game.sequence.shape.leaf` | Leaf | Hoja | RepeatSequenceView |  |
+| `game.sequence.shape.moon` | Moon | Luna | RepeatSequenceView |  |
+| `game.sequence.shape.square` | Square | Cuadrado | RepeatSequenceView |  |
+| `game.sequence.shape.star` | Star | Estrella | RepeatSequenceView |  |
+| `game.sequence.shape.sun` | Sun | Sol | RepeatSequenceView |  |
+| `game.sequence.shape.triangle` | Triangle | Triángulo | RepeatSequenceView |  |
 | `game.sequence.title` | Repeat the Sequence | Repite la secuencia | GameID |  |
+| `game.sequence.turn` | Your turn | Tu turno | RepeatSequenceView |  |
+| `game.sequence.watch` | Watch… | Mira… | RepeatSequenceView |  |
 | `game.sliding.title` | Sliding Blocks | Bloques deslizantes | GameID |  |
 | `game.sudoku.a11y.cell %lld %lld %lld` | Row %1$lld, column %2$lld, %3$lld | Fila %1$lld, columna %2$lld, %3$lld | SudokuView |  |
 | `game.sudoku.a11y.empty %lld %lld` | Row %1$lld, column %2$lld, empty | Fila %1$lld, columna %2$lld, vacío | SudokuView |  |
@@ -148,17 +174,42 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `game.sudoku.done.box %lld` | Box %lld done | Bloque %lld completo | SudokuView |  |
 | `game.sudoku.done.column %lld` | Column %lld done | Columna %lld completa | SudokuView |  |
 | `game.sudoku.done.row %lld` | Row %lld done | Fila %lld completa | SudokuView |  |
+| `game.sudoku.guide` | Tap a square, then the number that fits | Toca un cuadro y después el número que encaje | SudokuView |  |
 | `game.sudoku.instruction` | Tap a square, then a number. | Toca un cuadro y luego un número. | SudokuView |  |
 | `game.sudoku.miss` | Almost — try another number. | Casi — prueba otro número. | SudokuView |  |
 | `game.sudoku.showme` | Show me one | Muéstrame uno | SudokuView |  |
 | `game.sudoku.title` | Sudoku | Sudoku | GameID |  |
+| `game.tangram.a11y.pickfirst` | Pick a piece first | Elige primero una pieza | TangramView |  |
+| `game.tangram.a11y.place %@` | Place in %@ | Colocar %@ | TangramView |  |
+| `game.tangram.flip` | Flip | Voltear | TangramView |  |
+| `game.tangram.instruction` | Fill the shape with the pieces. | Llena la figura con las piezas. | TangramView |  |
+| `game.tangram.miss.flip` | Almost — try flipping it | Casi — prueba a voltearla | TangramView |  |
+| `game.tangram.miss.spot` | Almost — try another spot | Casi — prueba otro lugar | TangramView |  |
+| `game.tangram.miss.turn` | Almost — try turning it | Casi — prueba a girarla | TangramView |  |
+| `game.tangram.piece.large` | large triangle | triángulo grande | TangramPieces |  |
+| `game.tangram.piece.medium` | medium triangle | triángulo mediano | TangramPieces |  |
+| `game.tangram.piece.parallelogram` | parallelogram | paralelogramo | TangramPieces |  |
+| `game.tangram.piece.small` | small triangle | triángulo pequeño | TangramPieces |  |
+| `game.tangram.piece.square` | square | cuadrado | TangramPieces |  |
+| `game.tangram.showone` | Show me one | Muéstrame una | TangramView |  |
+| `game.tangram.slot.bottom` | bottom | abajo | — |  |
+| `game.tangram.slot.bottom.left` | bottom left | abajo a la izquierda | — |  |
+| `game.tangram.slot.bottom.right` | bottom right | abajo a la derecha | — |  |
+| `game.tangram.slot.left` | left | a la izquierda | — |  |
+| `game.tangram.slot.middle` | middle | en el centro | — |  |
+| `game.tangram.slot.right` | right | a la derecha | — |  |
+| `game.tangram.slot.top` | top | arriba | — |  |
+| `game.tangram.slot.top.left` | top left | arriba a la izquierda | — |  |
+| `game.tangram.slot.top.right` | top right | arriba a la derecha | — |  |
 | `game.tangram.title` | Tangram | Tangram | GameID |  |
+| `game.tangram.turn` | Turn | Girar | TangramView |  |
 | `game.tilepairs.title` | Tile Pairs | Parejas de fichas | GameID |  |
 | `game.upordown.a11y.card %@ %@` | %1$@ of %2$@ | %1$@ de %2$@ | UpOrDownView |  |
 | `game.upordown.a11y.deck %lld` | Turn a new card, %lld left | Voltear una carta nueva, quedan %lld | UpOrDownView |  |
 | `game.upordown.a11y.empty` | Empty pile | Montón vacío | UpOrDownView |  |
 | `game.upordown.a11y.fits` | fits | sirve | UpOrDownView |  |
 | `game.upordown.a11y.open %@` | Open card: %@ | Carta abierta: %@ | UpOrDownView |  |
+| `game.upordown.guide` | Tap a card one higher or one lower than this one | Toca una carta que sea uno más o uno menos que esta | UpOrDownView |  |
 | `game.upordown.instruction` | Tap a card one higher or one lower. | Toca una carta con uno más o uno menos. | UpOrDownView |  |
 | `game.upordown.miss %@` | Almost — it needs one more or one less than %@. | Casi — necesita uno más o uno menos que %@. | UpOrDownView |  |
 | `game.upordown.rank.1` | Ace | As | — |  |
@@ -180,6 +231,12 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `game.upordown.suit.hearts` | hearts | corazones | — |  |
 | `game.upordown.suit.spades` | spades | picas | — |  |
 | `game.upordown.title` | Up or Down | Sube o baja | GameID |  |
+| `guide.again` | Show me again | Muéstramelo otra vez | FirstPlayGuide |  |
+| `guide.colorclash.example %@` | The ink is %@: tap that color. | La tinta es de color %@: toca ese color. | ColorClashView |  |
+| `guide.gotit` | Got it | Entendido | FirstPlayGuide |  |
+| `guide.sudoku.example %lld` | The framed square is chosen. The number %lld fits there. | El cuadro con marco está elegido. Ahí encaja el número %lld. | SudokuView |  |
+| `guide.upordown.example %@` | This one fits: %@ is one away from the open card. | Esta encaja: %@ está a un número de la carta abierta. | UpOrDownView |  |
+| `guide.upordown.example.none` | Look for a card one higher or one lower than the open card. | Busca una carta que sea uno más o uno menos que la carta abierta. | UpOrDownView |  |
 | `history.day.times %lld` | one: once / other: %lld times | one: una vez / other: %lld veces | HistoryView |  |
 | `history.days.header` | Day by day | Día a día | HistoryView |  |
 | `history.empty` | No games yet this week. Pick a game and have some fun! | Aún no hay juegos esta semana. ¡Elige un juego y diviértete! | HistoryView |  |
@@ -215,6 +272,9 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `level.offer.keep` | Keep it as it is | Así está bien | CelebrationView |  |
 | `level.offer.prompt` | That was perfect. Shall we try the next level? | ¡Te salió perfecto! ¿Probamos el siguiente nivel? | CelebrationView |  |
 | `level.offer.yes` | Yes, let's try | Sí, probemos | CelebrationView |  |
+| `myplan.note` | Today's plan stays as it is. These answers decide tomorrow's. | El plan de hoy se queda como está. Estas respuestas deciden el de mañana. | MyPlanView |  |
+| `myplan.open.hint` | Who plays, what to exercise, how long a day and how to start. | Quién juega, qué ejercitar, cuánto tiempo al día y cómo empezar. | SettingsView |  |
+| `myplan.title` | My plan | Mi plan | MyPlanView, SettingsView |  |
 | `object.book` | Book | Libro | EverydayObjects |  |
 | `object.chair` | Chair | Silla | EverydayObjects |  |
 | `object.clock` | Clock | Reloj | EverydayObjects |  |
@@ -223,12 +283,35 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `object.key` | Key | Llave | EverydayObjects |  |
 | `object.lamp` | Lamp | Lámpara | EverydayObjects |  |
 | `object.umbrella` | Umbrella | Paraguas | EverydayObjects |  |
+| `onboarding.back` | Back | Atrás | OnboardingView |  |
+| `onboarding.back.hint` | Goes back to the previous question. | Vuelve a la pregunta anterior. | OnboardingView |  |
 | `onboarding.disclaimer` | This is not a medical device. | No es un dispositivo médico. | OnboardingView |  |
+| `onboarding.focus.attention` | Attention | Atención | OnboardingSteps |  |
+| `onboarding.focus.fun` | Just have fun | Solo pasarla bien | OnboardingSteps |  |
+| `onboarding.focus.memory` | Memory | Memoria | OnboardingSteps |  |
+| `onboarding.focus.numbers` | Numbers | Números | OnboardingSteps |  |
+| `onboarding.focus.title` | What would you like to exercise? Pick any. | ¿Qué te gustaría ejercitar? Elige las que quieras. | OnboardingSteps |  |
+| `onboarding.focus.words` | Words | Palabras | OnboardingSteps |  |
 | `onboarding.line1` | Fun mental exercise. | Ejercicio mental divertido. | OnboardingView |  |
 | `onboarding.line2` | No rush, no pressure. | Sin prisa y sin presión. | OnboardingView |  |
 | `onboarding.line3` | Pick a game and start. | Elige un juego y empieza. | OnboardingView |  |
+| `onboarding.minutes.10` | 10 minutes | 10 minutos | — |  |
+| `onboarding.minutes.15` | 15 minutes | 15 minutos | — |  |
+| `onboarding.minutes.5` | 5 minutes | 5 minutos | — |  |
+| `onboarding.minutes.title` | How long a day? | ¿Cuánto tiempo al día? | OnboardingSteps |  |
+| `onboarding.next` | Next | Siguiente | OnboardingView |  |
+| `onboarding.pace.calm` | Calm | Tranquilo | OnboardingSteps |  |
+| `onboarding.pace.challenge` | A challenge | Con reto | OnboardingSteps |  |
+| `onboarding.pace.normal` | Normal | Normal | OnboardingSteps |  |
+| `onboarding.pace.title` | How would you like to start? | ¿Cómo quieres empezar? | OnboardingSteps |  |
+| `onboarding.skip` | Skip | Omitir | OnboardingView |  |
+| `onboarding.skip.hint` | Leaves this one unanswered. You can change it later in Settings, My plan. | Deja esta pregunta sin responder. Puedes cambiarla después en Ajustes, Mi plan. | OnboardingView |  |
 | `onboarding.start` | Let's play | A jugar | OnboardingView |  |
 | `onboarding.start.hint` | Opens the games | Abre los juegos | OnboardingView |  |
+| `onboarding.step %lld %lld` | Step %lld of %lld | Paso %lld de %lld | OnboardingView |  |
+| `onboarding.who.family` | A family member | Un familiar | OnboardingSteps |  |
+| `onboarding.who.me` | Me | Yo | OnboardingSteps |  |
+| `onboarding.who.title` | Who will play? | ¿Quién va a jugar? | OnboardingSteps |  |
 | `progress.accuracy %lld` | On average, %lld%% right each game | En promedio, %lld%% de aciertos por juego | MyProgressView |  |
 | `progress.days %lld` | Played on %lld of the last 7 days | Jugaste %lld de los últimos 7 días | MyProgressView |  |
 | `progress.empty` | No games in the last 7 days yet. Whenever you play, it shows up here. | Todavía no hay juegos en los últimos 7 días. Cuando juegues, aparecerá aquí. | MyProgressView |  |
@@ -367,6 +450,8 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `saying.60.end` | shouldn't throw stones | casa quiere | — |  |
 | `saying.60.start` | People who live in glass houses | Quien se casa | — |  |
 | `settings.done` | Done | Listo | FamilyPhotoCaptionSheet, SettingsView |  |
+| `settings.guides` | Show the game guides again | Volver a ver las guías | SettingsView |  |
+| `settings.guides.done` | Done. You'll see them again. | Listo. Volverás a verlas. | SettingsView |  |
 | `settings.language` | Language | Idioma | AppLanguage, SettingsView |  |
 | `settings.language.restart` | The language changes right away. | El idioma cambia al instante. | SettingsView |  |
 | `settings.language.system` | Device | Sistema | AppLanguage |  |
@@ -385,3 +470,33 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `settings.version` | Version | Versión | SettingsView |  |
 | `setup.open.hint` | Which games show, their difficulty, and Memory Lane photos | Qué juegos se muestran, su dificultad y las fotos de Camino de Memoria | SettingsView |  |
 | `setup.title` | Set up | Ajustes de juego | SetUpView, SettingsView |  |
+| `tangram.shape.01` | Boat | Barco | TangramShapes |  |
+| `tangram.shape.02` | Fish | Pez | TangramShapes |  |
+| `tangram.shape.03` | Bird | Pájaro | TangramShapes |  |
+| `tangram.shape.04` | Cat | Gato | TangramShapes |  |
+| `tangram.shape.05` | Dog | Perro | TangramShapes |  |
+| `tangram.shape.06` | Sea turtle | Tortuga marina | TangramShapes |  |
+| `tangram.shape.07` | Rabbit | Conejo | TangramShapes |  |
+| `tangram.shape.08` | Houses | Casas | TangramShapes |  |
+| `tangram.shape.09` | Tree | Árbol | TangramShapes |  |
+| `tangram.shape.10` | Candles | Velas | TangramShapes |  |
+| `tangram.shape.11` | Bow and arrow | Arco y flecha | TangramShapes |  |
+| `tangram.shape.12` | Mountains | Montañas | TangramShapes |  |
+| `tangram.shape.13` | Armchair | Sillón | TangramShapes |  |
+| `tangram.shape.14` | Walker | Caminante | TangramShapes |  |
+| `tangram.shape.15` | Pine | Pino | TangramShapes |  |
+| `tangram.shape.16` | Duck | Pato | TangramShapes |  |
+| `tangram.shape.17` | Frog | Rana | TangramShapes |  |
+| `tangram.shape.18` | Tent | Tienda de campaña | TangramShapes |  |
+| `tangram.shape.19` | Rocket | Cohete | TangramShapes |  |
+| `tangram.shape.20` | Butterfly | Mariposa | TangramShapes |  |
+| `tangram.shape.21` | Covered bridge | Puente cubierto | TangramShapes |  |
+| `tangram.shape.22` | Mushroom | Seta | TangramShapes |  |
+| `tangram.shape.23` | Swan | Cisne | TangramShapes |  |
+| `tangram.shape.24` | Owl | Búho | TangramShapes |  |
+| `tangram.shape.25` | Horse | Caballo | TangramShapes |  |
+| `tangram.shape.26` | Lamp | Lámpara | TangramShapes |  |
+| `tangram.shape.27` | Slide | Tobogán | TangramShapes |  |
+| `tangram.shape.28` | Snail | Caracol | TangramShapes |  |
+| `tangram.shape.29` | Penguin | Pingüino | TangramShapes |  |
+| `tangram.shape.30` | Crab | Cangrejo | TangramShapes |  |
