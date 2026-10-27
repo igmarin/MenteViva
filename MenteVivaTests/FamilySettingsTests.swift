@@ -55,6 +55,8 @@ final class FamilySettingsTests: XCTestCase {
         defaults.set(0, forKey: FamilySettings.legacyPinKey(.sudoku))
         defaults.set(1, forKey: FamilySettings.legacyPinKey(.sayings))
         defaults.set(2, forKey: FamilySettings.legacyPinKey(.upOrDown))
+        // Reads no longer migrate (#264); the launch-time pass does.
+        LevelMigration.runOnce(defaults: defaults)
         XCTAssertEqual(
             FamilySettings.pinned(defaults: defaults),
             [.sudoku: Difficulty(level: 2), .sayings: Difficulty(level: 4), .upOrDown: Difficulty(level: 6)])
