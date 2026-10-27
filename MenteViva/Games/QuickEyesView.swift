@@ -45,6 +45,8 @@ struct QuickEyesView: View {
     @State private var optionsShownAt = Date.now
     @State private var startedAt = Date.now
     @State private var revealTask: Task<Void, Never>?
+    /// The answer beat (#235): set by a tap, cleared when the next picture flashes.
+    @State private var beat: AnswerBeat<String>?
     @State private var showCelebration = false
     @State private var finalDetail = ""
 
@@ -96,6 +98,7 @@ struct QuickEyesView: View {
                                     .font(.system(size: 56))
                             }
                             .buttonStyle(AnswerTileStyle())
+                            .answerMark(beat?.mark(for: emoji) ?? .plain)
                             .accessibilityLabel(emoji)
                         }
                     }
@@ -113,12 +116,18 @@ struct QuickEyesView: View {
             instruction: AppLanguage.localized(phase == .showing ? "game.quickeyes.instruction" : "game.quickeyes.prompt")
         )
         .onAppear(perform: startRound)
-        .onDisappear { revealTask?.cancel() }
+        .onDisappear {
+            // A beat cut short must not leave taps locked if this state comes back.
+            revealTask?.cancel()
+            beat = nil
+        }
         // Same celebration as every other game (#45): progress, not points.
         .celebration(isPresented: $showCelebration, game: .quickEyes, detail: finalDetail, onPlayAgain: restart)
     }
 
     private func restart() {
+        revealTask?.cancel()
+        beat = nil
         progress.reset()
         correct = 0
         speedBonus = 0
@@ -147,12 +156,16 @@ struct QuickEyesView: View {
         }
     }
 
+    /// Shows the answer for a beat (#235), ignoring taps meanwhile, then flashes the next picture.
     private func choose(_ emoji: String) {
-        guard phase == .choosing, !progress.isFinished else { return }
-        if emoji == target {
+        guard phase == .choosing, beat == nil, !progress.isFinished else { return }
+        let answer = AnswerBeat(tapped: emoji, right: target)
+        beat = answer
+        if answer.isRight {
             correct += 1
             missedLastRound = false
             Feedback.play(.success)
+            AccessibilityNotification.Announcement(AppLanguage.localized("game.answer.right")).post()
             // Speed bonus: up to 5 points, one less per half-second of reaction time.
             let reaction = Date.now.timeIntervalSince(optionsShownAt)
             speedBonus += max(0, 5 - Int(reaction / 0.5))
@@ -160,13 +173,22 @@ struct QuickEyesView: View {
         } else {
             missedLastRound = true
             Feedback.play(.miss)
+            AccessibilityNotification.Announcement(
+                String(format: AppLanguage.localized("game.answer.was %@"), target)
+            ).post()
             // Relax one step after a miss so the next round feels kinder.
             displayTime = min(startDisplayTime, displayTime / shrinkFactor)
         }
-        if progress.completeRound() {
-            finish()
-        } else {
-            startRound()
+        // The beat shares revealTask, so leaving the game or restarting cancels it too.
+        revealTask = Task { @MainActor in
+            try? await Task.sleep(for: .seconds(answer.duration(voiceOver: UIAccessibility.isVoiceOverRunning)))
+            guard !Task.isCancelled else { return }
+            beat = nil
+            if progress.completeRound() {
+                finish()
+            } else {
+                startRound()
+            }
         }
     }
 
