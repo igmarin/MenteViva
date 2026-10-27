@@ -2,6 +2,21 @@
 
 Newest first. Format: date — decision — why — what would make us revisit.
 
+## 2026-10-27 — The reference player is "an older family member"; no diagnosis in the repo
+
+**Decision (owner):** the docs no longer name the reference player's diagnosis or tie a health
+detail to a real person. Where they did, they now say "an older family member" who needs
+errorless, familiar, low-failure play: the design consequence, without the private detail.
+
+- It is a family member's health information, and the repo is public and permanent.
+- The audience moved on (2026-10-26: anyone who wants an active mind), so the old framing misleads.
+- A diagnosis beside a game reads as a medical claim, which the copy rule forbids.
+- The archived Jev requests 007–010, 012 and 016 were edited the same way. Their responses are
+  unchanged; the original wording stays in git history, which the owner keeps as it is.
+- General research on populations (research-2026-09.md §1) stays: it is about evidence, not a person.
+
+Revisit when: never for the detail itself; new docs follow the same rule.
+
 ## 2026-10-27 — Open source under Apache-2.0; the name and icon stay ours
 
 **Question:** the repo moved to `igmarin/menteviva` to be open source. Under which licence, given
@@ -17,8 +32,8 @@ the app will also be sold on the App Store?
   would tangle outside contributions. Source-available set aside: not open source.
 - §6 grants no trademark rights: the name "MenteViva" and the icon are not licensed (README).
 
-**Before the repo goes public:** the docs and history describe the reference player's diagnosis;
-the owner decides whether to anonymize first (not part of this decision).
+**Before the repo goes public:** the reference player's diagnosis came out of the docs (entry
+above); history keeps it, by the owner's choice.
 
 Revisit when: someone ships a copy that confuses players (register the name), or the lawyer review
 (#226) advises otherwise.
@@ -39,8 +54,8 @@ The hackathon is fuel, not the goal. Owner decisions, made in one planning sessi
    the plist keys, the xcconfig and `proxy/` are removed; git history keeps them. Jev stays a
    **dev-machine tool for validating product ideas** (`TYPESAFE_API_KEY`, `tools/ask_jev.sh`).
    Nothing leaves the device any more.
-2. **Audience: anyone who wants an active mind**, with the reference player still the owner's
-   father. The design stays dementia-friendly (it helps everyone). Copy: "Ejercicio mental
+2. **Audience: anyone who wants an active mind**, with the reference player still an older
+   family member. The design stays errorless and calm (it helps everyone). Copy: "Ejercicio mental
    divertido / Fun mental exercise". **A game *exercises* memory or attention; copy never says it
    *improves* them.** No medical claims, unchanged.
 3. **Levels 1–10 per game**, replacing easy/medium/hard (migrated easy→2, medium→4, hard→6). A
@@ -356,7 +371,7 @@ Revisit when: a shared session coordinator owns round timing across screens.
 
 ## 2026-09-20 — Per-person libraries are the north star; per-device today
 
-Owner walk-through of `question-audit.md`: dad (early dementia), mom (healthy
+Owner walk-through of `question-audit.md`: an older family member, mom (healthy
 60+) and the owner (healthy 40+) are equal design floors. Each person
 eventually gets their own game library (allocate, don't delete: Jev 008).
 Today "who is playing" is the device (dad's iPad = dad) and Jev mix/difficulty
@@ -366,12 +381,12 @@ what his library should be; per-device also makes sync non-blocking.
 Revisit when: a second person shares one device, or the playtest reorders
 dad's library.
 
-## 2026-09-20 — Audience corrected: early dementia, not just "preventive"
+## 2026-09-20 — Audience corrected: an older family player, not just "preventive"
 
 > Corrects the 2026-09-19 "Primary audience" entry and Jev 001 (right answer to a wrong state). Locked on 2026-09-22.
 
-The owner clarified the real player has a diagnosis of **early-stage dementia**
-(mild). The earlier "healthy preventive 60+" framing was the *state* we fed the
+The owner clarified the real player is **an older family member who needs errorless,
+familiar, low-failure play**. The earlier "healthy preventive 60+" framing was the *state* we fed the
 model — not the truth — and it produced a confident-but-wrong answer (Jev 001).
 
 Re-asked with the corrected state (Jev 007, archived): primary audience =
@@ -380,7 +395,7 @@ familiarity/reminiscence** over speed drills (0.93); familiar/personalized
 content meaningfully beats generic emoji (0.88).
 
 Consequences:
-- **Design target is now early dementia**, not generic prevention. The existing
+- **Design target is now errorless, familiar play**, not generic prevention. The existing
   warm, no-fail, big-target design already leans this way — the shift is in
   *which* games and content matter, not in replacing the whole app.
 - **Evidence is mixed, not better:** MCI is the best-supported population for
@@ -561,7 +576,7 @@ Revisit when: playtest data shows one game dominates or gets abandoned.
 
 ## 2026-09-19 — Primary audience: healthy-to-mild older adults, preventive focus
 
-> **Superseded by** 2026-09-20 "Audience corrected: early dementia" and 2026-09-22 "Audience locked". Current audience: older adults 60+ including early cognitive decline; the adult child is the buyer. Kept for the record.
+> **Superseded by** 2026-09-20 "Audience corrected: an older family player" and 2026-09-22 "Audience locked". Current audience: older adults 60+ including early cognitive decline; the adult child is the buyer. Kept for the record.
 
 Decided with the grill interview: dad is "mostly fine, we want to keep him
 engaged." We are **not** building for diagnosed cognitive impairment

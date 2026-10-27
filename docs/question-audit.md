@@ -13,8 +13,8 @@ whose `state` is wrong is wrong no matter how confident the output.
 
 - ❌ Wrong version: "which population — healthy preventive 60+ vs MCI vs
   dementia?" — answered Jev 001 against a state that said *healthy preventive*.
-- ✅ Real version: **the player is an older adult with a diagnosis of early
-  dementia.** This changes both the evidence and the design bar.
+- ✅ Real version: **the player is an older family member who needs
+  errorless, familiar, low-failure play.** This changes both the evidence and the design bar.
 - How answered: Jev 007 (re-run with the corrected state) + research §1.
 - Consequence: the *evidence* does not improve: MCI is the best-supported
   population for cognitive training, established dementia shows no reliable
@@ -64,7 +64,7 @@ whose `state` is wrong is wrong no matter how confident the output.
 ## Review results — 2026-09-20 (owner walk-through)
 
 The owner re-examined every question against the reality that this is a
-**family**, not one person: dad (early dementia), mom (healthy 60+), owner
+**family**, not one person: an older family member, mom (healthy 60+), owner
 (healthy 40+). Answers:
 
 | # | Question | Answer |

@@ -11,7 +11,7 @@ newspaper puzzles, card and table games, and sayings. The owner wants **more var
 higher ceiling**. One new game per hobby takes his library from 4 to 7, and every game below
 deals fresh content each time, so no session looks like the last.
 
-The design floor does not move: errorless, familiar, calm (product brief; early-stage dementia).
+The design floor does not move: errorless, familiar, calm (product brief).
 "Harder" means a bigger puzzle, never a timer, a lost game or a score on screen.
 
 ## Shared rules (all three)

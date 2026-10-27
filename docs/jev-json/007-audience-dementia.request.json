@@ -1,14 +1,14 @@
 {
   "model": "jev-latest",
   "state": {
-    "player": "older adult with a diagnosis of early-stage dementia (mild), motivated, supported by an adult-child family member",
+    "player": "older family member who needs errorless, familiar, low-failure play, motivated, supported by an adult-child family member",
     "evidence": "cognitive training shows small-moderate benefit in mild cognitive impairment; early-stage dementia benefits more from cognitive stimulation (familiarity, reminiscence, errorless/low-failure) than from speed drills",
     "app": "warm bilingual cognitive mini-games, offline-first, no-fail design, non-clinical",
     "regulatory": "marketing must stay 'fun mental exercise'; no treatment or prevention claims"
   },
   "questions": {
-    "primary_audience": {"type":"choice","instructions":"Which population should v1 primarily serve, given the actual player has early-stage dementia?","criteria":{"mci_early_dementia":"Early dementia / mild cognitive impairment","healthy_preventive_60plus":"Healthy preventive 60+","established_dementia":"Moderate dementia","general_public":"General brain-training public"}},
-    "design_shift": {"type":"noul","instructions":"For an early-dementia player, should the design emphasize errorless, low-failure, familiarity/reminiscence mechanics over speed and adaptive-difficulty drills?","criteria":{"true":"Familiarity and low failure serve this population best","false":"Speed and adaptive difficulty remain more valuable"}},
+    "primary_audience": {"type":"choice","instructions":"Which population should v1 primarily serve, given the actual player is an older family member who needs errorless, familiar play?","criteria":{"mci_early_dementia":"Early dementia / mild cognitive impairment","healthy_preventive_60plus":"Healthy preventive 60+","established_dementia":"Moderate dementia","general_public":"General brain-training public"}},
+    "design_shift": {"type":"noul","instructions":"For this player, should the design emphasize errorless, low-failure, familiarity/reminiscence mechanics over speed and adaptive-difficulty drills?","criteria":{"true":"Familiarity and low failure serve this population best","false":"Speed and adaptive difficulty remain more valuable"}},
     "familiar_content": {"type":"noul","instructions":"Would personalized or familiar content (family photos, familiar objects) meaningfully improve engagement over generic emoji categories for early dementia?","criteria":{"true":"Familiar content drives engagement and meaning","false":"Generic categories are sufficient"}}
   }
 }

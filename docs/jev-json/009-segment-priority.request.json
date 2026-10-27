@@ -2,7 +2,7 @@
   "model": "jev-latest",
   "state": {
     "product": "MenteViva, iOS cognitive-exercise app: 5 warm-toned games (memory pairs, Stroop, category fluency, adaptive math, visual discrimination), offline-first, EN/ES bilingual, no accounts, no clinical scores. Zero third-party deps, solo developer. Copy ceiling: 'fun mental exercise' — no medical claims ever (FDA general-wellness line; FTC fined Lumosity $2M; App Store 1.4.1).",
-    "product_truth": "Primary player is the owner's dad, early-stage dementia. Jev request 008 ruled allocate-not-delete: familiarity-based games serve dad, other games serve mom/owner. Per-person libraries are the north star. Informal playtest: scoring confusing, games get boring, not visually attractive.",
+    "product_truth": "Primary player is an older family member who needs errorless, familiar play. Jev request 008 ruled allocate-not-delete: familiarity-based games serve that player, other games serve mom/owner. Per-person libraries are the north star. Informal playtest: scoring confusing, games get boring, not visually attractive.",
     "market_evidence": {
       "S1_older_adults_60plus": "1.1B people 60+ worldwide (2023) doubling to 2.1B by 2050 (WHO). 52.7M Americans 50+ play video games = 45% of that population (AARP 2023). Incumbents (Lumosity 100M registered, Elevate 50M downloads) are generic, subscription-priced, not dementia-adapted. Our edge: errorless low-failure design, one-time price, EN+ES.",
       "CH_caregiver_channel": "63M US family caregivers (AARP/NAC 2025). Adult child installs and pays; parent plays. Attach rate unknown.",
