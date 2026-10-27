@@ -2,6 +2,28 @@
 
 Newest first. Format: date — decision — why — what would make us revisit.
 
+## 2026-10-27 — Privacy stance: no analytics, no age data, no uploads (#189)
+
+**Decision (owner, from the 2026-10-26 legal-risk audit):** MenteViva carries none of the
+exposures below today, by design. Each line is a rule, so nobody reintroduces one by accident.
+
+- **No analytics, session replay or crash-reporting SDKs.** Zero third-party dependencies, and the
+  app makes no network calls (2026-10-26), so nothing leaves the device. Adding one would break the
+  privacy policy. Revisit when: a ticket proposes any SDK; it needs a new entry and a policy rewrite first.
+- **No accounts, no age gate, no age data.** The policy says we collect no age information and the
+  app is not directed at children. A gate would mean collecting what we promise not to.
+  Revisit when: a store or law requires an age signal; Apple's own age-rating API is the first place to look.
+- **No external fonts.** The app uses system fonts and `site/` loads only local CSS. Google Fonts
+  appear only in internal `docs/design/*.html` mockups; inline them if those are ever published.
+  Revisit when: a page under `site/` or a published mockup links any third-party host.
+- **No user-shared content.** Memory photos stay in private on-device storage and are never
+  uploaded, so no DMCA agent is needed. Revisit when: sharing between users is added (#11 family sharing).
+- **No marketing email.** Revisit when: a list is ever started; then an unsubscribe link and a
+  postal address go in every send.
+- **No price to show.** v1.0 is free with no in-app purchase (entry below), so renewal terms and
+  price copy are not needed. Revisit when: a price or subscription returns; then renewal terms go
+  next to the buy button, EN + ES.
+
 ## 2026-10-27 — v1.0 is free; support stays outside the app (#228)
 
 **Decision (owner):** MenteViva ships **free** on the App Store, with no price and no in-app
