@@ -6,6 +6,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 
 
 ### Added
+- **Set up: pin a game at any level 1–10 (#208):** each game with levels now has an "Automatic" switch and, when it is off, two big 100pt buttons (− / +) around "Level 4". At level 1 and 10 the button is dimmed and a line says it is the lowest or highest level. VoiceOver reads it as one adjustable control: swipe up or down to change the level.
 - **A gentle nudge after a strong game and a one-line level note (#207):** when the rules move a game up by one, by two, or ease it, the first time you open it that day you see one warm line under the header ("We made it a little harder: you've been doing great.", "Two steps up: you're flying!", "We made it a little calmer, so you enjoy it more.") in `.title2`, read by VoiceOver, gone once the first round starts and only once per day; never mentions misses or accuracy. When you finish a strong game below level 10 and the game isn't pinned, the celebration asks once that day "That was perfect. Shall we try the next level?" with two 100pt buttons "Yes, let's try" / "Keep it as it is" (equally prominent, neither default) — Yes lifts the level by one now with reason `.chosen` so the staircase counts from there.
 - **Finish the Saying (#181):** a ninth game. The start of a familiar saying; pick the
   ending from big buttons and hear the whole saying read aloud. Sixty sayings in each
