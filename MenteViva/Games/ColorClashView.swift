@@ -107,6 +107,11 @@ struct ColorClashView: View {
         String(format: AppLanguage.localized("game.colorclash.a11y.stimulus %@ %@"), ink.label, ink.shapeName)
     }
 
+    /// The guide's example move in words (#243): the ink of the word on screen, the tile to tap.
+    private var guideExample: String {
+        String(format: AppLanguage.localized("guide.colorclash.example %@"), ink.label.lowercased())
+    }
+
     static func score(correct: Int) -> Int {
         correct * 10
     }
@@ -154,6 +159,7 @@ struct ColorClashView: View {
                     }
                     .buttonStyle(.plain)
                     .answerMark(beat?.mark(for: candidate) ?? .plain)
+                    .guideTarget(candidate == ink)
                     .accessibilityLabel(candidate.label)
                     .accessibilityHint(candidate.shapeName)
                 }
@@ -164,6 +170,7 @@ struct ColorClashView: View {
         .padding()
         .fitOrScroll()
         .gameHeader(.stroop, instruction: AppLanguage.localized("game.colorclash.instruction"))
+        .firstPlayGuide(.stroop, line: AppLanguage.localized("game.colorclash.instruction"), example: guideExample)
         .onAppear {
             startedAt = .now
             deal()
