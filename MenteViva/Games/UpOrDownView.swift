@@ -59,6 +59,7 @@ struct UpOrDownView: View {
         .padding()
         .fitOrScroll()
         .gameHeader(.upOrDown, instruction: AppLanguage.localized("game.upordown.instruction"))
+        .firstPlayGuide(.upOrDown, line: AppLanguage.localized("game.upordown.guide"), example: guideExample)
         .celebration(isPresented: $showCelebration, game: .upOrDown, detail: finalDetail, onPlayAgain: restart)
     }
 
@@ -113,6 +114,7 @@ struct UpOrDownView: View {
                         .offset(y: Double(pile.count - 1) * 12 - (lift && fits ? 14 : 0))
                         .shadow(color: .black.opacity(lift && fits ? 0.25 : 0), radius: 6, y: 4)
                         .modifier(MissCue(active: missedPile == index ? $missed : .constant(false)))
+                        .guideTarget(fits && index == deal.playablePiles.first)
                         .accessibilityLabel(name(top))
                         .accessibilityValue(fits ? AppLanguage.localized("game.upordown.a11y.fits") : "")
                     } else {
@@ -182,6 +184,14 @@ struct UpOrDownView: View {
         }
         .disabled(deal.deck.isEmpty)
         .accessibilityLabel(String(format: AppLanguage.localized("game.upordown.a11y.deck %lld"), deal.deck.count))
+    }
+
+    /// The guide's example move in words: the first card that fits, or a hint when none does (#243).
+    private var guideExample: String {
+        guard let deal, let index = deal.playablePiles.first, let top = deal.piles[index].last else {
+            return AppLanguage.localized("guide.upordown.example.none")
+        }
+        return String(format: AppLanguage.localized("guide.upordown.example %@"), name(top))
     }
 
     private func rankName(_ card: PlayingCard) -> String { AppLanguage.localized(card.rankKey) }
