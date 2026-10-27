@@ -14,6 +14,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 ### Fixed
 - **One migration at launch, reads stay pure (#264):** pre-level pins and plan levels used to migrate inside every `pinned()` / `storedDifficulty()` read (Home renders, the plan, Set up). Now `LevelMigration.runOnce` batches both at launch behind one `level.migration.done` flag and reads do not write.
 
+### Changed
+- **Sudoku, ten levels (#201):** boards now grow from 4×4 to 6×6 to a classic 9×9 with more blanks at every step. Levels 2, 4 and 6 deal exactly the old easy, medium and hard boards; where the wanted board doesn't fit, a fuller smaller board steps in.
+
 ### Added
 - **"Let me show you" first-play guide (#243):** the first time you open Sudoku, Up or Down or Color Clash, a calm card says the one-line instruction (in big type, read aloud), highlights one example move with a soft pulse and an arrow (just the highlight with Reduce Motion), and offers two 100pt buttons, "Got it" and "Show me again". VoiceOver treats it as a modal with the example described in words. Settings has a new row, "Show the game guides again".
 - **Set up: pin a game at any level 1–10 (#208):** each game with levels now has an "Automatic" switch and, when it is off, two big 100pt buttons (− / +) around "Level 4". At level 1 and 10 the button is dimmed and a line says it is the lowest or highest level. VoiceOver reads it as one adjustable control: swipe up or down to change the level.

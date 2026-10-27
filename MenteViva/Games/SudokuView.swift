@@ -2,9 +2,10 @@ import SwiftData
 import SwiftUI
 import UIKit
 
-/// Sudoku (#179): a 4×4 or 6×6 board made fresh each game (`SudokuPuzzle`). Tap a
-/// square, then a big number. A number that doesn't fit gets a gentle "try another";
-/// "Show me one" fills the square when he's stuck. No timer.
+/// Sudoku (#179): a 4×4, 6×6 or 9×9 board made fresh each game (`SudokuPuzzle`,
+/// levels 1–10 in #201). Tap a square, then a big number. A number that doesn't
+/// fit gets a gentle "try another"; "Show me one" fills the square when he's
+/// stuck. No timer.
 struct SudokuView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.accessibilityReduceMotion) private var reduceMotion

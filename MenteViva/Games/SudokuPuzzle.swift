@@ -15,35 +15,68 @@ nonisolated struct SudokuPuzzle: Equatable {
     static let gap = 2.0
     private static let attempts = 20
 
-    /// Board size and blanks for a level. Hard is 6×6 only where its squares keep 60pt;
-    /// on narrower screens (iPhone SE) it stays 4×4 with more blanks.
-    /// Uses the temporary 1–3/4–5/6–10 bridge until the ten-step ticket lands (#197).
+    /// One row per level 1...10 (#201): the wanted board and, when its squares
+    /// would drop under 60pt, the fallback board (`nil` where the wanted board
+    /// fits everywhere the app runs). Levels 2/4/6 keep the old easy/medium/hard
+    /// boards (4×4 with 4/8 blanks, 6×6 with 18) so migrated players notice
+    /// nothing; boards grow 4×4 → 6×6 → 9×9 and blanks never shrink, so a higher
+    /// level is never easier.
+    typealias BoardSpec = (size: Int, blanks: Int)
+    static let layoutsPerLevel: [(wanted: BoardSpec, fallback: BoardSpec?)] = [
+        ((4, 3), nil),
+        ((4, 4), nil),
+        ((4, 6), nil),
+        ((4, 8), nil),
+        ((4, 10), nil),
+        ((6, 18), (4, 10)),
+        ((6, 21), (4, 11)),
+        ((6, 24), (4, 12)),
+        ((9, 40), (6, 26)),
+        ((9, 46), (6, 28)),
+    ]
+
+    /// Board size and blanks for a level: the wanted board where its squares
+    /// keep 60pt, else its fallback, else a 4×4 that fits everywhere the app
+    /// runs (4×60 + 3×2 = 246pt, under the narrowest board). The last resort
+    /// keeps the table's hardest 4×4 blanks, never more cells than exist.
     static func layout(for difficulty: Difficulty, width: Double) -> (size: Int, blanks: Int) {
-        difficulty.pick((4, 4), (4, 8), squaresFit(6, in: width) ? (6, 18) : (4, 10))
+        let row = difficulty.values(layoutsPerLevel)
+        if squaresFit(row.wanted.size, in: width) { return row.wanted }
+        if let fallback = row.fallback, squaresFit(fallback.size, in: width) { return fallback }
+        return (4, min(row.fallback?.blanks ?? row.wanted.blanks, 12))
+    }
+
+    /// Box shape per board size: 4×4 and 6×6 as before, 9×9 in 3×3 boxes.
+    static func boxes(for size: Int) -> (rows: Int, columns: Int) {
+        switch size {
+        case 9: (3, 3)
+        case 6: (2, 3)
+        default: (2, 2)
+        }
     }
 
     static func make<G: RandomNumberGenerator>(
         difficulty: Difficulty, width: Double, using generator: inout G
     ) -> SudokuPuzzle {
         let (size, blanks) = layout(for: difficulty, width: width)
-        let boxColumns = size == 6 ? 3 : 2
+        let (boxRows, boxColumns) = boxes(for: size)
         var best: (puzzle: SudokuPuzzle, removed: Int)?
         for _ in 0..<attempts {
-            let solution = solvedGrid(size: size, boxRows: 2, boxColumns: boxColumns, using: &generator)
+            let solution = solvedGrid(size: size, boxRows: boxRows, boxColumns: boxColumns, using: &generator)
             var grid = solution.map { Optional($0) }
             var removed = 0
             // Keep a removal only while the board still has exactly one solution.
             for index in grid.indices.shuffled(using: &generator) where removed < blanks {
                 let kept = grid[index]
                 grid[index] = nil
-                if solutionCount(grid, size: size, boxRows: 2, boxColumns: boxColumns, limit: 2) == 1 {
+                if solutionCount(grid, size: size, boxRows: boxRows, boxColumns: boxColumns, limit: 2) == 1 {
                     removed += 1
                 } else {
                     grid[index] = kept
                 }
             }
             let puzzle = SudokuPuzzle(
-                size: size, boxRows: 2, boxColumns: boxColumns, solution: solution,
+                size: size, boxRows: boxRows, boxColumns: boxColumns, solution: solution,
                 givens: Set(grid.indices.filter { grid[$0] != nil }))
             if removed == blanks { return puzzle }
             if removed > best?.removed ?? -1 { best = (puzzle, removed) }
