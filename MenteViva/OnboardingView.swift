@@ -265,7 +265,7 @@ struct OnboardingView: View {
             Button {
                 hasSeenOnboarding = true
             } label: {
-                Text(AppLanguage.localized("warmup.decline"))
+                Text(AppLanguage.localized("warmup.notnow"))
                     .font(.title2)
             }
             .buttonStyle(AnswerTileStyle(strength: 0.10))

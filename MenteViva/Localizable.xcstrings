@@ -8971,7 +8971,7 @@
         }
       }
     },
-    "warmup.decline" : {
+    "warmup.notnow" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
