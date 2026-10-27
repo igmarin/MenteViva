@@ -122,4 +122,22 @@ final class LevelExplainTests: XCTestCase {
             LevelExplainPolicy.shouldOffer(
                 accuracy: 0.64, game: .memoryMatch, level: Difficulty(level: 4), isPinned: false, alreadyOfferedToday: false))
     }
+
+    func testGivenYesWhenTappedTwiceSameDayThenLevelOnlyRisesOnce() {
+        let defaults = UserDefaults(suiteName: "LevelExplainTests.doubleTap")!
+        defaults.removePersistentDomain(forName: "LevelExplainTests.doubleTap")
+        let today = "2026-11-07"
+        let plan = DailyPlan(
+            dayStamp: today, games: [.memoryMatch, .stroop, .quickEyes], difficulty: [.stroop: Difficulty(level: 4)],
+            changes: [:]
+        )
+        PlanStore.cache(plan, defaults: defaults)
+        LevelOfferStore.applyChosen(for: .stroop, today: today, defaults: defaults)
+        LevelOfferStore.markOffered(for: .stroop, today: today, defaults: defaults)
+        LevelOfferStore.applyChosen(for: .stroop, today: today, defaults: defaults)
+        XCTAssertEqual(PlanStore.storedDifficulty(defaults: defaults)[.stroop], Difficulty(level: 5))
+        XCTAssertEqual(
+            PlanStore.cachedPlan(defaults: defaults)?.changes[.stroop],
+            LevelChange(previous: Difficulty(level: 4), reason: .chosen))
+    }
 }

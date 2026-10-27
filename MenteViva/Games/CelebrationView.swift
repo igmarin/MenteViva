@@ -21,6 +21,10 @@ struct CelebrationView: View {
     @State private var arrived = false
     /// This celebration's warm headline, picked once when it appears (#242).
     @State private var headline: String?
+    /// Whether the offer has been answered in this presentation (#207): flipping
+    /// this triggers a re-render so the offer disappears even though
+    /// `LevelOfferStore` (UserDefaults) is not observed by SwiftUI.
+    @State private var offerAnswered = false
 
     /// Today's games from the plan saved for today; nil before there is one.
     private var today: TodayRun? {
@@ -30,6 +34,7 @@ struct CelebrationView: View {
 
     /// Offer context for #207 2: strong game, not pinned, below 10, once per day.
     private var shouldShowOffer: Bool {
+        guard !offerAnswered else { return false }
         guard !LevelOfferStore.hasOfferedToday(for: game, today: PlanStore.dayStamp()) else { return false }
         guard FamilySettings.pinned()[game] == nil else { return false }
         guard game.hasLevels else { return false }
@@ -52,9 +57,19 @@ struct CelebrationView: View {
                 .accessibilityAddTraits(.isHeader)
             HStack(spacing: 12) {
                 Button {
+                    // Guard: UserDefaults is not observed, and the tap can
+                    // race a double-tap — check before lifting the level so
+                    // only one tap per day can raise it.
                     let today = PlanStore.dayStamp()
+                    guard !LevelOfferStore.hasOfferedToday(for: game, today: today) else {
+                        offerAnswered = true
+                        return
+                    }
+                    guard !offerAnswered else { return }
+                    offerAnswered = true
                     LevelOfferStore.applyChosen(for: game, today: today)
                     LevelOfferStore.markOffered(for: game, today: today)
+                    Feedback.play(.success)
                 } label: {
                     Text(AppLanguage.localized("level.offer.yes"))
                         .font(.title2.weight(.semibold))
@@ -65,7 +80,9 @@ struct CelebrationView: View {
                 .buttonStyle(.plain)
                 .accessibilityLabel(AppLanguage.localized("level.offer.yes"))
                 Button {
+                    offerAnswered = true
                     LevelOfferStore.markOffered(for: game, today: PlanStore.dayStamp())
+                    Feedback.play(.success)
                 } label: {
                     Text(AppLanguage.localized("level.offer.keep"))
                         .font(.title2.weight(.semibold))

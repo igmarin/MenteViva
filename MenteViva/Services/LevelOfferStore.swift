@@ -35,8 +35,10 @@ nonisolated enum LevelOfferStore {
 
     /// Player tapped "Yes, let's try" (#207 3): one level higher right now,
     /// stored like a staircase change with reason `.chosen` so the staircase
-    /// then counts from there.
+    /// then counts from there. Guarded to once per day — a second tap cannot
+    /// lift the level again, even if the view races a double-tap (#262).
     static func applyChosen(for game: GameID, today: String, defaults: UserDefaults = .standard) {
+        guard !hasOfferedToday(for: game, today: today, defaults: defaults) else { return }
         let before = PlanStore.storedDifficulty(defaults: defaults)
         let current = before[game] ?? Difficulty(level: 4)
         guard current.level < 10 else { return }
