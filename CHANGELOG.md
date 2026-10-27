@@ -21,7 +21,14 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
   typed per photo in For family and stay on this device. A new setting, "Read names
   aloud", speaks the name on its own (off by default); the speaker button always works.
 
+### Fixed
+- **Up or Down deck pulses only when stuck (#241):** the deck used to jump to 1.06 and stay there because the pulse was set once on appear; it now repeats 1.0↔1.06 at 0.8s while stuck, stops when a card fits or the deck empties, stays still under Reduce Motion (amber ring only), and VoiceOver says the stuck note once.
+
 ### Changed
+- **Sudoku and Finish the Saying are easier to tap (#236):** every answer button
+  and Sudoku's "Show me one" are back to at least 100pt tall, so they're
+  comfortable at the largest text sizes. The board still keeps 60pt squares;
+  overflow scrolls.
 - **Warm celebrations (#242):** the end of a game says one of five warm headlines ("Well done!",
   "Lovely work!", "That was great!", "Beautifully done!", "Nicely played!"), never the same one
   twice in a row. Nothing in them mentions a score or speed.

@@ -78,7 +78,7 @@ struct SayingsView: View {
                                     .multilineTextAlignment(.center)
                                     .padding(.horizontal, 12)
                             }
-                            .buttonStyle(AnswerTileStyle(minHeight: 80))
+                            .buttonStyle(AnswerTileStyle(minHeight: 100))
                             .disabled(dimmed.contains(choice))
                             .opacity(dimmed.contains(choice) ? 0.4 : 1)
                             .modifier(MissCue(active: missedChoice == choice ? $missed : .constant(false)))
