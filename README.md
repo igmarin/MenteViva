@@ -74,3 +74,13 @@ This is **not** a medical app. The science (see docs/research-2026-09.md):
 brain games alone show weak transfer to daily life; they work best as one
 ingredient of an engaged, active life. Our copy says "fun mental exercise" and
 never promises cognitive outcomes. That's the honest position and the legally safe one.
+
+## License
+
+The code and docs are licensed under the [Apache License 2.0](LICENSE); see [NOTICE](NOTICE).
+You may use, change and redistribute them, keeping the copyright and licence notices.
+
+The name **MenteViva** and the app icon are not covered by that licence (Apache-2.0 §6 grants
+no trademark rights). If you ship your own build, give it a different name and icon.
+
+Contributions are accepted under the same licence (Apache-2.0 §5).

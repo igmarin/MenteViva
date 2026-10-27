@@ -2,6 +2,27 @@
 
 Newest first. Format: date — decision — why — what would make us revisit.
 
+## 2026-10-27 — Open source under Apache-2.0; the name and icon stay ours
+
+**Question:** the repo moved to `igmarin/menteviva` to be open source. Under which licence, given
+the app will also be sold on the App Store?
+
+**Decision (owner, from Apache-2.0 / MIT / GPL-3.0 / source-available):** **Apache-2.0** — `LICENSE`
+(the canonical text) and `NOTICE` at the root.
+
+- Permissive, so the owner and anyone else may sell builds; the owner holds the copyright, so the
+  App Store release is unaffected.
+- Explicit patent grant, and contributions arrive under the same terms (§5).
+- GPL-3.0 set aside: its terms are widely read as incompatible with App Store distribution, which
+  would tangle outside contributions. Source-available set aside: not open source.
+- §6 grants no trademark rights: the name "MenteViva" and the icon are not licensed (README).
+
+**Before the repo goes public:** the docs and history describe the reference player's diagnosis;
+the owner decides whether to anonymize first (not part of this decision).
+
+Revisit when: someone ships a copy that confuses players (register the name), or the lawyer review
+(#226) advises otherwise.
+
 ## 2026-10-26 — Direction to v1.0: an App Store game worth buying, built by several agents
 
 **Question:** what does MenteViva need to be a paid App Store app, and how do we build it fast
