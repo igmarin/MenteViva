@@ -253,7 +253,7 @@ struct HomeView: View {
                 .font(.title3.weight(.heavy))
                 .accessibilityAddTraits(.isHeader)
             LazyVGrid(columns: columns, spacing: 16) {
-                ForEach(GameID.allCases.filter { !hidden.contains($0) }, id: \.self) { game in
+                ForEach(GameID.released.filter { !hidden.contains($0) }, id: \.self) { game in
                     NavigationLink(value: game) {
                         GameCard(game: game)
                     }
@@ -293,6 +293,8 @@ struct HomeView: View {
         case .sudoku: SudokuView()
         case .upOrDown: UpOrDownView()
         case .sayings: SayingsView()
+        // Placeholders: unreachable while the game is in `GameID.unreleased`.
+        case .repeatSequence, .tangram, .tilePairs, .slidingBlocks: Text("")
         }
     }
 }

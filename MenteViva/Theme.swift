@@ -52,6 +52,10 @@ extension GameID {
         case .sudoku: Color(light: 0x1F5F7A, dark: 0x86C5DE)
         case .upOrDown: Color(light: 0x6B4F2A, dark: 0xD2B48C)
         case .sayings: Color(light: 0x5B3F8C, dark: 0xC3A8F0)
+        case .repeatSequence: Color(light: 0x0F6B3C, dark: 0x6FD39A)
+        case .tangram: Color(light: 0xA3246B, dark: 0xF08CC2)
+        case .tilePairs: Color(light: 0x4B5563, dark: 0xB8C0CC)
+        case .slidingBlocks: Color(light: 0xA14A0E, dark: 0xF2A56B)
         }
     }
 }

@@ -138,7 +138,8 @@ How the numbers are kept honest:
 3. `GameID` case, ink colour in `Theme.swift`, emblem in `GameCard.swift`, route in `HomeView.destination`,
    weight in `DailyPolicy.value`.
 4. Strings in `Localizable.xcstrings`, EN + ES, in the same commit.
-5. `swift tools/generate_project.swift`, then build, test and lint (AGENTS.md Workflow 5).
+5. When the game is playable, remove its ID from `GameID.unreleased`.
+6. `swift tools/generate_project.swift`, then build, test and lint (AGENTS.md Workflow 5).
 
 ## What leaves the device
 

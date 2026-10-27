@@ -20,6 +20,7 @@ nonisolated enum DailyPolicy {
     static let value: [GameID: Double] = [
         .memoryMatch: 1.0, .quickEyes: 0.8, .categoryFluency: 0.7, .stroop: 0.3, .mathStreaks: 0.3,
         .reminiscence: 0.7, .sudoku: 0.8, .upOrDown: 0.8, .sayings: 0.8,
+        .repeatSequence: 0.8, .tangram: 0.8, .tilePairs: 0.8, .slidingBlocks: 0.8,
     ]
     static let gamesPerDay = 3
     /// Days a difficulty stays put after it changes. The 14-day accuracy window
@@ -40,7 +41,7 @@ nonisolated enum DailyPolicy {
         pinned: [GameID: Difficulty] = [:],
         hidden: Set<GameID> = []
     ) -> DailyPlan {
-        let ranked = GameID.allCases.filter { !hidden.contains($0) }.enumerated()
+        let ranked = GameID.released.filter { !hidden.contains($0) }.enumerated()
             .map { (index: $0.offset, game: $0.element, score: mixScore($0.element, state)) }
             .sorted { $0.score != $1.score ? $0.score > $1.score : $0.index < $1.index }
         var difficulty: [GameID: Difficulty] = [:]
