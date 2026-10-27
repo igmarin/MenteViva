@@ -2,14 +2,17 @@ name: ocr PR Review
 
 # One review per PR, not one per push: `synchronize` fires on every commit and
 # the Actions minutes are out (AGENTS.md). Pre-commit hook + pre-push hook cover
-# the rest. Runs alongside claude-code-review.yml; posts as the nebula-rs-guard
-# bot via GH_PAT, like rs-guard's own review workflow.
+# the rest. Runs alongside claude-code-review.yml and posts with the workflow's
+# own token: the old GH_PAT bot had no access after the move to igmarin/menteviva,
+# so every run reviewed fine and then failed with 404 while posting.
 on:
   pull_request:
     types: [opened, ready_for_review]
 
 permissions:
   contents: read
+  # The summary is an issue comment on the PR; the findings are review comments.
+  issues: write
   pull-requests: write
 
 concurrency:
@@ -18,7 +21,12 @@ concurrency:
 
 jobs:
   review:
-    if: github.event.pull_request.draft == false
+    # Fork PRs are skipped: GitHub gives them no secrets (no OPENAI_API_KEY) and a
+    # read-only token, so the review could neither run nor post. Their authors get
+    # the Claude review and the maintainer's; never switch this to pull_request_target.
+    if: >-
+      github.event.pull_request.draft == false &&
+      github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
@@ -39,7 +47,7 @@ jobs:
           llm_protocol: openai-responses
           llm_use_anthropic: 'false'
           llm_extra_body: '{}'
-          github_token: ${{ secrets.GH_PAT || github.token }}
+          github_token: ${{ github.token }}
           effort: medium
           background: >-
             MenteViva is a SwiftUI iOS app (see AGENTS.md). Flag: crashes and
