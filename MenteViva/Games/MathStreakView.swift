@@ -69,7 +69,11 @@ struct MathStreakView: View {
         .fitOrScroll()
         .gameHeader(.mathStreaks, instruction: AppLanguage.localized("game.math.instruction") + " " + question.spoken())
         .onAppear(perform: deal)
-        .onDisappear { beatTask?.cancel() }
+        .onDisappear {
+            // A beat cut short must not leave taps locked if this state comes back.
+            beatTask?.cancel()
+            beat = nil
+        }
         .celebration(isPresented: $showCelebration, game: .mathStreaks, detail: finalDetail, onPlayAgain: restart)
     }
 
@@ -100,6 +104,7 @@ struct MathStreakView: View {
             bestStreak = max(bestStreak, streak)
             correct += 1
             Feedback.play(.success)
+            AccessibilityNotification.Announcement(AppLanguage.localized("game.answer.right")).post()
         } else {
             streak = 0
             Feedback.play(.miss)

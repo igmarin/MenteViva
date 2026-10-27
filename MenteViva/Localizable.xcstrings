@@ -704,6 +704,22 @@
         }
       }
     },
+    "game.answer.right" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "That's it!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Eso es!"
+          }
+        }
+      }
+    },
     "game.answer.was %@" : {
       "extractionState" : "stale",
       "localizations" : {

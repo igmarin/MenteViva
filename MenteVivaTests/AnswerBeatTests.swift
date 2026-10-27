@@ -25,7 +25,7 @@ final class AnswerBeatTests: XCTestCase {
         XCTAssertEqual(beat.duration(voiceOver: true), 1.2)
     }
 
-    func testGivenAMissWhenAnnouncedThenTheLineNamesTheAnswerWarmly() throws {
+    func testGivenAnAnswerWhenAnnouncedThenBothLinesAreWarmInEnglishAndSpanish() throws {
         let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
         let data = try Data(contentsOf: root.appendingPathComponent("MenteViva/Localizable.xcstrings"))
         let json = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
@@ -34,5 +34,9 @@ final class AnswerBeatTests: XCTestCase {
         let localizations = try XCTUnwrap(entry["localizations"] as? [String: [String: [String: String]]])
         XCTAssertEqual(localizations["en"]?["stringUnit"]?["value"], "The answer was %@")
         XCTAssertEqual(localizations["es"]?["stringUnit"]?["value"], "La respuesta era %@")
+        let right = try XCTUnwrap(strings["game.answer.right"] as? [String: Any])
+        let rightLines = try XCTUnwrap(right["localizations"] as? [String: [String: [String: String]]])
+        XCTAssertEqual(rightLines["en"]?["stringUnit"]?["value"], "That's it!")
+        XCTAssertEqual(rightLines["es"]?["stringUnit"]?["value"], "¡Eso es!")
     }
 }

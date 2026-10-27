@@ -116,7 +116,11 @@ struct QuickEyesView: View {
             instruction: AppLanguage.localized(phase == .showing ? "game.quickeyes.instruction" : "game.quickeyes.prompt")
         )
         .onAppear(perform: startRound)
-        .onDisappear { revealTask?.cancel() }
+        .onDisappear {
+            // A beat cut short must not leave taps locked if this state comes back.
+            revealTask?.cancel()
+            beat = nil
+        }
         // Same celebration as every other game (#45): progress, not points.
         .celebration(isPresented: $showCelebration, game: .quickEyes, detail: finalDetail, onPlayAgain: restart)
     }
@@ -161,6 +165,7 @@ struct QuickEyesView: View {
             correct += 1
             missedLastRound = false
             Feedback.play(.success)
+            AccessibilityNotification.Announcement(AppLanguage.localized("game.answer.right")).post()
             // Speed bonus: up to 5 points, one less per half-second of reaction time.
             let reaction = Date.now.timeIntervalSince(optionsShownAt)
             speedBonus += max(0, 5 - Int(reaction / 0.5))

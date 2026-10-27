@@ -92,7 +92,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
   game emoji + score, warm weekly summary line, gentle empty state.
 
 ### Changed
-- **Every answer shows itself (#235):** in Quick Eyes, Color Clash and Number Trail the answer you tapped gets a check, or a soft amber outline with the right answer checked beside it, for a moment before the next round; taps wait meanwhile. It shows with sound off too, and VoiceOver says "The answer was …" after a miss.
+- **Every answer shows itself (#235):** in Quick Eyes, Color Clash and Number Trail the answer you tapped gets a check, or a soft amber outline with the right answer checked beside it, for a moment before the next round; taps wait meanwhile. It shows with sound off too, and VoiceOver says "That's it!" after a right answer and "The answer was …" after a miss.
 - **Every game comes round at least once a week (#279):** a game left out of today's games for a week takes the last place, whatever the minutes or focus chosen; the first places stay as they were.
 - **Color Clash and Number Trail come round too (#277):** they used to be left out of today's three every day; now each is dealt about two days in fourteen, and Memory Lane still comes up most.
 - **Quick Eyes has ten levels (#200):** the picture flashes from 2 seconds at level 1 down to a 0.16-second floor at level 10. Levels 2, 4 and 6 play exactly as easy, medium and hard did.

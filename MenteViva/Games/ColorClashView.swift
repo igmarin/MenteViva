@@ -168,7 +168,11 @@ struct ColorClashView: View {
             startedAt = .now
             deal()
         }
-        .onDisappear { beatTask?.cancel() }
+        .onDisappear {
+            // A beat cut short must not leave taps locked if this state comes back.
+            beatTask?.cancel()
+            beat = nil
+        }
         .celebration(isPresented: $showCelebration, game: .stroop, detail: finalDetail, onPlayAgain: restart)
     }
 
@@ -197,6 +201,7 @@ struct ColorClashView: View {
         if answer.isRight {
             correct += 1
             Feedback.play(.success)
+            AccessibilityNotification.Announcement(AppLanguage.localized("game.answer.right")).post()
         } else {
             Feedback.play(.miss)
             AccessibilityNotification.Announcement(
