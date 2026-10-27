@@ -185,6 +185,7 @@ private struct FamilyGameRow: View {
 
     init(game: GameID) {
         self.game = game
+        FamilySettings.migrateLegacyPins()
         _pin = AppStorage(wrappedValue: FamilySettings.auto, FamilySettings.pinKey(game))
     }
 
@@ -205,7 +206,7 @@ private struct FamilyGameRow: View {
             return AppLanguage.localized("family.hidden")
         }
         guard game.hasLevels else { return AppLanguage.localized("family.game.nolevel") }
-        return levelLine(game, pin: Difficulty(rawValue: pin))
+        return levelLine(game, pin: FamilySettings.pinnedLevel(pin))
     }
 }
 
@@ -218,6 +219,7 @@ private struct FamilyGameView: View {
 
     init(game: GameID) {
         self.game = game
+        FamilySettings.migrateLegacyPins()
         _pin = AppStorage(wrappedValue: FamilySettings.auto, FamilySettings.pinKey(game))
     }
 
@@ -250,8 +252,10 @@ private struct FamilyGameView: View {
             if game.hasLevels {
                 Section {
                     choice(FamilySettings.auto, AppLanguage.localized("family.difficulty.auto"))
+                    // Three pins until #208 brings the full 1–10 picker: the
+                    // migrated easy/medium/hard rows, now labelled by level.
                     ForEach([Difficulty.easy, .medium, .hard], id: \.self) { level in
-                        choice(level.rawValue, AppLanguage.localized(level.title))
+                        choice(level.level, AppLanguage.localized(level.title))
                     }
                 } header: {
                     Text(AppLanguage.localized("family.difficulty")).font(.title3)

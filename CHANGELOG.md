@@ -4,6 +4,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 
 ## [Unreleased]
 
+### Changed
+- **A gentler staircase, still in one day's plan (#198):** levels 1–10 climb one after a strong game, two after two strong in a row, and ease one when the latest game was hard going; once a day, never mid-game, clamped to 1...10. Memory Lane's strong/weak thresholds (0.65/0.45) are lowered because its accuracy counts moves (pairs / moves) so even good play sits near 0.6. The old 7-day hold is gone — the window since the last change is the hold now.
+
 ### Added
 - **Finish the Saying (#181):** a ninth game. The start of a familiar saying; pick the
   ending from big buttons and hear the whole saying read aloud. Sixty sayings in each

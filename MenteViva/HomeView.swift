@@ -275,7 +275,9 @@ struct HomeView: View {
                     FetchDescriptor<GameSession>(
                         predicate: #Predicate { $0.playedAt >= since }))) ?? []
             let difficulty = PlanStore.storedDifficulty()
-            let state = PlayerStateSummary.build(from: recent, difficulty: difficulty)
+            let state = PlayerStateSummary.build(
+                from: recent, difficulty: difficulty,
+                lastChange: PlanStore.lastDifficultyChange())
             let plan = PlanStore.todaysPlan(state: state)
             self.plan = plan.games
         }

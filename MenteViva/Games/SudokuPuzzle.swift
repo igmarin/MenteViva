@@ -17,12 +17,9 @@ nonisolated struct SudokuPuzzle: Equatable {
 
     /// Board size and blanks for a level. Hard is 6×6 only where its squares keep 60pt;
     /// on narrower screens (iPhone SE) it stays 4×4 with more blanks.
+    /// Uses the temporary 1–3/4–5/6–10 bridge until the ten-step ticket lands (#197).
     static func layout(for difficulty: Difficulty, width: Double) -> (size: Int, blanks: Int) {
-        switch difficulty {
-        case .easy: (4, 4)
-        case .medium: (4, 8)
-        case .hard: squaresFit(6, in: width) ? (6, 18) : (4, 10)
-        }
+        difficulty.pick((4, 4), (4, 8), squaresFit(6, in: width) ? (6, 18) : (4, 10))
     }
 
     static func make<G: RandomNumberGenerator>(

@@ -51,7 +51,7 @@ struct ProgressRates: Equatable {
                 share: Double(mine.count) / Double(total),
                 accuracy: accuracy, level: level,
                 accuracyTrend: enough ? trend(accuracy, before.meanAccuracy) : nil,
-                levelTrend: enough ? trend(level?.rawValue, latestLevel(before)?.rawValue) : nil)
+                levelTrend: enough ? trend(level?.level, latestLevel(before)?.level) : nil)
         }
     }
 
@@ -67,6 +67,6 @@ struct ProgressRates: Equatable {
     }
 
     private static func latestLevel(_ sessions: [GameSession]) -> Difficulty? {
-        sessions.filter { $0.level != nil }.max { $0.playedAt < $1.playedAt }?.level
+        sessions.filter { $0.resolvedLevel != nil }.max { $0.playedAt < $1.playedAt }?.resolvedLevel
     }
 }

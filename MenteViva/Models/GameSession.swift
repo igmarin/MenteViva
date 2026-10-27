@@ -21,16 +21,26 @@ final class GameSession {
     var attempts: Int = 0
     var playedAt: Date = Date.now
     /// Difficulty the game was played at (#107); -1 for sessions saved before
-    /// it was recorded, which never count toward a level trend.
+    /// it was recorded, which never count toward a level trend. Kept for old
+    /// rows only: new sessions write `level` (#197, lightweight migration).
     var difficulty: Int = -1
+    /// Level the game was played at, 1...10; 0 means not recorded, so rows
+    /// saved before levels existed keep reading through `difficulty`.
+    var level: Int = 0
 
     /// 0...1, or nil when the session predates accuracy tracking.
     var accuracy: Double? {
         attempts > 0 ? min(Double(correct) / Double(attempts), 1) : nil
     }
 
-    /// nil for legacy sessions without a recorded difficulty.
-    var level: Difficulty? { Difficulty(rawValue: difficulty) }
+    /// The level this session counts as: the recorded level when present,
+    /// else a migrated legacy value (easy/medium/hard read as 2/4/6), else
+    /// nil for sessions saved before any difficulty was recorded (#197).
+    var resolvedLevel: Difficulty? {
+        if level > 0 { return Difficulty(level: level) }
+        guard (0...2).contains(difficulty) else { return nil }
+        return Difficulty(level: [2, 4, 6][difficulty])
+    }
 
     /// The game this session belongs to; "memory" is Memory Lane's pre-#57 ID.
     var game: GameID? { GameID(rawValue: gameID) ?? (gameID == "memory" ? .memoryMatch : nil) }
@@ -45,7 +55,7 @@ final class GameSession {
         self.durationSeconds = durationSeconds
         self.correct = correct
         self.attempts = attempts
-        self.difficulty = difficulty?.rawValue ?? -1
+        self.level = difficulty?.level ?? 0
         self.playedAt = .now
     }
 }
