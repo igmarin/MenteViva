@@ -33,11 +33,11 @@ final class NumberTrailQuestionTests: XCTestCase {
     }
 
     func testGivenEasyWhenManyQuestionsThenOnlyAddition() {
-        XCTAssertEqual(Set(questions(.easy).map(\.operation)), [.plus])
+        XCTAssertEqual(Set(questions(Difficulty(level: 2)).map(\.operation)), [.plus])
     }
 
     func testGivenMediumWhenManyQuestionsThenAddAndSubtractOnlyAndNeverBelowZero() {
-        let medium = questions(.medium)
+        let medium = questions(Difficulty(level: 4))
         XCTAssertEqual(Set(medium.map(\.operation)), [.plus, .minus])
         for q in medium {
             XCTAssertGreaterThanOrEqual(q.answer, 0, q.text)
@@ -46,11 +46,11 @@ final class NumberTrailQuestionTests: XCTestCase {
     }
 
     func testGivenHardWhenManyQuestionsThenAllFourOperatorsAppear() {
-        XCTAssertEqual(Set(questions(.hard).map(\.operation)), Set(NumberTrailQuestion.Operation.allCases))
+        XCTAssertEqual(Set(questions(Difficulty(level: 6)).map(\.operation)), Set(NumberTrailQuestion.Operation.allCases))
     }
 
     func testGivenHardWhenDivisionThenAlwaysExactWithNonzeroDivisor() {
-        let divisions = questions(.hard).filter { $0.operation == .dividedBy }
+        let divisions = questions(Difficulty(level: 6)).filter { $0.operation == .dividedBy }
         XCTAssertFalse(divisions.isEmpty)
         for q in divisions {
             XCTAssertNotEqual(q.right, 0, q.text)
@@ -60,7 +60,7 @@ final class NumberTrailQuestionTests: XCTestCase {
     }
 
     func testGivenAnyDifficultyWhenManyQuestionsThenEveryAnswerIsCorrectAndPositive() {
-        for difficulty in [Difficulty.easy, .medium, .hard] {
+        for difficulty in [Difficulty(level: 2), Difficulty(level: 4), Difficulty(level: 6)] {
             for q in questions(difficulty, seed: 7) {
                 XCTAssertEqual(q.answer, expected(q), q.text)
                 XCTAssertGreaterThan(q.answer, 0, q.text)
@@ -69,7 +69,7 @@ final class NumberTrailQuestionTests: XCTestCase {
     }
 
     func testGivenHardWhenTimesOrDivideThenFactorsStayInTheTimesTables() {
-        for q in questions(.hard) where q.operation == .times || q.operation == .dividedBy {
+        for q in questions(Difficulty(level: 6)) where q.operation == .times || q.operation == .dividedBy {
             let factors = q.operation == .times ? [q.left, q.right] : [q.right, q.answer]
             XCTAssertTrue(factors.allSatisfy { (2...10).contains($0) }, q.text)
         }

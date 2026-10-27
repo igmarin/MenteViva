@@ -64,13 +64,6 @@ final class DifficultyTests: XCTestCase {
         XCTAssertEqual(Difficulty(level: 10).level, 10)
     }
 
-    func testGivenLevelsOneToTenWhenBridgedThenEasyMediumHardBands() {
-        let bands = (1...10).map { Difficulty(level: $0).pick("easy", "medium", "hard") }
-        XCTAssertEqual(
-            bands,
-            ["easy", "easy", "easy", "medium", "medium"] + Array(repeating: "hard", count: 5))
-    }
-
     func testGivenTenValueTableWhenValuesThenPicksByLevel() {
         let table = Array(1...10)
         for level in 1...10 {

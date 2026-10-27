@@ -11,7 +11,7 @@ final class DailyPolicyTests: XCTestCase {
 
     private func stats(
         sessions: Int = 0, accuracy: Double? = nil, days: Int = 14,
-        level: Difficulty = .medium, recent: [Double] = []
+        level: Difficulty = Difficulty(level: 4), recent: [Double] = []
     ) -> Stats {
         Stats(
             sessionsLast14Days: sessions, meanAccuracy: accuracy, meanRoundsCompleted: 8,
@@ -62,8 +62,8 @@ final class DailyPolicyTests: XCTestCase {
     func testGivenPinnedGameWithLowAccuracyWhenPlanThenThePinIsKept() {
         // Staircase eases only with a weak recent accuracy; with empty recent
         // accuracies even an unpinned game holds. Pin still wins regardless.
-        let s = state([.quickEyes: stats(level: .hard, recent: [0.2])])
-        XCTAssertEqual(plan(s, pinned: [.quickEyes: .hard]).difficulty[.quickEyes], .hard)
+        let s = state([.quickEyes: stats(level: Difficulty(level: 6), recent: [0.2])])
+        XCTAssertEqual(plan(s, pinned: [.quickEyes: Difficulty(level: 6)]).difficulty[.quickEyes], Difficulty(level: 6))
         XCTAssertEqual(plan(s).difficulty[.quickEyes], Difficulty(level: 5))  // auto eases one level
     }
 
@@ -98,7 +98,7 @@ final class DailyPolicyTests: XCTestCase {
     func testGivenGameMissingFromStateWhenPlanThenTreatedAsNeverPlayed() {
         let p = DailyPolicy.plan(state: PlayerStateSummary(games: [:]), dayStamp: "2026-09-30")
         XCTAssertEqual(p.games, [.memoryMatch, .quickEyes, .sudoku])
-        XCTAssertTrue(GameID.allCases.allSatisfy { p.difficulty[$0] == .medium })
+        XCTAssertTrue(GameID.allCases.allSatisfy { p.difficulty[$0] == Difficulty(level: 4) })
     }
 
     // MARK: Staircase (#198)
@@ -150,12 +150,12 @@ final class DailyPolicyTests: XCTestCase {
 
     func testGivenMiddlingAccuracyOrNoAccuraciesWhenPlanThenDifficultyKeptWithNoChange() {
         let s = state([
-            .stroop: stats(level: .medium, recent: [0.80]),
-            .mathStreaks: stats(level: .hard, recent: []),
+            .stroop: stats(level: Difficulty(level: 4), recent: [0.80]),
+            .mathStreaks: stats(level: Difficulty(level: 6), recent: []),
         ])
-        XCTAssertEqual(plan(s).difficulty[.stroop], .medium)
+        XCTAssertEqual(plan(s).difficulty[.stroop], Difficulty(level: 4))
         XCTAssertNil(plan(s).changes[.stroop])
-        XCTAssertEqual(plan(s).difficulty[.mathStreaks], .hard)
+        XCTAssertEqual(plan(s).difficulty[.mathStreaks], Difficulty(level: 6))
         XCTAssertNil(plan(s).changes[.mathStreaks])
     }
 
