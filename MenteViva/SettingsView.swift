@@ -10,6 +10,7 @@ struct SettingsView: View {
     @AppStorage(SettingsView.biggerTextKey) private var biggerText = false
     @AppStorage(SoundPlayer.enabledKey) private var soundEnabled = true
     @AppStorage(CaptionSpeaker.speakNamesKey) private var speakNames = false
+    @State private var guidesReset = false
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
@@ -64,6 +65,28 @@ struct SettingsView: View {
                     Toggle(AppLanguage.localized("settings.textsize"), isOn: $biggerText)
                         .font(.title3)
                         .frame(minHeight: 100)
+                }
+
+                Section {
+                    // Brings back each game's "Let me show you" guide (#243).
+                    Button {
+                        FirstPlayGuideStore.resetAll()
+                        guidesReset = true
+                    } label: {
+                        HStack {
+                            Text(AppLanguage.localized("settings.guides"))
+                            Spacer()
+                            if guidesReset {
+                                Image(systemName: "checkmark")
+                                    .accessibilityHidden(true)
+                            }
+                        }
+                        .font(.title3)
+                        .frame(maxWidth: .infinity, minHeight: 100, alignment: .leading)
+                        .contentShape(Rectangle())
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityValue(guidesReset ? AppLanguage.localized("settings.guides.done") : "")
                 }
 
                 Section {

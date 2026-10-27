@@ -42,3 +42,19 @@ Haptics are the same principle: `UIImpactFeedbackGenerator` / `UINotificationFee
 | Haptics independent of sound? | No — one toggle governs both; simpler |
 | Does sound block the UI? | Never — played off the main path, fire-and-forget |
 | Silent switch? | Respected — `.ambient` session |
+
+## Warmer tones (#240, 2026-10)
+
+Finding 6 of `docs/review-2026-10-gamefeel.md`: the tones were thin blips and the miss tone sat below
+what an iPhone speaker reproduces. The note tables and the render moved into the pure `ToneSynth`
+(`Services/ToneSynth.swift`); `SoundPlayer` only plays. Tests render every event and check the peak.
+
+| | Before | After |
+|---|---|---|
+| Envelope | 10 ms attack, linear fall to zero at 25% of the note (a 25-45 ms blip) | 10 ms attack, exponential decay over the whole note (e^-5 at the end, no hard zero) |
+| Timbre | pure sine | sine + second harmonic at 20% |
+| Miss tone | 180 Hz, 0.16 s, 0.28 | 280 Hz, 0.20 s, 0.28 (still the lowest and softest) |
+| Tap / success / complete | unchanged pitches and levels | same pitches and lengths |
+| Peak | at most 0.5 | at most 0.6 (0.5 x 1.2), tested to stay under 0.8 |
+
+Not decided by a test: how it sounds. The owner listens on a device before merging.

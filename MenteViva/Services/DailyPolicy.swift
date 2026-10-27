@@ -177,7 +177,8 @@ nonisolated enum DailyPolicy {
         hidden: Set<GameID> = [],
         profile: PlayerProfile = PlayerProfile()
     ) -> DailyPlan {
-        let ranked = GameID.released.filter { !hidden.contains($0) }.enumerated()
+        let visible = GameID.released.filter { !hidden.contains($0) }
+        let ranked = visible.enumerated()
             .map { (index: $0.offset, game: $0.element, score: mixScore($0.element, state, focus: profile.focus)) }
             .sorted { $0.score != $1.score ? $0.score > $1.score : $0.index < $1.index }
         var difficulty: [GameID: Difficulty] = [:]
@@ -197,9 +198,29 @@ nonisolated enum DailyPolicy {
         }
         return DailyPlan(
             dayStamp: dayStamp,
-            games: ranked.prefix(dealSize(for: profile)).map(\.game),
+            games: withLongestWaiting(Array(ranked.prefix(dealSize(for: profile)).map(\.game)), from: visible, state),
             difficulty: difficulty,
             changes: changes)
+    }
+
+    /// Days a game may go undealt before it is owed a place (#279).
+    static let restLimit = 7
+
+    /// A visible game that has rested `restLimit` days or more takes the deal's last place (#279): the
+    /// longest-rested one, ties in `GameID` order, and only from a game that has rested less. A rule and
+    /// not a weight, because with a focus or a short deal no weight keeps every game coming round, while
+    /// this one does. The first places never change, and a brand-new player (every game equally rested)
+    /// keeps the ranked deal.
+    private static func withLongestWaiting(
+        _ deal: [GameID], from visible: [GameID], _ state: PlayerStateSummary
+    ) -> [GameID] {
+        guard deal.count > 1, let last = deal.last else { return deal }
+        let rested = { (game: GameID) in state.games[game.rawValue]?.daysSinceLastPlayed ?? 14 }
+        let waiting = visible.filter { !deal.contains($0) && rested($0) >= restLimit }
+        guard let longest = waiting.max(by: { rested($0) < rested($1) }), rested(longest) > rested(last) else {
+            return deal
+        }
+        return Array(deal.dropLast()) + [longest]
     }
 
     /// Worth, times the focus boost, times how long the game has rested: a focus moves a game up the

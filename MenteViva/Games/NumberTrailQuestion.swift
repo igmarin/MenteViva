@@ -49,15 +49,27 @@ nonisolated struct NumberTrailQuestion: Equatable {
         spoken(localize: { AppLanguage.localized($0) })
     }
 
+    /// Operations per level: 1-3 only +, 4-5 +-, 6-10 all four.
+    /// Levels 2/4/6 match old easy/medium/hard.
+    static let operationsByLevel: [[Operation]] = [
+        [.plus], [.plus], [.plus],
+        [.plus, .minus], [.plus, .minus],
+        Operation.allCases, Operation.allCases, Operation.allCases, Operation.allCases, Operation.allCases,
+    ]
+    /// Starting sum per level.
+    static let startByLevel: [Int] = [10, 10, 10, 10, 15, 20, 20, 25, 30, 40]
+    /// Cap per level.
+    static let capByLevel: [Int] = [10, 20, 30, 50, 50, 50, 75, 100, 100, 120]
+
     static func operations(for difficulty: Difficulty) -> [Operation] {
-        difficulty.pick([.plus], [.plus, .minus], Operation.allCases)
+        difficulty.values(operationsByLevel)
     }
 
-    /// Largest sum (and largest number subtracted from): easy stays small, hard
-    /// starts bigger; medium is the original curve. Grows gently with the streak.
+    /// Largest sum (and largest number subtracted from) for this streak and level.
+    /// Grows by 5 with the streak, capped per level.
     static func maxSum(streak: Int, difficulty: Difficulty) -> Int {
-        let start = difficulty.pick(10, 10, 20)
-        let cap = difficulty.pick(20, 50, 50)
+        let start = difficulty.values(startByLevel)
+        let cap = difficulty.values(capByLevel)
         return min(start + streak * 5, cap)
     }
 
