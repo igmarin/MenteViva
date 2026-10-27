@@ -82,6 +82,10 @@ struct HomeView: View {
         // restarted the plan (a fetch) on every Back.
         // Keyed by day, it runs at launch and again when the day rolls over.
         .task(id: planDay) { refreshPlan() }
+        // Settings -> My plan can start the warm-up (#213), which replaces today's plan.
+        .onChange(of: showSettings) { _, shown in
+            if !shown { refreshPlan() }
+        }
         .onChange(of: scenePhase) { _, phase in
             if phase == .active { planDay = PlanStore.dayStamp() }
         }

@@ -73,7 +73,8 @@ extension Sequence<GameSession> {
 extension ModelContext {
     /// Inserts and saves at once (#106): a finished game must survive the app
     /// being closed before SwiftData's periodic autosave runs. A failed save is
-    /// logged, never shown — play is never interrupted.
+    /// logged, never shown — play is never interrupted. A game in its warm-up (#213) settles its
+    /// level here, so the next session, even the same day, starts where it should.
     func record(_ session: GameSession) {
         insert(session)
         do {
@@ -81,6 +82,9 @@ extension ModelContext {
         } catch {
             Logger(subsystem: "com.igmarin.MenteViva", category: "store")
                 .error("Could not save session: \(String(describing: error), privacy: .public)")
+        }
+        if let game = session.game {
+            WarmUpStore.sessionFinished(game: game, accuracy: session.accuracy, today: PlanStore.dayStamp())
         }
     }
 }

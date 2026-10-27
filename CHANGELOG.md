@@ -5,6 +5,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 ## [Unreleased]
 
 ### Added
+- **A warm-up that finds your pace (#213):** at the end of the first run, "Shall we play three games to find your pace?" ("Let's play" / "Not now"), and always in Settings → My plan; not offered when the app is set up for a family member. It deals three games from three different focus areas at the starting level. While a game is in its first three sessions its level may move two up or two down after each one, more than once a day; after that the normal staircase returns. Nothing is shown at the end but the usual warm celebration: no score, no result, no level screen.
 - **Tile Pairs — a mahjong-solitaire pairs game (#220/#221):** find two free tiles that match; layers offset with a shadow, free vs covered never colour alone (covered tiles are dimmed and hatched). Ten levels (8 to 72 tiles, 1–3 layers, look-alike tiles from level 5); every deal clears and a warm reshuffle mixes the tiles when stuck. Warm hints: "That one's covered — try a tile on the edge" and "Almost — those two are different"; "Show me a pair" highlights a free match. Tiles drawn in code with 18 symbols, 80–100pt targets where the board allows (≥60pt always), title2 instructions, VoiceOver only on free tiles with symbol names. Celebration records the session with its level.
 - **"Why these games" in Settings (#214):** a new screen that says plainly what the research found,
   what each game exercises, and what MenteViva is not. Every line that rests on a source carries
