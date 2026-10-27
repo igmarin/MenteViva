@@ -1,5 +1,6 @@
 import SwiftData
 import SwiftUI
+import UIKit
 
 /// Up or Down (#180): a golf solitaire with big cards drawn in SwiftUI (`UpOrDownDeal`).
 /// Tap a top card one higher or one lower than the open card; turn the deck when none
@@ -155,8 +156,23 @@ struct UpOrDownView: View {
         }
         .buttonStyle(.plain)
         .scaleEffect(nudge && pulse && !reduceMotion ? 1.06 : 1)
-        .animation(nudge && !reduceMotion ? .easeInOut(duration: 0.8).repeatForever() : .default, value: pulse)
-        .onAppear { pulse = true }
+        .animation(
+            nudge && !reduceMotion ? .easeInOut(duration: 0.8).repeatForever(autoreverses: true) : .default,
+            value: pulse
+        )
+        .onChange(of: nudge) { _, stuck in
+            if stuck {
+                if !reduceMotion { pulse.toggle() }
+                UIAccessibility.post(notification: .announcement, argument: AppLanguage.localized("game.upordown.stuck"))
+            } else {
+                pulse = false
+            }
+        }
+        .onAppear {
+            // Seed the pulse only when already stuck at appear; the stuck transition
+            // drives it afterwards so the deck doesn't jump and stay at 1.06.
+            if nudge, !reduceMotion { pulse = true }
+        }
         .disabled(deal.deck.isEmpty)
         .accessibilityLabel(String(format: AppLanguage.localized("game.upordown.a11y.deck %lld"), deal.deck.count))
     }
