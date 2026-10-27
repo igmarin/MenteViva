@@ -43,9 +43,9 @@ struct GameProgress: Equatable {
 
     var levelTrend: Trend? {
         guard let level, let previousLevel else { return nil }
-        return level.rawValue > previousLevel.rawValue
+        return level.level > previousLevel.level
             ? .up
-            : level.rawValue < previousLevel.rawValue ? .down : .steady
+            : level.level < previousLevel.level ? .down : .steady
     }
 
     var accuracyTrend: Trend? {
@@ -78,7 +78,7 @@ struct GameProgress: Equatable {
     }
 
     private static func latestLevel(_ sessions: [GameSession]) -> Difficulty? {
-        sessions.filter { $0.level != nil }.max { $0.playedAt < $1.playedAt }?.level
+        sessions.filter { $0.resolvedLevel != nil }.max { $0.playedAt < $1.playedAt }?.resolvedLevel
     }
 }
 

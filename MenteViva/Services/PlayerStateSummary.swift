@@ -33,7 +33,7 @@ nonisolated struct PlayerStateSummary: Codable {
                 meanAccuracy: mine.meanAccuracy,
                 meanRoundsCompleted: mine.isEmpty ? 0 : Double(mine.map(\.rounds).reduce(0, +)) / Double(mine.count),
                 daysSinceLastPlayed: last.flatMap { calendar.dateComponents([.day], from: $0, to: now).day } ?? window,
-                currentDifficulty: difficulty[game] ?? .medium)
+                currentDifficulty: difficulty[game] ?? Difficulty(level: 4))
         }
         return PlayerStateSummary(games: games)
     }

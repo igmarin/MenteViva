@@ -66,14 +66,14 @@ nonisolated enum DailyPolicy {
         _ stats: PlayerStateSummary.GameStats?,
         changedOn: String?, today: String
     ) -> Difficulty {
-        let current = stats?.currentDifficulty ?? .medium
+        let current = stats?.currentDifficulty ?? Difficulty(level: 4)
         guard let stats, stats.sessionsLast14Days > 0, let accuracy = stats.meanAccuracy else { return current }
         if let changedOn, daysBetween(changedOn, today) < holdDays { return current }
         if accuracy < easeBelowAccuracy {
-            return Difficulty(rawValue: current.rawValue - 1) ?? .easy
+            return Difficulty(level: current.level - 1)
         }
         if accuracy >= raiseAtAccuracy && stats.sessionsLast14Days >= raiseNeedsSessions {
-            return Difficulty(rawValue: current.rawValue + 1) ?? .hard
+            return Difficulty(level: current.level + 1)
         }
         return current
     }

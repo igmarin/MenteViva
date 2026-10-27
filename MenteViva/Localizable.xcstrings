@@ -34,50 +34,18 @@
         }
       }
     },
-    "difficulty.easy" : {
+    "difficulty.level" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Easy"
+            "value" : "Level %lld"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Fácil"
-          }
-        }
-      }
-    },
-    "difficulty.hard" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hard"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Difícil"
-          }
-        }
-      }
-    },
-    "difficulty.medium" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Medium"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Medio"
+            "value" : "Nivel %lld"
           }
         }
       }

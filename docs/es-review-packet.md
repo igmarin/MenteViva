@@ -25,9 +25,7 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | Key | English | Español | Used in | ✓ |
 |---|---|---|---|---|
 | `app.title` | Mente Viva | Mente Viva | HomeView, OnboardingView |  |
-| `difficulty.easy` | Easy | Fácil | Difficulty |  |
-| `difficulty.hard` | Hard | Difícil | Difficulty |  |
-| `difficulty.medium` | Medium | Medio | Difficulty |  |
+| `difficulty.level` | Level %lld | Nivel %lld | Difficulty |  |
 | `family.auto` | set automatically | ajustado automáticamente | SetUpView |  |
 | `family.caption.field` | A name or a few words | Un nombre o unas palabras | FamilyPhotoCaptionSheet |  |
 | `family.caption.placeholder` | Mom's house | La casa de mamá | FamilyPhotoCaptionSheet |  |

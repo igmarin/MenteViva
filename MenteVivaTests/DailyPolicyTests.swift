@@ -49,7 +49,7 @@ final class DailyPolicyTests: XCTestCase {
     func testGivenPinnedGameWithLowAccuracyWhenPlanThenThePinIsKept() {
         let s = state([.quickEyes: stats(sessions: 4, accuracy: 0.3, level: .hard)])
         XCTAssertEqual(plan(s, pinned: [.quickEyes: .hard]).difficulty[.quickEyes], .hard)
-        XCTAssertEqual(plan(s).difficulty[.quickEyes], .medium)  // auto would have eased it
+        XCTAssertEqual(plan(s).difficulty[.quickEyes], Difficulty(level: 5))  // auto eases one level
     }
 
     // MARK: Mix
@@ -90,19 +90,19 @@ final class DailyPolicyTests: XCTestCase {
 
     func testGivenLowAccuracyWhenPlanThenOneLevelEasier() {
         let p = plan(state([.stroop: stats(sessions: 1, accuracy: 0.6, level: .medium)]))
-        XCTAssertEqual(p.difficulty[.stroop], .easy)
+        XCTAssertEqual(p.difficulty[.stroop], Difficulty(level: 3))
         let hard = plan(state([.stroop: stats(sessions: 1, accuracy: 0.6, level: .hard)]))
-        XCTAssertEqual(hard.difficulty[.stroop], .medium, "never two levels in one day")
+        XCTAssertEqual(hard.difficulty[.stroop], Difficulty(level: 5), "never two levels in one day")
     }
 
-    func testGivenEasiestLevelAndLowAccuracyWhenPlanThenStaysEasy() {
+    func testGivenLevelTwoAndLowAccuracyWhenPlanThenEasesToLevelOne() {
         let p = plan(state([.stroop: stats(sessions: 4, accuracy: 0.2, level: .easy)]))
-        XCTAssertEqual(p.difficulty[.stroop], .easy)
+        XCTAssertEqual(p.difficulty[.stroop], Difficulty(level: 1))
     }
 
     func testGivenHighAccuracyAndEnoughSessionsWhenPlanThenOneLevelHarder() {
         let p = plan(state([.categoryFluency: stats(sessions: 3, accuracy: 0.95)]))
-        XCTAssertEqual(p.difficulty[.categoryFluency], .hard)
+        XCTAssertEqual(p.difficulty[.categoryFluency], Difficulty(level: 5))
     }
 
     func testGivenHighAccuracyButThinDataWhenPlanThenDifficultyKept() {
@@ -110,9 +110,9 @@ final class DailyPolicyTests: XCTestCase {
         XCTAssertEqual(p.difficulty[.categoryFluency], .medium)
     }
 
-    func testGivenHardAndHighAccuracyWhenPlanThenStaysHard() {
+    func testGivenLevelSixAndHighAccuracyWhenPlanThenMovesToLevelSeven() {
         let p = plan(state([.quickEyes: stats(sessions: 6, accuracy: 0.99, level: .hard)]))
-        XCTAssertEqual(p.difficulty[.quickEyes], .hard)
+        XCTAssertEqual(p.difficulty[.quickEyes], Difficulty(level: 7))
     }
 
     func testGivenMiddlingAccuracyOrNoSessionsWhenPlanThenDifficultyKept() {
@@ -135,9 +135,9 @@ final class DailyPolicyTests: XCTestCase {
         // changed 3 days ago -> held
         XCTAssertEqual(plan(low, lastChange: [.stroop: "2026-09-27"]).difficulty[.stroop], .medium)
         // changed exactly holdDays ago -> free to move again
-        XCTAssertEqual(plan(low, lastChange: [.stroop: "2026-09-23"]).difficulty[.stroop], .easy)
+        XCTAssertEqual(plan(low, lastChange: [.stroop: "2026-09-23"]).difficulty[.stroop], Difficulty(level: 3))
         // unparseable stamp never blocks a change
-        XCTAssertEqual(plan(low, lastChange: [.stroop: "garbage"]).difficulty[.stroop], .easy)
+        XCTAssertEqual(plan(low, lastChange: [.stroop: "garbage"]).difficulty[.stroop], Difficulty(level: 3))
     }
 
     // MARK: The real payload (docs/jev-json/011)
@@ -151,9 +151,9 @@ final class DailyPolicyTests: XCTestCase {
         let p = plan(summary, hidden: [.reminiscence, .sudoku, .upOrDown, .sayings])
         // Jev picked quick_eyes, category_fluency, memory_match for this payload.
         XCTAssertEqual(Set(p.games), [.quickEyes, .categoryFluency, .memoryMatch])
-        XCTAssertEqual(p.difficulty[.stroop], .easy)  // 0.60 accuracy, one session
-        XCTAssertEqual(p.difficulty[.mathStreaks], .medium)  // no sessions: no evidence, no change
-        XCTAssertEqual(p.difficulty[.memoryMatch], .medium)
+        XCTAssertEqual(p.difficulty[.stroop], Difficulty(level: 1))  // 0.60 accuracy, one session
+        XCTAssertEqual(p.difficulty[.mathStreaks], Difficulty(level: 1))  // no sessions: no evidence, no change
+        XCTAssertEqual(p.difficulty[.memoryMatch], Difficulty(level: 1))
     }
 
     // MARK: Today's plan, saved (PlanStore.todaysPlan)
@@ -170,9 +170,9 @@ final class DailyPolicyTests: XCTestCase {
             state: state, now: Date(timeIntervalSince1970: 1_790_000_000), defaults: defaults)
 
         XCTAssertEqual(plan, DailyPolicy.plan(state: state, dayStamp: plan.dayStamp))
-        XCTAssertEqual(plan.difficulty[.stroop], .easy)
+        XCTAssertEqual(plan.difficulty[.stroop], Difficulty(level: 3))
         XCTAssertEqual(PlanStore.cachedPlan(defaults: defaults), plan)
-        XCTAssertEqual(PlanStore.storedDifficulty(defaults: defaults)[.stroop], .easy)
+        XCTAssertEqual(PlanStore.storedDifficulty(defaults: defaults)[.stroop], Difficulty(level: 3))
         XCTAssertEqual(PlanStore.lastDifficultyChange(defaults: defaults)[.stroop], plan.dayStamp)
         XCTAssertNil(PlanStore.lastDifficultyChange(defaults: defaults)[.memoryMatch])
     }

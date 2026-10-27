@@ -64,6 +64,7 @@
 		30AC8D27570BF6EA00000031 /* DayGroupingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B2C1FA22781E7680000002B; };
 		35A281A4703D4C320000002E /* DayStampTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 704A57A9A9F6E88000000028; };
 		13FA9F9D70716C6800000037 /* DifficultyMappingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70A793986C53BDC600000031; };
+		DA5576CFCC1597B600000030 /* DifficultyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 144E32855AFBBF740000002A; };
 		68E9DA3C26CDDAAA00000034 /* FamilySettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E952D4EA684697A80000002E; };
 		1C320C298D4269F400000036 /* GameSessionStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE35901B6A0B75A200000030; };
 		578160CE8C24557000000031 /* MemoryBoardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2EEF523201AB21E0000002B; };
@@ -141,6 +142,7 @@
 		8B2C1FA22781E7680000002B /* DayGroupingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/DayGroupingTests.swift; sourceTree = SOURCE_ROOT; };
 		704A57A9A9F6E88000000028 /* DayStampTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/DayStampTests.swift; sourceTree = SOURCE_ROOT; };
 		70A793986C53BDC600000031 /* DifficultyMappingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/DifficultyMappingTests.swift; sourceTree = SOURCE_ROOT; };
+		144E32855AFBBF740000002A /* DifficultyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/DifficultyTests.swift; sourceTree = SOURCE_ROOT; };
 		E952D4EA684697A80000002E /* FamilySettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/FamilySettingsTests.swift; sourceTree = SOURCE_ROOT; };
 		DE35901B6A0B75A200000030 /* GameSessionStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/GameSessionStoreTests.swift; sourceTree = SOURCE_ROOT; };
 		A2EEF523201AB21E0000002B /* MemoryBoardTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/MemoryBoardTests.swift; sourceTree = SOURCE_ROOT; };
@@ -255,6 +257,7 @@
 				8B2C1FA22781E7680000002B /* DayGroupingTests.swift */,
 				704A57A9A9F6E88000000028 /* DayStampTests.swift */,
 				70A793986C53BDC600000031 /* DifficultyMappingTests.swift */,
+				144E32855AFBBF740000002A /* DifficultyTests.swift */,
 				E952D4EA684697A80000002E /* FamilySettingsTests.swift */,
 				DE35901B6A0B75A200000030 /* GameSessionStoreTests.swift */,
 				A2EEF523201AB21E0000002B /* MemoryBoardTests.swift */,
@@ -405,6 +408,7 @@
 				30AC8D27570BF6EA00000031 /* DayGroupingTests.swift in Sources */,
 				35A281A4703D4C320000002E /* DayStampTests.swift in Sources */,
 				13FA9F9D70716C6800000037 /* DifficultyMappingTests.swift in Sources */,
+				DA5576CFCC1597B600000030 /* DifficultyTests.swift in Sources */,
 				68E9DA3C26CDDAAA00000034 /* FamilySettingsTests.swift in Sources */,
 				1C320C298D4269F400000036 /* GameSessionStoreTests.swift in Sources */,
 				578160CE8C24557000000031 /* MemoryBoardTests.swift in Sources */,

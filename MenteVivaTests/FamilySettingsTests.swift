@@ -26,15 +26,16 @@ final class FamilySettingsTests: XCTestCase {
     }
 
     func testGivenAPinAndAnAutoEntryWhenReadingPinsThenOnlyThePinCounts() {
-        defaults.set(Difficulty.easy.rawValue, forKey: FamilySettings.pinKey(.quickEyes))
+        defaults.set(2, forKey: FamilySettings.pinKey(.quickEyes))
         defaults.set(FamilySettings.auto, forKey: FamilySettings.pinKey(.stroop))
-        XCTAssertEqual(FamilySettings.pinned(defaults: defaults), [.quickEyes: .easy])
+        XCTAssertEqual(
+            FamilySettings.pinned(defaults: defaults), [.quickEyes: Difficulty(level: 2)])
     }
 
     func testGivenAPinWhenStoredDifficultyThenThePinWinsOverAuto() {
-        defaults.set(try! JSONEncoder().encode(["quick_eyes": Difficulty.hard.rawValue]), forKey: "jev.difficulty")
-        XCTAssertEqual(Difficulty.stored(.quickEyes, defaults: defaults), .hard)
-        defaults.set(Difficulty.easy.rawValue, forKey: FamilySettings.pinKey(.quickEyes))
-        XCTAssertEqual(Difficulty.stored(.quickEyes, defaults: defaults), .easy)
+        defaults.set(try! JSONEncoder().encode(["quick_eyes": 2]), forKey: "jev.difficulty")
+        XCTAssertEqual(Difficulty.stored(.quickEyes, defaults: defaults), Difficulty(level: 6))
+        defaults.set(4, forKey: FamilySettings.pinKey(.quickEyes))
+        XCTAssertEqual(Difficulty.stored(.quickEyes, defaults: defaults), Difficulty(level: 4))
     }
 }

@@ -25,6 +25,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 - **Up or Down deck pulses only when stuck (#241):** the deck used to jump to 1.06 and stay there because the pulse was set once on appear; it now repeats 1.0↔1.06 at 0.8s while stuck, stops when a card fits or the deck empties, stays still under Reduce Motion (amber ring only), and VoiceOver says the stuck note once.
 
 ### Changed
+- **Levels 1–10 begin under the surface (#197):** `Difficulty` is now a level
+  from 1 to 10, and every saved easy/medium/hard reads back as level 2/4/6.
+  Set up and My progress say "Level 4" where they said "Medium". Games play
+  exactly as before until their own levels ticket lands.
 - **Sudoku and Finish the Saying are easier to tap (#236):** every answer button
   and Sudoku's "Show me one" are back to at least 100pt tall, so they're
   comfortable at the largest text sizes. The board still keeps 60pt squares;
