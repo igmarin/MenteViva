@@ -48,9 +48,32 @@ nonisolated struct UpOrDownDeal: Equatable {
     static let cardsPerPile = 3
     private static let easyTries = 50
 
-    /// Easy 4, medium 5, hard 6 piles, fewer where the row would put a card under 60pt.
+    /// One row per level 1...10 (#202): piles, whether King–Ace wraps, and
+    /// whether the deal retries until it can always be cleared. Levels 2/4/6
+    /// match old easy/medium/hard (4/5/6 piles, wrapping except hard, retries
+    /// only where easy did) so migrated players notice nothing; piles never
+    /// shrink, and wrapping and retries never come back once off.
+    static let rulesPerLevel: [(piles: Int, wraps: Bool, clearable: Bool)] = [
+        (3, true, true),
+        (4, true, true),
+        (4, true, true),
+        (5, true, false),
+        (5, true, false),
+        (6, false, false),
+        (6, false, false),
+        (7, false, false),
+        (7, false, false),
+        (7, false, false),
+    ]
+
+    /// The table row for a level.
+    static func rules(for difficulty: Difficulty) -> (piles: Int, wraps: Bool, clearable: Bool) {
+        difficulty.values(rulesPerLevel)
+    }
+
+    /// Piles for a level, fewer where the row would put a card under 60pt.
     static func pileCount(for difficulty: Difficulty, width: Double) -> Int {
-        var piles = difficulty.pick(4, 5, 6)
+        var piles = rules(for: difficulty).piles
         while piles > 3 && !cardsFit(piles, in: width) { piles -= 1 }
         return piles
     }
@@ -58,20 +81,21 @@ nonisolated struct UpOrDownDeal: Equatable {
     static func make<G: RandomNumberGenerator>(
         difficulty: Difficulty, width: Double, using generator: inout G
     ) -> UpOrDownDeal {
+        let rules = rules(for: difficulty)
         let count = pileCount(for: difficulty, width: width)
-        // Bands, not exact levels: the staircase reaches every level 1...10, and
-        // `== .hard` would hand levels 7–10 the easier wrapping deal (#197 bridge).
-        var made = deal(piles: count, wraps: difficulty.pick(true, true, false), using: &generator)
-        guard difficulty.pick(true, false, false) else { return made }
+        var made = deal(piles: count, wraps: rules.wraps, using: &generator)
+        guard rules.clearable else { return made }
         // Every candidate is checked before it is returned.
         for _ in 0..<easyTries {
             if greedyClears(made) { return made }
-            made = deal(piles: count, wraps: true, using: &generator)
+            made = deal(piles: count, wraps: rules.wraps, using: &generator)
         }
         return made
     }
 
-    /// Whether playable top cards are lifted as a hint: the easy band only (levels 1–3).
+    /// Whether playable top cards are lifted as a hint: the first three levels
+    /// only, where every deal is also checked clearable. It keeps the temporary
+    /// bridge because the levels table (#202) owns no hint knob.
     static func liftsPlayableCards(at difficulty: Difficulty) -> Bool {
         difficulty.pick(true, false, false)
     }

@@ -15,6 +15,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 - **One migration at launch, reads stay pure (#264):** pre-level pins and plan levels used to migrate inside every `pinned()` / `storedDifficulty()` read (Home renders, the plan, Set up). Now `LevelMigration.runOnce` batches both at launch behind one `level.migration.done` flag and reads do not write.
 
 ### Changed
+- **Up or Down, ten levels (#202):** tables now grow from 3 piles to 7, King–Ace stops wrapping from level 6, and only the first three levels always clear. Levels 2, 4 and 6 deal exactly the old easy, medium and hard games.
 - **Sudoku, ten levels (#201):** boards now grow from 4×4 to 6×6 to a classic 9×9 with more blanks at every step. Levels 2, 4 and 6 deal exactly the old easy, medium and hard boards; where the wanted board doesn't fit, a fuller smaller board steps in.
 
 ### Added
