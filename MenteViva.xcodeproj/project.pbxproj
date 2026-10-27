@@ -23,6 +23,7 @@
 		18180C4157C1561D00000021 /* MemoryMatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 250E769752DD6A430000001B; };
 		3B89FA1FCE6129CF00000019 /* MissCue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86AF3B4C1D5F21E500000013; };
 		253F249A6FF746A300000025 /* NumberTrailQuestion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4D45FC480DA5090000001F; };
+		17BB594169B12A7F0000001F /* QuickEyesDeal.swift in Sources */ = {isa = PBXBuildFile; fileRef = E685D4510ACEA17500000019; };
 		06316652C0C975F40000001F /* QuickEyesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D757F5352AE1A200000019; };
 		AD020DC30561DD5000000022 /* ReminiscenceDeck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A9D512184D7D07E0000001C; };
 		A87005C5B52DA39800000022 /* ReminiscenceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11EA4E85E31685D60000001C; };
@@ -105,6 +106,7 @@
 		2E81FDB867FC926B00000038 /* PlayerStateSummaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9231182AE986A100000032; };
 		56E513B81D42ABF300000033 /* PluralStringsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478EE86492C1F2390000002D; };
 		B881D90E62998BE900000033 /* ProgressRatesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7420A39CEC074ABF0000002D; };
+		9C33891BEB57002A00000033 /* QuickEyesDealTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2EDDDF03A4E9280000002D; };
 		8014E3CE95A477CB00000036 /* ReminiscenceDeckTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AC3CFEA0009500100000030; };
 		F54A8747C07E0F3800000039 /* ReminiscenceSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE180630A87047600000033; };
 		F3781E2CF00E20FA00000033 /* RoundProgressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690FA2BE3DFB9D180000002D; };
@@ -137,6 +139,7 @@
 		250E769752DD6A430000001B /* MemoryMatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/MemoryMatchView.swift; sourceTree = "<group>"; };
 		86AF3B4C1D5F21E500000013 /* MissCue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/MissCue.swift; sourceTree = "<group>"; };
 		1C4D45FC480DA5090000001F /* NumberTrailQuestion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/NumberTrailQuestion.swift; sourceTree = "<group>"; };
+		E685D4510ACEA17500000019 /* QuickEyesDeal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/QuickEyesDeal.swift; sourceTree = "<group>"; };
 		B4D757F5352AE1A200000019 /* QuickEyesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/QuickEyesView.swift; sourceTree = "<group>"; };
 		7A9D512184D7D07E0000001C /* ReminiscenceDeck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/ReminiscenceDeck.swift; sourceTree = "<group>"; };
 		11EA4E85E31685D60000001C /* ReminiscenceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/ReminiscenceView.swift; sourceTree = "<group>"; };
@@ -219,6 +222,7 @@
 		7D9231182AE986A100000032 /* PlayerStateSummaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/PlayerStateSummaryTests.swift; sourceTree = SOURCE_ROOT; };
 		478EE86492C1F2390000002D /* PluralStringsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/PluralStringsTests.swift; sourceTree = SOURCE_ROOT; };
 		7420A39CEC074ABF0000002D /* ProgressRatesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/ProgressRatesTests.swift; sourceTree = SOURCE_ROOT; };
+		EA2EDDDF03A4E9280000002D /* QuickEyesDealTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/QuickEyesDealTests.swift; sourceTree = SOURCE_ROOT; };
 		6AC3CFEA0009500100000030 /* ReminiscenceDeckTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/ReminiscenceDeckTests.swift; sourceTree = SOURCE_ROOT; };
 		4BE180630A87047600000033 /* ReminiscenceSessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/ReminiscenceSessionTests.swift; sourceTree = SOURCE_ROOT; };
 		690FA2BE3DFB9D180000002D /* RoundProgressTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/RoundProgressTests.swift; sourceTree = SOURCE_ROOT; };
@@ -277,6 +281,7 @@
 				250E769752DD6A430000001B /* MemoryMatchView.swift */,
 				86AF3B4C1D5F21E500000013 /* MissCue.swift */,
 				1C4D45FC480DA5090000001F /* NumberTrailQuestion.swift */,
+				E685D4510ACEA17500000019 /* QuickEyesDeal.swift */,
 				B4D757F5352AE1A200000019 /* QuickEyesView.swift */,
 				7A9D512184D7D07E0000001C /* ReminiscenceDeck.swift */,
 				11EA4E85E31685D60000001C /* ReminiscenceView.swift */,
@@ -370,6 +375,7 @@
 				7D9231182AE986A100000032 /* PlayerStateSummaryTests.swift */,
 				478EE86492C1F2390000002D /* PluralStringsTests.swift */,
 				7420A39CEC074ABF0000002D /* ProgressRatesTests.swift */,
+				EA2EDDDF03A4E9280000002D /* QuickEyesDealTests.swift */,
 				6AC3CFEA0009500100000030 /* ReminiscenceDeckTests.swift */,
 				4BE180630A87047600000033 /* ReminiscenceSessionTests.swift */,
 				690FA2BE3DFB9D180000002D /* RoundProgressTests.swift */,
@@ -467,6 +473,7 @@
 				18180C4157C1561D00000021 /* MemoryMatchView.swift in Sources */,
 				3B89FA1FCE6129CF00000019 /* MissCue.swift in Sources */,
 				253F249A6FF746A300000025 /* NumberTrailQuestion.swift in Sources */,
+				17BB594169B12A7F0000001F /* QuickEyesDeal.swift in Sources */,
 				06316652C0C975F40000001F /* QuickEyesView.swift in Sources */,
 				AD020DC30561DD5000000022 /* ReminiscenceDeck.swift in Sources */,
 				A87005C5B52DA39800000022 /* ReminiscenceView.swift in Sources */,
@@ -557,6 +564,7 @@
 				2E81FDB867FC926B00000038 /* PlayerStateSummaryTests.swift in Sources */,
 				56E513B81D42ABF300000033 /* PluralStringsTests.swift in Sources */,
 				B881D90E62998BE900000033 /* ProgressRatesTests.swift in Sources */,
+				9C33891BEB57002A00000033 /* QuickEyesDealTests.swift in Sources */,
 				8014E3CE95A477CB00000036 /* ReminiscenceDeckTests.swift in Sources */,
 				F54A8747C07E0F3800000039 /* ReminiscenceSessionTests.swift in Sources */,
 				F3781E2CF00E20FA00000033 /* RoundProgressTests.swift in Sources */,
