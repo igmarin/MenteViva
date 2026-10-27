@@ -6,8 +6,8 @@ import SwiftUI
 struct ColorClashView: View {
     @Environment(\.modelContext) private var modelContext
 
-    private enum Ink: String, CaseIterable {
-        case red, blue, green, orange
+    enum Ink: String, CaseIterable {
+        case red, blue, green, orange, purple, yellow
 
         var color: Color {
             switch self {
@@ -15,6 +15,8 @@ struct ColorClashView: View {
             case .blue: .blue
             case .green: .green
             case .orange: .orange
+            case .purple: .purple
+            case .yellow: Color(red: 0.7, green: 0.6, blue: 0.0)
             }
         }
 
@@ -24,6 +26,8 @@ struct ColorClashView: View {
             case .blue: AppLanguage.localized("game.colorclash.word.blue")
             case .green: AppLanguage.localized("game.colorclash.word.green")
             case .orange: AppLanguage.localized("game.colorclash.word.orange")
+            case .purple: AppLanguage.localized("game.colorclash.word.purple")
+            case .yellow: AppLanguage.localized("game.colorclash.word.yellow")
             }
         }
 
@@ -33,6 +37,8 @@ struct ColorClashView: View {
             case .blue: AppLanguage.localized("game.colorclash.color.blue")
             case .green: AppLanguage.localized("game.colorclash.color.green")
             case .orange: AppLanguage.localized("game.colorclash.color.orange")
+            case .purple: AppLanguage.localized("game.colorclash.color.purple")
+            case .yellow: AppLanguage.localized("game.colorclash.color.yellow")
             }
         }
 
@@ -44,6 +50,8 @@ struct ColorClashView: View {
             case .blue: "triangle.fill"
             case .green: "square.fill"
             case .orange: "diamond.fill"
+            case .purple: "hexagon.fill"
+            case .yellow: "star.fill"
             }
         }
 
@@ -53,15 +61,30 @@ struct ColorClashView: View {
             case .blue: AppLanguage.localized("game.colorclash.shape.triangle")
             case .green: AppLanguage.localized("game.colorclash.shape.square")
             case .orange: AppLanguage.localized("game.colorclash.shape.diamond")
+            case .purple: AppLanguage.localized("game.colorclash.shape.hexagon")
+            case .yellow: AppLanguage.localized("game.colorclash.shape.star")
             }
         }
     }
 
     private static let totalRounds = 10
 
-    /// Chance the word already matches its ink: easy is mostly matching, hard never.
+    /// Matching chance per level: high at 1, 0 from 6 onward. Levels 2/4/6
+    /// are 0.7/0.25/0 to match old easy/medium/hard.
+    static let matchingChanceByLevel: [Double] = [0.85, 0.7, 0.45, 0.25, 0.1, 0, 0, 0, 0, 0]
+
+    /// Chance the word already matches its ink.
     static func matchingChance(for difficulty: Difficulty) -> Double {
-        difficulty.pick(0.7, 0.25, 0)
+        difficulty.values(matchingChanceByLevel)
+    }
+
+    /// Available inks per level. More distinct colour+shape choices increase
+    /// Stroop interference without shrinking targets or using colour alone,
+    /// and reuses the existing shape cue infrastructure.
+    static func availableInks(for difficulty: Difficulty) -> [Ink] {
+        // Levels 1-8 show 4 options, 9-10 show 6 so difficulty rises via larger choice set.
+        let count = difficulty.values([4, 4, 4, 4, 4, 4, 4, 4, 6, 6])
+        return Array(Ink.allCases.prefix(count))
     }
 
     // The word and its shape follow the device text size (#117).
@@ -113,7 +136,7 @@ struct ColorClashView: View {
             .accessibilityHint(AppLanguage.localized("game.colorclash.a11y.stimulus.hint"))
 
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
-                ForEach(Ink.allCases, id: \.self) { candidate in
+                ForEach(Self.availableInks(for: difficulty), id: \.self) { candidate in
                     Button {
                         tap(candidate)
                     } label: {
@@ -154,9 +177,10 @@ struct ColorClashView: View {
     }
 
     private func deal() {
-        ink = Ink.allCases.randomElement() ?? .blue
+        let pool = Self.availableInks(for: difficulty)
+        ink = pool.randomElement() ?? .blue
         let matches = Double.random(in: 0..<1) < Self.matchingChance(for: difficulty)
-        word = matches ? ink : (Ink.allCases.filter { $0 != ink }.randomElement() ?? .red)
+        word = matches ? ink : (pool.filter { $0 != ink }.randomElement() ?? .red)
         AccessibilityNotification.Announcement(stimulusLabel).post()
     }
 
