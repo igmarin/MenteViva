@@ -1,6 +1,7 @@
 # ES review packet — for the native-speaker pass (#12)
 
 Hand this whole file to the reviewer. Generated from `Localizable.xcstrings`
+(490 user-facing strings; keys that are only format specifiers are omitted).
 (476 user-facing strings; keys that are only format specifiers are omitted).
 Rows already signed off on #12 are pre-marked ✅.
 Regenerate after any string change: `python3 tools/generate_es_packet.py`.
@@ -500,3 +501,43 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `tangram.shape.28` | Snail | Caracol | TangramShapes |  |
 | `tangram.shape.29` | Penguin | Pingüino | TangramShapes |  |
 | `tangram.shape.30` | Crab | Cangrejo | TangramShapes |  |
+| `why.footer` | Educational information, not medical advice. | Información educativa, no consejo médico. | WhyTheseGamesView |  |
+| `why.game.category` | Name the Herd exercises finding words. | Nombra la Manada ejercita encontrar palabras. | WhyTheseGamesView |  |
+| `why.game.colorclash` | Color Clash exercises paying attention to what matters and ignoring the rest. | Choque de Colores ejercita fijarse en lo importante y dejar pasar lo demás. | WhyTheseGamesView |  |
+| `why.game.math` | Number Trail exercises quick, easy sums. | Sendero de Números ejercita las cuentas sencillas y rápidas. | WhyTheseGamesView |  |
+| `why.game.memory` | Memory Lane exercises remembering where things are. | Camino de Memoria ejercita recordar dónde está cada cosa. | WhyTheseGamesView |  |
+| `why.game.quickeyes` | Quick Eyes exercises noticing things quickly. | Ojos Ágiles ejercita fijarse en las cosas con rapidez. | WhyTheseGamesView |  |
+| `why.game.reminiscence` | Remember Together is a chance to enjoy your own photos and talk about them with someone. There are no right or wrong answers. | Recordar juntos es una ocasión para disfrutar tus fotos y conversar sobre ellas con alguien. No hay respuestas buenas ni malas. | WhyTheseGamesView |  |
+| `why.game.sayings` | Finish the Saying exercises finding words you already know. | Termina el refrán ejercita encontrar palabras que ya conoces. | WhyTheseGamesView |  |
+| `why.game.sequence` | Repeat the Sequence exercises holding a few things in mind at once. | Repite la secuencia ejercita tener varias cosas en mente a la vez. | WhyTheseGamesView |  |
+| `why.game.sliding` | Sliding Blocks exercises planning your moves before you make them. | Bloques deslizantes ejercita planear los movimientos antes de hacerlos. | WhyTheseGamesView |  |
+| `why.game.sudoku` | Sudoku exercises planning and thinking one step ahead. | Sudoku ejercita planear y pensar un paso adelante. | WhyTheseGamesView |  |
+| `why.game.tangram` | Tangram exercises planning how shapes fit together. | Tangram ejercita planear cómo encajan las formas. | WhyTheseGamesView |  |
+| `why.game.tilepairs` | Tile Pairs exercises looking closely and spotting matches. | Parejas de fichas ejercita mirar con atención y encontrar parejas. | WhyTheseGamesView |  |
+| `why.game.upordown` | Up or Down exercises planning your next card. | Sube o baja ejercita planear tu próxima carta. | WhyTheseGamesView |  |
+| `why.games.title` | What each game exercises | Qué ejercita cada juego | WhyTheseGamesView |  |
+| `why.not.advice` | This is educational information, not medical advice. | Esta es información educativa, no consejo médico. | WhyTheseGamesView |  |
+| `why.not.device` | MenteViva is not a medical device. | MenteViva no es un dispositivo médico. | WhyTheseGamesView |  |
+| `why.not.doctor` | If something worries you about your memory, please talk to a doctor. | Si algo te preocupa de tu memoria, habla con un médico. | WhyTheseGamesView |  |
+| `why.not.fun` | MenteViva is a fun mental exercise. We hope it gives you a good moment each day. | MenteViva es un ejercicio mental divertido. Esperamos que te dé un buen rato cada día. | WhyTheseGamesView |  |
+| `why.not.test` | It is not a test. It never gives you a result about your mind, and it never gives a diagnosis. | No es una prueba. Nunca te da un resultado sobre tu mente ni un diagnóstico. | WhyTheseGamesView |  |
+| `why.not.title` | What MenteViva is not | Lo que MenteViva no es | WhyTheseGamesView |  |
+| `why.open.hint` | The research behind the games, and what MenteViva is not. | La investigación detrás de los juegos, y lo que MenteViva no es. | SettingsView |  |
+| `why.research.bundle` | One large study of people aged 60 to 77 looked at games together with food, movement and a healthy routine, not games alone. | Un estudio grande con personas de 60 a 77 años miró los juegos junto con la comida, el movimiento y una rutina sana, no los juegos solos. | WhyTheseGamesView |  |
+| `why.research.promise` | So we promise you nothing. We offer pleasant mental exercise, at your pace. | Por eso no te prometemos nada. Te ofrecemos un ejercicio mental agradable, a tu ritmo. | WhyTheseGamesView |  |
+| `why.research.small` | In studies of older adults, computer games led to small gains, mostly on the very tasks people practised. | En estudios con personas mayores, los juegos de computadora dieron pequeños avances, sobre todo en las mismas tareas que se practicaron. | WhyTheseGamesView |  |
+| `why.research.stanford` | In 2014, about 70 scientists wrote that there is "no compelling scientific evidence" for what brain games promise in daily life. | En 2014, unos 70 científicos escribieron que "no hay pruebas científicas convincentes" de lo que los juegos mentales prometen en la vida diaria. | WhyTheseGamesView |  |
+| `why.research.title` | What the research says | Lo que dice la investigación | WhyTheseGamesView |  |
+| `why.research.transfer` | Whether that carries over to everyday life has not been shown. | Que eso se note después en la vida diaria no se ha demostrado. | WhyTheseGamesView |  |
+| `why.research.varied` | Another expert group, the Global Council on Brain Health, says that new, varied and shared activities matter too, and that games can be one part of a full day. | Otro grupo de expertos, el Global Council on Brain Health, dice que también cuentan las actividades nuevas, variadas y compartidas, y que los juegos pueden ser una parte de un día completo. | WhyTheseGamesView |  |
+| `why.source.cct` | Read the study on computer games (PubMed Central) | Leer el estudio sobre juegos de computadora (PubMed Central) | WhyTheseGamesView |  |
+| `why.source.fda` | Read the general wellness policy (FDA) | Leer la política de bienestar general (FDA) | WhyTheseGamesView |  |
+| `why.source.finger` | Read the FINGER study (The Lancet) | Leer el estudio FINGER (The Lancet) | WhyTheseGamesView |  |
+| `why.source.fluency` | Read the verbal fluency study (PubMed Central) | Leer el estudio sobre fluidez verbal (PubMed Central) | WhyTheseGamesView |  |
+| `why.source.globalcouncil` | Visit the Global Council on Brain Health (globalcouncilonbrainhealth.org) | Visitar el Global Council on Brain Health (globalcouncilonbrainhealth.org) | WhyTheseGamesView |  |
+| `why.source.hint` | Opens in your browser. | Se abre en tu navegador. | WhyTheseGamesView |  |
+| `why.source.processing` | Read the processing speed study (PubMed Central) | Leer el estudio sobre velocidad de procesamiento (PubMed Central) | WhyTheseGamesView |  |
+| `why.source.simons` | Read the Simons 2016 review (SAGE Journals) | Leer la revisión de Simons de 2016 (SAGE Journals) | WhyTheseGamesView |  |
+| `why.source.stanford` | Read the Stanford 2014 consensus (Stanford Longevity) | Leer el consenso de Stanford de 2014 (Stanford Longevity) | WhyTheseGamesView |  |
+| `why.source.workingmemory` | Read the working memory study (PubMed) | Leer el estudio sobre memoria de trabajo (PubMed) | WhyTheseGamesView |  |
+| `why.title` | Why these games | Por qué estos juegos | SettingsView, WhyTheseGamesView |  |

@@ -5,6 +5,11 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 ## [Unreleased]
 
 ### Added
+- **"Why these games" in Settings (#214):** a new screen that says plainly what the research found,
+  what each game exercises, and what MenteViva is not. Every line that rests on a source carries
+  that source as a link whose label names where it goes, each part is a heading the VoiceOver rotor
+  lists, and the screen closes on "Educational information, not medical advice." EN + ES, readable
+  offline.
 - **The first run asks four short questions, and "My plan" asks them again (#212):** after the
   welcome screen, one question per screen — who will play, what to exercise (any number of
   answers), how long a day and how to start — each with 100pt answer tiles, a visible "Skip",
