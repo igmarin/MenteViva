@@ -163,12 +163,11 @@ struct UpOrDownView: View {
             nudge && !reduceMotion ? .easeInOut(duration: 0.8).repeatForever(autoreverses: true) : .default,
             value: pulse
         )
-        .onChange(of: nudge) { _, stuck in
-            if stuck {
-                if !reduceMotion { pulse.toggle() }
-                UIAccessibility.post(notification: .announcement, argument: AppLanguage.localized("game.upordown.stuck"))
-            } else {
-                pulse = false
+        .onChange(of: nudge) { wasStuck, isStuck in
+            let cue = UpOrDownDeal.stuckCue(wasStuck: wasStuck, isStuck: isStuck, reduceMotion: reduceMotion)
+            pulse = cue.pulse
+            if cue.announce {
+                AccessibilityNotification.Announcement(AppLanguage.localized("game.upordown.stuck")).post()
             }
         }
         .onAppear {
