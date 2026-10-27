@@ -4,6 +4,10 @@ import SwiftUI
 
 @main
 struct MenteVivaApp: App {
+    init() {
+        LevelMigration.runOnce()
+    }
+
     /// CloudKit sync is a **compile-time** choice. The generator passes
     /// `LOCAL_ONLY` for `--local-only` builds, because iCloud entitlements need
     /// the paid Developer Program and enabling CloudKit in a build without the

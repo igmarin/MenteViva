@@ -35,6 +35,7 @@ final class FamilySettingsTests: XCTestCase {
 
     func testGivenAPinWhenStoredDifficultyThenThePinWinsOverAuto() {
         defaults.set(try! JSONEncoder().encode(["quick_eyes": 2]), forKey: "jev.difficulty")
+        LevelMigration.runOnce(defaults: defaults)
         XCTAssertEqual(Difficulty.stored(.quickEyes, defaults: defaults), Difficulty(level: 6))
         defaults.set(4, forKey: FamilySettings.pinKey(.quickEyes))
         XCTAssertEqual(Difficulty.stored(.quickEyes, defaults: defaults), Difficulty(level: 4))

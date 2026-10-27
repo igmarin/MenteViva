@@ -38,8 +38,8 @@ nonisolated enum FamilySettings {
 
     /// One-time upgrade of pre-level pins (#197): legacy values read as
     /// levels 2/4/6 and save under the new keys, which later reads prefer.
-    /// Call before binding `@AppStorage` to the new keys so Set up opens on
-    /// the migrated pin.
+    /// Called once by `LevelMigration.runOnce` at launch (#264); reads never
+    /// trigger it.
     static func migrateLegacyPins(defaults: UserDefaults = .standard) {
         for game in GameID.allCases {
             guard defaults.object(forKey: pinKey(game)) == nil,
@@ -50,10 +50,10 @@ nonisolated enum FamilySettings {
         }
     }
 
-    /// Games with a fixed difficulty; Auto games are absent.
+    /// Games with a fixed difficulty; Auto games are absent. Pure read — does
+    /// not migrate or write (#264). Migration runs once via `LevelMigration`.
     static func pinned(defaults: UserDefaults = .standard) -> [GameID: Difficulty] {
-        migrateLegacyPins(defaults: defaults)
-        return Dictionary(
+        Dictionary(
             uniqueKeysWithValues: GameID.allCases.compactMap { game in
                 (defaults.object(forKey: pinKey(game)) as? Int)
                     .flatMap(pinnedLevel)

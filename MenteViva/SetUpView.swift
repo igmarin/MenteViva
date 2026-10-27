@@ -185,7 +185,6 @@ private struct FamilyGameRow: View {
 
     init(game: GameID) {
         self.game = game
-        FamilySettings.migrateLegacyPins()
         _pin = AppStorage(wrappedValue: FamilySettings.auto, FamilySettings.pinKey(game))
     }
 
@@ -219,7 +218,6 @@ private struct FamilyGameView: View {
 
     init(game: GameID) {
         self.game = game
-        FamilySettings.migrateLegacyPins()
         _pin = AppStorage(wrappedValue: FamilySettings.auto, FamilySettings.pinKey(game))
     }
 
