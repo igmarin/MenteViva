@@ -1,5 +1,4 @@
-#!/usr/bin/env swift  // Renders MenteViva's app icon. Zero dependencies — AppKit only.
-// Re-run after changing the design: swift tools/generate_icon.swift
+#!/usr/bin/env swift  // Renders MenteViva's app icon. Zero dependencies — AppKit only.  // Re-run after changing the design: swift tools/generate_icon.swift
 //
 // Design notes (Card Table, docs/design/2026-10-13-privacy-and-icon.html, option A):
 // - One game card as Home deals it: white paper, a framed panel in Memory
