@@ -57,8 +57,9 @@ final class TangramPuzzleTests: XCTestCase {
             }
             let xs = polys.flatMap { $0.map(\.x) }
             let ys = polys.flatMap { $0.map(\.y) }
-            XCTAssertGreaterThanOrEqual(xs.min() ?? 0, 0, shape.key)
-            XCTAssertGreaterThanOrEqual(ys.min() ?? 0, 0, shape.key)
+            // Corners at 0 come out of the turn as ±0.000000000000001: allow that rounding.
+            XCTAssertGreaterThanOrEqual(xs.min() ?? 0, -0.000_001, shape.key)
+            XCTAssertGreaterThanOrEqual(ys.min() ?? 0, -0.000_001, shape.key)
             XCTAssertLessThanOrEqual((xs.max() ?? 0) - (xs.min() ?? 0), 32, shape.key)
             XCTAssertLessThanOrEqual((ys.max() ?? 0) - (ys.min() ?? 0), 32, shape.key)
         }
