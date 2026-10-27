@@ -4,6 +4,11 @@ import Foundation
 /// with `values(_:)`; `pick(_:_:_:)` is the temporary bridge that keeps games
 /// on easy/medium/hard until their own levels ticket lands. Codable as a
 /// single Int so plans and summaries keep their shape.
+///
+/// Levels are produced by `DailyPolicy.nextDifficulty` and `LevelMigration`,
+/// persisted in `PlanStore.storedDifficulty` and `FamilySettings.pinned`,
+/// offered by `LevelPolicy.shouldOffer`/`LevelOfferStore.applyChosen`,
+/// and shown in `CelebrationView.shouldShowOffer` / `LevelExplainBanner`.
 nonisolated struct Difficulty: Codable, Hashable, Comparable {
     /// Valid levels; everything else clamps into range on creation.
     static let range = 1...10
