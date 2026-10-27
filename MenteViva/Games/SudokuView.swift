@@ -53,7 +53,7 @@ struct SudokuView: View {
                     Text(AppLanguage.localized("game.sudoku.showme"))
                         .font(.title2.weight(.semibold))
                 }
-                .buttonStyle(AnswerTileStyle(strength: 0.08, minHeight: 70))
+                .buttonStyle(AnswerTileStyle(strength: 0.08, minHeight: 100))
             }
         }
         .frame(maxWidth: .infinity)
@@ -143,7 +143,7 @@ struct SudokuView: View {
                     Text(verbatim: "\(digit)")
                         .font(.system(size: digitSize, weight: .semibold))
                 }
-                .buttonStyle(AnswerTileStyle(minHeight: 80))
+                .buttonStyle(AnswerTileStyle(minHeight: 100))
                 .accessibilityLabel(String(format: AppLanguage.localized("game.sudoku.a11y.put %lld"), digit))
             }
         }
