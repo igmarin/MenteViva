@@ -144,6 +144,43 @@ final class UpOrDownDealTests: XCTestCase {
         XCTAssertFalse(d.fits(width: Self.iPhoneSE))
     }
 
+    // MARK: Ten levels (#202)
+
+    func testGivenLevelsTwoFourSixWhenDealtThenMatchesOldEasyMediumHard() {
+        let easy = deal(Difficulty(level: 2))
+        XCTAssertEqual(easy.piles.count, 4)
+        XCTAssertTrue(easy.wraps)
+        let medium = deal(Difficulty(level: 4))
+        XCTAssertEqual(medium.piles.count, 5)
+        XCTAssertTrue(medium.wraps)
+        let hard = deal(Difficulty(level: 6))
+        XCTAssertEqual(hard.piles.count, 6)
+        XCTAssertFalse(hard.wraps)
+        for seed in 1...50 {
+            XCTAssertTrue(
+                UpOrDownDeal.greedyClears(deal(Difficulty(level: 2), seed: UInt64(seed))), "seed \(seed)")
+        }
+    }
+
+    func testGivenLevelOneWhenDealtThenAlwaysClearable() {
+        for seed in 1...50 {
+            let made = deal(Difficulty(level: 1), seed: UInt64(seed))
+            XCTAssertEqual(made.piles.count, 3)
+            XCTAssertTrue(UpOrDownDeal.greedyClears(made), "seed \(seed)")
+        }
+    }
+
+    func testGivenRisingLevelsWhenRulesThenNeverEasier() {
+        let rules = (1...10).map { UpOrDownDeal.rules(for: Difficulty(level: $0)) }
+        XCTAssertEqual(rules.map(\.piles), [3, 4, 4, 5, 5, 6, 6, 7, 7, 7])
+        for pair in zip(rules, rules.dropFirst()) {
+            XCTAssertLessThanOrEqual(pair.0.piles, pair.1.piles)
+            // Wrapping and clearability never come back once off.
+            XCTAssertTrue(pair.0.wraps || !pair.1.wraps)
+            XCTAssertTrue(pair.0.clearable || !pair.1.clearable)
+        }
+    }
+
     // MARK: Stuck cue (#265)
 
     func testGivenNotStuckWhenBecomingStuckThenPulseAndAnnounce() {
