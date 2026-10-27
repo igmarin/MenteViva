@@ -1,5 +1,4 @@
-#!/usr/bin/env swift  // Generates MenteViva.xcodeproj from the files on disk. No external deps.
-// Re-run after adding source files: swift tools/generate_project.swift
+#!/usr/bin/env swift  // Generates MenteViva.xcodeproj from the files on disk. No external deps.  // Re-run after adding source files: swift tools/generate_project.swift
 import Foundation
 
 /// Fail with one clear line instead of a raw trace.
