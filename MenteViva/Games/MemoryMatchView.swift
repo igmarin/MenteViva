@@ -2,7 +2,7 @@ import SwiftData
 import SwiftUI
 
 /// Memory Lane: classic pair-matching on large cards.
-/// Difficulty = board size (4 / 6 / 8 pairs). Fully offline, fully deterministic.
+/// Level = board size (3 to 12 pairs, #199). Fully offline, fully deterministic.
 /// #43: themed boards rotate each game so visits stop feeling identical.
 /// #109: "a game, but he's not a child" — grown-up themes, paper-like cards, a
 /// calm card back, and a board sized to the screen (iPad and iPhone) so every
@@ -13,13 +13,14 @@ struct MemoryMatchView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
-    /// Four grown-up sets of 8 pairs. One is drawn per game; emoji carry their
-    /// own VoiceOver names, so themes need no extra strings.
-    private static let themes: [[String]] = [
-        ["☕️", "🫖", "🍞", "🧀", "🍷", "🥐", "🍋", "🫒"],  // kitchen table
-        ["🌹", "🌻", "🌷", "🪴", "🍐", "🌳", "🦋", "🐝"],  // the garden
-        ["⛵️", "🚂", "✈️", "🗺️", "🧳", "⛰️", "🏖️", "🚲"],  // travels
-        ["🎻", "🎺", "🎹", "📻", "🕰️", "📚", "🧶", "🪑"],  // music and home
+    /// Four grown-up sets of 12 pairs (#199 needs 12 faces at level 10). One is
+    /// drawn per game; emoji carry their own VoiceOver names, so themes need
+    /// no extra strings.
+    static let themes: [[String]] = [
+        ["☕️", "🫖", "🍞", "🧀", "🍷", "🥐", "🍋", "🫒", "🍵", "🥖", "🍰", "🍫"],  // kitchen table
+        ["🌹", "🌻", "🌷", "🪴", "🍐", "🌳", "🦋", "🐝", "🍎", "🌲", "🐞", "🍇"],  // the garden
+        ["⛵️", "🚂", "✈️", "🗺️", "🧳", "⛰️", "🏖️", "🚲", "🚗", "🏕️", "🗽", "🚁"],  // travels
+        ["🎻", "🎺", "🎹", "📻", "🕰️", "📚", "🧶", "🪑", "🎸", "🖼️", "📞", "🛋️"],  // music and home
     ]
     private static let spacing: CGFloat = 12
     /// Icon-teal card back (Card Table theme): calm, not childish, the same in light and dark.
@@ -31,6 +32,8 @@ struct MemoryMatchView: View {
     @State private var photoImages: [URL: UIImage] = [:]
 
     @State private var cards: [Card] = []
+    /// The board's size on screen; deals are capped to it so cards keep minimum size.
+    @State private var boardSize = CGSize.zero
     /// Which cards are face up after each tap (#237); the view animates it.
     @State private var board = MemoryBoard(pairs: [])
     @State private var moves = 0
@@ -58,8 +61,31 @@ struct MemoryMatchView: View {
         return fromPhotos + theme.prefix(pairs - fromPhotos.count).map(Face.emoji)
     }
 
+    /// Pairs per level 1...10 (#199). Levels 2/4/6 keep the old easy/medium/hard
+    /// boards (4/6/8 pairs) so migrated players notice nothing; every other
+    /// step adds at most one pair, so a higher level never shows fewer cards.
+    static let pairsPerLevel = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+
+    /// Narrowest card the player taps (conventions §4); the cap below never
+    /// lets a card under it.
+    static let minCard = 60.0
+
     static func pairCount(for difficulty: Difficulty) -> Int {
-        difficulty.pick(4, 6, 8)
+        difficulty.values(pairsPerLevel)
+    }
+
+    /// Pairs actually dealt at `difficulty` in a board of `size`: the table
+    /// value, capped down until `gridFit` keeps every card at its minimum.
+    static func cappedPairs(for difficulty: Difficulty, in size: CGSize) -> Int {
+        var pairs = pairCount(for: difficulty)
+        while pairs > 1 && !cardsFit(pairs: pairs, in: size) { pairs -= 1 }
+        return pairs
+    }
+
+    /// Whether `pairs` pairs fit in `size` with every card at its minimum.
+    static func cardsFit(pairs: Int, in size: CGSize) -> Bool {
+        let fit = gridFit(count: pairs * 2, in: size, spacing: spacing)
+        return min(fit.card.width, fit.card.height) >= minCard
     }
 
     /// Columns and card size that show `count` cards in `size` with nothing
@@ -123,16 +149,30 @@ struct MemoryMatchView: View {
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .onGeometryChange(for: CGSize.self) {
+                    $0.size
+                } action: { size in
+                    guard size.width > 0, size.height > 0 else { return }
+                    boardSize = size
+                    // The first size report deals the board; a board dealt for a
+                    // bigger screen is dealt again only when the pair count
+                    // changes, so turning the phone never resets a game that
+                    // still fits. Cards never drop under 60pt.
+                    if cards.count != Self.cappedPairs(for: difficulty, in: size) * 2 {
+                        deal(size: size)
+                    }
+                }
             }
         }
         .padding()
         .gameHeader(.memoryMatch, instruction: AppLanguage.localized("game.memory.instruction"))
-        .onAppear(perform: deal)
         .onDisappear {
             flipBackTask?.cancel()
             flipBackTask = nil
         }
-        .celebration(isPresented: $showCelebration, game: .memoryMatch, detail: finalDetail, onPlayAgain: deal)
+        .celebration(
+            isPresented: $showCelebration, game: .memoryMatch, detail: finalDetail,
+            onPlayAgain: { deal(size: boardSize) })
     }
 
     /// A card turns over in 0.25 s, eased in and out, the face swapping at the
@@ -213,17 +253,17 @@ struct MemoryMatchView: View {
             .degrees(reduceMotion ? 0 : 180), axis: (x: 0, y: 1, z: 0))
     }
 
-    private func deal() {
-        HotPath.measure("memory.deal") { dealCards() }
+    private func deal(size: CGSize) {
+        HotPath.measure("memory.deal") { dealCards(size: size) }
     }
 
-    private func dealCards() {
+    private func dealCards(size: CGSize) {
         flipBackTask?.cancel()
         flipBackTask = nil
         let photos = MemoryPhotos.all().shuffled()
         faces = Self.faces(
             photos: photos, theme: Self.themes.randomElement() ?? Self.themes[0],
-            pairs: Self.pairCount(for: difficulty))
+            pairs: Self.cappedPairs(for: difficulty, in: size))
         photoImages = Dictionary(
             uniqueKeysWithValues: faces.compactMap { face in
                 guard case .photo(let url) = face, let image = UIImage(contentsOfFile: url.path) else { return nil }
