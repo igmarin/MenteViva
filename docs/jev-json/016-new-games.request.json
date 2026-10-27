@@ -2,7 +2,7 @@
   "model": "jev-latest",
   "state": {
     "product": "MenteViva, iOS cognitive-exercise app for older adults. Warm, no-fail, big-target design, EN+ES, offline, zero third-party dependencies, solo developer. Copy ceiling: 'fun mental exercise', no medical claims. Home deals 3 games a day chosen on the device by rules (value weight per game x days since last played); easy/medium/hard per game, step at most once per 7 days.",
-    "player": "Primary player: the owner's father, early-stage dementia, plays alone on his own iPad and iPhone. Caregiver and buyer: the adult child.",
+    "player": "Primary player: an older family member who plays alone on their own iPad and iPhone. Caregiver and buyer: the adult child.",
     "games": "Visible on his iPad: Memory Lane (pair matching, his own photos), Name the Herd (pick the items of a category), Quick Eyes (an item flashes, find it among 4), Remember Together (his photos with names, no wrong answer). Color Clash and Number Trail are hidden: they fell flat. Value weights: Memory Lane 1.0, Quick Eyes 0.8, Name the Herd 0.7, Remember Together 0.7.",
     "playtest_findings": "Recent informal sessions: he likes the app but gets bored. Few games, very repetitive: with 4 visible games and 3 dealt a day he sees the same games daily, and some content repeats. The owner wants more variety and a higher ceiling. Before, he enjoyed newspaper puzzles (sudoku, crosswords, word search), card and table games, and sayings and quiz shows.",
     "owner_decisions": "Add one game per hobby, each dealing fresh content every session, each with easy/medium/hard, warm misses, no timer, no visible score, targets of 60pt or more. Word search, dominoes and decade trivia were considered and set aside.",

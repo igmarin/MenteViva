@@ -88,7 +88,7 @@ minority is already covered by the existing "revisit after family beta" trigger.
 ## 007 — Audience re-asked (corrected state) — 2026-09-20
 
 The original 001 call assumed "healthy preventive 60+". The owner later stated
-the real player has early-stage dementia. Same model, same question shape,
+the real player is an older family member who needs errorless, familiar play. Same model, same question shape,
 corrected state — and the answer flips (raw pair: `jev-json/007-audience-dementia.*`).
 
 | Judgment | 001 | 007 |
@@ -103,7 +103,7 @@ most expensive failure mode we have.
 
 ## 008 — Games re-scored for early dementia — 2026-09-20
 
-Same five games, re-scored against the corrected audience (early dementia,
+Same five games, re-scored against the corrected audience (an older family player,
 errorless/familiarity priority). Raw pair: `jev-json/008-games-dementia.*`.
 Score legend: 0 = deprioritize, 1 = keep, 2 = core.
 

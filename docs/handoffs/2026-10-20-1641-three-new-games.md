@@ -2,7 +2,7 @@
 
 ## Goal
 
-The owner's father (early-stage dementia, plays on his own iPad and iPhone) gets bored: "few games,
+An older family member (plays alone on their own iPad and iPhone) gets bored: "few games,
 very repetitive". Only 4 games are visible to him, and Home deals 3 a day. The owner wants more variety
 and a higher ceiling, at no cost. One new game per hobby he used to have: newspaper puzzles → Sudoku
 (#179), card games → Up or Down (#180), sayings → Finish the Saying (#181). Ship one PR per game.
