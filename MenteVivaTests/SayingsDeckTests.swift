@@ -21,16 +21,16 @@ final class SayingsDeckTests: XCTestCase {
     }
 
     private func deal(
-        _ difficulty: Difficulty = .medium, pool: [Saying] = Sayings.all, seed: UInt64 = 1
+        _ difficulty: Difficulty = Difficulty(level: 4), pool: [Saying] = Sayings.all, seed: UInt64 = 1
     ) -> [SayingRound] {
         var generator = SeededGenerator(state: seed)
         return SayingsDeck.deal(difficulty: difficulty, from: pool, defaults: defaults, using: &generator)
     }
 
     func testGivenEachLevelWhenChoiceCountThenThreeFourFour() {
-        XCTAssertEqual(SayingsDeck.choiceCount(for: .easy), 3)
-        XCTAssertEqual(SayingsDeck.choiceCount(for: .medium), 4)
-        XCTAssertEqual(SayingsDeck.choiceCount(for: .hard), 4)
+        XCTAssertEqual(SayingsDeck.choiceCount(for: Difficulty(level: 2)), 3)
+        XCTAssertEqual(SayingsDeck.choiceCount(for: Difficulty(level: 4)), 4)
+        XCTAssertEqual(SayingsDeck.choiceCount(for: Difficulty(level: 6)), 4)
     }
 
     func testGivenADealThenEightRoundsWithEightDifferentSayings() {
@@ -40,7 +40,7 @@ final class SayingsDeckTests: XCTestCase {
     }
 
     func testGivenADealThenEachRoundHoldsItsSayingOnceAmongDistinctChoices() {
-        for difficulty in [Difficulty.easy, .medium, .hard] {
+        for difficulty in [Difficulty(level: 2), Difficulty(level: 4), Difficulty(level: 6)] {
             for round in deal(difficulty) {
                 XCTAssertEqual(round.choices.count, SayingsDeck.choiceCount(for: difficulty))
                 XCTAssertEqual(Set(round.choices).count, round.choices.count)
@@ -72,7 +72,7 @@ final class SayingsDeckTests: XCTestCase {
     func testGivenHardWhenThreeSameThemeSayingsExistThenDistractorsShareTheTheme() {
         // 8 animal sayings and 8 money sayings: every round can draw 3 of its own theme.
         let pool = (1...16).map { Saying(id: $0, theme: $0 <= 8 ? .animals : .money) }
-        for round in deal(.hard, pool: pool) {
+        for round in deal(Difficulty(level: 6), pool: pool) {
             XCTAssertTrue(round.choices.allSatisfy { $0.theme == round.saying.theme })
         }
     }
