@@ -143,4 +143,30 @@ final class UpOrDownDealTests: XCTestCase {
         XCTAssertTrue(d.fits(width: 600))
         XCTAssertFalse(d.fits(width: Self.iPhoneSE))
     }
+
+    // MARK: Stuck cue (#265)
+
+    func testGivenNotStuckWhenBecomingStuckThenPulseAndAnnounce() {
+        let cue = UpOrDownDeal.stuckCue(wasStuck: false, isStuck: true, reduceMotion: false)
+        XCTAssertTrue(cue.pulse)
+        XCTAssertTrue(cue.announce)
+    }
+
+    func testGivenStuckWhenStillStuckThenNoSecondAnnouncement() {
+        let cue = UpOrDownDeal.stuckCue(wasStuck: true, isStuck: true, reduceMotion: false)
+        XCTAssertTrue(cue.pulse)
+        XCTAssertFalse(cue.announce)
+    }
+
+    func testGivenReduceMotionWhenBecomingStuckThenAnnounceWithoutPulse() {
+        let cue = UpOrDownDeal.stuckCue(wasStuck: false, isStuck: true, reduceMotion: true)
+        XCTAssertFalse(cue.pulse)
+        XCTAssertTrue(cue.announce)
+    }
+
+    func testGivenStuckWhenClearingThenNoPulseAndNoAnnouncement() {
+        let cue = UpOrDownDeal.stuckCue(wasStuck: true, isStuck: false, reduceMotion: false)
+        XCTAssertFalse(cue.pulse)
+        XCTAssertFalse(cue.announce)
+    }
 }

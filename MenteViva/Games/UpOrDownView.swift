@@ -163,13 +163,17 @@ struct UpOrDownView: View {
             nudge && !reduceMotion ? .easeInOut(duration: 0.8).repeatForever(autoreverses: true) : .default,
             value: pulse
         )
-        .onChange(of: nudge) { _, stuck in
-            if stuck {
-                if !reduceMotion { pulse.toggle() }
-                UIAccessibility.post(notification: .announcement, argument: AppLanguage.localized("game.upordown.stuck"))
-            } else {
-                pulse = false
+        .onChange(of: nudge) { wasStuck, isStuck in
+            let cue = UpOrDownDeal.stuckCue(wasStuck: wasStuck, isStuck: isStuck, reduceMotion: reduceMotion)
+            pulse = cue.pulse
+            if cue.announce {
+                AccessibilityNotification.Announcement(AppLanguage.localized("game.upordown.stuck")).post()
             }
+        }
+        .onChange(of: reduceMotion) { _, reduced in
+            // Stuck-ness didn't change, so this never re-announces: refresh the
+            // pulse for the new preference while the deck waits for a turn.
+            pulse = UpOrDownDeal.stuckCue(wasStuck: nudge, isStuck: nudge, reduceMotion: reduced).pulse
         }
         .onAppear {
             // Seed the pulse only when already stuck at appear; the stuck transition

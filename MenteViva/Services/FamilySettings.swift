@@ -28,12 +28,33 @@ nonisolated enum FamilySettings {
         hidden(from: defaults.string(forKey: hiddenKey) ?? "")
     }
 
-    /// A raw pin value as a level: Auto stays absent, legacy 0/1/2 read as
-    /// levels 2/4/6, anything else clamps into 1...10 (#197).
+    /// A raw pin value under the new keys as a level: Auto stays absent, anything else clamps into
+    /// 1...10. Those values are always true levels, so 2 means level 2; the legacy 0/1/2 → 2/4/6
+    /// mapping lives only in `migrateLegacyPins` (#197).
     static func pinnedLevel(_ raw: Int) -> Difficulty? {
         guard raw != auto else { return nil }
-        if (0...2).contains(raw) { return Difficulty(level: [2, 4, 6][raw]) }
         return Difficulty(level: raw)
+    }
+
+    /// A pin moved by one step on the 1...10 scale, clamped at both ends. Auto has no level to
+    /// step, so it stays Auto (#208).
+    static func stepped(_ raw: Int, by delta: Int) -> Int {
+        guard raw != auto else { return auto }
+        // Clamp first: a stray stored Int.max must not overflow the addition.
+        return Difficulty(level: Difficulty(level: raw).level + delta).level
+    }
+
+    /// Whether a − (`-1`) or + (`1`) tap would change the pin; the view disables and labels the
+    /// button at the limits from this.
+    static func canStep(_ raw: Int, by delta: Int) -> Bool {
+        raw != auto && stepped(raw, by: delta) != Difficulty(level: raw).level
+    }
+
+    /// The pin after the Auto switch moves. Turning Auto off starts from the level the game would
+    /// use now (the family changes it from there); an existing pin is never overwritten.
+    static func settingAuto(_ on: Bool, from raw: Int, currentLevel: Int) -> Int {
+        if on { return auto }
+        return raw == auto ? Difficulty(level: currentLevel).level : raw
     }
 
     /// One-time upgrade of pre-level pins (#197): legacy values read as
@@ -46,7 +67,8 @@ nonisolated enum FamilySettings {
                 let old = defaults.object(forKey: legacyPinKey(game)) as? Int,
                 old != auto
             else { continue }
-            defaults.set(pinnedLevel(old)?.level ?? auto, forKey: pinKey(game))
+            let mapped = (0...2).contains(old) ? [2, 4, 6][old] : old
+            defaults.set(Difficulty(level: mapped).level, forKey: pinKey(game))
         }
     }
 

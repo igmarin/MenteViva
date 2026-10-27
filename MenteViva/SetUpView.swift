@@ -249,11 +249,19 @@ private struct FamilyGameView: View {
 
             if game.hasLevels {
                 Section {
-                    choice(FamilySettings.auto, AppLanguage.localized("family.difficulty.auto"))
-                    // Three pins until #208 brings the full 1–10 picker: the
-                    // migrated easy/medium/hard rows, now labelled by level.
-                    ForEach([Difficulty.easy, .medium, .hard], id: \.self) { level in
-                        choice(level.level, AppLanguage.localized(level.title))
+                    Toggle(
+                        AppLanguage.localized("family.difficulty.auto"),
+                        isOn: Binding(
+                            get: { pin == FamilySettings.auto },
+                            set: { on in
+                                pin = FamilySettings.settingAuto(
+                                    on, from: pin, currentLevel: Difficulty.stored(game).level)
+                            })
+                    )
+                    .font(.title3)
+                    .frame(minHeight: 100)
+                    if pin != FamilySettings.auto {
+                        levelStepper
                     }
                 } header: {
                     Text(AppLanguage.localized("family.difficulty")).font(.title3)
@@ -265,22 +273,45 @@ private struct FamilyGameView: View {
         .navigationTitle(AppLanguage.localized(game.title))
     }
 
-    private func choice(_ value: Int, _ label: String) -> some View {
-        Button {
-            pin = value
-        } label: {
-            HStack {
-                Text(label).font(.title3)
-                Spacer()
-                if pin == value {
-                    Image(systemName: "checkmark").accessibilityHidden(true)
-                }
+    /// Big − / + around the level, one adjustable element for VoiceOver (swipe up/down changes it).
+    /// At 1 and 10 the button is dimmed and a line says why, so the limit isn't colour only.
+    private var levelStepper: some View {
+        VStack(spacing: 8) {
+            HStack(spacing: 16) {
+                stepButton(delta: -1, symbol: "minus", label: "family.level.lower")
+                Text(String(format: AppLanguage.localized("difficulty.level"), pin))
+                    .font(.title2.weight(.semibold))
+                    .frame(maxWidth: .infinity)
+                stepButton(delta: 1, symbol: "plus", label: "family.level.higher")
             }
-            .frame(maxWidth: .infinity, minHeight: 100, alignment: .leading)
-            .contentShape(Rectangle())
+            if !FamilySettings.canStep(pin, by: 1) {
+                Text(AppLanguage.localized("family.level.max")).font(.body)
+            } else if !FamilySettings.canStep(pin, by: -1) {
+                Text(AppLanguage.localized("family.level.min")).font(.body)
+            }
+        }
+        .frame(minHeight: 100)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(AppLanguage.localized("family.difficulty"))
+        .accessibilityValue(String(format: AppLanguage.localized("difficulty.level"), pin))
+        .accessibilityAdjustableAction { direction in
+            pin = FamilySettings.stepped(pin, by: direction == .increment ? 1 : -1)
+        }
+    }
+
+    private func stepButton(delta: Int, symbol: String, label: String) -> some View {
+        Button {
+            pin = FamilySettings.stepped(pin, by: delta)
+        } label: {
+            Image(systemName: symbol)
+                .font(.title.weight(.bold))
+                .frame(width: 100, height: 100)
+                .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 16))
+                .opacity(FamilySettings.canStep(pin, by: delta) ? 1 : 0.3)
         }
         .buttonStyle(.plain)
-        .accessibilityAddTraits(pin == value ? [.isSelected] : [])
+        .disabled(!FamilySettings.canStep(pin, by: delta))
+        .accessibilityLabel(AppLanguage.localized(label))
     }
 }
 
