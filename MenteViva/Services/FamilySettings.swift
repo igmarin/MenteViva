@@ -74,6 +74,8 @@ nonisolated enum FamilySettings {
 
     /// Games with a fixed difficulty; Auto games are absent. Pure read — does
     /// not migrate or write (#264). Migration runs once via `LevelMigration`.
+    /// Pins win over `PlanStore.storedDifficulty` in `Difficulty.stored(_:)` and
+    /// are checked by `LevelPolicy.shouldOffer` (pinned stays off offers).
     static func pinned(defaults: UserDefaults = .standard) -> [GameID: Difficulty] {
         Dictionary(
             uniqueKeysWithValues: GameID.allCases.compactMap { game in

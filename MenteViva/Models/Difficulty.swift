@@ -3,6 +3,11 @@ import Foundation
 /// A game's level from 1 to 10 (#197). Each game turns it into its own knobs
 /// with `values(_:)`; there are no easy/medium/hard names left (#209). Codable
 /// as a single Int so plans and summaries keep their shape.
+///
+/// Levels are produced by `DailyPolicy.nextDifficulty` and `LevelMigration`,
+/// persisted in `PlanStore.storedDifficulty` and `FamilySettings.pinned`,
+/// offered by `LevelPolicy.shouldOffer`/`LevelOfferStore.applyChosen`,
+/// and shown in `CelebrationView.shouldShowOffer` / `LevelExplainBanner`.
 nonisolated struct Difficulty: Codable, Hashable, Comparable {
     /// Valid levels; everything else clamps into range on creation.
     static let range = 1...10

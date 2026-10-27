@@ -99,6 +99,8 @@ nonisolated enum PlanStore {
     /// Each game's level from the last saved plan. A game with none yet starts where the profile says
     /// (`DailyPolicy.startingLevel`, #211; level 4 without one). Only changes when a new daily plan is
     /// saved. Pure read — does not migrate (#264); `LevelMigration.runOnce` does that once at launch.
+    /// Called by `Difficulty.stored(_:)` and `PlanStore.todaysPlan`/`PlanStore.cache`,
+    /// and read by `HomeView.refreshPlan` to seed `CelebrationView` offers via `LevelPolicy`.
     static func storedDifficulty(defaults: UserDefaults = .standard) -> [GameID: Difficulty] {
         let raw =
             defaults.data(forKey: levelKey)
