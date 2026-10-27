@@ -34,7 +34,7 @@ MenteViva/            app (SwiftUI + SwiftData)
   Games/              one file per game (9) + CelebrationView, MissCue, FitOrScroll
   Models/             GameSession, GameID, Difficulty, RoundProgress
   Services/           DailyPolicy (on-device plan), PlanStore (saved plan + levels),
-                      FamilySettings, MemoryPhotos,
+                      FamilySettings, PlayerProfile (onboarding answers), MemoryPhotos,
                       PlayerStateSummary, WeeklySummary, ProgressRates, AppLanguage, SoundPlayer, HotPath (signposts),
                       CaptionSpeaker, EverydayObjects
   Localizable.xcstrings  every string, EN + ES

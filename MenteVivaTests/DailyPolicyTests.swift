@@ -248,6 +248,75 @@ final class DailyPolicyTests: XCTestCase {
         XCTAssertEqual(legacy.changes, [:])
     }
 
+    // MARK: The player's profile shapes the plan (#211)
+
+    private func plan(_ s: PlayerStateSummary, profile: PlayerProfile) -> DailyPlan {
+        DailyPolicy.plan(state: s, dayStamp: "2026-09-30", profile: profile)
+    }
+
+    /// Deals `days` days in a row, as if the player played exactly the games dealt each day.
+    private func dealtCounts(over days: Int = 14, profile: PlayerProfile) -> [GameID: Int] {
+        var away = Dictionary(uniqueKeysWithValues: GameID.allCases.map { ($0, 14) })
+        var counts: [GameID: Int] = [:]
+        for _ in 0..<days {
+            let today = state(away.mapValues { stats(days: $0) })
+            let dealt = plan(today, profile: profile).games
+            for game in GameID.allCases {
+                away[game] = dealt.contains(game) ? 0 : (away[game] ?? 14) + 1
+            }
+            for game in dealt {
+                counts[game, default: 0] += 1
+            }
+        }
+        return counts
+    }
+
+    func testGivenMinutesWhenPlanThenTwoThreeOrFiveGamesAndThreeWithoutAProfile() {
+        XCTAssertEqual(plan(state(), profile: PlayerProfile(minutesPerDay: 15)).games.count, 5)
+        XCTAssertEqual(plan(state(), profile: PlayerProfile(minutesPerDay: 10)).games.count, 3)
+        XCTAssertEqual(plan(state(), profile: PlayerProfile(minutesPerDay: 5)).games.count, 2)
+        XCTAssertEqual(plan(state(), profile: PlayerProfile()).games.count, 3)
+    }
+
+    func testGivenFocusMemoryOverFourteenDaysWhenDealtThenMemoryGamesMoreOftenAndNoGameCrowdedOut() {
+        let plain = dealtCounts(profile: PlayerProfile())
+        let memory = dealtCounts(profile: PlayerProfile(focus: [.memory]))
+        let memoryGames = GameID.released.filter { DailyPolicy.focus[$0] == .memory }
+        XCTAssertGreaterThan(
+            memoryGames.map { memory[$0, default: 0] }.reduce(0, +),
+            memoryGames.map { plain[$0, default: 0] }.reduce(0, +))
+        // Variety still holds: every game dealt without a focus is still dealt with one.
+        for game in plain.keys {
+            XCTAssertGreaterThan(memory[game, default: 0], 0, "\(game) was crowded out by the focus")
+        }
+    }
+
+    func testGivenJustFunOrNoFocusWhenPlanThenNothingIsBoosted() {
+        let rested = state([.sudoku: stats(days: 0), .memoryMatch: stats(days: 3)])
+        XCTAssertEqual(
+            plan(rested, profile: PlayerProfile(focus: [.justFun])), plan(rested, profile: PlayerProfile()))
+    }
+
+    func testGivenChallengeWhenPlanThenANeverPlayedGameStartsAtSixAndFamilyMemberAtTwo() {
+        let nothingPlayed = PlayerStateSummary(games: [:])
+        XCTAssertEqual(
+            plan(nothingPlayed, profile: PlayerProfile(startPace: .challenge)).difficulty[.sudoku], Difficulty(level: 6))
+        XCTAssertEqual(
+            plan(nothingPlayed, profile: PlayerProfile(forWhom: .familyMember)).difficulty[.sudoku], Difficulty(level: 2))
+    }
+
+    func testGivenEmptyProfileWhenPlanThenExactlyTheOldPlan() {
+        let mixed = state([
+            .memoryMatch: stats(sessions: 3, accuracy: 0.9, days: 0, recent: [0.95]),
+            .stroop: stats(sessions: 1, accuracy: 0.3, days: 5, level: Difficulty(level: 3), recent: [0.3]),
+            .sudoku: stats(days: 2),
+        ])
+        let before = plan(mixed, day: "2026-09-30")
+        XCTAssertEqual(plan(mixed, profile: PlayerProfile()), before)
+        XCTAssertEqual(plan(mixed, profile: PlayerProfile(forWhom: .me, focus: [.justFun])), before)
+        XCTAssertEqual(plan(PlayerStateSummary(games: [:]), profile: PlayerProfile()).difficulty[.sudoku], Difficulty(level: 4))
+    }
+
     // MARK: A chosen level-up carries into the next days (#266)
 
     /// Noon, local time, `offset` days after a fixed day: stamps and "days ago" stay stable.
