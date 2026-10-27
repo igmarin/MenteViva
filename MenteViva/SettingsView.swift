@@ -100,6 +100,15 @@ struct SettingsView: View {
                     .accessibilityHint(AppLanguage.localized("progress.open.hint"))
 
                     NavigationLink {
+                        MyPlanView()
+                    } label: {
+                        Label(AppLanguage.localized("myplan.title"), systemImage: "checklist")
+                            .font(.title3)
+                            .frame(maxWidth: .infinity, minHeight: 100, alignment: .leading)
+                    }
+                    .accessibilityHint(AppLanguage.localized("myplan.open.hint"))
+
+                    NavigationLink {
                         SetUpView()
                     } label: {
                         Label(AppLanguage.localized("setup.title"), systemImage: "slider.horizontal.3")
@@ -107,6 +116,16 @@ struct SettingsView: View {
                             .frame(maxWidth: .infinity, minHeight: 100, alignment: .leading)
                     }
                     .accessibilityHint(AppLanguage.localized("setup.open.hint"))
+
+                    // The balanced, sourced words behind the games (#214), readable offline.
+                    NavigationLink {
+                        WhyTheseGamesView()
+                    } label: {
+                        Label(AppLanguage.localized("why.title"), systemImage: "questionmark.circle")
+                            .font(.title3)
+                            .frame(maxWidth: .infinity, minHeight: 100, alignment: .leading)
+                    }
+                    .accessibilityHint(AppLanguage.localized("why.open.hint"))
                 }
 
                 // Short promises he can read at a glance.

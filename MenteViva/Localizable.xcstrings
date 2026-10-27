@@ -3339,6 +3339,54 @@
         }
       }
     },
+    "myplan.note" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today's plan stays as it is. These answers decide tomorrow's."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El plan de hoy se queda como está. Estas respuestas deciden el de mañana."
+          }
+        }
+      }
+    },
+    "myplan.open.hint" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Who plays, what to exercise, how long a day and how to start."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quién juega, qué ejercitar, cuánto tiempo al día y cómo empezar."
+          }
+        }
+      }
+    },
+    "myplan.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "My plan"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mi plan"
+          }
+        }
+      }
+    },
     "object.book" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -3475,6 +3523,38 @@
         }
       }
     },
+    "onboarding.back" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Back"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atrás"
+          }
+        }
+      }
+    },
+    "onboarding.back.hint" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Goes back to the previous question."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vuelve a la pregunta anterior."
+          }
+        }
+      }
+    },
     "onboarding.disclaimer" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -3488,6 +3568,102 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No es un dispositivo médico."
+          }
+        }
+      }
+    },
+    "onboarding.focus.attention" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Attention"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atención"
+          }
+        }
+      }
+    },
+    "onboarding.focus.fun" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Just have fun"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Solo pasarla bien"
+          }
+        }
+      }
+    },
+    "onboarding.focus.memory" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Memory"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Memoria"
+          }
+        }
+      }
+    },
+    "onboarding.focus.numbers" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Numbers"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Números"
+          }
+        }
+      }
+    },
+    "onboarding.focus.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "What would you like to exercise? Pick any."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Qué te gustaría ejercitar? Elige las que quieras."
+          }
+        }
+      }
+    },
+    "onboarding.focus.words" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Words"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Palabras"
           }
         }
       }
@@ -3543,6 +3719,182 @@
         }
       }
     },
+    "onboarding.minutes.10" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "10 minutes"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "10 minutos"
+          }
+        }
+      }
+    },
+    "onboarding.minutes.15" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "15 minutes"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "15 minutos"
+          }
+        }
+      }
+    },
+    "onboarding.minutes.5" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "5 minutes"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "5 minutos"
+          }
+        }
+      }
+    },
+    "onboarding.minutes.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "How long a day?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Cuánto tiempo al día?"
+          }
+        }
+      }
+    },
+    "onboarding.next" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Next"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Siguiente"
+          }
+        }
+      }
+    },
+    "onboarding.pace.calm" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calm"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tranquilo"
+          }
+        }
+      }
+    },
+    "onboarding.pace.challenge" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A challenge"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Con reto"
+          }
+        }
+      }
+    },
+    "onboarding.pace.normal" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Normal"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Normal"
+          }
+        }
+      }
+    },
+    "onboarding.pace.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "How would you like to start?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Cómo quieres empezar?"
+          }
+        }
+      }
+    },
+    "onboarding.skip" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skip"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Omitir"
+          }
+        }
+      }
+    },
+    "onboarding.skip.hint" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leaves this one unanswered. You can change it later in Settings, My plan."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deja esta pregunta sin responder. Puedes cambiarla después en Ajustes, Mi plan."
+          }
+        }
+      }
+    },
     "onboarding.start" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -3573,6 +3925,70 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Abre los juegos"
+          }
+        }
+      }
+    },
+    "onboarding.step %lld %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Step %lld of %lld"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paso %lld de %lld"
+          }
+        }
+      }
+    },
+    "onboarding.who.family" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A family member"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un familiar"
+          }
+        }
+      }
+    },
+    "onboarding.who.me" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Me"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yo"
+          }
+        }
+      }
+    },
+    "onboarding.who.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Who will play?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Quién va a jugar?"
           }
         }
       }
@@ -7607,6 +8023,646 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sol"
+          }
+        }
+      }
+    },
+    "why.footer" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Educational information, not medical advice."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Información educativa, no consejo médico."
+          }
+        }
+      }
+    },
+    "why.game.category" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Name the Herd exercises finding words."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nombra la Manada ejercita encontrar palabras."
+          }
+        }
+      }
+    },
+    "why.game.colorclash" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Color Clash exercises paying attention to what matters and ignoring the rest."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choque de Colores ejercita fijarse en lo importante y dejar pasar lo demás."
+          }
+        }
+      }
+    },
+    "why.game.math" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Number Trail exercises quick, easy sums."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sendero de Números ejercita las cuentas sencillas y rápidas."
+          }
+        }
+      }
+    },
+    "why.game.memory" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Memory Lane exercises remembering where things are."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Camino de Memoria ejercita recordar dónde está cada cosa."
+          }
+        }
+      }
+    },
+    "why.game.quickeyes" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quick Eyes exercises noticing things quickly."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ojos Ágiles ejercita fijarse en las cosas con rapidez."
+          }
+        }
+      }
+    },
+    "why.game.reminiscence" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remember Together is a chance to enjoy your own photos and talk about them with someone. There are no right or wrong answers."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recordar juntos es una ocasión para disfrutar tus fotos y conversar sobre ellas con alguien. No hay respuestas buenas ni malas."
+          }
+        }
+      }
+    },
+    "why.game.sayings" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Finish the Saying exercises finding words you already know."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Termina el refrán ejercita encontrar palabras que ya conoces."
+          }
+        }
+      }
+    },
+    "why.game.sequence" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Repeat the Sequence exercises holding a few things in mind at once."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Repite la secuencia ejercita tener varias cosas en mente a la vez."
+          }
+        }
+      }
+    },
+    "why.game.sliding" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sliding Blocks exercises planning your moves before you make them."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bloques deslizantes ejercita planear los movimientos antes de hacerlos."
+          }
+        }
+      }
+    },
+    "why.game.sudoku" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sudoku exercises planning and thinking one step ahead."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sudoku ejercita planear y pensar un paso adelante."
+          }
+        }
+      }
+    },
+    "why.game.tangram" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tangram exercises planning how shapes fit together."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tangram ejercita planear cómo encajan las formas."
+          }
+        }
+      }
+    },
+    "why.game.tilepairs" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tile Pairs exercises looking closely and spotting matches."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Parejas de fichas ejercita mirar con atención y encontrar parejas."
+          }
+        }
+      }
+    },
+    "why.game.upordown" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Up or Down exercises planning your next card."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sube o baja ejercita planear tu próxima carta."
+          }
+        }
+      }
+    },
+    "why.games.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "What each game exercises"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Qué ejercita cada juego"
+          }
+        }
+      }
+    },
+    "why.not.advice" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This is educational information, not medical advice."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esta es información educativa, no consejo médico."
+          }
+        }
+      }
+    },
+    "why.not.device" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "MenteViva is not a medical device."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "MenteViva no es un dispositivo médico."
+          }
+        }
+      }
+    },
+    "why.not.doctor" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "If something worries you about your memory, please talk to a doctor."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si algo te preocupa de tu memoria, habla con un médico."
+          }
+        }
+      }
+    },
+    "why.not.fun" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "MenteViva is a fun mental exercise. We hope it gives you a good moment each day."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "MenteViva es un ejercicio mental divertido. Esperamos que te dé un buen rato cada día."
+          }
+        }
+      }
+    },
+    "why.not.test" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "It is not a test. It never gives you a result about your mind, and it never gives a diagnosis."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No es una prueba. Nunca te da un resultado sobre tu mente ni un diagnóstico."
+          }
+        }
+      }
+    },
+    "why.not.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "What MenteViva is not"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lo que MenteViva no es"
+          }
+        }
+      }
+    },
+    "why.open.hint" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The research behind the games, and what MenteViva is not."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La investigación detrás de los juegos, y lo que MenteViva no es."
+          }
+        }
+      }
+    },
+    "why.research.bundle" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "One large study of people aged 60 to 77 looked at games together with food, movement and a healthy routine, not games alone."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un estudio grande con personas de 60 a 77 años miró los juegos junto con la comida, el movimiento y una rutina sana, no los juegos solos."
+          }
+        }
+      }
+    },
+    "why.research.promise" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "So we promise you nothing. We offer pleasant mental exercise, at your pace."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Por eso no te prometemos nada. Te ofrecemos un ejercicio mental agradable, a tu ritmo."
+          }
+        }
+      }
+    },
+    "why.research.small" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In studies of older adults, computer games led to small gains, mostly on the very tasks people practised."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En estudios con personas mayores, los juegos de computadora dieron pequeños avances, sobre todo en las mismas tareas que se practicaron."
+          }
+        }
+      }
+    },
+    "why.research.stanford" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In 2014, about 70 scientists wrote that there is \"no compelling scientific evidence\" for what brain games promise in daily life."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En 2014, unos 70 científicos escribieron que \"no hay pruebas científicas convincentes\" de lo que los juegos mentales prometen en la vida diaria."
+          }
+        }
+      }
+    },
+    "why.research.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "What the research says"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lo que dice la investigación"
+          }
+        }
+      }
+    },
+    "why.research.transfer" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Whether that carries over to everyday life has not been shown."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Que eso se note después en la vida diaria no se ha demostrado."
+          }
+        }
+      }
+    },
+    "why.research.varied" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Another expert group, the Global Council on Brain Health, says that new, varied and shared activities matter too, and that games can be one part of a full day."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otro grupo de expertos, el Global Council on Brain Health, dice que también cuentan las actividades nuevas, variadas y compartidas, y que los juegos pueden ser una parte de un día completo."
+          }
+        }
+      }
+    },
+    "why.source.cct" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Read the study on computer games (PubMed Central)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leer el estudio sobre juegos de computadora (PubMed Central)"
+          }
+        }
+      }
+    },
+    "why.source.fda" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Read the general wellness policy (FDA)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leer la política de bienestar general (FDA)"
+          }
+        }
+      }
+    },
+    "why.source.finger" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Read the FINGER study (The Lancet)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leer el estudio FINGER (The Lancet)"
+          }
+        }
+      }
+    },
+    "why.source.fluency" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Read the verbal fluency study (PubMed Central)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leer el estudio sobre fluidez verbal (PubMed Central)"
+          }
+        }
+      }
+    },
+    "why.source.globalcouncil" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Visit the Global Council on Brain Health (globalcouncilonbrainhealth.org)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Visitar el Global Council on Brain Health (globalcouncilonbrainhealth.org)"
+          }
+        }
+      }
+    },
+    "why.source.hint" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opens in your browser."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se abre en tu navegador."
+          }
+        }
+      }
+    },
+    "why.source.processing" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Read the processing speed study (PubMed Central)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leer el estudio sobre velocidad de procesamiento (PubMed Central)"
+          }
+        }
+      }
+    },
+    "why.source.simons" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Read the Simons 2016 review (SAGE Journals)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leer la revisión de Simons de 2016 (SAGE Journals)"
+          }
+        }
+      }
+    },
+    "why.source.stanford" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Read the Stanford 2014 consensus (Stanford Longevity)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leer el consenso de Stanford de 2014 (Stanford Longevity)"
+          }
+        }
+      }
+    },
+    "why.source.workingmemory" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Read the working memory study (PubMed)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leer el estudio sobre memoria de trabajo (PubMed)"
+          }
+        }
+      }
+    },
+    "why.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Why these games"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Por qué estos juegos"
           }
         }
       }
