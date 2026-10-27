@@ -20,6 +20,14 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 - **Memory Lane, ten levels (#199):** the board now grows one pair at a time from 3 pairs (level 1) to 12 (level 10). Levels 2, 4 and 6 deal exactly the old easy, medium and hard boards; on a small screen the board caps itself so every card stays big enough to tap.
 
 ### Added
+- **Tangram (#218, #219):** a new game. Fill the silhouette with seven tiles:
+  tap a tile, then tap where it goes, or drag it there. Near enough is enough,
+  and up to level 6 the tile turns itself into place; from level 7 you turn it,
+  and from level 9 you flip the parallelogram too. Four tiles start in place at
+  level 1. A tile that doesn't fit goes back with a hint ("Almost — try another
+  spot"). "Show me one" places a tile when you're stuck, and VoiceOver places
+  tiles through custom actions naming each free slot. Thirty figures, ten levels,
+  no repeats until all have been seen.
 - **"Let me show you" first-play guide (#243):** the first time you open Sudoku, Up or Down or Color Clash, a calm card says the one-line instruction (in big type, read aloud), highlights one example move with a soft pulse and an arrow (just the highlight with Reduce Motion), and offers two 100pt buttons, "Got it" and "Show me again". VoiceOver treats it as a modal with the example described in words. Settings has a new row, "Show the game guides again".
 - **Set up: pin a game at any level 1–10 (#208):** each game with levels now has an "Automatic" switch and, when it is off, two big 100pt buttons (− / +) around "Level 4". At level 1 and 10 the button is dimmed and a line says it is the lowest or highest level. VoiceOver reads it as one adjustable control: swipe up or down to change the level.
 - **A gentle nudge after a strong game and a one-line level note (#207):** when the rules move a game up by one, by two, or ease it, the first time you open it that day you see one warm line under the header ("We made it a little harder: you've been doing great.", "Two steps up: you're flying!", "We made it a little calmer, so you enjoy it more.") in `.title2`, read by VoiceOver, gone once the first round starts and only once per day; never mentions misses or accuracy. When you finish a strong game below level 10 and the game isn't pinned, the celebration asks once that day "That was perfect. Shall we try the next level?" with two 100pt buttons "Yes, let's try" / "Keep it as it is" (equally prominent, neither default) — Yes lifts the level by one now with reason `.chosen` so the staircase counts from there.
