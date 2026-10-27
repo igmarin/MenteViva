@@ -58,18 +58,23 @@ final class DifficultyMappingTests: XCTestCase {
             NumberTrailQuestion.maxSum(streak: 0, difficulty: .medium))
     }
 
-    func testGivenDifficultiesWhenDisplayTimesThenEasyFlashesLongerAndFloorIsHigher() {
-        let (e, m, h) = (
-            QuickEyesView.displayTimes(for: .easy),
-            QuickEyesView.displayTimes(for: .medium),
-            QuickEyesView.displayTimes(for: .hard)
-        )
-        XCTAssertGreaterThan(e.start, m.start)
-        XCTAssertGreaterThan(m.start, h.start)
-        XCTAssertGreaterThan(e.floor, m.floor)
-        XCTAssertGreaterThan(m.floor, h.floor)
-        XCTAssertEqual(m.start, 1.2)
-        XCTAssertEqual(m.floor, 0.35)
+    // MARK: Quick Eyes levels 1–10 (#200)
+
+    func testGivenLevelsTwoFourSixWhenDisplayTimesThenMatchesOldEasyMediumHard() {
+        let times = [2, 4, 6].map { QuickEyesView.displayTimes(for: Difficulty(level: $0)) }
+        XCTAssertEqual(times.map(\.start), [1.6, 1.2, 1.0])
+        XCTAssertEqual(times.map(\.floor), [0.8, 0.35, 0.25])
+    }
+
+    func testGivenRisingLevelsWhenDisplayTimesThenNeverSlower() {
+        let times = (1...10).map { QuickEyesView.displayTimes(for: Difficulty(level: $0)) }
+        for (lower, higher) in zip(times, times.dropFirst()) {
+            XCTAssertLessThanOrEqual(higher.start, lower.start)
+            XCTAssertLessThanOrEqual(higher.floor, lower.floor)
+        }
+        for time in times {
+            XCTAssertLessThanOrEqual(time.floor, time.start)
+        }
     }
 
     func testGivenDifficultiesWhenStroopMatchingChanceThenEasyMostHardNone() {
