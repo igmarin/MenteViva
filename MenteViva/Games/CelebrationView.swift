@@ -21,11 +21,81 @@ struct CelebrationView: View {
     @State private var arrived = false
     /// This celebration's warm headline, picked once when it appears (#242).
     @State private var headline: String?
+    /// Whether the offer has been answered in this presentation (#207): flipping
+    /// this triggers a re-render so the offer disappears even though
+    /// `LevelOfferStore` (UserDefaults) is not observed by SwiftUI.
+    @State private var offerAnswered = false
 
     /// Today's games from the plan saved for today; nil before there is one.
     private var today: TodayRun? {
         guard let plan = PlanStore.cachedPlan(), plan.dayStamp == PlanStore.dayStamp() else { return nil }
         return TodayRun(plan: plan.games, hidden: FamilySettings.hidden(from: hiddenGames), sessions: sessions)
+    }
+
+    /// Offer context for #207 2: strong game, not pinned, below 10, once per day.
+    private var shouldShowOffer: Bool {
+        guard !offerAnswered else { return false }
+        guard !LevelOfferStore.hasOfferedToday(for: game, today: PlanStore.dayStamp()) else { return false }
+        guard FamilySettings.pinned()[game] == nil else { return false }
+        guard game.hasLevels else { return false }
+        let todaySessions = sessions.filter { $0.game == game && Calendar.current.isDate($0.playedAt, inSameDayAs: .now) }
+        guard let last = todaySessions.max(by: { $0.playedAt < $1.playedAt }),
+            let accuracy = last.accuracy
+        else { return false }
+        let level = last.resolvedLevel ?? PlanStore.storedDifficulty()[game] ?? Difficulty(level: 4)
+        guard level.level < 10 else { return false }
+        return LevelExplainPolicy.shouldOffer(
+            accuracy: accuracy, game: game, level: level, isPinned: false,
+            alreadyOfferedToday: false)
+    }
+
+    private var offerSection: some View {
+        VStack(spacing: 12) {
+            Text(AppLanguage.localized("level.offer.prompt"))
+                .font(.title2.weight(.semibold))
+                .multilineTextAlignment(.center)
+                .accessibilityAddTraits(.isHeader)
+            HStack(spacing: 12) {
+                Button {
+                    // Guard: UserDefaults is not observed, and the tap can
+                    // race a double-tap — check before lifting the level so
+                    // only one tap per day can raise it.
+                    let today = PlanStore.dayStamp()
+                    guard !LevelOfferStore.hasOfferedToday(for: game, today: today) else {
+                        offerAnswered = true
+                        return
+                    }
+                    guard !offerAnswered else { return }
+                    offerAnswered = true
+                    LevelOfferStore.applyChosen(for: game, today: today)
+                    LevelOfferStore.markOffered(for: game, today: today)
+                    Feedback.play(.success)
+                } label: {
+                    Text(AppLanguage.localized("level.offer.yes"))
+                        .font(.title2.weight(.semibold))
+                        .frame(maxWidth: .infinity, minHeight: 100)
+                        .background(Color.brand, in: .rect(cornerRadius: 20))
+                        .foregroundStyle(Color(.systemBackground))
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(AppLanguage.localized("level.offer.yes"))
+                Button {
+                    offerAnswered = true
+                    LevelOfferStore.markOffered(for: game, today: PlanStore.dayStamp())
+                    Feedback.play(.success)
+                } label: {
+                    Text(AppLanguage.localized("level.offer.keep"))
+                        .font(.title2.weight(.semibold))
+                        .frame(maxWidth: .infinity, minHeight: 100)
+                        .background(Color.clear, in: .rect(cornerRadius: 20))
+                        .overlay { RoundedRectangle(cornerRadius: 20).strokeBorder(.secondary, lineWidth: 2) }
+                        .foregroundStyle(Color.primary)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(AppLanguage.localized("level.offer.keep"))
+            }
+        }
+        .padding(.vertical, 8)
     }
 
     var body: some View {
@@ -59,6 +129,9 @@ struct CelebrationView: View {
                 Text(detail)
                     .font(.title2.weight(.semibold))
                     .multilineTextAlignment(.center)
+                if shouldShowOffer {
+                    offerSection
+                }
                 WeekBoard(
                     days: DayGrouping.thisWeek(sessions, date: \.playedAt).map {
                         (day: $0.day, games: $0.items.compactMap(\.game))

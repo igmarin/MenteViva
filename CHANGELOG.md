@@ -4,6 +4,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 
 ## [Unreleased]
 
+### Added
+- **A gentle nudge after a strong game and a one-line level note (#207):** when the rules move a game up by one, by two, or ease it, the first time you open it that day you see one warm line under the header ("We made it a little harder: you've been doing great.", "Two steps up: you're flying!", "We made it a little calmer, so you enjoy it more.") in `.title2`, read by VoiceOver, gone once the first round starts and only once per day; never mentions misses or accuracy. When you finish a strong game below level 10 and the game isn't pinned, the celebration asks once that day "That was perfect. Shall we try the next level?" with two 100pt buttons "Yes, let's try" / "Keep it as it is" (equally prominent, neither default) — Yes lifts the level by one now with reason `.chosen` so the staircase counts from there.
+
 ### Changed
 - **A gentler staircase, still in one day's plan (#198):** levels 1–10 climb one after a strong game, two after two strong in a row, and ease one when the latest game was hard going; once a day, never mid-game, clamped to 1...10. Memory Lane's strong/weak thresholds (0.65/0.45) are lowered because its accuracy counts moves (pairs / moves) so even good play sits near 0.6. The old 7-day hold is gone — the window since the last change is the hold now.
 
