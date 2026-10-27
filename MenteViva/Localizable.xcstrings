@@ -6809,6 +6809,22 @@
         }
       }
     },
+    "game.tangram.miss.flip" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Almost — try flipping it"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casi — prueba a voltearla"
+          }
+        }
+      }
+    },
     "game.tangram.miss.spot" : {
       "extractionState" : "manual",
       "localizations" : {

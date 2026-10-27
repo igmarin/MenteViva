@@ -45,6 +45,24 @@ nonisolated enum TangramPiece: Int, CaseIterable, Sendable {
         }
     }
 
+    /// The twin triangles share a kind, so either large fits either large slot
+    /// (and the same for the smalls): to the player they are the same tile.
+    var kind: TangramPiece {
+        switch self {
+        case .large2: .large
+        case .small2: .small
+        default: self
+        }
+    }
+
+    /// The tile's size, its bounding diagonal: how far a drop may land from a
+    /// slot scales with it, so small tiles need no more precision than large.
+    var diagonal: Double {
+        let xs = corners.map(\.x)
+        let ys = corners.map(\.y)
+        return Double(hypot((xs.max() ?? 0) - (xs.min() ?? 0), (ys.max() ?? 0) - (ys.min() ?? 0)))
+    }
+
     /// The tile's corners after the placement motion: mirror across the
     /// vertical axis when flipped, then `rotation` steps of 45°, then move to
     /// `position`. The authoring tool (`/tmp/tangram`, not in the repo) uses

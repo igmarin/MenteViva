@@ -1,49 +1,40 @@
 import SwiftData
 import SwiftUI
 
-/// Tangram: fill the silhouette with the seven tiles (#219). Tap a tray tile,
-/// then tap where it goes; dragging a tile on the board also works, and
-/// VoiceOver places tiles through custom actions. Pure rules live in
-/// `TangramPuzzle`; this view owns taps, drags and layout. Fully offline.
+/// Tangram: fill the silhouette with the seven tiles (#219). Tap a tray tile, then tap where it
+/// goes; a tray tile can also be dragged onto the board, and VoiceOver places tiles through custom
+/// actions that name each slot. The rules live in `TangramPuzzle`; this view owns taps, drags and
+/// drawing. A tile that doesn't fit goes back to the tray with a warm hint. Fully offline.
 struct TangramView: View {
     @Environment(\.modelContext) private var modelContext
 
-    /// Off the board: tiles waiting in the tray carry this spot, far outside
-    /// every silhouette, so the board simply never draws them.
-    static let traySpot = CGPoint(x: -1000, y: -1000)
+    /// The screen's coordinate space: a tray drag ends in it, so the drop reads as a board point.
+    private static let space = "tangram.table"
 
     @State private var difficulty = Difficulty.stored(.tangram)
-    @State private var shape = TangramShapes.all[0]
     @State private var seen: Set<String> = []
-    @State private var placed: [TangramPlacement] = []
+    @State private var puzzle = TangramPuzzle(
+        shape: TangramShapes.all[0], rules: TangramPuzzle.rules(for: Difficulty.stored(.tangram)))
+    /// The turn and mirror the player gave each tray tile, keyed by the slot it was dealt for.
+    @State private var turns: [Int: TangramPlacement] = [:]
     @State private var selected: Int?
-    @State private var moves = 0
-    @State private var misses = 0
-    @State private var startedAt = Date.now
-    @State private var missMessage: String?
+    @State private var dragged: Int?
+    @State private var dragOffset = CGSize.zero
+    @State private var boardFrame = CGRect.zero
+    @State private var hint: String?
     @State private var missed = false
+    @State private var startedAt = Date.now
     @State private var showCelebration = false
     @State private var finalDetail = ""
-    /// Each dragged tile's spot when its drag began: the displacement applies
-    /// onto this snapshot, never onto the already-moving state.
-    @State private var dragStart: [Int: CGPoint] = [:]
 
-    private var rules: TangramRules { TangramPuzzle.rules(for: difficulty) }
-
-    /// Tiles still out of place, the tray's contents in target order.
-    private var remaining: [Int] {
-        placed.indices.filter {
-            !TangramPuzzle.snapped(
-                placed[$0], to: shape.placements[$0],
-                matchRotation: rules.matchRotation, matchFlip: rules.matchFlip)
-        }
-    }
+    private var shape: TangramShape { puzzle.shape }
+    private var rules: TangramRules { puzzle.rules }
 
     var body: some View {
         VStack(spacing: 16) {
             LevelExplainBanner(
                 change: PlanStore.cachedPlan()?.changes[GameID.tangram], game: GameID.tangram,
-                hasStarted: moves > 0)
+                hasStarted: puzzle.attempts > 0)
             Text(AppLanguage.localized("game.tangram.instruction"))
                 .font(.title2)
                 .multilineTextAlignment(.center)
@@ -51,112 +42,70 @@ struct TangramView: View {
             GeometryReader { geometry in
                 board(size: geometry.size)
             }
-            .frame(minHeight: 300)
+            .frame(minHeight: 280)
+            .onGeometryChange(for: CGRect.self) {
+                $0.frame(in: .named(Self.space))
+            } action: { frame in
+                boardFrame = frame
+            }
             .modifier(MissCue(active: $missed))
 
-            if let missMessage {
-                Text(missMessage)
+            if let hint {
+                Text(hint)
                     .font(.title2)
                     .multilineTextAlignment(.center)
-                    .accessibilityLiveRegion(.polite)
             }
 
             controls
             tray
         }
         .padding()
+        .coordinateSpace(.named(Self.space))
         .fitOrScroll()
         .gameHeader(.tangram, instruction: AppLanguage.localized("game.tangram.instruction"))
         .onAppear(perform: deal)
         .onDisappear { CaptionSpeaker.stop() }
-        .celebration(
-            isPresented: $showCelebration, game: .tangram, detail: finalDetail, onPlayAgain: deal)
+        .celebration(isPresented: $showCelebration, game: .tangram, detail: finalDetail, onPlayAgain: deal)
     }
 
     // MARK: - Board
 
-    /// The silhouette with the player's tiles on it. One tap handler reads the
-    /// position; tiles are labelled shapes, not buttons, so taps land here.
+    /// The silhouette and the slots already home. A free slot shows its own outline while the
+    /// level gives it; a filled one is drawn solid with a dark edge. One tap handler reads the point.
     private func board(size: CGSize) -> some View {
-        let box = TangramPuzzle.boundingBox(of: shape)
-        let fit = TangramPuzzle.fitTransform(box: box, in: size)
+        let fit = TangramPuzzle.fitTransform(box: TangramPuzzle.boundingBox(of: shape), in: size)
         return ZStack {
-            ForEach(shape.placements.indices, id: \.self) { index in
-                silhouetteTile(index: index, scale: fit.scale, origin: fit.origin)
-            }
-            ForEach(placed.indices, id: \.self) { index in
-                if placed[index].position != Self.traySpot {
-                    playerTile(index: index, scale: fit.scale, origin: fit.origin)
-                }
+            ForEach(shape.placements.indices, id: \.self) { slot in
+                slotView(slot, scale: fit.scale, origin: fit.origin)
             }
         }
         .frame(width: size.width, height: size.height)
         .contentShape(Rectangle())
         .onTapGesture { point in
-            placeSelected(
-                at: TangramPuzzle.fromScreen(point, scale: fit.scale, origin: fit.origin))
+            tapBoard(at: TangramPuzzle.fromScreen(point, scale: fit.scale, origin: fit.origin))
         }
-        .accessibilityElement(children: .contain)
-        .accessibilityLabel(AppLanguage.localized(shape.key))
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(
+            AppLanguage.localized(puzzle.isComplete ? shape.key : "game.tangram.instruction"))
     }
 
-    /// One target: a wash of ink, stroked from level 3 when the outline shows.
-    private func silhouetteTile(index: Int, scale: CGFloat, origin: CGPoint) -> some View {
-        let target = shape.placements[index]
-        return poly(points: target, scale: scale, origin: origin)
-            .fill(GameID.tangram.ink.opacity(0.12))
-            .overlay {
-                poly(points: target, scale: scale, origin: origin)
-                    .stroke(
-                        GameID.tangram.ink.opacity(rules.outline ? 0.8 : 0.25),
-                        lineWidth: rules.outline ? 2 : 1)
-            }
-            .accessibilityHidden(true)
+    private func slotView(_ slot: Int, scale: CGFloat, origin: CGPoint) -> some View {
+        let path = Self.path(shape.placements[slot], scale: scale, origin: origin)
+        let isFilled = puzzle.filled.contains(slot)
+        let ink = GameID.tangram.ink
+        let edge = isFilled ? Color.primary.opacity(0.6) : ink.opacity(puzzle.showsOutline(slot) ? 0.8 : 0)
+        return
+            path
+            .fill(ink.opacity(isFilled ? 0.6 : 0.14))
+            .overlay { path.stroke(edge, lineWidth: 2) }
     }
 
-    /// One tile the player put down: ink, a dark edge, and a thick edge while
-    /// selected (thickness, not colour, marks the selection). Draggable.
-    private func playerTile(index: Int, scale: CGFloat, origin: CGPoint) -> some View {
-        let tile = placed[index]
-        return poly(points: tile, scale: scale, origin: origin)
-            .fill(GameID.tangram.ink.opacity(0.55))
-            .overlay {
-                poly(points: tile, scale: scale, origin: origin)
-                    .stroke(
-                        Color.primary.opacity(0.6),
-                        lineWidth: selected == index ? 6 : 2)
-            }
-            .accessibilityLabel(AppLanguage.localized(tile.piece.nameKey))
-            .gesture(
-                DragGesture(minimumDistance: 8)
-                    .onChanged { drag in
-                        if dragStart[index] == nil { dragStart[index] = tile.position }
-                        let from = TangramPuzzle.fromScreen(
-                            drag.startLocation, scale: scale, origin: origin)
-                        let at = TangramPuzzle.fromScreen(
-                            drag.location, scale: scale, origin: origin)
-                        guard let base = dragStart[index] else { return }
-                        placed[index] = TangramPlacement(
-                            piece: tile.piece,
-                            position: CGPoint(
-                                x: base.x + at.x - from.x,
-                                y: base.y + at.y - from.y),
-                            rotation: tile.rotation, flipped: tile.flipped)
-                    }
-                    .onEnded { _ in
-                        dragStart[index] = nil
-                        moves += 1
-                        settle(index: index)
-                    }
-            )
-    }
-
-    private func poly(points: TangramPlacement, scale: CGFloat, origin: CGPoint) -> Path {
+    private static func path(_ placement: TangramPlacement, scale: CGFloat, origin: CGPoint) -> Path {
         var path = Path()
         path.addLines(
             TangramPiece.placedCorners(
-                points.piece, position: points.position,
-                rotation: points.rotation, flipped: points.flipped
+                placement.piece, position: placement.position,
+                rotation: placement.rotation, flipped: placement.flipped
             ).map { TangramPuzzle.toScreen($0, scale: scale, origin: origin) })
         path.closeSubpath()
         return path
@@ -164,252 +113,215 @@ struct TangramView: View {
 
     // MARK: - Controls
 
-    /// Turn from level 7, Flip from level 9, "Show me one" at every level.
+    /// Turn from level 7, Flip from level 9, "Show me one" at every level; all 100pt.
     private var controls: some View {
         HStack(spacing: 12) {
             if rules.matchRotation {
-                Button {
-                    adjustSelected(TangramPuzzle.turned)
-                } label: {
-                    Text(AppLanguage.localized("game.tangram.turn"))
-                        .font(.title2.weight(.semibold))
-                }
-                .buttonStyle(AnswerTileStyle(minHeight: 100))
-                .disabled(selected == nil)
-                .accessibilityHint(
-                    selected == nil ? AppLanguage.localized("game.tangram.a11y.pickfirst") : "")
+                controlButton("game.tangram.turn", enabled: selected != nil) { adjustSelected(TangramPuzzle.turned) }
             }
             if rules.matchFlip {
-                Button {
-                    adjustSelected(TangramPuzzle.mirrored)
-                } label: {
-                    Text(AppLanguage.localized("game.tangram.flip"))
-                        .font(.title2.weight(.semibold))
-                }
-                .buttonStyle(AnswerTileStyle(minHeight: 100))
-                .disabled(selected == nil)
-                .accessibilityHint(
-                    selected == nil ? AppLanguage.localized("game.tangram.a11y.pickfirst") : "")
+                controlButton("game.tangram.flip", enabled: selected != nil) { adjustSelected(TangramPuzzle.mirrored) }
             }
-            Button {
-                showOne()
-            } label: {
-                Text(AppLanguage.localized("game.tangram.showone"))
-                    .font(.title2.weight(.semibold))
-            }
-            .buttonStyle(AnswerTileStyle(minHeight: 100))
-            .disabled(remaining.isEmpty)
+            controlButton("game.tangram.showone", enabled: !puzzle.isComplete, action: showOne)
         }
     }
 
-    /// The tray: every tile still out of place in a 100pt cell. Tapping
-    /// selects; the selected tile offers each free slot as a VoiceOver action.
+    private func controlButton(_ key: String, enabled: Bool, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Text(AppLanguage.localized(key))
+                .font(.title2.weight(.semibold))
+        }
+        .buttonStyle(AnswerTileStyle(minHeight: 100))
+        .disabled(!enabled)
+    }
+
+    // MARK: - Tray
+
+    /// One 100pt cell per tile still to place. Tapping selects (a thick edge, not colour, marks it);
+    /// dragging drops it on the board; VoiceOver lists the slots it fits as actions.
     private var tray: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 12) {
-                ForEach(remaining, id: \.self) { index in
-                    Button {
-                        selected = index
-                        missMessage = nil
-                    } label: {
-                        trayCell(index: index)
-                    }
-                    .buttonStyle(.plain)
-                    .accessibilityLabel(AppLanguage.localized(placed[index].piece.nameKey))
-                    .accessibilityAddTraits(selected == index ? .isSelected : [])
-                    .accessibilityActions {
-                        if selected == index {
-                            ForEach(remaining, id: \.self) { slot in
-                                Button(slotActionName(slot)) {
-                                    placeViaAction(piece: index, slot: slot)
-                                }
-                            }
-                        }
-                    }
-                }
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: 100), spacing: 12)], spacing: 12) {
+            ForEach(puzzle.freeSlots, id: \.self) { slot in
+                trayTile(slot)
             }
-            .padding(.vertical, 4)
         }
     }
 
-    /// The tile drawn in its current turn and mirror, fitted into a 100pt cell
-    /// with a thick edge while selected.
-    private func trayCell(index: Int) -> some View {
-        let tile = placed[index]
+    private func trayTile(_ slot: Int) -> some View {
+        let tile = orientation(of: slot)
+        let isSelected = selected == slot
+        return Button {
+            selected = isSelected ? nil : slot
+            hint = nil
+        } label: {
+            Self.drawing(of: tile)
+                .frame(width: 100, height: 100)
+                .background(Color(.systemBackground), in: .rect(cornerRadius: 16))
+                .overlay {
+                    RoundedRectangle(cornerRadius: 16)
+                        .strokeBorder(
+                            isSelected ? GameID.tangram.ink : Color.secondary.opacity(0.4),
+                            lineWidth: isSelected ? 6 : 2)
+                }
+        }
+        .buttonStyle(.plain)
+        .offset(dragged == slot ? dragOffset : .zero)
+        .zIndex(dragged == slot ? 1 : 0)
+        .simultaneousGesture(
+            DragGesture(minimumDistance: 10, coordinateSpace: .named(Self.space))
+                .onChanged { value in
+                    dragged = slot
+                    dragOffset = value.translation
+                }
+                .onEnded { value in
+                    dragged = nil
+                    dragOffset = .zero
+                    drop(slot, at: value.location)
+                }
+        )
+        .accessibilityLabel(AppLanguage.localized(tile.piece.nameKey))
+        .accessibilityAddTraits(isSelected ? .isSelected : [])
+        .accessibilityActions {
+            ForEach(puzzle.fittingSlots(for: tile.piece), id: \.self) { target in
+                Button(slotActionName(target)) { placeByName(slot, into: target) }
+            }
+        }
+    }
+
+    /// A tray tile drawn turned and mirrored as it is now, fitted into a 76pt square in its cell.
+    private static func drawing(of tile: TangramPlacement) -> some View {
         let corners = TangramPiece.placedCorners(
             tile.piece, position: .zero, rotation: tile.rotation, flipped: tile.flipped)
         let xs = corners.map(\.x)
         let ys = corners.map(\.y)
-        let box = CGRect(
-            x: xs.min() ?? 0, y: ys.min() ?? 0,
-            width: (xs.max() ?? 1) - (xs.min() ?? 0), height: (ys.max() ?? 1) - (ys.min() ?? 0))
-        let side: CGFloat = 76
-        let scale = min(side / max(box.width, 0.001), side / max(box.height, 0.001))
+        let minX = xs.min() ?? 0
+        let minY = ys.min() ?? 0
+        let width = max((xs.max() ?? 0) - minX, 0.001)
+        let height = max((ys.max() ?? 0) - minY, 0.001)
+        let scale = 76 / max(width, height)
         var path = Path()
         path.addLines(
             corners.map {
-                CGPoint(
-                    x: 50 + ($0.x - box.minX - box.width / 2) * scale,
-                    y: 50 - ($0.y - box.minY - box.height / 2) * scale)
+                CGPoint(x: 50 + ($0.x - minX - width / 2) * scale, y: 50 - ($0.y - minY - height / 2) * scale)
             })
         path.closeSubpath()
-        return
-            path
-            .fill(GameID.tangram.ink.opacity(0.45))
-            .frame(width: 100, height: 100)
-            .background(Color(.systemBackground), in: .rect(cornerRadius: 16))
-            .overlay {
-                RoundedRectangle(cornerRadius: 16)
-                    .strokeBorder(
-                        selected == index ? GameID.tangram.ink : .secondary.opacity(0.4),
-                        lineWidth: selected == index ? 6 : 2)
-            }
+        return path.fill(GameID.tangram.ink.opacity(0.55))
     }
 
     // MARK: - Play
 
-    /// A board tap: with a tile selected, its middle moves onto the tap; with
-    /// none, a tap on a tile's body picks it up instead.
-    private func placeSelected(at point: CGPoint) {
-        guard let index = selected else {
-            selected = placed.indices.min {
-                middle(of: placed[$0], to: point) < middle(of: placed[$1], to: point)
-            }.flatMap { middle(of: placed[$0], to: point) < grab(placed[$0]) ? $0 : nil }
+    /// A tray tile's current turn: what the player set, else the slot's own turn while the level
+    /// turns tiles for the player, else unturned, so from level 7 turning is part of the puzzle.
+    private func orientation(of slot: Int) -> TangramPlacement {
+        if let turn = turns[slot] { return turn }
+        let target = shape.placements[slot]
+        return rules.matchRotation
+            ? TangramPlacement(piece: target.piece, position: .zero, rotation: 0, flipped: false)
+            : TangramPlacement(piece: target.piece, position: .zero, rotation: target.rotation, flipped: target.flipped)
+    }
+
+    private func adjustSelected(_ change: (TangramPlacement) -> TangramPlacement) {
+        guard let slot = selected else { return }
+        turns[slot] = change(orientation(of: slot))
+    }
+
+    private func tapBoard(at point: CGPoint) {
+        guard let slot = selected else {
+            say(AppLanguage.localized("game.tangram.a11y.pickfirst"))
             return
         }
-        moves += 1
-        let anchor = TangramPuzzle.centroidOffset(of: placed[index])
-        placed[index] = TangramPlacement(
-            piece: placed[index].piece,
-            position: CGPoint(x: point.x - anchor.x, y: point.y - anchor.y),
-            rotation: placed[index].rotation, flipped: placed[index].flipped)
-        settle(index: index)
+        place(slot, at: point)
     }
 
-    /// Tap-to-tile distance through the tile's middle, and how close a tap
-    /// must be to pick it up; tray tiles sit a thousand units out, far beyond
-    /// any grab.
-    private func middle(of placement: TangramPlacement, to point: CGPoint) -> CGFloat {
-        let offset = TangramPuzzle.centroidOffset(of: placement)
-        return hypot(
-            point.x - (placement.position.x + offset.x),
-            point.y - (placement.position.y + offset.y))
+    /// A drag that ends over the board places the tile there; anywhere else it just goes back.
+    private func drop(_ slot: Int, at location: CGPoint) {
+        guard boardFrame.contains(location) else { return }
+        let local = CGPoint(x: location.x - boardFrame.minX, y: location.y - boardFrame.minY)
+        let fit = TangramPuzzle.fitTransform(box: TangramPuzzle.boundingBox(of: shape), in: boardFrame.size)
+        place(slot, at: TangramPuzzle.fromScreen(local, scale: fit.scale, origin: fit.origin))
     }
 
-    private func grab(_ placement: TangramPlacement) -> CGFloat {
-        TangramPuzzle.grabRadius(of: placement.piece)
+    private func place(_ slot: Int, at point: CGPoint) {
+        let tile = orientation(of: slot)
+        respond(to: puzzle.place(tile.piece, at: point, rotation: tile.rotation, flipped: tile.flipped), from: slot)
     }
 
-    /// After a tile lands: snapped tiles stay with a happy sound, the rest say
-    /// what to try next — another spot, or a turn when it sits nearly right.
-    private func settle(index: Int) {
-        let target = shape.placements[index]
-        if TangramPuzzle.snapped(
-            placed[index], to: target,
-            matchRotation: rules.matchRotation, matchFlip: rules.matchFlip)
-        {
-            missMessage = nil
+    private func placeByName(_ slot: Int, into target: Int) {
+        respond(to: puzzle.place(orientation(of: slot).piece, inSlot: target), from: slot)
+    }
+
+    /// Home: a happy sound, and the round ends when the figure is whole. Otherwise one warm line on
+    /// what to try next, and the tile stays in the tray.
+    private func respond(to result: TangramPlaceResult, from slot: Int) {
+        switch result {
+        case .snapped(let home):
+            // A twin went into the other twin's slot: the tile left in the tray keeps that twin's turn.
+            if home != slot { turns[slot] = turns[home] }
+            turns[home] = nil
             selected = nil
+            say(nil)
             Feedback.play(.success)
-            if puzzleDone { finish() }
-            return
+            if puzzle.isComplete { finish() }
+        case .turnIt: miss("game.tangram.miss.turn")
+        case .flipIt: miss("game.tangram.miss.flip")
+        case .tryAnotherSpot: miss("game.tangram.miss.spot")
         }
-        misses += 1
+    }
+
+    private func miss(_ key: String) {
         missed = true
-        let near =
-            hypot(
-                placed[index].position.x - target.position.x,
-                placed[index].position.y - target.position.y) <= TangramPuzzle.snapTolerance
-        missMessage = AppLanguage.localized(
-            near && rules.matchRotation ? "game.tangram.miss.turn" : "game.tangram.miss.spot")
+        say(AppLanguage.localized(key))
         Feedback.play(.miss)
     }
 
-    private var puzzleDone: Bool {
-        TangramPuzzle(shape: shape, placed: placed).isCorrect(
-            matchRotation: rules.matchRotation, matchFlip: rules.matchFlip)
+    /// Shows a hint under the board and reads it to VoiceOver; nil clears it.
+    private func say(_ line: String?) {
+        hint = line
+        if let line { AccessibilityNotification.Announcement(line).post() }
     }
 
-    /// Turn and Flip re-check a tile on the board, so one that lands right
-    /// snaps at once; a tile still in the tray just turns, with no miss, since
-    /// lining it up before placing it is the normal way to play.
-    private func adjustSelected(_ change: (TangramPlacement) -> TangramPlacement) {
-        guard let index = selected else { return }
-        placed[index] = change(placed[index])
-        guard placed[index].position != Self.traySpot else { return }
-        moves += 1
-        settle(index: index)
-    }
-
-    /// "Show me one": the first tile still out goes home, at every level.
+    /// "Show me one": the first free slot fills itself, at every level.
     private func showOne() {
-        guard
-            let index = TangramPuzzle.firstMisplacedIndex(
-                placed: placed, in: shape,
-                matchRotation: rules.matchRotation, matchFlip: rules.matchFlip)
-        else { return }
-        moves += 1
-        placed[index] = shape.placements[index]
-        if selected == index { selected = nil }
-        missMessage = nil
+        guard let slot = puzzle.showOne() else { return }
+        if selected == slot { selected = nil }
+        turns[slot] = nil
+        say(nil)
         Feedback.play(.success)
-        if puzzleDone { finish() }
-    }
-
-    /// A VoiceOver slot action: the tile moves to the named slot. Choosing its
-    /// own slot also straightens it — picking the tile and the slot is the
-    /// puzzle; the fine turning is the accommodation, so the game stays
-    /// finishable by ear at every level.
-    private func placeViaAction(piece: Int, slot: Int) {
-        moves += 1
-        let target = shape.placements[slot]
-        placed[piece] = TangramPlacement(
-            piece: placed[piece].piece, position: target.position,
-            rotation: slot == piece ? target.rotation : placed[piece].rotation,
-            flipped: slot == piece ? target.flipped : placed[piece].flipped)
-        selected = nil
-        settle(index: piece)
+        if puzzle.isComplete { finish() }
     }
 
     private func slotActionName(_ slot: Int) -> String {
-        String(
+        let region = TangramPuzzle.slot(of: shape.placements[slot], in: shape).keySuffix
+        return String(
             format: AppLanguage.localized("game.tangram.a11y.place %@"),
-            AppLanguage.localized(
-                "game.tangram.slot.\(TangramPuzzle.slot(of: shape.placements[slot], in: shape).keySuffix)"))
+            AppLanguage.localized("game.tangram.slot.\(region)"))
     }
 
     private func deal() {
         var generator = SystemRandomNumberGenerator()
-        shape = TangramPuzzle.pick(from: TangramShapes.all, seen: seen, using: &generator)
-        seen.insert(shape.key)
-        placed = shape.placements.enumerated().map { index, target in
-            index < rules.prefill
-                ? target
-                : TangramPlacement(
-                    piece: target.piece, position: Self.traySpot,
-                    rotation: target.rotation, flipped: target.flipped)
-        }
+        let next = TangramPuzzle.pick(from: TangramShapes.all, seen: seen, using: &generator)
+        seen.insert(next.key)
+        puzzle = TangramPuzzle(shape: next, rules: TangramPuzzle.rules(for: difficulty))
+        turns = [:]
         selected = nil
-        dragStart = [:]
-        moves = 0
-        misses = 0
-        startedAt = .now
-        missMessage = nil
+        dragged = nil
+        dragOffset = .zero
+        hint = nil
         missed = false
-        // Level 1 deals the full ghost, already complete: celebrate the figure
-        // by name instead of leaving a finished board with nothing to do.
-        if puzzleDone { finish() }
+        startedAt = .now
     }
 
+    /// The whole figure, named on screen and aloud, then the shared celebration.
     private func finish() {
         let elapsed = Int(Date.now.timeIntervalSince(startedAt))
         modelContext.record(
             GameSession(
-                gameID: .tangram, score: Self.score(misses: misses), rounds: 1,
-                durationSeconds: elapsed, correct: shape.placements.count, attempts: moves,
-                difficulty: difficulty))
+                gameID: .tangram, score: Self.score(misses: puzzle.attempts - puzzle.correct),
+                rounds: shape.placements.count, durationSeconds: elapsed,
+                correct: puzzle.correct, attempts: puzzle.attempts, difficulty: difficulty))
         finalDetail = AppLanguage.localized(shape.key)
         if CaptionSpeaker.autoSpeaks() { CaptionSpeaker.speak(finalDetail) }
+        AccessibilityNotification.Announcement(finalDetail).post()
         showCelebration = true
     }
 
