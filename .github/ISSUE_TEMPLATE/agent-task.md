@@ -32,6 +32,12 @@ labels: ready
 
 - none
 
+## How to work it (AGENTS.md "Several agents at once")
+
+- Own worktree and branch: `git worktree add ../mv-<issue> -b agent/<issue>-<slug> origin/main`.
+- A "(2/2)" ticket stacks on its "(1/2)" branch with `gh stack`; its PR targets that branch.
+- Tests first; lint and tests green locally (pre-push hook, your own simulator) before every push.
+
 ## Done when
 
 AGENTS.md "Definition of done" holds, and the PR says `Closes #<this issue>`.

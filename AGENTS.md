@@ -34,7 +34,7 @@ MenteViva/            app (SwiftUI + SwiftData)
   Games/              one file per game (9) + CelebrationView, MissCue, FitOrScroll
   Models/             GameSession, GameID, Difficulty, RoundProgress
   Services/           DailyPolicy (on-device plan), PlanStore (saved plan + levels),
-                      FamilySettings, MemoryPhotos,
+                      FamilySettings, PlayerProfile (onboarding answers), MemoryPhotos,
                       PlayerStateSummary, WeeklySummary, ProgressRates, AppLanguage, SoundPlayer, HotPath (signposts),
                       CaptionSpeaker, EverydayObjects
   Localizable.xcstrings  every string, EN + ES
@@ -173,6 +173,17 @@ lead and reviews every PR; no agent merges.
    Priority: `p0` (blocks the App Store), `p1`, `p2`. Size: `size:S` (<2 h), `size:M` (half a day),
    `size:L` (split before taking). Who: `agent:muse`, `agent:cline`, `agent:claude`, `owner`.
    State: `ready`, `review`, `blocked`. Epics are parent issues; tickets are their sub-issues.
+6. **One worktree per ticket**, never the main checkout:
+   `git worktree add ../mv-<issue> -b agent/<issue>-<slug> origin/main`. Remove it after the merge
+   (`git worktree remove ../mv-<issue>`). Agents that don't do this on their own (Muse) are told to.
+7. **Split tickets stack with `gh stack`.** A "(2/2)" screen ticket builds on its "(1/2)" logic
+   ticket: its branch starts from the logic branch and its PR targets that branch, not `main`. Let
+   `gh stack` keep the stack in order; never rebase or force-push a branch someone else pushed to.
+8. **Green locally before every push.** On a Mac with Xcode, run lint
+   (`xcrun swift-format lint --strict -r MenteViva MenteVivaTests tools`) and the tests on your own
+   simulator (`MENTEVIVA_SIMULATOR=<udid> git push` runs both through the pre-push hook), and use the
+   `menteviva-checks` skill. Never `--no-verify`. An agent that can't run them (no Xcode) says so in
+   the PR and opens it ready, so CI runs them.
 
 ## Definition of done (every PR)
 

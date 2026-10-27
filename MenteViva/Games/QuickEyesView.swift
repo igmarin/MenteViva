@@ -12,9 +12,16 @@ struct QuickEyesView: View {
 
     private let emojis = ["🌻", "🐢", "🍎", "🎸", "🌙", "☕️", "🦋", "🍊", "🚗", "⭐", "🐝", "🌵"]
     private static let totalRounds = 12
-    /// Flash length in seconds: where it starts and the floor it shrinks to.
+    /// Flash length in seconds for levels 1...10: where it starts and the floor it shrinks to (#200).
+    /// Levels 2, 4 and 6 keep the old easy, medium and hard pairs, so migrated players notice nothing.
+    /// Level 1 gives the slowest start yet, and 7–10 tighten in small steps; no time grows with the level.
+    static let displayTimeTable: [(start: Double, floor: Double)] = [
+        (2.0, 1.0), (1.6, 0.8), (1.4, 0.5), (1.2, 0.35), (1.1, 0.3),
+        (1.0, 0.25), (0.9, 0.22), (0.8, 0.2), (0.75, 0.18), (0.7, 0.16),
+    ]
+
     static func displayTimes(for difficulty: Difficulty) -> (start: Double, floor: Double) {
-        difficulty.pick((1.6, 0.8), (1.2, 0.35), (1.0, 0.25))
+        difficulty.values(displayTimeTable)
     }
     private var startDisplayTime: Double { Self.displayTimes(for: difficulty).start }
     private var minDisplayTime: Double { Self.displayTimes(for: difficulty).floor }
