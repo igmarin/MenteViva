@@ -76,6 +76,13 @@ nonisolated struct UpOrDownDeal: Equatable {
         difficulty.pick(true, false, false)
     }
 
+    /// Stuck pulse and announcement rule (#265): announce only on the transition
+    /// into stuck; pulse only while stuck with Reduce Motion off. The view feeds
+    /// it `onChange` values, so a re-render never re-announces.
+    static func stuckCue(wasStuck: Bool, isStuck: Bool, reduceMotion: Bool) -> (pulse: Bool, announce: Bool) {
+        (isStuck && !reduceMotion, isStuck && !wasStuck)
+    }
+
     static func canPlay(_ card: PlayingCard, on open: PlayingCard, wraps: Bool) -> Bool {
         let distance = abs(card.rank - open.rank)
         return distance == 1 || (wraps && distance == 12)
