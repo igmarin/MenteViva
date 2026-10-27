@@ -14,71 +14,6 @@ struct CategoryFluencyView: View {
         case showBeatThenFinish
     }
 
-    private enum Category: CaseIterable {
-        case animals, fruits, colors, vehicles
-
-        var name: String {
-            switch self {
-            case .animals: AppLanguage.localized("game.category.animals")
-            case .fruits: AppLanguage.localized("game.category.fruits")
-            case .colors: AppLanguage.localized("game.category.colors")
-            case .vehicles: AppLanguage.localized("game.category.vehicles")
-            }
-        }
-
-        var items: [String] {
-            switch self {
-            case .animals: ["🐶", "🐱", "🦁", "🐸", "🐢", "🦋", "🐘"]
-            case .fruits: ["🍎", "🍌", "🍇", "🍊", "🍓", "🍉", "🍑"]
-            case .colors: ["🔴", "🔵", "🟢", "🟡", "🟠", "🟣", "🟤"]
-            case .vehicles: ["🚗", "🚌", "✈️", "🚀", "🚲", "🚂", "⛵️"]
-            }
-        }
-    }
-
-    private let roundsPerSession = 3
-
-    /// Decoys per level: one more each step so progress is felt, but never
-    /// mid-game. Levels 2/4/6 are 3/5/7 to match the old easy/medium/hard so
-    /// migrated players see no change; the fit cap keeps 100pt targets on SE.
-    static let decoysByLevel: [Int] = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
-    /// Smallest tile that stays tappable (conventions §4).
-    static let tileMin: Double = 100
-    static let tileGap: Double = 16
-    static let horizontalPadding: Double = 32
-
-    /// Decoys for a level, capped to the available pool.
-    static func decoyCount(for difficulty: Difficulty) -> Int {
-        min(difficulty.values(decoysByLevel), 21)
-    }
-
-    /// Test helper with injectable pool size.
-    static func decoyCount(for difficulty: Difficulty, poolSize: Int) -> Int {
-        min(difficulty.values(decoysByLevel), poolSize)
-    }
-
-    /// Decoys capped to both the pool and the width so every tile keeps
-    /// 100pt. Width is the full screen width; padding and gaps are removed
-    /// before measuring.
-    static func fittedDecoyCount(for difficulty: Difficulty, width: Double) -> Int {
-        fittedDecoyCount(for: difficulty, width: width, poolSize: 21)
-    }
-
-    /// Test helper with injectable pool size.
-    static func fittedDecoyCount(for difficulty: Difficulty, width: Double, poolSize: Int) -> Int {
-        let poolCapped = decoyCount(for: difficulty, poolSize: poolSize)
-        let gridWidth = max(0, width - horizontalPadding)
-        // Columns that keep a tile >= 100pt.
-        let maxColumns = max(1, Int((gridWidth + tileGap) / (tileMin + tileGap)))
-        // If even a single column doesn't fit, no decoy can rescue it.
-        guard gridWidth >= tileMin else { return 0 }
-        // When the board needs more columns than fit, the tile would shrink
-        // below 100pt. Cap decoys so total tiles don't force that.
-        // Approximation: total tiles displayed in maxColumns columns.
-        let maxTotalTiles = maxColumns * 6  // enough rows before scrolling, keeps 100pt
-        let maxDecoysForWidth = max(0, maxTotalTiles - 7)
-        return min(poolCapped, maxDecoysForWidth)
-    }
     @State private var difficulty = Difficulty.stored(.categoryFluency)
 
     struct Tile: Identifiable {
@@ -88,9 +23,9 @@ struct CategoryFluencyView: View {
         var isPicked = false
     }
 
-    @State private var rounds: [Category] = []
+    @State private var session: [CategoryDeal.Round] = []
     @State private var tiles: [Tile] = []
-    @State private var progress = RoundProgress(totalRounds: 3)
+    @State private var progress = RoundProgress(totalRounds: CategoryDeal.roundsPerSession)
     @State private var found = 0
     @State private var totalCorrect = 0
     @State private var totalPicks = 0
@@ -115,10 +50,10 @@ struct CategoryFluencyView: View {
     private let columns = [GridItem(.adaptive(minimum: 100), spacing: 16)]
 
     /// The round being played, or nil once the session ends. Body reads this
-    /// instead of indexing `rounds`: a counter that runs one past the end used
+    /// instead of indexing the deal: a counter that runs one past the end used
     /// to crash here with "Index out of range" (#30).
-    private var currentRound: Category? {
-        rounds.indices.contains(progress.completedRounds) ? rounds[progress.completedRounds] : nil
+    private var currentRound: CategoryDeal.Round? {
+        session.indices.contains(progress.completedRounds) ? session[progress.completedRounds] : nil
     }
 
     var body: some View {
@@ -132,18 +67,18 @@ struct CategoryFluencyView: View {
                         .font(.title2)
                         .multilineTextAlignment(.center)
 
-                    Text(round.name)
+                    Text(name(of: round))
                         .font(.largeTitle)
                         .fontWeight(.bold)
                         .accessibilityAddTraits(.isHeader)
 
                     ProgressCards(
-                        done: found, total: round.items.count,
+                        done: found, total: round.category.items.count,
                         words: String(
-                            format: AppLanguage.localized("game.category.found %lld %lld"), found, round.items.count))
+                            format: AppLanguage.localized("game.category.found %lld %lld"), found, round.category.items.count))
 
                     if isShowingCompletionBeat {
-                        Text(String(format: AppLanguage.localized("game.category.complete %@"), round.name))
+                        Text(String(format: AppLanguage.localized("game.category.complete %@"), name(of: round)))
                             .font(.title2)
                             .multilineTextAlignment(.center)
                     }
@@ -180,20 +115,25 @@ struct CategoryFluencyView: View {
                         }
                     }
                 }
-                .id(round)
+                .id(round.category)
                 .transition(reduceMotion ? .identity : .opacity)
-                .onAppear { AccessibilityNotification.Announcement(round.name).post() }
+                .onAppear { AccessibilityNotification.Announcement(name(of: round)).post() }
             }
         }
         .padding()
         .fitOrScroll()
         .gameHeader(
             .categoryFluency,
-            instruction: AppLanguage.localized("game.category.instruction") + " " + (currentRound?.name ?? "")
+            instruction: AppLanguage.localized("game.category.instruction") + " " + (currentRound.map(name(of:)) ?? "")
         )
         .onAppear(perform: setup)
         .onDisappear { completionTask?.cancel() }
         .celebration(isPresented: $showCelebration, game: .categoryFluency, detail: finalDetail, onPlayAgain: restart)
+    }
+
+    /// The category in play, as shown and announced.
+    private func name(of round: CategoryDeal.Round) -> String {
+        AppLanguage.localized(round.category.nameKey)
     }
 
     private func restart() {
@@ -207,22 +147,18 @@ struct CategoryFluencyView: View {
         completionTask?.cancel()
         completionTask = nil
         isShowingCompletionBeat = false
-        rounds = Category.allCases.shuffled().prefix(roundsPerSession).map { $0 }
-        progress = RoundProgress(totalRounds: rounds.count)
+        var generator = SystemRandomNumberGenerator()
+        session = CategoryDeal.deal(
+            difficulty: difficulty, width: Double(UIScreen.main.bounds.width), using: &generator)
+        progress = RoundProgress(totalRounds: session.count)
         startedAt = .now
         dealRound()
     }
 
+    /// Lays out the tiles of the round in play; the deal already shuffled them.
     private func dealRound() {
-        guard let category = currentRound else { return }
-        let width = Double(UIScreen.main.bounds.width)
-        let count = Self.fittedDecoyCount(for: difficulty, width: width)
-        let decoys = Category.allCases.filter { $0 != category }
-            .flatMap(\.items).shuffled().prefix(count)
-        let mixed =
-            category.items.map { (emoji: $0, belongs: true) }
-            + decoys.map { (emoji: $0, belongs: false) }
-        tiles = mixed.shuffled().enumerated().map { Tile(id: $0, emoji: $1.emoji, belongs: $1.belongs) }
+        guard let round = currentRound else { return }
+        tiles = round.tiles.enumerated().map { Tile(id: $0, emoji: $1.emoji, belongs: $1.belongs) }
         tilePositions = Dictionary(uniqueKeysWithValues: tiles.indices.map { (tiles[$0].id, $0 + 1) })
         found = 0
     }
@@ -243,8 +179,8 @@ struct CategoryFluencyView: View {
         totalCorrect += 1
         Feedback.play(.success)
         let completion = Self.completion(
-            found: found, total: currentRound?.items.count ?? 0,
-            hasNextRound: progress.completedRounds + 1 < rounds.count)
+            found: found, total: currentRound?.category.items.count ?? 0,
+            hasNextRound: progress.completedRounds + 1 < session.count)
         guard completion != .keepPlaying else { return }
         isShowingCompletionBeat = true
         completionTask = Task { @MainActor in
@@ -272,7 +208,7 @@ struct CategoryFluencyView: View {
         modelContext.record(
             GameSession(
                 gameID: .categoryFluency, score: score,
-                rounds: roundsPerSession, durationSeconds: elapsed,
+                rounds: CategoryDeal.roundsPerSession, durationSeconds: elapsed,
                 correct: totalCorrect, attempts: totalPicks,
                 difficulty: difficulty))
         finalDetail = String(format: AppLanguage.localized("game.celebration.items %lld"), totalCorrect)
