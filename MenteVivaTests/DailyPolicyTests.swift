@@ -179,7 +179,7 @@ final class DailyPolicyTests: XCTestCase {
 
     // MARK: The real payload (docs/jev-json/011)
 
-    func testGivenArchivedLivePayloadWhenPlanThenSameTopThreeSetAsJevAndSensibleDifficulty() throws {
+    func testGivenArchivedLivePayloadWhenPlanThenLongestRestedGameJoinsAndSensibleDifficulty() throws {
         let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
         let data = try Data(contentsOf: root.appendingPathComponent("docs/jev-json/011-daily-plan.request.json"))
         struct Envelope: Decodable { let state: PlayerStateSummary }
@@ -187,8 +187,10 @@ final class DailyPolicyTests: XCTestCase {
         // The 011 payload lists per-game means but no recentAccuracies array
         // yet — the staircase sees no strong session and holds every level.
         let p = plan(summary, hidden: [.reminiscence, .sudoku, .upOrDown, .sayings])
-        // Jev picked quick_eyes, category_fluency, memory_match for this payload.
-        XCTAssertEqual(Set(p.games), [.quickEyes, .categoryFluency, .memoryMatch])
+        // Jev picked quick_eyes, category_fluency, memory_match for this payload. Since #277 the rested
+        // 0.55 games outrank Name the Herd (0.7, played 2 days ago: 0.45), and since #279 Number Trail,
+        // unplayed for 14 days, takes the last place from Color Clash (rested 9).
+        XCTAssertEqual(Set(p.games), [.quickEyes, .mathStreaks, .memoryMatch])
         XCTAssertEqual(p.difficulty[.stroop], Difficulty(level: 1))
         XCTAssertEqual(p.difficulty[.mathStreaks], Difficulty(level: 1))
         XCTAssertEqual(p.difficulty[.memoryMatch], Difficulty(level: 1))
@@ -246,5 +248,220 @@ final class DailyPolicyTests: XCTestCase {
         let legacy = try JSONDecoder().decode(
             DailyPlan.self, from: JSONEncoder().encode(withoutChanges))
         XCTAssertEqual(legacy.changes, [:])
+    }
+
+    // MARK: The player's profile shapes the plan (#211)
+
+    private func plan(_ s: PlayerStateSummary, profile: PlayerProfile) -> DailyPlan {
+        DailyPolicy.plan(state: s, dayStamp: "2026-09-30", profile: profile)
+    }
+
+    /// Deals `days` days in a row, as if the player played exactly the games dealt each day.
+    private func dealtCounts(over days: Int = 14, profile: PlayerProfile) -> [GameID: Int] {
+        var away = Dictionary(uniqueKeysWithValues: GameID.allCases.map { ($0, 14) })
+        var counts: [GameID: Int] = [:]
+        for _ in 0..<days {
+            let today = state(away.mapValues { stats(days: $0) })
+            let dealt = plan(today, profile: profile).games
+            for game in GameID.allCases {
+                away[game] = dealt.contains(game) ? 0 : (away[game] ?? 14) + 1
+            }
+            for game in dealt {
+                counts[game, default: 0] += 1
+            }
+        }
+        return counts
+    }
+
+    func testGivenMinutesWhenPlanThenTwoThreeOrFiveGamesAndThreeWithoutAProfile() {
+        XCTAssertEqual(plan(state(), profile: PlayerProfile(minutesPerDay: 15)).games.count, 5)
+        XCTAssertEqual(plan(state(), profile: PlayerProfile(minutesPerDay: 10)).games.count, 3)
+        XCTAssertEqual(plan(state(), profile: PlayerProfile(minutesPerDay: 5)).games.count, 2)
+        XCTAssertEqual(plan(state(), profile: PlayerProfile()).games.count, 3)
+    }
+
+    func testGivenFocusMemoryOverFourteenDaysWhenDealtThenMemoryGamesMoreOftenAndNoGameCrowdedOut() {
+        let plain = dealtCounts(profile: PlayerProfile())
+        let memory = dealtCounts(profile: PlayerProfile(focus: [.memory]))
+        let memoryGames = GameID.released.filter { DailyPolicy.focus[$0] == .memory }
+        XCTAssertGreaterThan(
+            memoryGames.map { memory[$0, default: 0] }.reduce(0, +),
+            memoryGames.map { plain[$0, default: 0] }.reduce(0, +))
+        // Variety still holds: every game dealt without a focus is still dealt with one.
+        for game in plain.keys {
+            XCTAssertGreaterThan(memory[game, default: 0], 0, "\(game) was crowded out by the focus")
+        }
+    }
+
+    func testGivenJustFunOrNoFocusWhenPlanThenNothingIsBoosted() {
+        let rested = state([.sudoku: stats(days: 0), .memoryMatch: stats(days: 3)])
+        XCTAssertEqual(
+            plan(rested, profile: PlayerProfile(focus: [.justFun])), plan(rested, profile: PlayerProfile()))
+    }
+
+    func testGivenChallengeWhenPlanThenANeverPlayedGameStartsAtSixAndFamilyMemberAtTwo() {
+        let nothingPlayed = PlayerStateSummary(games: [:])
+        XCTAssertEqual(
+            plan(nothingPlayed, profile: PlayerProfile(startPace: .challenge)).difficulty[.sudoku], Difficulty(level: 6))
+        XCTAssertEqual(
+            plan(nothingPlayed, profile: PlayerProfile(forWhom: .familyMember)).difficulty[.sudoku], Difficulty(level: 2))
+    }
+
+    func testGivenEmptyProfileWhenPlanThenExactlyTheOldPlan() {
+        let mixed = state([
+            .memoryMatch: stats(sessions: 3, accuracy: 0.9, days: 0, recent: [0.95]),
+            .stroop: stats(sessions: 1, accuracy: 0.3, days: 5, level: Difficulty(level: 3), recent: [0.3]),
+            .sudoku: stats(days: 2),
+        ])
+        let before = plan(mixed, day: "2026-09-30")
+        XCTAssertEqual(plan(mixed, profile: PlayerProfile()), before)
+        XCTAssertEqual(plan(mixed, profile: PlayerProfile(forWhom: .me, focus: [.justFun])), before)
+        XCTAssertEqual(plan(PlayerStateSummary(games: [:]), profile: PlayerProfile()).difficulty[.sudoku], Difficulty(level: 4))
+    }
+
+    // MARK: Every visible game gets its turn (#277)
+
+    func testGivenFourteenDaysWithoutAProfileWhenDealtThenEveryVisibleGameAppears() {
+        let counts = dealtCounts(profile: PlayerProfile())
+        for game in GameID.released {
+            XCTAssertGreaterThan(counts[game, default: 0], 0, "\(game) never made the daily three")
+        }
+    }
+
+    func testGivenAnyOneFocusOverFourteenDaysWhenDealtThenEveryVisibleGameStillAppears() {
+        for area in [PlayerProfile.Focus.memory, .attention, .numbers, .words] {
+            let counts = dealtCounts(profile: PlayerProfile(focus: [area]))
+            for game in GameID.released {
+                XCTAssertGreaterThan(counts[game, default: 0], 0, "\(game) never dealt with a \(area) focus")
+            }
+        }
+    }
+
+    func testGivenFourteenDaysWhenDealtThenMemoryLaneStillLeads() {
+        let counts = dealtCounts(profile: PlayerProfile())
+        let most = counts.values.max()
+        XCTAssertEqual(counts[.memoryMatch], most)
+        XCTAssertEqual(counts.filter { $0.value == most }.count, 1, "Memory Lane leads on its own")
+    }
+
+    // MARK: A game left out for a week takes the last place (#279)
+
+    func testGivenAnyFocusAndDealSizeOverFourteenDaysWhenDealtThenEveryVisibleGameAppears() {
+        let areas: [PlayerProfile.Focus] = [.memory, .attention, .numbers, .words]
+        // Every combination of areas, from none to all four.
+        let combinations = (0..<(1 << areas.count)).map { mask in
+            Set(areas.indices.filter { mask & (1 << $0) != 0 }.map { areas[$0] })
+        }
+        for minutes in [5, 10, 15] {
+            for focus in combinations {
+                let counts = dealtCounts(profile: PlayerProfile(focus: focus, minutesPerDay: minutes))
+                for game in GameID.released {
+                    XCTAssertGreaterThan(
+                        counts[game, default: 0], 0, "\(game) never dealt with \(minutes) minutes and focus \(focus)")
+                }
+            }
+        }
+    }
+
+    func testGivenAGameRestedSevenDaysWhenLeftOutThenItTakesTheLastPlace() {
+        // Fully rested at 7 days, Number Trail (0.55) still ranks below the 0.8 games played 3 days ago (0.57).
+        var rests = Dictionary(uniqueKeysWithValues: GameID.allCases.map { ($0, stats(days: 3)) })
+        rests[.mathStreaks] = stats(days: 7)
+        XCTAssertEqual(plan(state(rests), profile: PlayerProfile()).games, [.memoryMatch, .quickEyes, .mathStreaks])
+        rests[.mathStreaks] = stats(days: 6)
+        XCTAssertEqual(
+            plan(state(rests), profile: PlayerProfile()).games, [.memoryMatch, .quickEyes, .sudoku],
+            "one day short of the limit, the ranking decides")
+    }
+
+    func testGivenNoGameRestedSevenDaysWhenPlanThenUnchanged() {
+        let recent = state([
+            .memoryMatch: stats(days: 0), .stroop: stats(days: 6), .mathStreaks: stats(days: 5),
+            .quickEyes: stats(days: 2), .categoryFluency: stats(days: 1), .reminiscence: stats(days: 4),
+            .sudoku: stats(days: 3), .upOrDown: stats(days: 1), .sayings: stats(days: 2),
+        ])
+        XCTAssertEqual(plan(recent).games, [.sudoku, .reminiscence, .quickEyes], "the ranking alone")
+        // A brand-new player has every game equally rested: the ranked deal stands.
+        XCTAssertEqual(plan(state()).games, [.memoryMatch, .quickEyes, .sudoku])
+    }
+
+    // MARK: A chosen level-up carries into the next days (#266)
+
+    /// Noon, local time, `offset` days after a fixed day: stamps and "days ago" stay stable.
+    private func noon(_ offset: Int) -> Date {
+        let start = Calendar.current.date(from: DateComponents(year: 2026, month: 11, day: 2, hour: 12))!
+        return Calendar.current.date(byAdding: .day, value: offset, to: start)!
+    }
+
+    private func played(_ game: GameID, level: Int, correct: Int, on day: Date) -> GameSession {
+        let session = GameSession(
+            gameID: game, score: 0, rounds: 10, durationSeconds: 1,
+            correct: correct, attempts: 10, difficulty: Difficulty(level: level))
+        session.playedAt = day
+        return session
+    }
+
+    /// The app's own path (`HomeView.refreshPlan`): a summary from the sessions, the stored levels
+    /// and the days they changed, then today's saved plan.
+    private func planThroughStore(on day: Date, sessions: [GameSession], defaults: UserDefaults) -> DailyPlan {
+        let state = PlayerStateSummary.build(
+            from: sessions, difficulty: PlanStore.storedDifficulty(defaults: defaults), now: day,
+            lastChange: PlanStore.lastDifficultyChange(defaults: defaults))
+        return PlanStore.todaysPlan(state: state, now: day, defaults: defaults)
+    }
+
+    /// Day 1 for a new player: the plan deals Color Clash at level 4, a strong game, then "Yes, let's try".
+    private func choseYesOnDayOne(_ defaults: UserDefaults) -> [GameSession] {
+        XCTAssertEqual(planThroughStore(on: noon(0), sessions: [], defaults: defaults).difficulty[.stroop], Difficulty(level: 4))
+        let strong = played(.stroop, level: 4, correct: 10, on: noon(0))
+        PlanStore.raiseByChoice(.stroop, today: PlanStore.dayStamp(noon(0)), defaults: defaults)
+        XCTAssertEqual(
+            PlanStore.cachedPlan(defaults: defaults)?.changes[.stroop],
+            LevelChange(previous: Difficulty(level: 4), reason: .chosen))
+        return [strong]
+    }
+
+    private func freshDefaults(_ name: String) -> UserDefaults {
+        let defaults = UserDefaults(suiteName: name)!
+        defaults.removePersistentDomain(forName: name)
+        return defaults
+    }
+
+    func testGivenChosenYesterdayWhenNextPlanThenStartsFromChosenLevel() {
+        let defaults = freshDefaults("DailyPolicyTests.chosenNextDay")
+        let sessions = choseYesOnDayOne(defaults)
+
+        let dayTwo = planThroughStore(on: noon(1), sessions: sessions, defaults: defaults)
+
+        XCTAssertEqual(dayTwo.difficulty[.stroop], Difficulty(level: 5))
+        XCTAssertNil(dayTwo.changes[.stroop], "the level-4 game that earned the Yes no longer counts")
+    }
+
+    func testGivenChosenYesterdayAndOldSessionsWhenNextPlanThenOldSessionsDontCount() {
+        let defaults = freshDefaults("DailyPolicyTests.chosenOldSessions")
+        // Played at level 5 before, hard going: it would ease the game if it still counted.
+        let old = [
+            played(.stroop, level: 5, correct: 2, on: noon(-3)),
+            played(.stroop, level: 5, correct: 1, on: noon(-2)),
+        ]
+        let sessions = old + choseYesOnDayOne(defaults)
+
+        let dayTwo = planThroughStore(on: noon(1), sessions: sessions, defaults: defaults)
+
+        XCTAssertEqual(dayTwo.difficulty[.stroop], Difficulty(level: 5))
+        XCTAssertNil(dayTwo.changes[.stroop])
+    }
+
+    func testGivenStrongSessionAfterChosenWhenNextPlanThenRaisesOne() {
+        let defaults = freshDefaults("DailyPolicyTests.chosenThenStrong")
+        var sessions = choseYesOnDayOne(defaults)
+        XCTAssertEqual(
+            planThroughStore(on: noon(1), sessions: sessions, defaults: defaults).difficulty[.stroop], Difficulty(level: 5))
+        sessions.append(played(.stroop, level: 5, correct: 10, on: noon(1)))
+
+        let dayThree = planThroughStore(on: noon(2), sessions: sessions, defaults: defaults)
+
+        XCTAssertEqual(dayThree.difficulty[.stroop], Difficulty(level: 6))
+        XCTAssertEqual(dayThree.changes[.stroop], LevelChange(previous: Difficulty(level: 5), reason: .raised(by: 1)))
     }
 }

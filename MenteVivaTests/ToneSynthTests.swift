@@ -1,0 +1,43 @@
+import XCTest
+
+@testable import MenteViva
+
+/// #240: the tones are warm and soft, and the miss tone is high enough for a phone speaker.
+final class ToneSynthTests: XCTestCase {
+    func testGivenEachEventWhenRenderedThenPeakBelowHeadroom() {
+        for event in Feedback.Event.allCases {
+            let samples = ToneSynth.samples(for: event)
+            let peak = samples.map { abs($0) }.max() ?? 0
+            XCTAssertFalse(samples.isEmpty, "\(event) rendered nothing")
+            XCTAssertLessThan(peak, ToneSynth.headroom, "\(event) peaks at \(peak)")
+        }
+    }
+
+    func testGivenMissWhenRenderedThenFundamentalAtLeast250Hz() {
+        let notes = ToneSynth.notes(for: .miss)
+        XCTAssertFalse(notes.isEmpty)
+        for note in notes {
+            XCTAssertGreaterThanOrEqual(note.frequency, 250)
+            XCTAssertLessThanOrEqual(note.frequency, 300)
+        }
+    }
+
+    func testGivenMissWhenComparedThenLowerAndSofterThanTheOthers() {
+        let miss = ToneSynth.notes(for: .miss)
+        let others = Feedback.Event.allCases.filter { $0 != .miss }.flatMap { ToneSynth.notes(for: $0) }
+        XCTAssertLessThan(miss.map(\.frequency).max() ?? 0, others.map(\.frequency).min() ?? 0)
+        XCTAssertLessThan(miss.map(\.amplitude).max() ?? 0, others.map(\.amplitude).min() ?? 0)
+    }
+
+    func testGivenANoteWhenRenderedThenItFadesInAndNeverCutsToZero() {
+        let note = ToneSynth.Note(frequency: 440, duration: 0.2, amplitude: 0.5)
+        let samples = ToneSynth.render([note])
+        XCTAssertEqual(samples.count, Int(ToneSynth.sampleRate * note.duration))
+        XCTAssertEqual(samples[0], 0, accuracy: 0.0001)
+        // Past the 10 ms attack the tone is audible, and in the last quarter it is still decaying, not zero.
+        let attackFrames = Int(ToneSynth.sampleRate * ToneSynth.attack)
+        XCTAssertGreaterThan(samples[attackFrames...].prefix(100).map { abs($0) }.max() ?? 0, 0.1)
+        let tail = samples[(samples.count * 3 / 4)...].map { abs($0) }.max() ?? 0
+        XCTAssertGreaterThan(tail, 0)
+    }
+}
