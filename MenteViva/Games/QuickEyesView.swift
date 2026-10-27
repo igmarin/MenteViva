@@ -10,7 +10,6 @@ struct QuickEyesView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dynamicTypeSize) private var typeSize
 
-    private let emojis = ["🌻", "🐢", "🍎", "🎸", "🌙", "☕️", "🦋", "🍊", "🚗", "⭐", "🐝", "🌵"]
     private static let totalRounds = 12
     /// Flash length in seconds for levels 1...10: where it starts and the floor it shrinks to (#200).
     /// Levels 2, 4 and 6 keep the old easy, medium and hard pairs, so migrated players notice nothing.
@@ -139,9 +138,10 @@ struct QuickEyesView: View {
 
     private func startRound() {
         revealTask?.cancel()
-        target = emojis.randomElement() ?? "🌻"
-        let distractors = emojis.filter { $0 != target }.shuffled().prefix(3)
-        options = (distractors + [target]).shuffled()
+        var generator = SystemRandomNumberGenerator()
+        let round = QuickEyesDeal.make(using: &generator)
+        target = round.target
+        options = round.options
         phase = .showing
         // VoiceOver needs time to speak the picture; hold it longer (#64).
         let hold = UIAccessibility.isVoiceOverRunning ? max(displayTime, Self.voiceOverHold) : displayTime
