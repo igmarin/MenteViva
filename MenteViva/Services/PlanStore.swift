@@ -96,9 +96,9 @@ nonisolated enum PlanStore {
     }
 
     /// Each game's level from the last saved plan (level 4 for a new player).
-    /// Only changes when a new daily plan is saved.
+    /// Only changes when a new daily plan is saved. Pure read — does not
+    /// migrate (#264); `LevelMigration.runOnce` does that once at launch.
     static func storedDifficulty(defaults: UserDefaults = .standard) -> [GameID: Difficulty] {
-        migrateLegacyLevels(defaults: defaults)
         let raw =
             defaults.data(forKey: levelKey)
             .flatMap { try? JSONDecoder().decode([String: Int].self, from: $0) } ?? [:]
@@ -110,7 +110,10 @@ nonisolated enum PlanStore {
 
     /// One-time upgrade of pre-level plans (#197): old 0/1/2 values read as
     /// levels 2/4/6 and save under the new key, which later reads prefer.
-    private static func migrateLegacyLevels(defaults: UserDefaults) {
+    /// Called once by `LevelMigration.runOnce` at launch (#264); reads never
+    /// trigger it.
+    /// Visible for `LevelMigration` only; reads never call it (#264).
+    static func migrateLegacyLevels(defaults: UserDefaults = .standard) {
         guard defaults.data(forKey: levelKey) == nil,
             let old = defaults.data(forKey: legacyDifficultyKey)
                 .flatMap({ try? JSONDecoder().decode([String: Int].self, from: $0) })

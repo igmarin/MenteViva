@@ -36,16 +36,19 @@ final class DifficultyTests: XCTestCase {
 
     func testGivenOldPinKeyWhenPinnedReadThenMigratedOnceToNewKey() {
         defaults.set(2, forKey: "difficulty.pin.quick_eyes")
+        LevelMigration.runOnce(defaults: defaults)
         XCTAssertEqual(FamilySettings.pinned(defaults: defaults), [.quickEyes: Difficulty(level: 6)])
         XCTAssertEqual(defaults.integer(forKey: FamilySettings.pinKey(.quickEyes)), 6)
         // Migrated once: later changes under the old key no longer apply.
         defaults.set(0, forKey: "difficulty.pin.quick_eyes")
+        LevelMigration.runOnce(defaults: defaults)
         XCTAssertEqual(FamilySettings.pinned(defaults: defaults), [.quickEyes: Difficulty(level: 6)])
     }
 
     func testGivenOldPlanKeyWhenStoredDifficultyReadThenMigratedToNewKey() {
         defaults.set(
             try! JSONEncoder().encode(["quick_eyes": 2]), forKey: "jev.difficulty")
+        LevelMigration.runOnce(defaults: defaults)
         XCTAssertEqual(PlanStore.storedDifficulty(defaults: defaults)[.quickEyes], Difficulty(level: 6))
         XCTAssertEqual(
             PlanStore.storedDifficulty(defaults: defaults)[.stroop], Difficulty(level: 4),
@@ -73,6 +76,37 @@ final class DifficultyTests: XCTestCase {
         for level in 1...10 {
             XCTAssertEqual(Difficulty(level: level).values(table), level)
         }
+    }
+
+    func testGivenLegacyKeysWhenRunOnceTwiceThenMigratedOnce() {
+        defaults.set(1, forKey: "difficulty.pin.quick_eyes")
+        defaults.set(1, forKey: "difficulty.pin.stroop")
+        defaults.set(try! JSONEncoder().encode(["quick_eyes": 1, "stroop": 2]), forKey: "jev.difficulty")
+        LevelMigration.runOnce(defaults: defaults)
+        XCTAssertEqual(
+            FamilySettings.pinned(defaults: defaults),
+            [
+                .quickEyes: Difficulty(level: 4), .stroop: Difficulty(level: 4),
+            ])
+        XCTAssertEqual(PlanStore.storedDifficulty(defaults: defaults)[.quickEyes], Difficulty(level: 4))
+        XCTAssertEqual(PlanStore.storedDifficulty(defaults: defaults)[.stroop], Difficulty(level: 6))
+        XCTAssertTrue(defaults.bool(forKey: LevelMigration.doneKey))
+        // Second run changes nothing, even if legacy keys change underneath.
+        defaults.set(0, forKey: "difficulty.pin.quick_eyes")
+        defaults.set(try! JSONEncoder().encode(["quick_eyes": 0]), forKey: "jev.difficulty")
+        LevelMigration.runOnce(defaults: defaults)
+        XCTAssertEqual(FamilySettings.pinned(defaults: defaults)[.quickEyes], Difficulty(level: 4))
+        XCTAssertEqual(PlanStore.storedDifficulty(defaults: defaults)[.quickEyes], Difficulty(level: 4))
+    }
+
+    func testGivenMigratedStoreWhenPinnedReadThenNoWrites() {
+        defaults.set(6, forKey: FamilySettings.pinKey(.quickEyes))
+        defaults.set(true, forKey: LevelMigration.doneKey)
+        let keysBefore = Set(defaults.dictionaryRepresentation().keys)
+        _ = FamilySettings.pinned(defaults: defaults)
+        _ = PlanStore.storedDifficulty(defaults: defaults)
+        let keysAfter = Set(defaults.dictionaryRepresentation().keys)
+        XCTAssertEqual(keysBefore, keysAfter, "reads must not create new keys after migration")
     }
 
     func testGivenDifficultyLevelKeyWhenCatalogReadThenItHasEnglishAndSpanish() throws {

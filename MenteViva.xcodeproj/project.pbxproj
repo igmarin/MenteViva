@@ -46,6 +46,7 @@
 		9A0F9B11E98286F400000024 /* EverydayObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = D939A12670747AA20000001E; };
 		5BDF348CC430543800000023 /* FamilySettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D5B4260F3371760000001D; };
 		EB1D5656AAE8FB090000001C /* HotPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66F53A1E32AAD85F00000016; };
+		B655A39EA9B5D68F00000023 /* LevelMigration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA5E65A5CDB56250000001D; };
 		2EAE227B2A482B2400000024 /* LevelOfferStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E124490D58C484320000001E; };
 		0164563C802E6C1D00000020 /* LevelPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = D086556AECE330430000001A; };
 		1D8B162B0DC9013B00000021 /* MemoryPhotos.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A47663ED0263910000001B; };
@@ -129,6 +130,7 @@
 		D939A12670747AA20000001E /* EverydayObjects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/EverydayObjects.swift; sourceTree = "<group>"; };
 		74D5B4260F3371760000001D /* FamilySettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/FamilySettings.swift; sourceTree = "<group>"; };
 		66F53A1E32AAD85F00000016 /* HotPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/HotPath.swift; sourceTree = "<group>"; };
+		0EA5E65A5CDB56250000001D /* LevelMigration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/LevelMigration.swift; sourceTree = "<group>"; };
 		E124490D58C484320000001E /* LevelOfferStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/LevelOfferStore.swift; sourceTree = "<group>"; };
 		D086556AECE330430000001A /* LevelPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/LevelPolicy.swift; sourceTree = "<group>"; };
 		D5A47663ED0263910000001B /* MemoryPhotos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/MemoryPhotos.swift; sourceTree = "<group>"; };
@@ -238,6 +240,7 @@
 				D939A12670747AA20000001E /* EverydayObjects.swift */,
 				74D5B4260F3371760000001D /* FamilySettings.swift */,
 				66F53A1E32AAD85F00000016 /* HotPath.swift */,
+				0EA5E65A5CDB56250000001D /* LevelMigration.swift */,
 				E124490D58C484320000001E /* LevelOfferStore.swift */,
 				D086556AECE330430000001A /* LevelPolicy.swift */,
 				D5A47663ED0263910000001B /* MemoryPhotos.swift */,
@@ -397,6 +400,7 @@
 				9A0F9B11E98286F400000024 /* EverydayObjects.swift in Sources */,
 				5BDF348CC430543800000023 /* FamilySettings.swift in Sources */,
 				EB1D5656AAE8FB090000001C /* HotPath.swift in Sources */,
+				B655A39EA9B5D68F00000023 /* LevelMigration.swift in Sources */,
 				2EAE227B2A482B2400000024 /* LevelOfferStore.swift in Sources */,
 				0164563C802E6C1D00000020 /* LevelPolicy.swift in Sources */,
 				1D8B162B0DC9013B00000021 /* MemoryPhotos.swift in Sources */,
