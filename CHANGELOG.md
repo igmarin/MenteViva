@@ -5,6 +5,14 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 ## [Unreleased]
 
 ### Added
+- **The first run asks four short questions, and "My plan" asks them again (#212):** after the
+  welcome screen, one question per screen — who will play, what to exercise (any number of
+  answers), how long a day and how to start — each with 100pt answer tiles, a visible "Skip",
+  Back, and a "2 of 5" dot row. Nothing is required, nothing is preselected, and with "a family
+  member" the calmest pace is offered first. The same four answers live in Settings → My plan,
+  where tapping a chosen answer again leaves that question unanswered. Minutes a day decide how
+  many games the daily plan deals (5 → 2, 10 → 3, 15 → 5); a change made today shapes tomorrow's
+  plan, not today's.
 - **Repeat the Sequence — watch and repeat the lit tiles (#216/#217):** a new game with levels 1–10 (grid 2×2 to 3×3, sequence 2–8, light 1.0s→0.55s; on a narrow screen a 3×3 falls back to 2×3). Five sequences per game; miss once and it says "Almost — watch again" and replays, then moves on warmly.
 - **Levels 1–10 for four games (#203–#206):** Name the Herd (2–11 decoys), Finish the Saying (2–5 choices, same-theme from level 6), Number Trail (ops and caps per level, cap 120 at 10), Color Clash (matching chance 0.85→0 and 6 colours/shapes at levels 9–10).
 
