@@ -316,4 +316,84 @@ final class DailyPolicyTests: XCTestCase {
         XCTAssertEqual(plan(mixed, profile: PlayerProfile(forWhom: .me, focus: [.justFun])), before)
         XCTAssertEqual(plan(PlayerStateSummary(games: [:]), profile: PlayerProfile()).difficulty[.sudoku], Difficulty(level: 4))
     }
+
+    // MARK: A chosen level-up carries into the next days (#266)
+
+    /// Noon, local time, `offset` days after a fixed day: stamps and "days ago" stay stable.
+    private func noon(_ offset: Int) -> Date {
+        let start = Calendar.current.date(from: DateComponents(year: 2026, month: 11, day: 2, hour: 12))!
+        return Calendar.current.date(byAdding: .day, value: offset, to: start)!
+    }
+
+    private func played(_ game: GameID, level: Int, correct: Int, on day: Date) -> GameSession {
+        let session = GameSession(
+            gameID: game, score: 0, rounds: 10, durationSeconds: 1,
+            correct: correct, attempts: 10, difficulty: Difficulty(level: level))
+        session.playedAt = day
+        return session
+    }
+
+    /// The app's own path (`HomeView.refreshPlan`): a summary from the sessions, the stored levels
+    /// and the days they changed, then today's saved plan.
+    private func planThroughStore(on day: Date, sessions: [GameSession], defaults: UserDefaults) -> DailyPlan {
+        let state = PlayerStateSummary.build(
+            from: sessions, difficulty: PlanStore.storedDifficulty(defaults: defaults), now: day,
+            lastChange: PlanStore.lastDifficultyChange(defaults: defaults))
+        return PlanStore.todaysPlan(state: state, now: day, defaults: defaults)
+    }
+
+    /// Day 1 for a new player: the plan deals Color Clash at level 4, a strong game, then "Yes, let's try".
+    private func choseYesOnDayOne(_ defaults: UserDefaults) -> [GameSession] {
+        XCTAssertEqual(planThroughStore(on: noon(0), sessions: [], defaults: defaults).difficulty[.stroop], Difficulty(level: 4))
+        let strong = played(.stroop, level: 4, correct: 10, on: noon(0))
+        PlanStore.raiseByChoice(.stroop, today: PlanStore.dayStamp(noon(0)), defaults: defaults)
+        XCTAssertEqual(
+            PlanStore.cachedPlan(defaults: defaults)?.changes[.stroop],
+            LevelChange(previous: Difficulty(level: 4), reason: .chosen))
+        return [strong]
+    }
+
+    private func freshDefaults(_ name: String) -> UserDefaults {
+        let defaults = UserDefaults(suiteName: name)!
+        defaults.removePersistentDomain(forName: name)
+        return defaults
+    }
+
+    func testGivenChosenYesterdayWhenNextPlanThenStartsFromChosenLevel() {
+        let defaults = freshDefaults("DailyPolicyTests.chosenNextDay")
+        let sessions = choseYesOnDayOne(defaults)
+
+        let dayTwo = planThroughStore(on: noon(1), sessions: sessions, defaults: defaults)
+
+        XCTAssertEqual(dayTwo.difficulty[.stroop], Difficulty(level: 5))
+        XCTAssertNil(dayTwo.changes[.stroop], "the level-4 game that earned the Yes no longer counts")
+    }
+
+    func testGivenChosenYesterdayAndOldSessionsWhenNextPlanThenOldSessionsDontCount() {
+        let defaults = freshDefaults("DailyPolicyTests.chosenOldSessions")
+        // Played at level 5 before, hard going: it would ease the game if it still counted.
+        let old = [
+            played(.stroop, level: 5, correct: 2, on: noon(-3)),
+            played(.stroop, level: 5, correct: 1, on: noon(-2)),
+        ]
+        let sessions = old + choseYesOnDayOne(defaults)
+
+        let dayTwo = planThroughStore(on: noon(1), sessions: sessions, defaults: defaults)
+
+        XCTAssertEqual(dayTwo.difficulty[.stroop], Difficulty(level: 5))
+        XCTAssertNil(dayTwo.changes[.stroop])
+    }
+
+    func testGivenStrongSessionAfterChosenWhenNextPlanThenRaisesOne() {
+        let defaults = freshDefaults("DailyPolicyTests.chosenThenStrong")
+        var sessions = choseYesOnDayOne(defaults)
+        XCTAssertEqual(
+            planThroughStore(on: noon(1), sessions: sessions, defaults: defaults).difficulty[.stroop], Difficulty(level: 5))
+        sessions.append(played(.stroop, level: 5, correct: 10, on: noon(1)))
+
+        let dayThree = planThroughStore(on: noon(2), sessions: sessions, defaults: defaults)
+
+        XCTAssertEqual(dayThree.difficulty[.stroop], Difficulty(level: 6))
+        XCTAssertEqual(dayThree.changes[.stroop], LevelChange(previous: Difficulty(level: 5), reason: .raised(by: 1)))
+    }
 }
