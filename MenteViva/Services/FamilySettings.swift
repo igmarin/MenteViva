@@ -40,7 +40,8 @@ nonisolated enum FamilySettings {
     /// step, so it stays Auto (#208).
     static func stepped(_ raw: Int, by delta: Int) -> Int {
         guard raw != auto else { return auto }
-        return Difficulty(level: raw + delta).level
+        // Clamp first: a stray stored Int.max must not overflow the addition.
+        return Difficulty(level: Difficulty(level: raw).level + delta).level
     }
 
     /// Whether a − (`-1`) or + (`1`) tap would change the pin; the view disables and labels the

@@ -96,4 +96,11 @@ final class FamilySettingsTests: XCTestCase {
     func testGivenAPinWhenAutoIsTurnedOffAgainThenThePinIsKept() {
         XCTAssertEqual(FamilySettings.settingAuto(false, from: 7, currentLevel: 3), 7)
     }
+
+    func testGivenAnExtremeStoredPinWhenSteppedThenItClampsWithoutOverflow() {
+        XCTAssertEqual(FamilySettings.stepped(Int.max, by: 1), 10)
+        XCTAssertEqual(FamilySettings.stepped(Int.min, by: -1), 1)
+        XCTAssertFalse(FamilySettings.canStep(Int.max, by: 1))
+        XCTAssertFalse(FamilySettings.canStep(Int.min, by: -1))
+    }
 }
