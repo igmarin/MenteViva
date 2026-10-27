@@ -85,11 +85,16 @@ struct WhyTheseGamesView: View {
                 .font(.title2)
                 .fixedSize(horizontal: false, vertical: true)
             if let source {
-                Link(AppLanguage.localized(source.labelKey), destination: source.url)
-                    .font(.title2)
-                    .frame(maxWidth: .infinity, minHeight: 100, alignment: .leading)
-                    .contentShape(Rectangle())
-                    .accessibilityHint(AppLanguage.localized("why.source.hint"))
+                Link(destination: source.url) {
+                    Text(AppLanguage.localized(source.labelKey))
+                        .font(.title2)
+                        .multilineTextAlignment(.leading)
+                        // The label fills the row so it lines up with the paragraph above it,
+                        // instead of the button's own centring; the whole row is the target.
+                        .frame(maxWidth: .infinity, minHeight: 100, alignment: .leading)
+                }
+                .contentShape(Rectangle())
+                .accessibilityHint(AppLanguage.localized("why.source.hint"))
             }
         }
     }
