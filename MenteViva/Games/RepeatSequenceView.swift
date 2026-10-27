@@ -70,6 +70,8 @@ struct RepeatSequenceView: View {
     @State private var finalDetail = ""
     @State private var showMiss = false
     @State private var task: Task<Void, Never>?
+    @State private var boardWidth: Double = 0
+    @State private var isTransitioning = false
 
     private var instruction: String {
         if showing {
@@ -108,7 +110,9 @@ struct RepeatSequenceView: View {
     private var sequenceGrid: some View {
         GeometryReader { proxy in
             let width = proxy.size.width
-            let rules = SequenceDeal.rules(for: difficulty, width: Double(width))
+            // Use a single width source for deal and grid; proxy is already inside .padding(),
+            // so convert to the screen-width value SequenceDeal expects.
+            let rules = SequenceDeal.rules(for: difficulty, width: width + 32)
             let cols = rules.columns
             let allTiles = Array(Tile.allCases.prefix(cols * rules.rows))
             let columns = Array(repeating: GridItem(.flexible(), spacing: 16), count: cols)
@@ -131,12 +135,14 @@ struct RepeatSequenceView: View {
                             .animation(.easeInOut(duration: 0.2), value: lit)
                     }
                     .buttonStyle(.plain)
-                    .disabled(showing)
+                    .disabled(showing || isTransitioning)
                     .accessibilityLabel(tile.name)
                     .accessibilityHint(AppLanguage.localized("game.sequence.a11y.hint"))
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            .onAppear { boardWidth = width }
+            .onChange(of: width) { _, newValue in boardWidth = newValue }
         }
         .frame(minHeight: 260)
     }
@@ -147,10 +153,11 @@ struct RepeatSequenceView: View {
         tapped = []
         lit = nil
         showing = true
+        isTransitioning = false
         showMiss = false
         startedAt = .now
         var gen = SystemRandomNumberGenerator()
-        let width = Double(UIScreen.main.bounds.width)
+        let width = boardWidth > 0 ? boardWidth + 32 : Double(UIScreen.main.bounds.width)
         let sequences = (0..<Self.roundsPerSession).map { _ in
             SequenceDeal.deal(level: difficulty, width: width, using: &gen)
         }
@@ -164,6 +171,7 @@ struct RepeatSequenceView: View {
             return
         }
         showing = true
+        isTransitioning = false
         tapped = []
         // VoiceOver: speak the sequence names.
         let names = seq.compactMap { idx in
@@ -172,7 +180,7 @@ struct RepeatSequenceView: View {
         if !names.isEmpty {
             AccessibilityNotification.Announcement(names).post()
         }
-        let width = Double(UIScreen.main.bounds.width)
+        let width = boardWidth > 0 ? boardWidth + 32 : Double(UIScreen.main.bounds.width)
         let rules = SequenceDeal.rules(for: difficulty, width: width)
         task?.cancel()
         task = Task { @MainActor in
@@ -189,7 +197,7 @@ struct RepeatSequenceView: View {
     }
 
     private func tap(_ idx: Int) {
-        guard !showing, session?.current != nil else { return }
+        guard !showing, !isTransitioning, session?.current != nil else { return }
         tapped.append(idx)
         SoundPlayer.play(.success)
         lit = idx
@@ -207,10 +215,12 @@ struct RepeatSequenceView: View {
             if progress.isFinished {
                 finish()
             } else {
-                // Brief pause before next show.
+                // Brief pause before next show — keep input disabled.
+                isTransitioning = true
                 task?.cancel()
                 task = Task { @MainActor in
                     try? await Task.sleep(for: .seconds(0.6))
+                    guard !Task.isCancelled else { return }
                     showNext()
                 }
             }
@@ -222,9 +232,11 @@ struct RepeatSequenceView: View {
             let wasReplay = session?.needsReplay == true
             if wasReplay {
                 // Still need to replay: show again after cue.
+                isTransitioning = true
                 task?.cancel()
                 task = Task { @MainActor in
                     try? await Task.sleep(for: .seconds(0.8))
+                    guard !Task.isCancelled else { return }
                     showMiss = false
                     showNext()
                 }
@@ -234,9 +246,11 @@ struct RepeatSequenceView: View {
                 if progress.isFinished {
                     finish()
                 } else {
+                    isTransitioning = true
                     task?.cancel()
                     task = Task { @MainActor in
                         try? await Task.sleep(for: .seconds(0.8))
+                        guard !Task.isCancelled else { return }
                         showMiss = false
                         showNext()
                     }
