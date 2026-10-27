@@ -107,6 +107,16 @@ struct SettingsView: View {
                             .frame(maxWidth: .infinity, minHeight: 100, alignment: .leading)
                     }
                     .accessibilityHint(AppLanguage.localized("setup.open.hint"))
+
+                    // The balanced, sourced words behind the games (#214), readable offline.
+                    NavigationLink {
+                        WhyTheseGamesView()
+                    } label: {
+                        Label(AppLanguage.localized("why.title"), systemImage: "questionmark.circle")
+                            .font(.title3)
+                            .frame(maxWidth: .infinity, minHeight: 100, alignment: .leading)
+                    }
+                    .accessibilityHint(AppLanguage.localized("why.open.hint"))
                 }
 
                 // Short promises he can read at a glance.

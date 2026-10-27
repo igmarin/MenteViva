@@ -70,6 +70,7 @@
 		5C8E2594068C583000000015 /* SetUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA9A8EDB47F7F15E0000000F; };
 		F1CAEDFBEAB27E7A00000018 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881D5FFD680EE69800000012; };
 		ECD662DF93B8B0C900000011 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A215EBB02284C9F0000000B; };
+		58627E8B1C01B7510000001D /* WhyTheseGamesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CA86CA714CE21700000017; };
 		AA674BC0E040592B00000030 /* AnswerBeatTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B769A416292C0E10000002A; };
 		F506C5A65F14390000000031 /* AppLanguageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE643EB3378B20E0000002B; };
 		4534EC198FDAD8AC00000034 /* CaptionSpeakerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD28529EBCF4FB0A0000002E; };
@@ -105,6 +106,7 @@
 		BF3BF8B08BEED1310000002F /* ToneSynthTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B995186993817700000029; };
 		54286FE8DD94251F00000032 /* UpOrDownDealTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A88D996E3D1849950000002C; };
 		0EEED9F3112B457400000033 /* WeeklySummaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2CB27B32AF72D220000002D; };
+		D45AEF3BDEB8E3E30000003A /* WhyTheseGamesStringsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F6AD437F92C1C900000034; };
 
 		B91ABDA086A9E6DC00000010 /* BigTargets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BigTargets.swift; sourceTree = "<group>"; };
 		4BB8113FC44C63A70000001D /* FamilyPhotoCaptionSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FamilyPhotoCaptionSheet.swift; sourceTree = "<group>"; };
@@ -171,6 +173,7 @@
 		CA9A8EDB47F7F15E0000000F /* SetUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetUpView.swift; sourceTree = "<group>"; };
 		881D5FFD680EE69800000012 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		7A215EBB02284C9F0000000B /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		53CA86CA714CE21700000017 /* WhyTheseGamesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhyTheseGamesView.swift; sourceTree = "<group>"; };
 		7B769A416292C0E10000002A /* AnswerBeatTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/AnswerBeatTests.swift; sourceTree = SOURCE_ROOT; };
 		6BE643EB3378B20E0000002B /* AppLanguageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/AppLanguageTests.swift; sourceTree = SOURCE_ROOT; };
 		DD28529EBCF4FB0A0000002E /* CaptionSpeakerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/CaptionSpeakerTests.swift; sourceTree = SOURCE_ROOT; };
@@ -206,6 +209,7 @@
 		D4B995186993817700000029 /* ToneSynthTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/ToneSynthTests.swift; sourceTree = SOURCE_ROOT; };
 		A88D996E3D1849950000002C /* UpOrDownDealTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/UpOrDownDealTests.swift; sourceTree = SOURCE_ROOT; };
 		A2CB27B32AF72D220000002D /* WeeklySummaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/WeeklySummaryTests.swift; sourceTree = SOURCE_ROOT; };
+		31F6AD437F92C1C900000034 /* WhyTheseGamesStringsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/WhyTheseGamesStringsTests.swift; sourceTree = SOURCE_ROOT; };
 		5D90A9FDEC5CFCA50000000D /* MenteViva.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MenteViva.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5791C14BF0160AFA00000009 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 
@@ -298,6 +302,7 @@
 				CA9A8EDB47F7F15E0000000F /* SetUpView.swift */,
 				881D5FFD680EE69800000012 /* SettingsView.swift */,
 				7A215EBB02284C9F0000000B /* Theme.swift */,
+				53CA86CA714CE21700000017 /* WhyTheseGamesView.swift */,
 				5791C14BF0160AFA00000009 /* Localizable.xcstrings */,
 				A5DD4286E2AD05560000000F /* Assets.xcassets */,
 				956A7D38BC89506B0000000B /* MenteVivaTests */,
@@ -344,6 +349,7 @@
 				D4B995186993817700000029 /* ToneSynthTests.swift */,
 				A88D996E3D1849950000002C /* UpOrDownDealTests.swift */,
 				A2CB27B32AF72D220000002D /* WeeklySummaryTests.swift */,
+				31F6AD437F92C1C900000034 /* WhyTheseGamesStringsTests.swift */,
 			);
 			name = MenteVivaTests;
 			sourceTree = "<group>";
@@ -475,6 +481,7 @@
 				5C8E2594068C583000000015 /* SetUpView.swift in Sources */,
 				F1CAEDFBEAB27E7A00000018 /* SettingsView.swift in Sources */,
 				ECD662DF93B8B0C900000011 /* Theme.swift in Sources */,
+				58627E8B1C01B7510000001D /* WhyTheseGamesView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -518,6 +525,7 @@
 				BF3BF8B08BEED1310000002F /* ToneSynthTests.swift in Sources */,
 				54286FE8DD94251F00000032 /* UpOrDownDealTests.swift in Sources */,
 				0EEED9F3112B457400000033 /* WeeklySummaryTests.swift in Sources */,
+				D45AEF3BDEB8E3E30000003A /* WhyTheseGamesStringsTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
