@@ -16,6 +16,8 @@ struct OnboardingView: View {
 
     @AppStorage(OnboardingView.seenKey) private var hasSeenOnboarding = false
     @AppStorage(AppLanguage.storageKey) private var appLanguage = AppLanguage.system.rawValue
+    /// Bigger text needs the whole width for one answer, so the grid becomes a single column.
+    @Environment(\.dynamicTypeSize) private var typeSize
     /// The step on screen: 1 is the welcome screen, 2-5 are the questions in order.
     @State private var step = 1
     /// The answers so far. Saved after every tap, so leaving mid-way loses nothing.
@@ -88,7 +90,7 @@ struct OnboardingView: View {
     /// One question per screen. The question comes before its answers in the layout, so
     /// VoiceOver reads what is being asked and then each answer with its state.
     private func questionStep(_ question: OnboardingQuestion) -> some View {
-        VStack(spacing: 20) {
+        VStack(spacing: 16) {
             stepDots
 
             Spacer(minLength: 0)
@@ -99,16 +101,17 @@ struct OnboardingView: View {
                 .fixedSize(horizontal: false, vertical: true)
                 .accessibilityAddTraits(.isHeader)
 
-            VStack(spacing: 12) {
-                ForEach(OnboardingSteps.answers(for: question, profile: profile), id: \.labelKey) { answer in
-                    let chosen = OnboardingSteps.isChosen(answer, in: profile)
-                    Button {
-                        choose(answer, in: question)
-                    } label: {
-                        ProfileAnswerTile(text: AppLanguage.localized(answer.labelKey), chosen: chosen)
-                    }
-                    .buttonStyle(.plain)
-                    .accessibilityAddTraits(chosen ? [.isSelected] : [])
+            // Five answers one per row would push Next and Skip off an everyday screen, so the
+            // multi-select question lays its tiles out two by two; every other question shows one
+            // per row, and at bigger text sizes every question does, because the words need the
+            // whole width. Each tile keeps its 100pt height either way (conventions §4).
+            if question.allowsMultiple {
+                LazyVGrid(columns: answerColumns, spacing: 10) {
+                    answerTiles(question)
+                }
+            } else {
+                VStack(spacing: 10) {
+                    answerTiles(question)
                 }
             }
 
@@ -131,6 +134,30 @@ struct OnboardingView: View {
 
             footer
         }
+    }
+
+    /// One tile per answer, in the order the flow offers them. The chosen ones carry a tick and a
+    /// filled background, never colour alone.
+    @ViewBuilder
+    private func answerTiles(_ question: OnboardingQuestion) -> some View {
+        ForEach(OnboardingSteps.answers(for: question, profile: profile), id: \.labelKey) { answer in
+            let chosen = OnboardingSteps.isChosen(answer, in: profile)
+            Button {
+                choose(answer, in: question)
+            } label: {
+                ProfileAnswerTile(text: AppLanguage.localized(answer.labelKey), chosen: chosen)
+            }
+            .buttonStyle(.plain)
+            .accessibilityAddTraits(chosen ? [.isSelected] : [])
+        }
+    }
+
+    /// Two columns for the question that offers five answers, one column everywhere else and at
+    /// accessibility text sizes, where two short columns would break the words in half.
+    private var answerColumns: [GridItem] {
+        typeSize.isAccessibilitySize
+            ? [GridItem(.flexible())]
+            : [GridItem(.flexible(), spacing: 12), GridItem(.flexible())]
     }
 
     /// "2 of 5" and one dot per step: the words say where the player is, the dots show it,
