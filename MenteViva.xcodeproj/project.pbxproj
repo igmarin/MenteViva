@@ -51,6 +51,7 @@
 		0164563C802E6C1D00000020 /* LevelPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = D086556AECE330430000001A; };
 		1D8B162B0DC9013B00000021 /* MemoryPhotos.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A47663ED0263910000001B; };
 		275EC605D5ED04650000001E /* PlanStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3931AC8D4E8A85DB00000018; };
+		9D6ADE4D20F436F700000022 /* PlayerProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1445B0C518DED93D0000001C; };
 		45C157ABD39C164F00000027 /* PlayerStateSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9EBAADE3EF5726500000021; };
 		9E9F4FAC49AD445F00000022 /* ProgressRates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CDE0DE57134F5550000001C; };
 		8C75A9CE4133529700000020 /* SoundPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B94116EB608F25D0000001A; };
@@ -76,6 +77,7 @@
 		578160CE8C24557000000031 /* MemoryBoardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2EEF523201AB21E0000002B; };
 		19A5511F2D9320B700000032 /* MemoryPhotosTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982802FDA721007D0000002C; };
 		4E437CEEEEB1E47600000039 /* NumberTrailQuestionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B15A3FA40FC93B400000033; };
+		288A7358D7C5AA1900000033 /* PlayerProfileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B056BE6CAA0C14F0000002D; };
 		2E81FDB867FC926B00000038 /* PlayerStateSummaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9231182AE986A100000032; };
 		56E513B81D42ABF300000033 /* PluralStringsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478EE86492C1F2390000002D; };
 		B881D90E62998BE900000033 /* ProgressRatesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7420A39CEC074ABF0000002D; };
@@ -135,6 +137,7 @@
 		D086556AECE330430000001A /* LevelPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/LevelPolicy.swift; sourceTree = "<group>"; };
 		D5A47663ED0263910000001B /* MemoryPhotos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/MemoryPhotos.swift; sourceTree = "<group>"; };
 		3931AC8D4E8A85DB00000018 /* PlanStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/PlanStore.swift; sourceTree = "<group>"; };
+		1445B0C518DED93D0000001C /* PlayerProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/PlayerProfile.swift; sourceTree = "<group>"; };
 		D9EBAADE3EF5726500000021 /* PlayerStateSummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/PlayerStateSummary.swift; sourceTree = "<group>"; };
 		9CDE0DE57134F5550000001C /* ProgressRates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/ProgressRates.swift; sourceTree = "<group>"; };
 		6B94116EB608F25D0000001A /* SoundPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/SoundPlayer.swift; sourceTree = "<group>"; };
@@ -160,6 +163,7 @@
 		A2EEF523201AB21E0000002B /* MemoryBoardTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/MemoryBoardTests.swift; sourceTree = SOURCE_ROOT; };
 		982802FDA721007D0000002C /* MemoryPhotosTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/MemoryPhotosTests.swift; sourceTree = SOURCE_ROOT; };
 		7B15A3FA40FC93B400000033 /* NumberTrailQuestionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/NumberTrailQuestionTests.swift; sourceTree = SOURCE_ROOT; };
+		5B056BE6CAA0C14F0000002D /* PlayerProfileTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/PlayerProfileTests.swift; sourceTree = SOURCE_ROOT; };
 		7D9231182AE986A100000032 /* PlayerStateSummaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/PlayerStateSummaryTests.swift; sourceTree = SOURCE_ROOT; };
 		478EE86492C1F2390000002D /* PluralStringsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/PluralStringsTests.swift; sourceTree = SOURCE_ROOT; };
 		7420A39CEC074ABF0000002D /* ProgressRatesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/ProgressRatesTests.swift; sourceTree = SOURCE_ROOT; };
@@ -245,6 +249,7 @@
 				D086556AECE330430000001A /* LevelPolicy.swift */,
 				D5A47663ED0263910000001B /* MemoryPhotos.swift */,
 				3931AC8D4E8A85DB00000018 /* PlanStore.swift */,
+				1445B0C518DED93D0000001C /* PlayerProfile.swift */,
 				D9EBAADE3EF5726500000021 /* PlayerStateSummary.swift */,
 				9CDE0DE57134F5550000001C /* ProgressRates.swift */,
 				6B94116EB608F25D0000001A /* SoundPlayer.swift */,
@@ -281,6 +286,7 @@
 				A2EEF523201AB21E0000002B /* MemoryBoardTests.swift */,
 				982802FDA721007D0000002C /* MemoryPhotosTests.swift */,
 				7B15A3FA40FC93B400000033 /* NumberTrailQuestionTests.swift */,
+				5B056BE6CAA0C14F0000002D /* PlayerProfileTests.swift */,
 				7D9231182AE986A100000032 /* PlayerStateSummaryTests.swift */,
 				478EE86492C1F2390000002D /* PluralStringsTests.swift */,
 				7420A39CEC074ABF0000002D /* ProgressRatesTests.swift */,
@@ -405,6 +411,7 @@
 				0164563C802E6C1D00000020 /* LevelPolicy.swift in Sources */,
 				1D8B162B0DC9013B00000021 /* MemoryPhotos.swift in Sources */,
 				275EC605D5ED04650000001E /* PlanStore.swift in Sources */,
+				9D6ADE4D20F436F700000022 /* PlayerProfile.swift in Sources */,
 				45C157ABD39C164F00000027 /* PlayerStateSummary.swift in Sources */,
 				9E9F4FAC49AD445F00000022 /* ProgressRates.swift in Sources */,
 				8C75A9CE4133529700000020 /* SoundPlayer.swift in Sources */,
@@ -438,6 +445,7 @@
 				578160CE8C24557000000031 /* MemoryBoardTests.swift in Sources */,
 				19A5511F2D9320B700000032 /* MemoryPhotosTests.swift in Sources */,
 				4E437CEEEEB1E47600000039 /* NumberTrailQuestionTests.swift in Sources */,
+				288A7358D7C5AA1900000033 /* PlayerProfileTests.swift in Sources */,
 				2E81FDB867FC926B00000038 /* PlayerStateSummaryTests.swift in Sources */,
 				56E513B81D42ABF300000033 /* PluralStringsTests.swift in Sources */,
 				B881D90E62998BE900000033 /* ProgressRatesTests.swift in Sources */,

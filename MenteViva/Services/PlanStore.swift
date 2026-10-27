@@ -26,7 +26,8 @@ nonisolated enum PlanStore {
             lastChange: lastDifficultyChange(defaults: defaults),
             dayStamp: stamp,
             pinned: FamilySettings.pinned(defaults: defaults),
-            hidden: FamilySettings.hidden(defaults: defaults))
+            hidden: FamilySettings.hidden(defaults: defaults),
+            profile: ProfileStore.load(defaults: defaults))
         cache(plan, defaults: defaults)
         return plan
     }
@@ -95,16 +96,17 @@ nonisolated enum PlanStore {
         }
     }
 
-    /// Each game's level from the last saved plan (level 4 for a new player).
-    /// Only changes when a new daily plan is saved. Pure read — does not
-    /// migrate (#264); `LevelMigration.runOnce` does that once at launch.
+    /// Each game's level from the last saved plan. A game with none yet starts where the profile says
+    /// (`DailyPolicy.startingLevel`, #211; level 4 without one). Only changes when a new daily plan is
+    /// saved. Pure read — does not migrate (#264); `LevelMigration.runOnce` does that once at launch.
     static func storedDifficulty(defaults: UserDefaults = .standard) -> [GameID: Difficulty] {
         let raw =
             defaults.data(forKey: levelKey)
             .flatMap { try? JSONDecoder().decode([String: Int].self, from: $0) } ?? [:]
+        let start = DailyPolicy.startingLevel(for: ProfileStore.load(defaults: defaults))
         return Dictionary(
             uniqueKeysWithValues: GameID.allCases.map { game in
-                (game, raw[game.rawValue].map(Difficulty.init(level:)) ?? Difficulty(level: 4))
+                (game, raw[game.rawValue].map(Difficulty.init(level:)) ?? start)
             })
     }
 
