@@ -47,19 +47,19 @@ final class UpOrDownDealTests: XCTestCase {
     }
 
     func testGivenEachLevelOnAWideScreenWhenPileCountThenFourFiveSix() {
-        XCTAssertEqual(UpOrDownDeal.pileCount(for: .easy, width: Self.wide), 4)
-        XCTAssertEqual(UpOrDownDeal.pileCount(for: .medium, width: Self.wide), 5)
-        XCTAssertEqual(UpOrDownDeal.pileCount(for: .hard, width: Self.wide), 6)
+        XCTAssertEqual(UpOrDownDeal.pileCount(for: Difficulty(level: 2), width: Self.wide), 4)
+        XCTAssertEqual(UpOrDownDeal.pileCount(for: Difficulty(level: 4), width: Self.wide), 5)
+        XCTAssertEqual(UpOrDownDeal.pileCount(for: Difficulty(level: 6), width: Self.wide), 6)
     }
 
     func testGivenHardOnAnIPhoneSEWidthWhenPileCountThenFive() {
         // Six cards and their gaps leave under 60pt each at 343pt; five do not.
-        XCTAssertEqual(UpOrDownDeal.pileCount(for: .hard, width: Self.iPhoneSE), 5)
-        XCTAssertEqual(UpOrDownDeal.pileCount(for: .easy, width: Self.iPhoneSE), 4)
+        XCTAssertEqual(UpOrDownDeal.pileCount(for: Difficulty(level: 6), width: Self.iPhoneSE), 5)
+        XCTAssertEqual(UpOrDownDeal.pileCount(for: Difficulty(level: 2), width: Self.iPhoneSE), 4)
     }
 
     func testGivenAMadeDealThenEachPileHasThreeAndAll52CardsAreUsedOnce() {
-        for difficulty in [Difficulty.easy, .medium, .hard] {
+        for difficulty in [Difficulty(level: 2), Difficulty(level: 4), Difficulty(level: 6)] {
             let d = deal(difficulty)
             XCTAssertTrue(d.piles.allSatisfy { $0.count == 3 })
             let all = d.piles.flatMap { $0 } + [d.open] + d.deck
@@ -70,14 +70,14 @@ final class UpOrDownDealTests: XCTestCase {
 
     func testGivenFiftySeedsWhenMakeEasyThenEveryDealGreedyClears() {
         for seed in 1...50 {
-            XCTAssertTrue(UpOrDownDeal.greedyClears(deal(.easy, seed: UInt64(seed))), "seed \(seed)")
+            XCTAssertTrue(UpOrDownDeal.greedyClears(deal(Difficulty(level: 2), seed: UInt64(seed))), "seed \(seed)")
         }
     }
 
     func testGivenHardWhenMakeThenItDoesNotWrap() {
-        XCTAssertTrue(deal(.easy).wraps)
-        XCTAssertTrue(deal(.medium).wraps)
-        XCTAssertFalse(deal(.hard).wraps)
+        XCTAssertTrue(deal(Difficulty(level: 2)).wraps)
+        XCTAssertTrue(deal(Difficulty(level: 4)).wraps)
+        XCTAssertFalse(deal(Difficulty(level: 6)).wraps)
     }
 
     // MARK: The three-level bridge reads bands, not exact levels (#197)
@@ -103,7 +103,7 @@ final class UpOrDownDealTests: XCTestCase {
     }
 
     func testGivenAFittingTopWhenPlayThenItBecomesTheOpenCardAndLeavesThePile() throws {
-        var d = deal(.easy)
+        var d = deal(Difficulty(level: 2))
         while playableIndices(d).fits == nil { XCTAssertTrue(d.turn()) }
         let pile = try XCTUnwrap(playableIndices(d).fits)
         let top = try XCTUnwrap(d.piles[pile].last)
@@ -113,7 +113,7 @@ final class UpOrDownDealTests: XCTestCase {
     }
 
     func testGivenANonFittingTopWhenPlayThenFalseAndNothingChanges() throws {
-        var d = deal(.hard, seed: 3)
+        var d = deal(Difficulty(level: 6), seed: 3)
         while playableIndices(d).misses == nil { XCTAssertTrue(d.turn()) }
         let before = d
         XCTAssertFalse(d.play(pile: try XCTUnwrap(playableIndices(d).misses)))
@@ -121,7 +121,7 @@ final class UpOrDownDealTests: XCTestCase {
     }
 
     func testGivenAnEmptyDeckWhenTurnThenFalse() {
-        var d = deal(.medium)
+        var d = deal(Difficulty(level: 4))
         while !d.deck.isEmpty { XCTAssertTrue(d.turn()) }
         let before = d
         XCTAssertFalse(d.turn())
@@ -129,7 +129,7 @@ final class UpOrDownDealTests: XCTestCase {
     }
 
     func testGivenEmptyDeckAndNoFitWhenAskedThenIsStuck() {
-        var d = deal(.hard, seed: 7)
+        var d = deal(Difficulty(level: 6), seed: 7)
         while !d.deck.isEmpty { d.turn() }
         while let pile = d.playablePiles.first { d.play(pile: pile) }
         XCTAssertTrue(d.isStuck || d.isCleared)
@@ -138,7 +138,7 @@ final class UpOrDownDealTests: XCTestCase {
 
     func testGivenASixPileDealWhenTheScreenNarrowsThenItNoLongerFits() {
         // Dealt in landscape on an iPhone SE, then turned to portrait.
-        let d = deal(.hard, width: 600)
+        let d = deal(Difficulty(level: 6), width: 600)
         XCTAssertEqual(d.piles.count, 6)
         XCTAssertTrue(d.fits(width: 600))
         XCTAssertFalse(d.fits(width: Self.iPhoneSE))

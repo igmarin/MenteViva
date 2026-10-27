@@ -139,6 +139,8 @@ nonisolated struct SudokuPuzzle: Equatable {
     }
 
     /// Solutions of a partly filled grid, counting no further than `limit`.
+    /// Backtracking via `allows(_:at:in:size:boxRows:boxColumns:)`; recursion depth ≤81, safe for 9×9.
+    /// Called by `make(difficulty:width:using:)` to keep only boards with exactly one solution.
     static func solutionCount(_ grid: [Int?], size: Int, boxRows: Int, boxColumns: Int, limit: Int) -> Int {
         guard let empty = grid.firstIndex(of: nil) else { return 1 }
         var grid = grid

@@ -1,20 +1,16 @@
 import Foundation
 
 /// A game's level from 1 to 10 (#197). Each game turns it into its own knobs
-/// with `values(_:)`; `pick(_:_:_:)` is the temporary bridge that keeps games
-/// on easy/medium/hard until their own levels ticket lands. Codable as a
-/// single Int so plans and summaries keep their shape.
+/// with `values(_:)`; there are no easy/medium/hard names left (#209). Codable
+/// as a single Int so plans and summaries keep their shape.
+///
+/// Levels are produced by `DailyPolicy.nextDifficulty` and `LevelMigration`,
+/// persisted in `PlanStore.storedDifficulty` and `FamilySettings.pinned`,
+/// offered by `LevelPolicy.shouldOffer`/`LevelOfferStore.applyChosen`,
+/// and shown in `CelebrationView.shouldShowOffer` / `LevelExplainBanner`.
 nonisolated struct Difficulty: Codable, Hashable, Comparable {
     /// Valid levels; everything else clamps into range on creation.
     static let range = 1...10
-
-    /// Temporary bridges so games compare levels exactly as they compared
-    /// easy/medium/hard: 2/4/6, the migrated values. The per-game levels
-    /// tickets remove each use; only `pick` below is formally deprecated, to
-    /// keep these call sites warning-free until then.
-    static let easy = Difficulty(level: 2)
-    static let medium = Difficulty(level: 4)
-    static let hard = Difficulty(level: 6)
 
     var level: Int
 
@@ -42,18 +38,6 @@ nonisolated struct Difficulty: Codable, Hashable, Comparable {
     static func stored(_ game: GameID, defaults: UserDefaults = .standard) -> Difficulty {
         FamilySettings.pinned(defaults: defaults)[game]
             ?? PlanStore.storedDifficulty(defaults: defaults)[game] ?? Difficulty(level: 4)
-    }
-
-    /// Temporary bridge until every game has ten steps (levels epic): levels
-    /// 1–3 read as easy, 4–5 as medium, 6–10 as hard, so every game behaves
-    /// exactly as it did until its own ticket lands.
-    @available(*, deprecated, message: "Use values(_:) — levels epic")
-    func pick<T>(_ easy: T, _ medium: T, _ hard: T) -> T {
-        switch level {
-        case 1...3: easy
-        case 4...5: medium
-        default: hard
-        }
     }
 
     /// The per-game value for this level from a ten-row table, one row per

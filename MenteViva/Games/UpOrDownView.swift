@@ -149,7 +149,7 @@ struct UpOrDownView: View {
     private func deckButton(_ deal: UpOrDownDeal) -> some View {
         let width = cardWidth(deal) * 1.15
         let nudge = deal.playablePiles.isEmpty && !deal.deck.isEmpty
-        return Button(action: turn) {
+        return Button(action: turnDeck) {
             RoundedRectangle(cornerRadius: 10)
                 .fill(GameID.upOrDown.ink)
                 .overlay {
@@ -230,7 +230,8 @@ struct UpOrDownView: View {
         finishIfDone()
     }
 
-    private func turn() {
+    /// Turns the deck (`UpOrDownDeal.turn`) — named `turnDeck` to avoid colliding with the deal's `turn`.
+    private func turnDeck() {
         guard var current = deal, current.turn() else { return }
         showAlmost = false
         deal = current
