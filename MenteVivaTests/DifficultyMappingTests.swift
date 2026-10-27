@@ -81,7 +81,7 @@ final class DifficultyMappingTests: XCTestCase {
 
     func testGivenDifficultiesWhenStroopMatchingChanceThenEasyMostHardNone() {
         XCTAssertEqual(
-            [Difficulty(level: 2), Difficulty(level: 4), Difficulty(level: 6)].map(ColorClashView.matchingChance),
+            [Difficulty(level: 2), Difficulty(level: 4), Difficulty(level: 6)].map(ColorClashDeal.matchingChance),
             [0.7, 0.25, 0])
     }
 
