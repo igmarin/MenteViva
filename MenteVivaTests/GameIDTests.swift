@@ -18,8 +18,8 @@ final class GameIDTests: XCTestCase {
     }
 
     func testGivenUnreleasedGamesWhenReleasedThenTheyAreLeftOut() {
-        XCTAssertEqual(GameID.unreleased.count, 4)
+        XCTAssertEqual(GameID.unreleased.count, 3)
         XCTAssertTrue(Set(GameID.released).isDisjoint(with: GameID.unreleased))
-        XCTAssertEqual(GameID.released.count, GameID.allCases.count - 4)
+        XCTAssertEqual(GameID.released.count, GameID.allCases.count - 3)
     }
 }

@@ -23,6 +23,7 @@
 		06316652C0C975F40000001F /* QuickEyesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D757F5352AE1A200000019; };
 		AD020DC30561DD5000000022 /* ReminiscenceDeck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A9D512184D7D07E0000001C; };
 		A87005C5B52DA39800000022 /* ReminiscenceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11EA4E85E31685D60000001C; };
+		CD2EA82032FB0E6900000024 /* RepeatSequenceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7FB2C68C28E13F0000001E; };
 		4ABB42872988EB3A0000001E /* RoundCounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF92BF2CF2BF92D800000018; };
 		C9F0638D4C5D8F2E00000019 /* Sayings.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA861EB6D0E1583C00000013; };
 		6C996EBFBA06751F0000001D /* SayingsDeck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F0F3C38239D199500000017; };
@@ -115,6 +116,7 @@
 		B4D757F5352AE1A200000019 /* QuickEyesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/QuickEyesView.swift; sourceTree = "<group>"; };
 		7A9D512184D7D07E0000001C /* ReminiscenceDeck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/ReminiscenceDeck.swift; sourceTree = "<group>"; };
 		11EA4E85E31685D60000001C /* ReminiscenceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/ReminiscenceView.swift; sourceTree = "<group>"; };
+		3A7FB2C68C28E13F0000001E /* RepeatSequenceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/RepeatSequenceView.swift; sourceTree = "<group>"; };
 		CF92BF2CF2BF92D800000018 /* RoundCounter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/RoundCounter.swift; sourceTree = "<group>"; };
 		FA861EB6D0E1583C00000013 /* Sayings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/Sayings.swift; sourceTree = "<group>"; };
 		9F0F3C38239D199500000017 /* SayingsDeck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/SayingsDeck.swift; sourceTree = "<group>"; };
@@ -233,6 +235,7 @@
 				B4D757F5352AE1A200000019 /* QuickEyesView.swift */,
 				7A9D512184D7D07E0000001C /* ReminiscenceDeck.swift */,
 				11EA4E85E31685D60000001C /* ReminiscenceView.swift */,
+				3A7FB2C68C28E13F0000001E /* RepeatSequenceView.swift */,
 				CF92BF2CF2BF92D800000018 /* RoundCounter.swift */,
 				FA861EB6D0E1583C00000013 /* Sayings.swift */,
 				9F0F3C38239D199500000017 /* SayingsDeck.swift */,
@@ -401,6 +404,7 @@
 				06316652C0C975F40000001F /* QuickEyesView.swift in Sources */,
 				AD020DC30561DD5000000022 /* ReminiscenceDeck.swift in Sources */,
 				A87005C5B52DA39800000022 /* ReminiscenceView.swift in Sources */,
+				CD2EA82032FB0E6900000024 /* RepeatSequenceView.swift in Sources */,
 				4ABB42872988EB3A0000001E /* RoundCounter.swift in Sources */,
 				C9F0638D4C5D8F2E00000019 /* Sayings.swift in Sources */,
 				6C996EBFBA06751F0000001D /* SayingsDeck.swift in Sources */,
