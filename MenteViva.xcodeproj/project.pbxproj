@@ -7,6 +7,7 @@
 	objects = {
 		8AC071529447874E00000016 /* BigTargets.swift in Sources */ = {isa = PBXBuildFile; fileRef = B91ABDA086A9E6DC00000010; };
 		C4A4C2DC56D1AD0100000023 /* FamilyPhotoCaptionSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB8113FC44C63A70000001D; };
+		27FC9D3E2B699DE60000001A /* FirstPlayGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2709843BA5CB20400000014; };
 		82CA8D7C6E784B6200000014 /* GameCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86B5E610ECF1EC500000000E; };
 		3FF1DA3530DADEF500000016 /* GameHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87A1ECDA07DDDD0B00000010; };
 		2526D29DE5FE6C8300000025 /* CategoryFluencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 915FB304D5C7D9690000001F; };
@@ -47,6 +48,7 @@
 		30ECA8CB22C0601E00000020 /* DailyPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABA89EC2CAC17B0C0000001A; };
 		9A0F9B11E98286F400000024 /* EverydayObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = D939A12670747AA20000001E; };
 		5BDF348CC430543800000023 /* FamilySettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D5B4260F3371760000001D; };
+		CDF4B3708A1458A800000028 /* FirstPlayGuideStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC77BCD3286198600000022; };
 		EB1D5656AAE8FB090000001C /* HotPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66F53A1E32AAD85F00000016; };
 		B655A39EA9B5D68F00000023 /* LevelMigration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA5E65A5CDB56250000001D; };
 		2EAE227B2A482B2400000024 /* LevelOfferStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E124490D58C484320000001E; };
@@ -74,6 +76,7 @@
 		13FA9F9D70716C6800000037 /* DifficultyMappingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70A793986C53BDC600000031; };
 		DA5576CFCC1597B600000030 /* DifficultyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 144E32855AFBBF740000002A; };
 		68E9DA3C26CDDAAA00000034 /* FamilySettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E952D4EA684697A80000002E; };
+		D2CC4A8C508F31C900000034 /* FirstPlayGuideTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F44282B9FAD59F0000002E; };
 		6B2AC072C6B8EED40000002C /* GameIDTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60D8C63A3D78C8200000026; };
 		1C320C298D4269F400000036 /* GameSessionStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE35901B6A0B75A200000030; };
 		EE07AD69390E5FDA00000032 /* LevelExplainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65152AEC3FEF3E780000002C; };
@@ -97,6 +100,7 @@
 
 		B91ABDA086A9E6DC00000010 /* BigTargets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BigTargets.swift; sourceTree = "<group>"; };
 		4BB8113FC44C63A70000001D /* FamilyPhotoCaptionSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FamilyPhotoCaptionSheet.swift; sourceTree = "<group>"; };
+		A2709843BA5CB20400000014 /* FirstPlayGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstPlayGuide.swift; sourceTree = "<group>"; };
 		86B5E610ECF1EC500000000E /* GameCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCard.swift; sourceTree = "<group>"; };
 		87A1ECDA07DDDD0B00000010 /* GameHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameHeader.swift; sourceTree = "<group>"; };
 		915FB304D5C7D9690000001F /* CategoryFluencyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/CategoryFluencyView.swift; sourceTree = "<group>"; };
@@ -137,6 +141,7 @@
 		ABA89EC2CAC17B0C0000001A /* DailyPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/DailyPolicy.swift; sourceTree = "<group>"; };
 		D939A12670747AA20000001E /* EverydayObjects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/EverydayObjects.swift; sourceTree = "<group>"; };
 		74D5B4260F3371760000001D /* FamilySettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/FamilySettings.swift; sourceTree = "<group>"; };
+		7BC77BCD3286198600000022 /* FirstPlayGuideStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/FirstPlayGuideStore.swift; sourceTree = "<group>"; };
 		66F53A1E32AAD85F00000016 /* HotPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/HotPath.swift; sourceTree = "<group>"; };
 		0EA5E65A5CDB56250000001D /* LevelMigration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/LevelMigration.swift; sourceTree = "<group>"; };
 		E124490D58C484320000001E /* LevelOfferStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/LevelOfferStore.swift; sourceTree = "<group>"; };
@@ -164,6 +169,7 @@
 		70A793986C53BDC600000031 /* DifficultyMappingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/DifficultyMappingTests.swift; sourceTree = SOURCE_ROOT; };
 		144E32855AFBBF740000002A /* DifficultyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/DifficultyTests.swift; sourceTree = SOURCE_ROOT; };
 		E952D4EA684697A80000002E /* FamilySettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/FamilySettingsTests.swift; sourceTree = SOURCE_ROOT; };
+		36F44282B9FAD59F0000002E /* FirstPlayGuideTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/FirstPlayGuideTests.swift; sourceTree = SOURCE_ROOT; };
 		A60D8C63A3D78C8200000026 /* GameIDTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/GameIDTests.swift; sourceTree = SOURCE_ROOT; };
 		DE35901B6A0B75A200000030 /* GameSessionStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/GameSessionStoreTests.swift; sourceTree = SOURCE_ROOT; };
 		65152AEC3FEF3E780000002C /* LevelExplainTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/LevelExplainTests.swift; sourceTree = SOURCE_ROOT; };
@@ -213,6 +219,7 @@
 			children = (
 				B91ABDA086A9E6DC00000010 /* BigTargets.swift */,
 				4BB8113FC44C63A70000001D /* FamilyPhotoCaptionSheet.swift */,
+				A2709843BA5CB20400000014 /* FirstPlayGuide.swift */,
 				86B5E610ECF1EC500000000E /* GameCard.swift */,
 				87A1ECDA07DDDD0B00000010 /* GameHeader.swift */,
 				915FB304D5C7D9690000001F /* CategoryFluencyView.swift */,
@@ -253,6 +260,7 @@
 				ABA89EC2CAC17B0C0000001A /* DailyPolicy.swift */,
 				D939A12670747AA20000001E /* EverydayObjects.swift */,
 				74D5B4260F3371760000001D /* FamilySettings.swift */,
+				7BC77BCD3286198600000022 /* FirstPlayGuideStore.swift */,
 				66F53A1E32AAD85F00000016 /* HotPath.swift */,
 				0EA5E65A5CDB56250000001D /* LevelMigration.swift */,
 				E124490D58C484320000001E /* LevelOfferStore.swift */,
@@ -291,6 +299,7 @@
 				70A793986C53BDC600000031 /* DifficultyMappingTests.swift */,
 				144E32855AFBBF740000002A /* DifficultyTests.swift */,
 				E952D4EA684697A80000002E /* FamilySettingsTests.swift */,
+				36F44282B9FAD59F0000002E /* FirstPlayGuideTests.swift */,
 				A60D8C63A3D78C8200000026 /* GameIDTests.swift */,
 				DE35901B6A0B75A200000030 /* GameSessionStoreTests.swift */,
 				65152AEC3FEF3E780000002C /* LevelExplainTests.swift */,
@@ -379,6 +388,7 @@
 			files = (
 				8AC071529447874E00000016 /* BigTargets.swift in Sources */,
 				C4A4C2DC56D1AD0100000023 /* FamilyPhotoCaptionSheet.swift in Sources */,
+				27FC9D3E2B699DE60000001A /* FirstPlayGuide.swift in Sources */,
 				82CA8D7C6E784B6200000014 /* GameCard.swift in Sources */,
 				3FF1DA3530DADEF500000016 /* GameHeader.swift in Sources */,
 				2526D29DE5FE6C8300000025 /* CategoryFluencyView.swift in Sources */,
@@ -419,6 +429,7 @@
 				30ECA8CB22C0601E00000020 /* DailyPolicy.swift in Sources */,
 				9A0F9B11E98286F400000024 /* EverydayObjects.swift in Sources */,
 				5BDF348CC430543800000023 /* FamilySettings.swift in Sources */,
+				CDF4B3708A1458A800000028 /* FirstPlayGuideStore.swift in Sources */,
 				EB1D5656AAE8FB090000001C /* HotPath.swift in Sources */,
 				B655A39EA9B5D68F00000023 /* LevelMigration.swift in Sources */,
 				2EAE227B2A482B2400000024 /* LevelOfferStore.swift in Sources */,
@@ -454,6 +465,7 @@
 				13FA9F9D70716C6800000037 /* DifficultyMappingTests.swift in Sources */,
 				DA5576CFCC1597B600000030 /* DifficultyTests.swift in Sources */,
 				68E9DA3C26CDDAAA00000034 /* FamilySettingsTests.swift in Sources */,
+				D2CC4A8C508F31C900000034 /* FirstPlayGuideTests.swift in Sources */,
 				6B2AC072C6B8EED40000002C /* GameIDTests.swift in Sources */,
 				1C320C298D4269F400000036 /* GameSessionStoreTests.swift in Sources */,
 				EE07AD69390E5FDA00000032 /* LevelExplainTests.swift in Sources */,
