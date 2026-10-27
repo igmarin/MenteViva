@@ -61,7 +61,7 @@ docs/                 start at docs/README.md
 - **Next: v0.3 then v1.0 on the App Store** (decisions.md 2026-10-26): Jev out of the app, levels
   1–10, onboarding with goals, four new games, then release work. Built by several agents in
   parallel; see "Several agents at once" below. The epics are the open issues labelled `epic`.
-- Live state is in the [issues](https://github.com/nebulaideas/MenteViva/issues), not here.
+- Live state is in the [issues](https://github.com/igmarin/menteviva/issues), not here.
 
 ## Signing
 
@@ -118,7 +118,7 @@ docs/                 start at docs/README.md
    `npm i -g @alibaba-group/open-code-review`; without them it warns and skips;
    `git commit --no-verify` skips it too).
 6. Track work in GitHub issues with the current milestone (see
-   [milestones](https://github.com/nebulaideas/MenteViva/milestones)). Closed-issue labels mark the release
+   [milestones](https://github.com/igmarin/menteviva/milestones)). Closed-issue labels mark the release
    (e.g. `v0.1.0`).
 7. Update `CHANGELOG.md` under `[Unreleased]` with any user-visible change.
 

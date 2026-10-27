@@ -38,7 +38,7 @@ machine.
 Do the steps for the agents you use. Nothing here is committed.
 
 1. **Clone and hooks.** `git config core.hooksPath .githooks` (enables pre-commit and pre-push).
-2. **GitHub token for MCP.** Create a token with repo scope for `nebulaideas/MenteViva`. Export it in the
+2. **GitHub token for MCP.** Create a token with repo scope for `igmarin/menteviva`. Export it in the
    shell the agent starts from, never in a committed file:
    `export GITHUB_TOKEN=<token>`. Claude Code and OMP expand `${GITHUB_TOKEN}` from `.mcp.json`.
    Without it, the GitHub server fails to connect and the agent reports a warning.

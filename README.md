@@ -3,14 +3,14 @@
 Warm, bilingual (ES/EN) cognitive games for older adults — built for one dad
 first, designed for every family like his.
 
-Five mini-games, one per cognitive domain. Big buttons, no countdown clocks
+Nine mini-games today, with four more on the way. Big buttons, no countdown clocks
 pressuring anyone, no fail shame — "Almost, try again", never "wrong".
 
 ## Status
 
-**v0.1.0 shipped**; five playable games since, offline-first, ES/EN complete.
+**v0.1.0 shipped**; nine playable games now, offline-first, ES/EN complete.
 See [CHANGELOG.md](CHANGELOG.md). What's next: [docs/roadmap.md](docs/roadmap.md)
-and [GitHub milestones](https://github.com/nebulaideas/MenteViva/milestones).
+and [GitHub issues](https://github.com/igmarin/menteviva/issues).
 
 ## The games
 
@@ -21,6 +21,12 @@ and [GitHub milestones](https://github.com/nebulaideas/MenteViva/milestones).
 | 🐾 Name the Herd | Verbal fluency | Tap everything that belongs to the category |
 | 🔢 Number Trail | Processing + numeracy | Adaptive math streaks |
 | 👀 Quick Eyes | Processing speed | Shrinking display-time discrimination |
+| 📷 Remember Together | Reminiscence | The family's own photos and names; nothing to get wrong |
+| ✏️ Sudoku | Logic | 4×4 and 6×6 boards, generated with one solution |
+| 🃏 Up or Down | Planning | Golf solitaire: one higher or one lower |
+| 💬 Finish the Saying | Language | Pick the ending of a familiar saying |
+
+Coming next (#193): Repeat the Sequence, Tangram, Tile Pairs, Sliding Blocks.
 
 Home marks today's picks and each game reads the daily difficulty. Both are
 decided by a small rule policy on the device (no network, no cost).

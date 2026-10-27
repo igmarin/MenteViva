@@ -77,6 +77,16 @@ final class SayingsDeckTests: XCTestCase {
         }
     }
 
+    func testGivenLevelsSixToTenWhenThreeSameThemeSayingsExistThenDistractorsShareTheTheme() {
+        // The bridge reads 6–10 as hard (#197): no level above 6 may get easier.
+        let pool = (1...16).map { Saying(id: $0, theme: $0 <= 8 ? .animals : .money) }
+        for level in 6...10 {
+            for round in deal(Difficulty(level: level), pool: pool) {
+                XCTAssertTrue(round.choices.allSatisfy { $0.theme == round.saying.theme }, "level \(level)")
+            }
+        }
+    }
+
     func testGivenARoundCompletedWhenMarkedThenItsIDIsPersistedUnderSeenKey() {
         let rounds = deal()
         SayingsDeck.markSeen(rounds[0].saying, defaults: defaults)

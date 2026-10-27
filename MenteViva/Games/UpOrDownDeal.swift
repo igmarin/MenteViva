@@ -59,14 +59,21 @@ nonisolated struct UpOrDownDeal: Equatable {
         difficulty: Difficulty, width: Double, using generator: inout G
     ) -> UpOrDownDeal {
         let count = pileCount(for: difficulty, width: width)
-        var made = deal(piles: count, wraps: difficulty != .hard, using: &generator)
-        guard difficulty == .easy else { return made }
+        // Bands, not exact levels: the staircase reaches every level 1...10, and
+        // `== .hard` would hand levels 7–10 the easier wrapping deal (#197 bridge).
+        var made = deal(piles: count, wraps: difficulty.pick(true, true, false), using: &generator)
+        guard difficulty.pick(true, false, false) else { return made }
         // Every candidate is checked before it is returned.
         for _ in 0..<easyTries {
             if greedyClears(made) { return made }
             made = deal(piles: count, wraps: true, using: &generator)
         }
         return made
+    }
+
+    /// Whether playable top cards are lifted as a hint: the easy band only (levels 1–3).
+    static func liftsPlayableCards(at difficulty: Difficulty) -> Bool {
+        difficulty.pick(true, false, false)
     }
 
     static func canPlay(_ card: PlayingCard, on open: PlayingCard, wraps: Bool) -> Bool {

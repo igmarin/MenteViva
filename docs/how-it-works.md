@@ -25,7 +25,7 @@ launch
 | Home | `HomeView.swift`, `GameCard.swift`, `Theme.swift` | Deals today's three as framed cards; each game has its own colour and an emblem drawn in SwiftUI shapes. |
 | Games | `Games/` | One file per game, plus the shared celebration, miss cue and `fitOrScroll`. |
 | Game list | `Models/GameID.swift` | The single list of games: stable ID, emoji, title key, whether it has levels. |
-| Levels | `Models/Difficulty.swift` | easy / medium / hard. Each game turns a level into its own knobs with `pick(easy, medium, hard)`. |
+| Levels | `Models/Difficulty.swift` | Levels 1–10 (#197). A game turns its level into its own knobs with `values(_:)`, a ten-row table; games still on the old three steps use the `pick(easy, medium, hard)` bridge (levels 1–3 / 4–5 / 6–10) until their ticket lands. |
 | Saved play | `Models/GameSession.swift` | One row per finished game: rounds, attempts, correct, duration, level. No scores on screen. |
 | Daily plan | `Services/DailyPolicy.swift` | Pure rules: which three games, and each game's level. No network. |
 | Plan cache | `Services/PlanStore.swift` | The plan is saved for the day, with each game's level and when it last changed. |
@@ -52,9 +52,11 @@ score = value[game] × (0.5 + 0.5 × daysSinceLastPlayed / 7)     (days capped a
 - `value` is a fixed weight per game (Memory Lane 1.0 … Number Trail 0.3). A game not played for a week
   counts fully; one played today counts half.
 - Hidden games are never picked.
-- **Levels** move one step at a time and only with evidence: below 65% accuracy → easier; 90%+ over at
-  least 3 sessions → harder; then the level holds for 7 days so it never shifts under the player. A pinned
-  level (Set up) wins over the rules.
+- **Levels** follow a staircase, once a day and never mid-game (#198): the newest session strong (90%+) → up
+  one; the two newest strong → up two; the newest hard going (under 65%) → down one, never more. Only
+  sessions at the current level since it last changed count, so that window is the hold. Memory Lane uses
+  0.65 / 0.45, because its accuracy counts moves. After a strong game the player can also choose to go up
+  one (#207). A pinned level (Set up) wins over the rules.
 
 ## Saved data
 

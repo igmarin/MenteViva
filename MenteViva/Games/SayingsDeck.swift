@@ -54,7 +54,7 @@ enum SayingsDeck {
         return picked.map { saying in
             let rest = pool.filter { $0 != saying }.shuffled(using: &generator)
             let distractors =
-                difficulty == .hard
+                difficulty.pick(false, false, true)
                 ? rest.filter { $0.theme == saying.theme } + rest.filter { $0.theme != saying.theme }
                 : rest
             return SayingRound(

@@ -90,7 +90,7 @@ struct UpOrDownView: View {
 
     private func piles(_ deal: UpOrDownDeal) -> some View {
         let width = cardWidth(deal)
-        let lift = difficulty == .easy
+        let lift = UpOrDownDeal.liftsPlayableCards(at: difficulty)
         return HStack(alignment: .top, spacing: UpOrDownDeal.gap) {
             ForEach(deal.piles.indices, id: \.self) { index in
                 let pile = deal.piles[index]

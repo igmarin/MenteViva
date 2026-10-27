@@ -19,9 +19,6 @@ struct ReminiscenceView: View {
 
     var body: some View {
         VStack(spacing: 20) {
-            LevelExplainBanner(
-                change: PlanStore.cachedPlan()?.changes[GameID.reminiscence], game: GameID.reminiscence,
-                hasStarted: progress.completedRounds > 0)
             if let card {
                 RoundCounter(progress: progress)
                 picture(of: card)
