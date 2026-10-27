@@ -6,7 +6,7 @@ import UIKit
 @MainActor
 enum Feedback {
     /// A user interaction that receives synchronized sound and haptic feedback.
-    enum Event {
+    enum Event: CaseIterable {
         case tap
         case success
         case complete
@@ -68,7 +68,7 @@ enum SoundPlayer {
         }
         guard let engine else { return }
 
-        guard let format = AVAudioFormat(standardFormatWithSampleRate: 44100, channels: 1),
+        guard let format = AVAudioFormat(standardFormatWithSampleRate: ToneSynth.sampleRate, channels: 1),
             let buffer = cachedBuffer(for: event, format: format)
         else { return }
 
@@ -112,45 +112,15 @@ enum SoundPlayer {
         return rendered
     }
 
+    /// Copies the synthesized samples (see `ToneSynth`) into a playable buffer.
     private static func buffer(for event: Feedback.Event, format: AVAudioFormat) -> AVAudioPCMBuffer? {
-        // Concatenate one or more notes into a single scheduled buffer.
-        let notes: [(Double, Double, Float)]
-        switch event {
-        case .tap:
-            notes = [(440, 0.10, 0.35)]
-        case .success:
-            notes = [(392, 0.14, 0.5), (523, 0.18, 0.5)]
-        case .complete:
-            notes = [(392, 0.12, 0.5), (523, 0.12, 0.5), (659, 0.20, 0.5)]
-        case .miss:
-            notes = [(180, 0.16, 0.28)]
-        }
-
-        let sampleRate = 44100.0
-        // Truncate per note, then sum: sizing from the summed duration can come
-        // out a frame short of what the loop below writes.
-        let noteFrames = notes.map { Int(sampleRate * $0.1) }
-        let totalFrames = AVAudioFrameCount(noteFrames.reduce(0, +))
+        let samples = ToneSynth.samples(for: event)
+        let totalFrames = AVAudioFrameCount(samples.count)
         guard let buffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: totalFrames),
             let channel = buffer.floatChannelData?[0]
         else { return nil }
         buffer.frameLength = totalFrames
-
-        var offset = 0
-        for (note, frames) in zip(notes, noteFrames) {
-            let freq = note.0
-            let duration = note.1
-            let amplitude = note.2
-            let attack = 0.01
-            for i in 0..<frames {
-                let t = Double(i) / sampleRate
-                let attackEnv = min(t / attack, 1.0)
-                let decayEnv = max(1.0 - t / (duration * 0.25), 0.0)
-                let envelope = Float(attackEnv * decayEnv)
-                channel[offset + i] = Float(sin(2.0 * Double.pi * freq * t)) * envelope * amplitude
-            }
-            offset += frames
-        }
+        for (i, sample) in samples.enumerated() { channel[i] = sample }
         return buffer
     }
 }
