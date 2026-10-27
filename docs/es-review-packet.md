@@ -2,6 +2,7 @@
 
 Hand this whole file to the reviewer. Generated from `Localizable.xcstrings`
 (490 user-facing strings; keys that are only format specifiers are omitted).
+(476 user-facing strings; keys that are only format specifiers are omitted).
 Rows already signed off on #12 are pre-marked ✅.
 Regenerate after any string change: `python3 tools/generate_es_packet.py`.
 
@@ -272,6 +273,9 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `level.offer.keep` | Keep it as it is | Así está bien | CelebrationView |  |
 | `level.offer.prompt` | That was perfect. Shall we try the next level? | ¡Te salió perfecto! ¿Probamos el siguiente nivel? | CelebrationView |  |
 | `level.offer.yes` | Yes, let's try | Sí, probemos | CelebrationView |  |
+| `myplan.note` | Today's plan stays as it is. These answers decide tomorrow's. | El plan de hoy se queda como está. Estas respuestas deciden el de mañana. | MyPlanView |  |
+| `myplan.open.hint` | Who plays, what to exercise, how long a day and how to start. | Quién juega, qué ejercitar, cuánto tiempo al día y cómo empezar. | SettingsView |  |
+| `myplan.title` | My plan | Mi plan | MyPlanView, SettingsView |  |
 | `object.book` | Book | Libro | EverydayObjects |  |
 | `object.chair` | Chair | Silla | EverydayObjects |  |
 | `object.clock` | Clock | Reloj | EverydayObjects |  |
@@ -280,12 +284,35 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `object.key` | Key | Llave | EverydayObjects |  |
 | `object.lamp` | Lamp | Lámpara | EverydayObjects |  |
 | `object.umbrella` | Umbrella | Paraguas | EverydayObjects |  |
+| `onboarding.back` | Back | Atrás | OnboardingView |  |
+| `onboarding.back.hint` | Goes back to the previous question. | Vuelve a la pregunta anterior. | OnboardingView |  |
 | `onboarding.disclaimer` | This is not a medical device. | No es un dispositivo médico. | OnboardingView |  |
+| `onboarding.focus.attention` | Attention | Atención | OnboardingSteps |  |
+| `onboarding.focus.fun` | Just have fun | Solo pasarla bien | OnboardingSteps |  |
+| `onboarding.focus.memory` | Memory | Memoria | OnboardingSteps |  |
+| `onboarding.focus.numbers` | Numbers | Números | OnboardingSteps |  |
+| `onboarding.focus.title` | What would you like to exercise? Pick any. | ¿Qué te gustaría ejercitar? Elige las que quieras. | OnboardingSteps |  |
+| `onboarding.focus.words` | Words | Palabras | OnboardingSteps |  |
 | `onboarding.line1` | Fun mental exercise. | Ejercicio mental divertido. | OnboardingView |  |
 | `onboarding.line2` | No rush, no pressure. | Sin prisa y sin presión. | OnboardingView |  |
 | `onboarding.line3` | Pick a game and start. | Elige un juego y empieza. | OnboardingView |  |
+| `onboarding.minutes.10` | 10 minutes | 10 minutos | — |  |
+| `onboarding.minutes.15` | 15 minutes | 15 minutos | — |  |
+| `onboarding.minutes.5` | 5 minutes | 5 minutos | — |  |
+| `onboarding.minutes.title` | How long a day? | ¿Cuánto tiempo al día? | OnboardingSteps |  |
+| `onboarding.next` | Next | Siguiente | OnboardingView |  |
+| `onboarding.pace.calm` | Calm | Tranquilo | OnboardingSteps |  |
+| `onboarding.pace.challenge` | A challenge | Con reto | OnboardingSteps |  |
+| `onboarding.pace.normal` | Normal | Normal | OnboardingSteps |  |
+| `onboarding.pace.title` | How would you like to start? | ¿Cómo quieres empezar? | OnboardingSteps |  |
+| `onboarding.skip` | Skip | Omitir | OnboardingView |  |
+| `onboarding.skip.hint` | Leaves this one unanswered. You can change it later in Settings, My plan. | Deja esta pregunta sin responder. Puedes cambiarla después en Ajustes, Mi plan. | OnboardingView |  |
 | `onboarding.start` | Let's play | A jugar | OnboardingView |  |
 | `onboarding.start.hint` | Opens the games | Abre los juegos | OnboardingView |  |
+| `onboarding.step %lld %lld` | Step %lld of %lld | Paso %lld de %lld | OnboardingView |  |
+| `onboarding.who.family` | A family member | Un familiar | OnboardingSteps |  |
+| `onboarding.who.me` | Me | Yo | OnboardingSteps |  |
+| `onboarding.who.title` | Who will play? | ¿Quién va a jugar? | OnboardingSteps |  |
 | `progress.accuracy %lld` | On average, %lld%% right each game | En promedio, %lld%% de aciertos por juego | MyProgressView |  |
 | `progress.days %lld` | Played on %lld of the last 7 days | Jugaste %lld de los últimos 7 días | MyProgressView |  |
 | `progress.empty` | No games in the last 7 days yet. Whenever you play, it shows up here. | Todavía no hay juegos en los últimos 7 días. Cuando juegues, aparecerá aquí. | MyProgressView |  |

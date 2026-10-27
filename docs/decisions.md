@@ -83,6 +83,19 @@ The hackathon is fuel, not the goal. Owner decisions, made in one planning sessi
 Revisit when: Jev 020 disagrees on levels, onboarding or the warm-up; a playtest shows the staircase
 moving too fast for dad; or the lawyer flags a game or name.
 
+**Jev 020 said** (`jev-json/020-v03-direction.response.json`, model jev-1.14.0). Jev is evidence; the owner decides.
+
+- **Levels staircase:** "excellent rule", 1.56 of 2 (60% for excellent). Agrees with item 3.
+- **Next-level offer:** P(yes) 0.69. Agrees with the "Shall we try the next level?" line.
+- **Onboarding:** "excellent onboarding", 1.69 of 2 (70% for excellent). Agrees with item 4.
+- **Warm-up:** P(yes) 0.70 that it is a risk. Jev disagrees with the warm-up as written.
+- **Why these games:** "manageable with the stated rules" (56%); leave it out only 1%. Agrees with item 5, with the sourcing and no-promise rules as conditions.
+- **Build order:** Repeat the Sequence first (78%), then Tile Pairs (14%). Repeat the Sequence has shipped; Tile Pairs is next in the Muse queue.
+- **Hardest to make accessible:** Tangram (62%). Shipped with tap, drag and VoiceOver slot actions; a device check is recommended before v1.0.
+
+**Owner decision (2026-10-27):** Jev's results are kept on record as evidence. The warm-up is **kept as written**, despite Jev's risk reading; the warm-up ticket (#213) proceeds with the spec as it stands. The Tangram accessibility check on a device goes on the v1.0 list.
+
+
 ## 2026-10-20 — CI on PRs to main, split by cost: Linux always, macOS only for Swift
 
 **Found:** `swift.yml` was manual-only after the minutes ran out (early October); until billing was

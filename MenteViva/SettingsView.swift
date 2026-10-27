@@ -100,6 +100,15 @@ struct SettingsView: View {
                     .accessibilityHint(AppLanguage.localized("progress.open.hint"))
 
                     NavigationLink {
+                        MyPlanView()
+                    } label: {
+                        Label(AppLanguage.localized("myplan.title"), systemImage: "checklist")
+                            .font(.title3)
+                            .frame(maxWidth: .infinity, minHeight: 100, alignment: .leading)
+                    }
+                    .accessibilityHint(AppLanguage.localized("myplan.open.hint"))
+
+                    NavigationLink {
                         SetUpView()
                     } label: {
                         Label(AppLanguage.localized("setup.title"), systemImage: "slider.horizontal.3")
