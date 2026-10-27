@@ -11,6 +11,7 @@
 		82CA8D7C6E784B6200000014 /* GameCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86B5E610ECF1EC500000000E; };
 		3FF1DA3530DADEF500000016 /* GameHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87A1ECDA07DDDD0B00000010; };
 		4A60D6FD0D8845180000001C /* AnswerBeat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D692C5E9BB2335600000016; };
+		B645E9FD0A4B45280000001E /* CategoryDeal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92460BFA86F86A0600000018; };
 		2526D29DE5FE6C8300000025 /* CategoryFluencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 915FB304D5C7D9690000001F; };
 		1DA22A903C3C9B3500000021 /* CelebrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4174FC9AF3B1DBCB0000001B; };
 		B59E327BE0BD12A700000020 /* ColorClashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7571F11C435CE80D0000001A; };
@@ -79,6 +80,7 @@
 		F506C5A65F14390000000031 /* AppLanguageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE643EB3378B20E0000002B; };
 		4534EC198FDAD8AC00000034 /* CaptionSpeakerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD28529EBCF4FB0A0000002E; };
 		67F61994F2F1071500000034 /* CaptionStringsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDA8FA1BF6ABDB2B0000002E; };
+		68D5916C1521743B00000032 /* CategoryDealTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37487EBC4F766E910000002C; };
 		F08ED95C221EC29F00000039 /* CelebrationHeadlineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C55DCECC243D31500000033; };
 		9F9B2B4F803D01DB0000002E /* ContrastTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF326128D400FE3100000028; };
 		D251CDE1271D51A600000031 /* DailyPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A13B966464CCDD440000002B; };
@@ -121,6 +123,7 @@
 		86B5E610ECF1EC500000000E /* GameCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCard.swift; sourceTree = "<group>"; };
 		87A1ECDA07DDDD0B00000010 /* GameHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameHeader.swift; sourceTree = "<group>"; };
 		8D692C5E9BB2335600000016 /* AnswerBeat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/AnswerBeat.swift; sourceTree = "<group>"; };
+		92460BFA86F86A0600000018 /* CategoryDeal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/CategoryDeal.swift; sourceTree = "<group>"; };
 		915FB304D5C7D9690000001F /* CategoryFluencyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/CategoryFluencyView.swift; sourceTree = "<group>"; };
 		4174FC9AF3B1DBCB0000001B /* CelebrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/CelebrationView.swift; sourceTree = "<group>"; };
 		7571F11C435CE80D0000001A /* ColorClashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/ColorClashView.swift; sourceTree = "<group>"; };
@@ -189,6 +192,7 @@
 		6BE643EB3378B20E0000002B /* AppLanguageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/AppLanguageTests.swift; sourceTree = SOURCE_ROOT; };
 		DD28529EBCF4FB0A0000002E /* CaptionSpeakerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/CaptionSpeakerTests.swift; sourceTree = SOURCE_ROOT; };
 		DDA8FA1BF6ABDB2B0000002E /* CaptionStringsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/CaptionStringsTests.swift; sourceTree = SOURCE_ROOT; };
+		37487EBC4F766E910000002C /* CategoryDealTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/CategoryDealTests.swift; sourceTree = SOURCE_ROOT; };
 		4C55DCECC243D31500000033 /* CelebrationHeadlineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/CelebrationHeadlineTests.swift; sourceTree = SOURCE_ROOT; };
 		FF326128D400FE3100000028 /* ContrastTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/ContrastTests.swift; sourceTree = SOURCE_ROOT; };
 		A13B966464CCDD440000002B /* DailyPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/DailyPolicyTests.swift; sourceTree = SOURCE_ROOT; };
@@ -257,6 +261,7 @@
 				86B5E610ECF1EC500000000E /* GameCard.swift */,
 				87A1ECDA07DDDD0B00000010 /* GameHeader.swift */,
 				8D692C5E9BB2335600000016 /* AnswerBeat.swift */,
+				92460BFA86F86A0600000018 /* CategoryDeal.swift */,
 				915FB304D5C7D9690000001F /* CategoryFluencyView.swift */,
 				4174FC9AF3B1DBCB0000001B /* CelebrationView.swift */,
 				7571F11C435CE80D0000001A /* ColorClashView.swift */,
@@ -336,6 +341,7 @@
 				6BE643EB3378B20E0000002B /* AppLanguageTests.swift */,
 				DD28529EBCF4FB0A0000002E /* CaptionSpeakerTests.swift */,
 				DDA8FA1BF6ABDB2B0000002E /* CaptionStringsTests.swift */,
+				37487EBC4F766E910000002C /* CategoryDealTests.swift */,
 				4C55DCECC243D31500000033 /* CelebrationHeadlineTests.swift */,
 				FF326128D400FE3100000028 /* ContrastTests.swift */,
 				A13B966464CCDD440000002B /* DailyPolicyTests.swift */,
@@ -443,6 +449,7 @@
 				82CA8D7C6E784B6200000014 /* GameCard.swift in Sources */,
 				3FF1DA3530DADEF500000016 /* GameHeader.swift in Sources */,
 				4A60D6FD0D8845180000001C /* AnswerBeat.swift in Sources */,
+				B645E9FD0A4B45280000001E /* CategoryDeal.swift in Sources */,
 				2526D29DE5FE6C8300000025 /* CategoryFluencyView.swift in Sources */,
 				1DA22A903C3C9B3500000021 /* CelebrationView.swift in Sources */,
 				B59E327BE0BD12A700000020 /* ColorClashView.swift in Sources */,
@@ -519,6 +526,7 @@
 				F506C5A65F14390000000031 /* AppLanguageTests.swift in Sources */,
 				4534EC198FDAD8AC00000034 /* CaptionSpeakerTests.swift in Sources */,
 				67F61994F2F1071500000034 /* CaptionStringsTests.swift in Sources */,
+				68D5916C1521743B00000032 /* CategoryDealTests.swift in Sources */,
 				F08ED95C221EC29F00000039 /* CelebrationHeadlineTests.swift in Sources */,
 				9F9B2B4F803D01DB0000002E /* ContrastTests.swift in Sources */,
 				D251CDE1271D51A600000031 /* DailyPolicyTests.swift in Sources */,

@@ -87,7 +87,7 @@ final class DifficultyMappingTests: XCTestCase {
 
     func testGivenDifficultiesWhenDecoysThenEasyHasFewestAndMediumIsOriginal() {
         XCTAssertEqual(
-            [Difficulty(level: 2), Difficulty(level: 4), Difficulty(level: 6)].map(CategoryFluencyView.decoyCount),
+            [Difficulty(level: 2), Difficulty(level: 4), Difficulty(level: 6)].map(CategoryDeal.decoyCount),
             [3, 5, 7])
     }
 
