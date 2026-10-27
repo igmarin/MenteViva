@@ -94,10 +94,9 @@ nonisolated struct UpOrDownDeal: Equatable {
     }
 
     /// Whether playable top cards are lifted as a hint: the first three levels
-    /// only, where every deal is also checked clearable. It keeps the temporary
-    /// bridge because the levels table (#202) owns no hint knob.
+    /// only, where every deal is also checked clearable.
     static func liftsPlayableCards(at difficulty: Difficulty) -> Bool {
-        difficulty.pick(true, false, false)
+        difficulty.level <= 3
     }
 
     /// Stuck pulse and announcement rule (#265): announce only on the transition

@@ -7,7 +7,9 @@ import XCTest
 final class DifficultyMappingTests: XCTestCase {
     func testGivenDifficultiesWhenMemoryPairsThenGridGrowsToAtMostEight() {
         // #109: at most 8 pairs so every card fits on screen, large (Jev 012).
-        XCTAssertEqual([Difficulty.easy, .medium, .hard].map(MemoryMatchView.pairCount), [4, 6, 8])
+        XCTAssertEqual(
+            [Difficulty(level: 2), Difficulty(level: 4), Difficulty(level: 6)].map(MemoryMatchView.pairCount),
+            [4, 6, 8])
     }
 
     // MARK: Memory board fit (#109): every card visible, as large as possible
@@ -50,12 +52,12 @@ final class DifficultyMappingTests: XCTestCase {
     }
 
     func testGivenSameStreakWhenMaxSumThenEasyIsSmallestAndMediumIsOriginal() {
-        XCTAssertEqual(NumberTrailQuestion.maxSum(streak: 0, difficulty: .medium), 10)
-        XCTAssertEqual(NumberTrailQuestion.maxSum(streak: 100, difficulty: .medium), 50)
-        XCTAssertEqual(NumberTrailQuestion.maxSum(streak: 100, difficulty: .easy), 20)
+        XCTAssertEqual(NumberTrailQuestion.maxSum(streak: 0, difficulty: Difficulty(level: 4)), 10)
+        XCTAssertEqual(NumberTrailQuestion.maxSum(streak: 100, difficulty: Difficulty(level: 4)), 50)
+        XCTAssertEqual(NumberTrailQuestion.maxSum(streak: 100, difficulty: Difficulty(level: 2)), 20)
         XCTAssertGreaterThan(
-            NumberTrailQuestion.maxSum(streak: 0, difficulty: .hard),
-            NumberTrailQuestion.maxSum(streak: 0, difficulty: .medium))
+            NumberTrailQuestion.maxSum(streak: 0, difficulty: Difficulty(level: 6)),
+            NumberTrailQuestion.maxSum(streak: 0, difficulty: Difficulty(level: 4)))
     }
 
     // MARK: Quick Eyes levels 1–10 (#200)
@@ -78,17 +80,21 @@ final class DifficultyMappingTests: XCTestCase {
     }
 
     func testGivenDifficultiesWhenStroopMatchingChanceThenEasyMostHardNone() {
-        XCTAssertEqual([Difficulty.easy, .medium, .hard].map(ColorClashView.matchingChance), [0.7, 0.25, 0])
+        XCTAssertEqual(
+            [Difficulty(level: 2), Difficulty(level: 4), Difficulty(level: 6)].map(ColorClashView.matchingChance),
+            [0.7, 0.25, 0])
     }
 
     func testGivenDifficultiesWhenDecoysThenEasyHasFewestAndMediumIsOriginal() {
-        XCTAssertEqual([Difficulty.easy, .medium, .hard].map(CategoryFluencyView.decoyCount), [3, 5, 7])
+        XCTAssertEqual(
+            [Difficulty(level: 2), Difficulty(level: 4), Difficulty(level: 6)].map(CategoryFluencyView.decoyCount),
+            [3, 5, 7])
     }
 
     func testGivenNoStoredPlanWhenStoredDifficultyThenMedium() {
         // Own suite: .standard is the host app's, which may hold a family pin.
         let defaults = UserDefaults(suiteName: "DifficultyMappingTests")!
         defaults.removePersistentDomain(forName: "DifficultyMappingTests")
-        XCTAssertEqual(Difficulty.stored(.stroop, defaults: defaults), .medium)
+        XCTAssertEqual(Difficulty.stored(.stroop, defaults: defaults), Difficulty(level: 4))
     }
 }

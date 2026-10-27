@@ -69,9 +69,9 @@ final class ProgressRatesTests: XCTestCase {
 
     func testGivenTwoPlaysThisWeekWhenWeekThenNoTrendYet() {
         let r = week([
-            session(.stroop, daysAgo: 0, level: .hard, correct: 10, attempts: 10),
-            session(.stroop, daysAgo: 1, level: .hard, correct: 10, attempts: 10),
-            session(.stroop, daysAgo: 9, level: .easy, correct: 2, attempts: 10),
+            session(.stroop, daysAgo: 0, level: Difficulty(level: 6), correct: 10, attempts: 10),
+            session(.stroop, daysAgo: 1, level: Difficulty(level: 6), correct: 10, attempts: 10),
+            session(.stroop, daysAgo: 9, level: Difficulty(level: 2), correct: 2, attempts: 10),
         ]).first
         XCTAssertNil(r?.accuracyTrend)
         XCTAssertNil(r?.levelTrend)
@@ -79,15 +79,15 @@ final class ProgressRatesTests: XCTestCase {
 
     func testGivenThreePlaysAboveEarlierWeeksWhenWeekThenTrendsAreUp() {
         let r = week([
-            session(.stroop, daysAgo: 0, level: .medium, correct: 9, attempts: 10),
-            session(.stroop, daysAgo: 1, level: .medium, correct: 9, attempts: 10),
-            session(.stroop, daysAgo: 2, level: .easy, correct: 9, attempts: 10),
-            session(.stroop, daysAgo: 9, level: .easy, correct: 5, attempts: 10),
-            session(.stroop, daysAgo: 20, level: .easy, correct: 7, attempts: 10),
+            session(.stroop, daysAgo: 0, level: Difficulty(level: 4), correct: 9, attempts: 10),
+            session(.stroop, daysAgo: 1, level: Difficulty(level: 4), correct: 9, attempts: 10),
+            session(.stroop, daysAgo: 2, level: Difficulty(level: 2), correct: 9, attempts: 10),
+            session(.stroop, daysAgo: 9, level: Difficulty(level: 2), correct: 5, attempts: 10),
+            session(.stroop, daysAgo: 20, level: Difficulty(level: 2), correct: 7, attempts: 10),
         ]).first
         XCTAssertEqual(r?.accuracyTrend, .up)
         XCTAssertEqual(r?.levelTrend, .up)
-        XCTAssertEqual(r?.level, .medium)
+        XCTAssertEqual(r?.level, Difficulty(level: 4))
     }
 
     func testGivenThreePlaysBelowEarlierWeeksWhenWeekThenAccuracyTrendIsDown() {
@@ -112,10 +112,10 @@ final class ProgressRatesTests: XCTestCase {
 
     func testGivenEarlierPlaysOfAnotherGameOnlyWhenWeekThenNoTrend() {
         let r = week([
-            session(.stroop, daysAgo: 0, level: .easy, correct: 9, attempts: 10),
-            session(.stroop, daysAgo: 1, level: .easy, correct: 9, attempts: 10),
-            session(.stroop, daysAgo: 2, level: .easy, correct: 9, attempts: 10),
-            session(.memoryMatch, daysAgo: 9, level: .hard, correct: 2, attempts: 10),
+            session(.stroop, daysAgo: 0, level: Difficulty(level: 2), correct: 9, attempts: 10),
+            session(.stroop, daysAgo: 1, level: Difficulty(level: 2), correct: 9, attempts: 10),
+            session(.stroop, daysAgo: 2, level: Difficulty(level: 2), correct: 9, attempts: 10),
+            session(.memoryMatch, daysAgo: 9, level: Difficulty(level: 6), correct: 2, attempts: 10),
         ]).first { $0.game == .stroop }
         XCTAssertNil(r?.accuracyTrend)
         XCTAssertNil(r?.levelTrend)

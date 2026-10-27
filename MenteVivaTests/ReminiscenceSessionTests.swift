@@ -23,9 +23,9 @@ final class ReminiscenceSessionTests: XCTestCase {
     }
 
     func testGivenReminiscenceSessionsWhenPlanThenItsDifficultyStaysMedium() {
-        let summary = PlayerStateSummary.build(from: sessions(10), difficulty: [.reminiscence: .medium])
+        let summary = PlayerStateSummary.build(from: sessions(10), difficulty: [.reminiscence: Difficulty(level: 4)])
         let plan = DailyPolicy.plan(state: summary, dayStamp: "2026-10-03")
-        XCTAssertEqual(plan.difficulty[.reminiscence], .medium)
+        XCTAssertEqual(plan.difficulty[.reminiscence], Difficulty(level: 4))
     }
 
     func testGivenOtherGamesHiddenWhenPlanThenReminiscenceIsPicked() {
