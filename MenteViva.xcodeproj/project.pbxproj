@@ -18,6 +18,7 @@
 		D456BAA2EE44DD2900000022 /* LevelExplainLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80ED0207C93C607F0000001C; };
 		A120B5E94542D41F00000020 /* MathStreakView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B13B6166437470950000001A; };
 		934DA6B35D17C6F90000001D /* MemoryBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82D743B92F69A1AF00000017; };
+		2C26F128CAE066EF0000001C /* MemoryDeal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F600D269255E8500000016; };
 		18180C4157C1561D00000021 /* MemoryMatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 250E769752DD6A430000001B; };
 		3B89FA1FCE6129CF00000019 /* MissCue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86AF3B4C1D5F21E500000013; };
 		253F249A6FF746A300000025 /* NumberTrailQuestion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4D45FC480DA5090000001F; };
@@ -93,6 +94,7 @@
 		1C320C298D4269F400000036 /* GameSessionStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE35901B6A0B75A200000030; };
 		EE07AD69390E5FDA00000032 /* LevelExplainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65152AEC3FEF3E780000002C; };
 		578160CE8C24557000000031 /* MemoryBoardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2EEF523201AB21E0000002B; };
+		6B009816AE0FE1DA00000030 /* MemoryDealTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D55FC27F498CD0780000002A; };
 		A34345BFC3478D0200000037 /* MemoryMatchLevelsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CECEA05CC9D6BF000000031; };
 		19A5511F2D9320B700000032 /* MemoryPhotosTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982802FDA721007D0000002C; };
 		4E437CEEEEB1E47600000039 /* NumberTrailQuestionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B15A3FA40FC93B400000033; };
@@ -130,6 +132,7 @@
 		80ED0207C93C607F0000001C /* LevelExplainLine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/LevelExplainLine.swift; sourceTree = "<group>"; };
 		B13B6166437470950000001A /* MathStreakView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/MathStreakView.swift; sourceTree = "<group>"; };
 		82D743B92F69A1AF00000017 /* MemoryBoard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/MemoryBoard.swift; sourceTree = "<group>"; };
+		88F600D269255E8500000016 /* MemoryDeal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/MemoryDeal.swift; sourceTree = "<group>"; };
 		250E769752DD6A430000001B /* MemoryMatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/MemoryMatchView.swift; sourceTree = "<group>"; };
 		86AF3B4C1D5F21E500000013 /* MissCue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/MissCue.swift; sourceTree = "<group>"; };
 		1C4D45FC480DA5090000001F /* NumberTrailQuestion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/NumberTrailQuestion.swift; sourceTree = "<group>"; };
@@ -205,6 +208,7 @@
 		DE35901B6A0B75A200000030 /* GameSessionStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/GameSessionStoreTests.swift; sourceTree = SOURCE_ROOT; };
 		65152AEC3FEF3E780000002C /* LevelExplainTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/LevelExplainTests.swift; sourceTree = SOURCE_ROOT; };
 		A2EEF523201AB21E0000002B /* MemoryBoardTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/MemoryBoardTests.swift; sourceTree = SOURCE_ROOT; };
+		D55FC27F498CD0780000002A /* MemoryDealTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/MemoryDealTests.swift; sourceTree = SOURCE_ROOT; };
 		5CECEA05CC9D6BF000000031 /* MemoryMatchLevelsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/MemoryMatchLevelsTests.swift; sourceTree = SOURCE_ROOT; };
 		982802FDA721007D0000002C /* MemoryPhotosTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/MemoryPhotosTests.swift; sourceTree = SOURCE_ROOT; };
 		7B15A3FA40FC93B400000033 /* NumberTrailQuestionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/NumberTrailQuestionTests.swift; sourceTree = SOURCE_ROOT; };
@@ -268,6 +272,7 @@
 				80ED0207C93C607F0000001C /* LevelExplainLine.swift */,
 				B13B6166437470950000001A /* MathStreakView.swift */,
 				82D743B92F69A1AF00000017 /* MemoryBoard.swift */,
+				88F600D269255E8500000016 /* MemoryDeal.swift */,
 				250E769752DD6A430000001B /* MemoryMatchView.swift */,
 				86AF3B4C1D5F21E500000013 /* MissCue.swift */,
 				1C4D45FC480DA5090000001F /* NumberTrailQuestion.swift */,
@@ -354,6 +359,7 @@
 				DE35901B6A0B75A200000030 /* GameSessionStoreTests.swift */,
 				65152AEC3FEF3E780000002C /* LevelExplainTests.swift */,
 				A2EEF523201AB21E0000002B /* MemoryBoardTests.swift */,
+				D55FC27F498CD0780000002A /* MemoryDealTests.swift */,
 				5CECEA05CC9D6BF000000031 /* MemoryMatchLevelsTests.swift */,
 				982802FDA721007D0000002C /* MemoryPhotosTests.swift */,
 				7B15A3FA40FC93B400000033 /* NumberTrailQuestionTests.swift */,
@@ -456,6 +462,7 @@
 				D456BAA2EE44DD2900000022 /* LevelExplainLine.swift in Sources */,
 				A120B5E94542D41F00000020 /* MathStreakView.swift in Sources */,
 				934DA6B35D17C6F90000001D /* MemoryBoard.swift in Sources */,
+				2C26F128CAE066EF0000001C /* MemoryDeal.swift in Sources */,
 				18180C4157C1561D00000021 /* MemoryMatchView.swift in Sources */,
 				3B89FA1FCE6129CF00000019 /* MissCue.swift in Sources */,
 				253F249A6FF746A300000025 /* NumberTrailQuestion.swift in Sources */,
@@ -539,6 +546,7 @@
 				1C320C298D4269F400000036 /* GameSessionStoreTests.swift in Sources */,
 				EE07AD69390E5FDA00000032 /* LevelExplainTests.swift in Sources */,
 				578160CE8C24557000000031 /* MemoryBoardTests.swift in Sources */,
+				6B009816AE0FE1DA00000030 /* MemoryDealTests.swift in Sources */,
 				A34345BFC3478D0200000037 /* MemoryMatchLevelsTests.swift in Sources */,
 				19A5511F2D9320B700000032 /* MemoryPhotosTests.swift in Sources */,
 				4E437CEEEEB1E47600000039 /* NumberTrailQuestionTests.swift in Sources */,
