@@ -58,4 +58,49 @@ final class FamilySettingsTests: XCTestCase {
             FamilySettings.pinned(defaults: defaults),
             [.sudoku: Difficulty(level: 2), .sayings: Difficulty(level: 4), .upOrDown: Difficulty(level: 6)])
     }
+
+    // MARK: The 1–10 picker steps and clamps here, the view only shows it (#208)
+
+    func testGivenPinAtFourWhenIncrementedTwiceThenItIsSix() {
+        let once = FamilySettings.stepped(4, by: 1)
+        XCTAssertEqual(FamilySettings.stepped(once, by: 1), 6)
+    }
+
+    func testGivenPinAtTenWhenIncrementedThenStaysTen() {
+        XCTAssertEqual(FamilySettings.stepped(10, by: 1), 10)
+        XCTAssertFalse(FamilySettings.canStep(10, by: 1))
+        XCTAssertTrue(FamilySettings.canStep(10, by: -1))
+    }
+
+    func testGivenPinAtOneWhenDecrementedThenStaysOne() {
+        XCTAssertEqual(FamilySettings.stepped(1, by: -1), 1)
+        XCTAssertFalse(FamilySettings.canStep(1, by: -1))
+        XCTAssertTrue(FamilySettings.canStep(1, by: 1))
+    }
+
+    func testGivenAutoWhenSteppedThenItStaysAutoAndNoStepIsOffered() {
+        XCTAssertEqual(FamilySettings.stepped(FamilySettings.auto, by: 1), FamilySettings.auto)
+        XCTAssertFalse(FamilySettings.canStep(FamilySettings.auto, by: 1))
+        XCTAssertFalse(FamilySettings.canStep(FamilySettings.auto, by: -1))
+    }
+
+    func testGivenAutoWhenTurnedOffThenThePinStartsAtTheCurrentLevel() {
+        XCTAssertEqual(
+            FamilySettings.settingAuto(false, from: FamilySettings.auto, currentLevel: 5), 5)
+    }
+
+    func testGivenAPinWhenAutoIsTurnedOnThenTheGameIsAuto() {
+        XCTAssertEqual(FamilySettings.settingAuto(true, from: 7, currentLevel: 7), FamilySettings.auto)
+    }
+
+    func testGivenAPinWhenAutoIsTurnedOffAgainThenThePinIsKept() {
+        XCTAssertEqual(FamilySettings.settingAuto(false, from: 7, currentLevel: 3), 7)
+    }
+
+    func testGivenAnExtremeStoredPinWhenSteppedThenItClampsWithoutOverflow() {
+        XCTAssertEqual(FamilySettings.stepped(Int.max, by: 1), 10)
+        XCTAssertEqual(FamilySettings.stepped(Int.min, by: -1), 1)
+        XCTAssertFalse(FamilySettings.canStep(Int.max, by: 1))
+        XCTAssertFalse(FamilySettings.canStep(Int.min, by: -1))
+    }
 }

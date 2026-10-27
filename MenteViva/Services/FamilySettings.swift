@@ -36,6 +36,27 @@ nonisolated enum FamilySettings {
         return Difficulty(level: raw)
     }
 
+    /// A pin moved by one step on the 1...10 scale, clamped at both ends. Auto has no level to
+    /// step, so it stays Auto (#208).
+    static func stepped(_ raw: Int, by delta: Int) -> Int {
+        guard raw != auto else { return auto }
+        // Clamp first: a stray stored Int.max must not overflow the addition.
+        return Difficulty(level: Difficulty(level: raw).level + delta).level
+    }
+
+    /// Whether a − (`-1`) or + (`1`) tap would change the pin; the view disables and labels the
+    /// button at the limits from this.
+    static func canStep(_ raw: Int, by delta: Int) -> Bool {
+        raw != auto && stepped(raw, by: delta) != Difficulty(level: raw).level
+    }
+
+    /// The pin after the Auto switch moves. Turning Auto off starts from the level the game would
+    /// use now (the family changes it from there); an existing pin is never overwritten.
+    static func settingAuto(_ on: Bool, from raw: Int, currentLevel: Int) -> Int {
+        if on { return auto }
+        return raw == auto ? Difficulty(level: currentLevel).level : raw
+    }
+
     /// One-time upgrade of pre-level pins (#197): legacy values read as
     /// levels 2/4/6 and save under the new keys, which later reads prefer.
     /// Call before binding `@AppStorage` to the new keys so Set up opens on
