@@ -4,6 +4,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 
 ## [Unreleased]
 
+### Changed
+- **Warmer tones an iPhone speaker can play (#240):** the sounds now fade in over 10 ms and die away gently instead of stopping after a fraction of the note, with a soft second harmonic for warmth. The "not quite" tone moves up from 180 Hz to 280 Hz, still the lowest and softest, so a phone speaker actually plays it. The tone maker is now a pure `ToneSynth`, tested for headroom and pitch.
+
 ### Fixed
 - **One migration at launch, reads stay pure (#264):** pre-level pins and plan levels used to migrate inside every `pinned()` / `storedDifficulty()` read (Home renders, the plan, Set up). Now `LevelMigration.runOnce` batches both at launch behind one `level.migration.done` flag and reads do not write.
 
@@ -11,6 +14,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 - **Memory Lane, ten levels (#199):** the board now grows one pair at a time from 3 pairs (level 1) to 12 (level 10). Levels 2, 4 and 6 deal exactly the old easy, medium and hard boards; on a small screen the board caps itself so every card stays big enough to tap.
 
 ### Added
+- **"Let me show you" first-play guide (#243):** the first time you open Sudoku or Up or Down, a calm card says the one-line instruction (in big type, read aloud), highlights one example move with a soft pulse and an arrow (just the highlight with Reduce Motion), and offers two 100pt buttons, "Got it" and "Show me again". VoiceOver treats it as a modal with the example described in words. Settings has a new row, "Show the game guides again". Color Clash follows after #206.
 - **Set up: pin a game at any level 1–10 (#208):** each game with levels now has an "Automatic" switch and, when it is off, two big 100pt buttons (− / +) around "Level 4". At level 1 and 10 the button is dimmed and a line says it is the lowest or highest level. VoiceOver reads it as one adjustable control: swipe up or down to change the level.
 - **A gentle nudge after a strong game and a one-line level note (#207):** when the rules move a game up by one, by two, or ease it, the first time you open it that day you see one warm line under the header ("We made it a little harder: you've been doing great.", "Two steps up: you're flying!", "We made it a little calmer, so you enjoy it more.") in `.title2`, read by VoiceOver, gone once the first round starts and only once per day; never mentions misses or accuracy. When you finish a strong game below level 10 and the game isn't pinned, the celebration asks once that day "That was perfect. Shall we try the next level?" with two 100pt buttons "Yes, let's try" / "Keep it as it is" (equally prominent, neither default) — Yes lifts the level by one now with reason `.chosen` so the staircase counts from there.
 - **Finish the Saying (#181):** a ninth game. The start of a familiar saying; pick the
@@ -87,6 +91,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
   game emoji + score, warm weekly summary line, gentle empty state.
 
 ### Changed
+- **Every game comes round at least once a week (#279):** a game left out of today's games for a week takes the last place, whatever the minutes or focus chosen; the first places stay as they were.
+- **Color Clash and Number Trail come round too (#277):** they used to be left out of today's three every day; now each is dealt about two days in fourteen, and Memory Lane still comes up most.
+- **Quick Eyes has ten levels (#200):** the picture flashes from 2 seconds at level 1 down to a 0.16-second floor at level 10. Levels 2, 4 and 6 play exactly as easy, medium and hard did.
 - **A gentler staircase, still in one day's plan (#198):** levels 1–10 climb one after a strong game, two after two strong in a row, and ease one when the latest game was hard going; once a day, never mid-game, clamped to 1...10. Memory Lane's strong/weak thresholds (0.65/0.45) are lowered because its accuracy counts moves (pairs / moves) so even good play sits near 0.6. The old 7-day hold is gone — the window since the last change is the hold now.
 - **Sudoku and Finish the Saying are easier to tap (#236):** every answer button
   and Sudoku's "Show me one" are back to at least 100pt tall, so they're

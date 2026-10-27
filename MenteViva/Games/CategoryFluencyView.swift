@@ -37,8 +37,47 @@ struct CategoryFluencyView: View {
     }
 
     private let roundsPerSession = 3
+
+    /// Decoys per level: one more each step so progress is felt, but never
+    /// mid-game. Levels 2/4/6 are 3/5/7 to match the old easy/medium/hard so
+    /// migrated players see no change; the fit cap keeps 100pt targets on SE.
+    static let decoysByLevel: [Int] = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+    /// Smallest tile that stays tappable (conventions §4).
+    static let tileMin: Double = 100
+    static let tileGap: Double = 16
+    static let horizontalPadding: Double = 32
+
+    /// Decoys for a level, capped to the available pool.
     static func decoyCount(for difficulty: Difficulty) -> Int {
-        difficulty.pick(3, 5, 7)
+        min(difficulty.values(decoysByLevel), 21)
+    }
+
+    /// Test helper with injectable pool size.
+    static func decoyCount(for difficulty: Difficulty, poolSize: Int) -> Int {
+        min(difficulty.values(decoysByLevel), poolSize)
+    }
+
+    /// Decoys capped to both the pool and the width so every tile keeps
+    /// 100pt. Width is the full screen width; padding and gaps are removed
+    /// before measuring.
+    static func fittedDecoyCount(for difficulty: Difficulty, width: Double) -> Int {
+        fittedDecoyCount(for: difficulty, width: width, poolSize: 21)
+    }
+
+    /// Test helper with injectable pool size.
+    static func fittedDecoyCount(for difficulty: Difficulty, width: Double, poolSize: Int) -> Int {
+        let poolCapped = decoyCount(for: difficulty, poolSize: poolSize)
+        let gridWidth = max(0, width - horizontalPadding)
+        // Columns that keep a tile >= 100pt.
+        let maxColumns = max(1, Int((gridWidth + tileGap) / (tileMin + tileGap)))
+        // If even a single column doesn't fit, no decoy can rescue it.
+        guard gridWidth >= tileMin else { return 0 }
+        // When the board needs more columns than fit, the tile would shrink
+        // below 100pt. Cap decoys so total tiles don't force that.
+        // Approximation: total tiles displayed in maxColumns columns.
+        let maxTotalTiles = maxColumns * 6  // enough rows before scrolling, keeps 100pt
+        let maxDecoysForWidth = max(0, maxTotalTiles - 7)
+        return min(poolCapped, maxDecoysForWidth)
     }
     @State private var difficulty = Difficulty.stored(.categoryFluency)
 
@@ -176,8 +215,10 @@ struct CategoryFluencyView: View {
 
     private func dealRound() {
         guard let category = currentRound else { return }
+        let width = Double(UIScreen.main.bounds.width)
+        let count = Self.fittedDecoyCount(for: difficulty, width: width)
         let decoys = Category.allCases.filter { $0 != category }
-            .flatMap(\.items).shuffled().prefix(Self.decoyCount(for: difficulty))
+            .flatMap(\.items).shuffled().prefix(count)
         let mixed =
             category.items.map { (emoji: $0, belongs: true) }
             + decoys.map { (emoji: $0, belongs: false) }

@@ -73,6 +73,7 @@ struct SudokuView: View {
         .padding()
         .fitOrScroll()
         .gameHeader(.sudoku, instruction: AppLanguage.localized("game.sudoku.instruction"))
+        .firstPlayGuide(.sudoku, line: AppLanguage.localized("game.sudoku.guide"), example: guideExample)
         .celebration(isPresented: $showCelebration, game: .sudoku, detail: finalDetail, onPlayAgain: restart)
     }
 
@@ -148,6 +149,7 @@ struct SudokuView: View {
                 }
                 .buttonStyle(AnswerTileStyle(minHeight: 100))
                 .accessibilityLabel(String(format: AppLanguage.localized("game.sudoku.a11y.put %lld"), digit))
+                .guideTarget(digit == guideDigit)
             }
         }
     }
@@ -157,6 +159,18 @@ struct SudokuView: View {
     private var openSquares: [Int] {
         guard let puzzle else { return [] }
         return puzzle.solution.indices.filter { !puzzle.givens.contains($0) && entries[$0] == nil }
+    }
+
+    /// The number that fits the chosen square: the first-play guide points at it (#243).
+    private var guideDigit: Int? {
+        guard let puzzle, let selected else { return nil }
+        return puzzle.solution[selected]
+    }
+
+    /// The guide's example move in words, for VoiceOver and for reading.
+    private var guideExample: String {
+        guard let guideDigit else { return "" }
+        return String(format: AppLanguage.localized("guide.sudoku.example %lld"), guideDigit)
     }
 
     private func deal() {
