@@ -47,6 +47,9 @@ struct QuickEyesView: View {
 
     var body: some View {
         VStack(spacing: 24) {
+            LevelExplainBanner(
+                change: PlanStore.cachedPlan()?.changes[GameID.quickEyes], game: GameID.quickEyes,
+                hasStarted: progress.completedRounds > 0)
             // At accessibility text sizes the long instruction would push the
             // choices off screen; while choosing, the short prompt is enough (#117).
             if phase == .showing || !typeSize.isAccessibilitySize {

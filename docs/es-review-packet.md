@@ -1,7 +1,7 @@
 # ES review packet — for the native-speaker pass (#12)
 
 Hand this whole file to the reviewer. Generated from `Localizable.xcstrings`
-(183 user-facing strings; keys that are only format specifiers are omitted).
+(361 user-facing strings; keys that are only format specifiers are omitted).
 Rows already signed off on #12 are pre-marked ✅.
 Regenerate after any string change: `python3 tools/generate_es_packet.py`.
 
@@ -25,9 +25,7 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | Key | English | Español | Used in | ✓ |
 |---|---|---|---|---|
 | `app.title` | Mente Viva | Mente Viva | HomeView, OnboardingView |  |
-| `difficulty.easy` | Easy | Fácil | Difficulty |  |
-| `difficulty.hard` | Hard | Difícil | Difficulty |  |
-| `difficulty.medium` | Medium | Medio | Difficulty |  |
+| `difficulty.level` | Level %lld | Nivel %lld | — |  |
 | `family.auto` | set automatically | ajustado automáticamente | SetUpView |  |
 | `family.caption.field` | A name or a few words | Un nombre o unas palabras | FamilyPhotoCaptionSheet |  |
 | `family.caption.placeholder` | Mom's house | La casa de mamá | FamilyPhotoCaptionSheet |  |
@@ -64,12 +62,19 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `game.category.a11y.position %lld %lld` | Tile %lld of %lld | Ficha %lld de %lld | CategoryFluencyView |  |
 | `game.category.animals` | Animals | Animales | CategoryFluencyView |  |
 | `game.category.colors` | Colors | Colores | CategoryFluencyView |  |
+| `game.category.complete %@` | All the %@ found! | ¡Encontraste todos: %@! | CategoryFluencyView |  |
 | `game.category.found %lld %lld` | %1$lld of %2$lld found | %1$lld de %2$lld encontrados | CategoryFluencyView |  |
 | `game.category.fruits` | Fruits | Frutas | CategoryFluencyView |  |
 | `game.category.instruction` | Tap all that belong to | Toca todos los que sean | CategoryFluencyView |  |
 | `game.category.title` | Name the Herd | Nombra la Manada | GameID |  |
 | `game.category.vehicles` | Vehicles | Vehículos | CategoryFluencyView |  |
 | `game.celebration.added` | Added to your week | Agregado a tu semana | CelebrationView | ✅ |
+| `game.celebration.cards %lld` | You cleared %lld cards | Quitaste %lld cartas | UpOrDownView |  |
+| `game.celebration.headline.1` | Well done! | ¡Muy bien! | CelebrationHeadline |  |
+| `game.celebration.headline.2` | Lovely work! | ¡Qué buen trabajo! | — |  |
+| `game.celebration.headline.3` | That was great! | ¡Estuvo genial! | — |  |
+| `game.celebration.headline.4` | Beautifully done! | ¡Lo hiciste muy bien! | — |  |
+| `game.celebration.headline.5` | Nicely played! | ¡Bien jugado! | — |  |
 | `game.celebration.home` | Home | Inicio | CelebrationView |  |
 | `game.celebration.items %lld` | You found %lld of them! | ¡Encontraste %lld! | CategoryFluencyView |  |
 | `game.celebration.next %@` | Next: %@ | Siguiente: %@ | CelebrationView | ✅ |
@@ -78,8 +83,11 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `game.celebration.questions %lld` | You answered all %lld questions! | ¡Respondiste las %lld preguntas! | MathStreakView |  |
 | `game.celebration.reminiscence %lld` | one: You looked at %lld picture today / other: You looked at %lld pictures today | one: Miraste %lld imagen hoy / other: Miraste %lld imágenes hoy | ReminiscenceView |  |
 | `game.celebration.rounds %lld` | You finished all %lld rounds! | ¡Terminaste las %lld rondas! | ColorClashView |  |
+| `game.celebration.sayings %lld` | You finished %lld sayings | Terminaste %lld refranes | SayingsView |  |
 | `game.celebration.spotted %lld %lld` | You spotted %1$lld of %2$lld! | ¡Viste %1$lld de %2$lld! | QuickEyesView |  |
+| `game.celebration.squares %lld` | You filled %lld squares | Llenaste %lld cuadros | SudokuView |  |
 | `game.celebration.streak %lld` | Best streak: %lld in a row! | ¡Mejor racha: %lld seguidas! | MathStreakView |  |
+| `game.celebration.table` | You cleared the table! | ¡Limpiaste la mesa! | UpOrDownView |  |
 | `game.celebration.today %lld %lld` | %1$lld of %2$lld today | Hoy: %1$lld de %2$lld | CelebrationView | ✅ |
 | `game.colorclash.a11y.stimulus %@ %@` | Ink colour: %1$@, shape: %2$@ | Color de la tinta: %1$@, forma: %2$@ | ColorClashView |  |
 | `game.colorclash.a11y.stimulus.hint` | The written word is a decoy. Tap the button with the ink colour. | La palabra escrita es un señuelo. Toca el botón con el color de la tinta. | ColorClashView |  |
@@ -97,7 +105,6 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `game.colorclash.word.green` | GREEN | VERDE | ColorClashView |  |
 | `game.colorclash.word.orange` | ORANGE | NARANJA | ColorClashView |  |
 | `game.colorclash.word.red` | RED | ROJO | ColorClashView |  |
-| `game.common.welldone` | Well done! 🎉 | ¡Muy bien! 🎉 | CelebrationView |  |
 | `game.math.instruction` | Tap the correct answer | Toca la respuesta correcta | MathStreakView |  |
 | `game.math.operator.dividedBy` | divided by | entre | NumberTrailQuestion |  |
 | `game.math.operator.minus` | minus | menos | NumberTrailQuestion |  |
@@ -127,6 +134,52 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `game.reminiscence.title` | Remember Together | Recordar juntos | GameID |  |
 | `game.reminiscence.together` | Let's look together | Veámoslo juntos | ReminiscenceView |  |
 | `game.round.a11y %lld %lld` | Round %1$lld of %2$lld | Ronda %1$lld de %2$lld | RoundCounter |  |
+| `game.sayings.a11y.listen` | Hear the saying | Escuchar el refrán | SayingsView |  |
+| `game.sayings.instruction` | How does this saying end? | ¿Cómo termina este refrán? | SayingsView |  |
+| `game.sayings.miss` | Almost — try again. | Casi — inténtalo de nuevo. | SayingsView |  |
+| `game.sayings.next` | Next | Siguiente | SayingsView |  |
+| `game.sayings.title` | Finish the Saying | Termina el refrán | GameID |  |
+| `game.sequence.title` | Repeat the Sequence | Repite la secuencia | GameID |  |
+| `game.sliding.title` | Sliding Blocks | Bloques deslizantes | GameID |  |
+| `game.sudoku.a11y.cell %lld %lld %lld` | Row %1$lld, column %2$lld, %3$lld | Fila %1$lld, columna %2$lld, %3$lld | SudokuView |  |
+| `game.sudoku.a11y.empty %lld %lld` | Row %1$lld, column %2$lld, empty | Fila %1$lld, columna %2$lld, vacío | SudokuView |  |
+| `game.sudoku.a11y.put %lld` | Put %lld | Poner %lld | SudokuView |  |
+| `game.sudoku.a11y.selected` | Selected | Seleccionado | SudokuView |  |
+| `game.sudoku.done.box %lld` | Box %lld done | Bloque %lld completo | SudokuView |  |
+| `game.sudoku.done.column %lld` | Column %lld done | Columna %lld completa | SudokuView |  |
+| `game.sudoku.done.row %lld` | Row %lld done | Fila %lld completa | SudokuView |  |
+| `game.sudoku.instruction` | Tap a square, then a number. | Toca un cuadro y luego un número. | SudokuView |  |
+| `game.sudoku.miss` | Almost — try another number. | Casi — prueba otro número. | SudokuView |  |
+| `game.sudoku.showme` | Show me one | Muéstrame uno | SudokuView |  |
+| `game.sudoku.title` | Sudoku | Sudoku | GameID |  |
+| `game.tangram.title` | Tangram | Tangram | GameID |  |
+| `game.tilepairs.title` | Tile Pairs | Parejas de fichas | GameID |  |
+| `game.upordown.a11y.card %@ %@` | %1$@ of %2$@ | %1$@ de %2$@ | UpOrDownView |  |
+| `game.upordown.a11y.deck %lld` | Turn a new card, %lld left | Voltear una carta nueva, quedan %lld | UpOrDownView |  |
+| `game.upordown.a11y.empty` | Empty pile | Montón vacío | UpOrDownView |  |
+| `game.upordown.a11y.fits` | fits | sirve | UpOrDownView |  |
+| `game.upordown.a11y.open %@` | Open card: %@ | Carta abierta: %@ | UpOrDownView |  |
+| `game.upordown.instruction` | Tap a card one higher or one lower. | Toca una carta con uno más o uno menos. | UpOrDownView |  |
+| `game.upordown.miss %@` | Almost — it needs one more or one less than %@. | Casi — necesita uno más o uno menos que %@. | UpOrDownView |  |
+| `game.upordown.rank.1` | Ace | As | — |  |
+| `game.upordown.rank.10` | 10 | 10 | — |  |
+| `game.upordown.rank.11` | Jack | Jota | — |  |
+| `game.upordown.rank.12` | Queen | Reina | — |  |
+| `game.upordown.rank.13` | King | Rey | — |  |
+| `game.upordown.rank.2` | 2 | 2 | — |  |
+| `game.upordown.rank.3` | 3 | 3 | — |  |
+| `game.upordown.rank.4` | 4 | 4 | — |  |
+| `game.upordown.rank.5` | 5 | 5 | — |  |
+| `game.upordown.rank.6` | 6 | 6 | — |  |
+| `game.upordown.rank.7` | 7 | 7 | — |  |
+| `game.upordown.rank.8` | 8 | 8 | — |  |
+| `game.upordown.rank.9` | 9 | 9 | — |  |
+| `game.upordown.stuck` | No card fits — turn a new one. | Ninguna carta sirve — voltea una nueva. | UpOrDownView |  |
+| `game.upordown.suit.clubs` | clubs | tréboles | — |  |
+| `game.upordown.suit.diamonds` | diamonds | diamantes | — |  |
+| `game.upordown.suit.hearts` | hearts | corazones | — |  |
+| `game.upordown.suit.spades` | spades | picas | — |  |
+| `game.upordown.title` | Up or Down | Sube o baja | GameID |  |
 | `history.day.times %lld` | one: once / other: %lld times | one: una vez / other: %lld veces | HistoryView |  |
 | `history.days.header` | Day by day | Día a día | HistoryView |  |
 | `history.empty` | No games yet this week. Pick a game and have some fun! | Aún no hay juegos esta semana. ¡Elige un juego y diviértete! | HistoryView |  |
@@ -156,6 +209,12 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `home.today.togo %lld` | one: Nice! %lld more to go. / other: Nice! %lld more to go. | one: ¡Bien! Falta %lld. / other: ¡Bien! Faltan %lld. | HomeView | ✅ |
 | `home.week.hint` | See what you played this week | Mira lo que jugaste esta semana | HomeView |  |
 | `home.week.title` | This week | Esta semana | HomeView | ✅ |
+| `level.explain.eased` | We made it a little calmer, so you enjoy it more. | Lo pusimos más tranquilo para que lo disfrutes más. | LevelPolicy |  |
+| `level.explain.raised1` | We made it a little harder: you've been doing great. | Lo subimos un poquito: te ha ido muy bien. | LevelPolicy |  |
+| `level.explain.raised2` | Two steps up: you're flying! | Subimos dos pasos: ¡vas volando! | LevelPolicy |  |
+| `level.offer.keep` | Keep it as it is | Así está bien | CelebrationView |  |
+| `level.offer.prompt` | That was perfect. Shall we try the next level? | ¡Te salió perfecto! ¿Probamos el siguiente nivel? | CelebrationView |  |
+| `level.offer.yes` | Yes, let's try | Sí, probemos | CelebrationView |  |
 | `object.book` | Book | Libro | EverydayObjects |  |
 | `object.chair` | Chair | Silla | EverydayObjects |  |
 | `object.clock` | Clock | Reloj | EverydayObjects |  |
@@ -165,7 +224,7 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `object.lamp` | Lamp | Lámpara | EverydayObjects |  |
 | `object.umbrella` | Umbrella | Paraguas | EverydayObjects |  |
 | `onboarding.disclaimer` | This is not a medical device. | No es un dispositivo médico. | OnboardingView |  |
-| `onboarding.line1` | Short games to keep your mind active. | Juegos cortos para mantener tu mente activa. | OnboardingView |  |
+| `onboarding.line1` | Fun mental exercise. | Ejercicio mental divertido. | OnboardingView |  |
 | `onboarding.line2` | No rush, no pressure. | Sin prisa y sin presión. | OnboardingView |  |
 | `onboarding.line3` | Pick a game and start. | Elige un juego y empieza. | OnboardingView |  |
 | `onboarding.start` | Let's play | A jugar | OnboardingView |  |
@@ -187,6 +246,126 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `progress.trend.level.down %@` | An easier level than your earlier weeks: now %@ | Un nivel más fácil que en tus semanas anteriores: ahora %@ | MyProgressView |  |
 | `progress.trend.level.up %@` | A level up from your earlier weeks: now %@ | Un nivel más que en tus semanas anteriores: ahora %@ | MyProgressView |  |
 | `progress.trend.wait %lld` | After %lld games this week, you'll see how it compares with your earlier weeks. | Después de %lld juegos esta semana, verás cómo se compara con tus semanas anteriores. | MyProgressView |  |
+| `saying.01.end` | is worth two in the bush | que ciento volando | — |  |
+| `saying.01.start` | A bird in the hand | Más vale pájaro en mano | — |  |
+| `saying.02.end` | seldom bite | no muerde | — |  |
+| `saying.02.start` | Barking dogs | Perro que ladra | — |  |
+| `saying.03.end` | catches the worm | se lo lleva la corriente | — |  |
+| `saying.03.start` | The early bird | Camarón que se duerme | — |  |
+| `saying.04.end` | in the mouth | no se le mira el diente | — |  |
+| `saying.04.start` | Don't look a gift horse | A caballo regalado | — |  |
+| `saying.05.end` | the mice will play | los ratones bailan | — |  |
+| `saying.05.start` | When the cat's away | Cuando el gato no está | — |  |
+| `saying.06.end` | lie | no entran moscas | — |  |
+| `saying.06.start` | Let sleeping dogs | En boca cerrada | — |  |
+| `saying.07.end` | does not make a summer | no hace verano | — |  |
+| `saying.07.start` | One swallow | Una golondrina | — |  |
+| `saying.08.end` | flock together | del agua fría huye | — |  |
+| `saying.08.start` | Birds of a feather | Gato escaldado | — |  |
+| `saying.09.end` | is a penny earned | es don Dinero | — |  |
+| `saying.09.start` | A penny saved | Poderoso caballero | — |  |
+| `saying.10.end` | grow on trees | sino el que menos necesita | — |  |
+| `saying.10.start` | Money doesn't | No es más rico el que más tiene | — |  |
+| `saying.11.end` | in one basket | siempre tiene | — |  |
+| `saying.11.start` | Don't put all your eggs | Quien guarda | — |  |
+| `saying.12.end` | what you pay for | sale caro | — |  |
+| `saying.12.start` | You get | Lo barato | — |  |
+| `saying.13.end` | is not gold | la felicidad | — |  |
+| `saying.13.start` | All that glitters | El dinero no da | — |  |
+| `saying.14.end` | than sorry | que lamentar | — |  |
+| `saying.14.start` | Better safe | Más vale prevenir | — |  |
+| `saying.15.end` | nor a lender be | amistades largas | — |  |
+| `saying.15.start` | Neither a borrower | Cuentas claras | — |  |
+| `saying.16.end` | in a day | amanece más temprano | — |  |
+| `saying.16.start` | Rome wasn't built | No por mucho madrugar | — |  |
+| `saying.17.end` | than never | que nunca | — |  |
+| `saying.17.start` | Better late | Más vale tarde | — |  |
+| `saying.18.end` | what you can do today | lo que puedas hacer hoy | — |  |
+| `saying.18.start` | Don't put off till tomorrow | No dejes para mañana | — |  |
+| `saying.19.end` | is money | es oro | — |  |
+| `saying.19.start` | Time | El tiempo | — |  |
+| `saying.20.end` | wait for no man | Dios lo ayuda | — |  |
+| `saying.20.start` | Time and tide | A quien madruga | — |  |
+| `saying.21.end` | wins the race | se va lejos | — |  |
+| `saying.21.start` | Slow and steady | Poco a poco | — |  |
+| `saying.22.end` | like the present | a su tiempo | — |  |
+| `saying.22.start` | There's no time | Cada cosa | — |  |
+| `saying.23.end` | saves nine | que rondar un año | — |  |
+| `saying.23.start` | A stitch in time | Más vale llegar a tiempo | — |  |
+| `saying.24.end` | spoil the broth | y el chocolate espeso | — |  |
+| `saying.24.start` | Too many cooks | Las cosas claras | — |  |
+| `saying.25.end` | and eat it too | y al vino, vino | — |  |
+| `saying.25.start` | You can't have your cake | Al pan, pan | — |  |
+| `saying.26.end` | is in the eating | se anda el camino | — |  |
+| `saying.26.start` | The proof of the pudding | Con pan y vino | — |  |
+| `saying.27.end` | the best sauce | no hay pan duro | — |  |
+| `saying.27.start` | Hunger is | A buen hambre | — |  |
+| `saying.28.end` | is better than none | comen tres | — |  |
+| `saying.28.start` | Half a loaf | Donde comen dos | — |  |
+| `saying.29.end` | over spilled milk | corazón contento | — |  |
+| `saying.29.start` | Don't cry | Panza llena | — |  |
+| `saying.30.end` | is the spice of life | y cebolla | — |  |
+| `saying.30.start` | Variety | Contigo pan | — |  |
+| `saying.31.end` | is sauce for the gander | saben a beso | — |  |
+| `saying.31.start` | What's sauce for the goose | Uvas con queso | — |  |
+| `saying.32.end` | there's a way | algo le cuesta | — |  |
+| `saying.32.start` | Where there's a will | El que algo quiere | — |  |
+| `saying.33.end` | make light work | a la obra | — |  |
+| `saying.33.start` | Many hands | Manos | — |  |
+| `saying.34.end` | makes perfect | y no mires a quién | — |  |
+| `saying.34.start` | Practice | Haz bien | — |  |
+| `saying.35.end` | try, try again | la consigue | — |  |
+| `saying.35.start` | If at first you don't succeed | El que la sigue | — |  |
+| `saying.36.end` | makes Jack a dull boy | es poder | — |  |
+| `saying.36.start` | All work and no play | Querer | — |  |
+| `saying.37.end` | master of none | a tus zapatos | — |  |
+| `saying.37.start` | Jack of all trades | Zapatero | — |  |
+| `saying.38.end` | louder than words | que no buenas razones | — |  |
+| `saying.38.start` | Actions speak | Obras son amores | — |  |
+| `saying.39.end` | has a silver lining | buena cara | — |  |
+| `saying.39.start` | Every cloud | Al mal tiempo | — |  |
+| `saying.40.end` | comes the calm | llega la calma | — |  |
+| `saying.40.start` | After the storm | Después de la tormenta | — |  |
+| `saying.41.end` | bring May flowers | aguas mil | — |  |
+| `saying.41.start` | April showers | En abril | — |  |
+| `saying.42.end` | but it pours | a gusto de todos | — |  |
+| `saying.42.start` | It never rains | Nunca llueve | — |  |
+| `saying.43.end` | while the sun shines | no te quites el sayo | — |  |
+| `saying.43.start` | Make hay | Hasta el cuarenta de mayo | — |  |
+| `saying.44.end` | sailor's delight | suelo mojado | — |  |
+| `saying.44.start` | Red sky at night | Cielo empedrado | — |  |
+| `saying.45.end` | twice in the same place | déjala correr | — |  |
+| `saying.45.start` | Lightning never strikes | Agua que no has de beber | — |  |
+| `saying.46.end` | is a friend indeed | y te diré quién eres | — |  |
+| `saying.46.start` | A friend in need | Dime con quién andas | — |  |
+| `saying.47.end` | are better than one | tiene un tesoro | — |  |
+| `saying.47.start` | Two heads | Quien tiene un amigo | — |  |
+| `saying.48.end` | conquers all | se paga | — |  |
+| `saying.48.start` | Love | Amor con amor | — |  |
+| `saying.49.end` | than in bad company | que mal acompañado | — |  |
+| `saying.49.start` | Better alone | Más vale solo | — |  |
+| `saying.50.end` | grow fonder | hace el cariño | — |  |
+| `saying.50.start` | Absence makes the heart | El roce | — |  |
+| `saying.51.end` | as you'd like to be treated | es amigo de verdad | — |  |
+| `saying.51.start` | Treat others | Amigo en la adversidad | — |  |
+| `saying.52.end` | deserves another | mañana por mí | — |  |
+| `saying.52.start` | One good turn | Hoy por ti | — |  |
+| `saying.53.end` | the merrier | que cien parientes | — |  |
+| `saying.53.start` | The more | Más vale un amigo | — |  |
+| `saying.54.end` | is where the heart is | y Dios en la de todos | — |  |
+| `saying.54.start` | Home | Cada uno en su casa | — |  |
+| `saying.55.end` | like home | cuchillo de palo | — |  |
+| `saying.55.start` | There's no place | En casa del herrero | — |  |
+| `saying.56.end` | home | hogar | — |  |
+| `saying.56.start` | Home sweet | Hogar, dulce | — |  |
+| `saying.57.end` | far from the tree | tal astilla | — |  |
+| `saying.57.start` | The apple doesn't fall | De tal palo | — |  |
+| `saying.58.end` | begins at home | empieza por casa | — |  |
+| `saying.58.start` | Charity | La caridad bien entendida | — |  |
+| `saying.59.end` | is his castle | es un mundo | — |  |
+| `saying.59.start` | A man's home | Cada casa | — |  |
+| `saying.60.end` | shouldn't throw stones | casa quiere | — |  |
+| `saying.60.start` | People who live in glass houses | Quien se casa | — |  |
 | `settings.done` | Done | Listo | FamilyPhotoCaptionSheet, SettingsView |  |
 | `settings.language` | Language | Idioma | AppLanguage, SettingsView |  |
 | `settings.language.restart` | The language changes right away. | El idioma cambia al instante. | SettingsView |  |
@@ -196,7 +375,6 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `settings.privacy.device %@` | Your games stay on this %@. | Tus juegos se quedan en este %@. | SettingsView |  |
 | `settings.privacy.noaccount` | No account, no ads, no tracking. | Sin cuenta, sin anuncios, sin rastreo. | SettingsView |  |
 | `settings.privacy.photos` | Your photos and their names never leave it. | Tus fotos y sus nombres nunca salen de aquí. | SettingsView |  |
-| `settings.privacy.suggestions` | Daily suggestions send only anonymous totals: which games, how many, how well. Never your name. | Las sugerencias diarias solo envían totales anónimos: qué juegos, cuántos y qué tan bien. Nunca tu nombre. | SettingsView |  |
 | `settings.privacy.title` | Your privacy | Tu privacidad | SettingsView |  |
 | `settings.sound` | Sound & haptics | Sonido y vibración | SettingsView |  |
 | `settings.sound.hint` | Gentle tones and taps | Tonos y toques suaves | SettingsView |  |

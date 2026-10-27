@@ -7,9 +7,11 @@ nonisolated struct LevelChange: Codable, Equatable {
 
     /// Fast climbers, gentle drops: one strong session climbs one, two in a
     /// row climb two; a hard-going session eases one, never more.
+    /// `.chosen` is the player's own \"Yes, let's try\" after a strong game (#207).
     enum Reason: Codable, Equatable {
         case raised(by: Int)
         case eased
+        case chosen
     }
 }
 
