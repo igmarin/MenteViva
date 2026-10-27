@@ -170,6 +170,11 @@ struct UpOrDownView: View {
                 AccessibilityNotification.Announcement(AppLanguage.localized("game.upordown.stuck")).post()
             }
         }
+        .onChange(of: reduceMotion) { _, reduced in
+            // Stuck-ness didn't change, so this never re-announces: refresh the
+            // pulse for the new preference while the deck waits for a turn.
+            pulse = UpOrDownDeal.stuckCue(wasStuck: nudge, isStuck: nudge, reduceMotion: reduced).pulse
+        }
         .onAppear {
             // Seed the pulse only when already stuck at appear; the stuck transition
             // drives it afterwards so the deck doesn't jump and stay at 1.06.
