@@ -84,6 +84,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
   game emoji + score, warm weekly summary line, gentle empty state.
 
 ### Changed
+- **Every game comes round at least once a week (#279):** a game left out of today's games for a week takes the last place, whatever the minutes or focus chosen; the first places stay as they were.
 - **Color Clash and Number Trail come round too (#277):** they used to be left out of today's three every day; now each is dealt about two days in fourteen, and Memory Lane still comes up most.
 - **Quick Eyes has ten levels (#200):** the picture flashes from 2 seconds at level 1 down to a 0.16-second floor at level 10. Levels 2, 4 and 6 play exactly as easy, medium and hard did.
 - **A gentler staircase, still in one day's plan (#198):** levels 1–10 climb one after a strong game, two after two strong in a row, and ease one when the latest game was hard going; once a day, never mid-game, clamped to 1...10. Memory Lane's strong/weak thresholds (0.65/0.45) are lowered because its accuracy counts moves (pairs / moves) so even good play sits near 0.6. The old 7-day hold is gone — the window since the last change is the hold now.

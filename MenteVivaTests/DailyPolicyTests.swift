@@ -179,7 +179,7 @@ final class DailyPolicyTests: XCTestCase {
 
     // MARK: The real payload (docs/jev-json/011)
 
-    func testGivenArchivedLivePayloadWhenPlanThenRestedColorClashJoinsAndSensibleDifficulty() throws {
+    func testGivenArchivedLivePayloadWhenPlanThenLongestRestedGameJoinsAndSensibleDifficulty() throws {
         let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
         let data = try Data(contentsOf: root.appendingPathComponent("docs/jev-json/011-daily-plan.request.json"))
         struct Envelope: Decodable { let state: PlayerStateSummary }
@@ -187,9 +187,10 @@ final class DailyPolicyTests: XCTestCase {
         // The 011 payload lists per-game means but no recentAccuracies array
         // yet — the staircase sees no strong session and holds every level.
         let p = plan(summary, hidden: [.reminiscence, .sudoku, .upOrDown, .sayings])
-        // Jev picked quick_eyes, category_fluency, memory_match for this payload. Since #277, Color Clash
-        // (0.55, rested 9 days) outranks Name the Herd (0.7, played 2 days ago: 0.45), so it takes that place.
-        XCTAssertEqual(Set(p.games), [.quickEyes, .stroop, .memoryMatch])
+        // Jev picked quick_eyes, category_fluency, memory_match for this payload. Since #277 the rested
+        // 0.55 games outrank Name the Herd (0.7, played 2 days ago: 0.45), and since #279 Number Trail,
+        // unplayed for 14 days, takes the last place from Color Clash (rested 9).
+        XCTAssertEqual(Set(p.games), [.quickEyes, .mathStreaks, .memoryMatch])
         XCTAssertEqual(p.difficulty[.stroop], Difficulty(level: 1))
         XCTAssertEqual(p.difficulty[.mathStreaks], Difficulty(level: 1))
         XCTAssertEqual(p.difficulty[.memoryMatch], Difficulty(level: 1))
@@ -341,6 +342,47 @@ final class DailyPolicyTests: XCTestCase {
         let most = counts.values.max()
         XCTAssertEqual(counts[.memoryMatch], most)
         XCTAssertEqual(counts.filter { $0.value == most }.count, 1, "Memory Lane leads on its own")
+    }
+
+    // MARK: A game left out for a week takes the last place (#279)
+
+    func testGivenAnyFocusAndDealSizeOverFourteenDaysWhenDealtThenEveryVisibleGameAppears() {
+        let areas: [PlayerProfile.Focus] = [.memory, .attention, .numbers, .words]
+        // Every combination of areas, from none to all four.
+        let combinations = (0..<(1 << areas.count)).map { mask in
+            Set(areas.indices.filter { mask & (1 << $0) != 0 }.map { areas[$0] })
+        }
+        for minutes in [5, 10, 15] {
+            for focus in combinations {
+                let counts = dealtCounts(profile: PlayerProfile(focus: focus, minutesPerDay: minutes))
+                for game in GameID.released {
+                    XCTAssertGreaterThan(
+                        counts[game, default: 0], 0, "\(game) never dealt with \(minutes) minutes and focus \(focus)")
+                }
+            }
+        }
+    }
+
+    func testGivenAGameRestedSevenDaysWhenLeftOutThenItTakesTheLastPlace() {
+        // Fully rested at 7 days, Number Trail (0.55) still ranks below the 0.8 games played 3 days ago (0.57).
+        var rests = Dictionary(uniqueKeysWithValues: GameID.allCases.map { ($0, stats(days: 3)) })
+        rests[.mathStreaks] = stats(days: 7)
+        XCTAssertEqual(plan(state(rests), profile: PlayerProfile()).games, [.memoryMatch, .quickEyes, .mathStreaks])
+        rests[.mathStreaks] = stats(days: 6)
+        XCTAssertEqual(
+            plan(state(rests), profile: PlayerProfile()).games, [.memoryMatch, .quickEyes, .sudoku],
+            "one day short of the limit, the ranking decides")
+    }
+
+    func testGivenNoGameRestedSevenDaysWhenPlanThenUnchanged() {
+        let recent = state([
+            .memoryMatch: stats(days: 0), .stroop: stats(days: 6), .mathStreaks: stats(days: 5),
+            .quickEyes: stats(days: 2), .categoryFluency: stats(days: 1), .reminiscence: stats(days: 4),
+            .sudoku: stats(days: 3), .upOrDown: stats(days: 1), .sayings: stats(days: 2),
+        ])
+        XCTAssertEqual(plan(recent).games, [.sudoku, .reminiscence, .quickEyes], "the ranking alone")
+        // A brand-new player has every game equally rested: the ranked deal stands.
+        XCTAssertEqual(plan(state()).games, [.memoryMatch, .quickEyes, .sudoku])
     }
 
     // MARK: A chosen level-up carries into the next days (#266)
