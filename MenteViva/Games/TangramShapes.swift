@@ -1,3 +1,4 @@
+import CoreGraphics
 import Foundation
 
 /// One of the 30 Tangram silhouettes (#218): seven tile placements that
