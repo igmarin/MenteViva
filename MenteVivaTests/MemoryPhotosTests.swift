@@ -142,17 +142,19 @@ final class MemoryPhotosTests: XCTestCase {
 
     // MARK: Board faces
 
-    private let theme = ["☕️", "🫖", "🍞", "🧀", "🍷", "🥐", "🍋", "🫒"]
+    private let theme = GamePictures.named([
+        "coffee", "teapot", "bread", "cheese", "wine_glass", "croissant", "lemon", "olives",
+    ])
 
-    func testGivenNoPhotosWhenDealingThenThemeEmojiFillTheBoard() {
+    func testGivenNoPhotosWhenDealingThenThemePicturesFillTheBoard() {
         let faces = MemoryDeal.faces(photos: [], theme: theme, pairs: 4)
-        XCTAssertEqual(faces, theme.prefix(4).map(MemoryFace.emoji))
+        XCTAssertEqual(faces, theme.prefix(4).map(MemoryFace.picture))
     }
 
-    func testGivenSomePhotosWhenDealingThenPhotosComeFirstAndEmojiFillTheRest() {
+    func testGivenSomePhotosWhenDealingThenPhotosComeFirstAndPicturesFillTheRest() {
         let photos = [URL(fileURLWithPath: "/a.jpg"), URL(fileURLWithPath: "/b.jpg")]
         let faces = MemoryDeal.faces(photos: photos, theme: theme, pairs: 4)
-        XCTAssertEqual(faces, [.photo(photos[0]), .photo(photos[1]), .emoji("☕️"), .emoji("🫖")])
+        XCTAssertEqual(faces, [.photo(photos[0]), .photo(photos[1]), .picture(theme[0]), .picture(theme[1])])
     }
 
     func testGivenMorePhotosThanPairsWhenDealingThenOnlyPhotosAreUsed() {

@@ -20,19 +20,25 @@ nonisolated enum CategoryDeal {
         }
 
         /// The seven items a player has to find.
-        var items: [String] {
+        var items: [GamePicture] {
             switch self {
-            case .animals: ["🐶", "🐱", "🦁", "🐸", "🐢", "🦋", "🐘"]
-            case .fruits: ["🍎", "🍌", "🍇", "🍊", "🍓", "🍉", "🍑"]
-            case .colors: ["🔴", "🔵", "🟢", "🟡", "🟠", "🟣", "🟤"]
-            case .vehicles: ["🚗", "🚌", "✈️", "🚀", "🚲", "🚂", "⛵️"]
+            case .animals: GamePictures.named(["dog", "cat", "lion", "frog", "turtle", "butterfly", "elephant"])
+            case .fruits:
+                GamePictures.named(["apple", "banana", "grapes", "orange", "strawberry", "watermelon", "peach"])
+            case .colors:
+                GamePictures.named([
+                    "color.red", "color.blue", "color.green", "color.yellow", "color.orange", "color.purple",
+                    "color.brown",
+                ])
+            case .vehicles:
+                GamePictures.named(["car", "bus", "airplane", "rocket", "bicycle", "train", "sailboat"])
             }
         }
     }
 
-    /// One tile on the board: an emoji and whether it belongs to the category.
+    /// One tile on the board: a picture and whether it belongs to the category.
     nonisolated struct Tile: Equatable {
-        let emoji: String
+        let picture: GamePicture
         let belongs: Bool
     }
 
@@ -97,8 +103,8 @@ nonisolated enum CategoryDeal {
             let from = Category.allCases.filter { $0 != category }
                 .flatMap(\.items).shuffled(using: &generator).prefix(decoys)
             let tiles =
-                category.items.map { Tile(emoji: $0, belongs: true) }
-                + from.map { Tile(emoji: $0, belongs: false) }
+                category.items.map { Tile(picture: $0, belongs: true) }
+                + from.map { Tile(picture: $0, belongs: false) }
             return Round(category: category, tiles: tiles.shuffled(using: &generator))
         }
     }

@@ -22,10 +22,10 @@ final class MemoryDealTests: XCTestCase {
         return MemoryDeal.make(photos: photos, pairs: pairs, using: &generator)
     }
 
-    /// The emoji of an emoji face, or nil for a photo: what the theme check needs.
-    private func emoji(of face: MemoryFace) -> String? {
-        guard case .emoji(let emoji) = face else { return nil }
-        return emoji
+    /// The picture of a picture face, or nil for a photo: what the theme check needs.
+    private func picture(of face: MemoryFace) -> GamePicture? {
+        guard case .picture(let picture) = face else { return nil }
+        return picture
     }
 
     func testGivenTheSameSeedWhenDealtTwiceThenTheSameBoard() {
@@ -49,7 +49,7 @@ final class MemoryDealTests: XCTestCase {
 
     func testGivenOneThousandSeedsWhenDealtThenEveryBoardComesFromOneTheme() {
         for seed in 1...1000 {
-            let drawn = deal(seed: UInt64(seed)).faces.compactMap { emoji(of: $0) }
+            let drawn = deal(seed: UInt64(seed)).faces.compactMap { picture(of: $0) }
             let themes = MemoryDeal.themes.filter { Set(drawn).isSubset(of: Set($0)) }
             XCTAssertEqual(themes.count, 1, "seed \(seed)")
         }
@@ -59,13 +59,13 @@ final class MemoryDealTests: XCTestCase {
         let dealt = deal(photos: photos, pairs: 4, seed: 3)
         XCTAssertEqual(Array(dealt.faces.prefix(2)), photos.map(MemoryFace.photo))
         XCTAssertEqual(dealt.faces.count, 4)
-        XCTAssertTrue(dealt.faces.dropFirst(2).allSatisfy { emoji(of: $0) != nil })
+        XCTAssertTrue(dealt.faces.dropFirst(2).allSatisfy { picture(of: $0) != nil })
     }
 
     func testGivenMorePhotosThanPairsWhenDealtThenOnlyPhotosAreUsed() {
         let many = (0..<6).map { URL(fileURLWithPath: "/\($0).jpg") }
         let dealt = deal(photos: many, pairs: 4, seed: 5)
         XCTAssertEqual(Set(dealt.faces).count, 4)
-        XCTAssertTrue(dealt.faces.allSatisfy { emoji(of: $0) == nil })
+        XCTAssertTrue(dealt.faces.allSatisfy { picture(of: $0) == nil })
     }
 }

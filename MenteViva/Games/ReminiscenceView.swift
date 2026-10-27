@@ -53,11 +53,24 @@ struct ReminiscenceView: View {
             PhotoCard(url: url)
                 .id(card.id)
                 .accessibilityLabel(label ?? AppLanguage.localized("game.reminiscence.a11y.photo"))
-        case .symbol(let name):
-            Image(systemName: name)
+        case .object(let object):
+            objectPicture(object)
+                .accessibilityLabel(label ?? AppLanguage.localized("game.reminiscence.a11y.object"))
+        }
+    }
+
+    /// Our picture of the object once its art ships (#324), its SF Symbol until then.
+    @ViewBuilder
+    private func objectPicture(_ object: EverydayObject) -> some View {
+        if case .asset(let name) = object.picture.look(hasAsset: PictureView.bundleHasAsset) {
+            Image(name)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 160, height: 160)
+        } else {
+            Image(systemName: object.symbol)
                 .font(.system(size: 120))
                 .foregroundStyle(.secondary)
-                .accessibilityLabel(label ?? AppLanguage.localized("game.reminiscence.a11y.object"))
         }
     }
 

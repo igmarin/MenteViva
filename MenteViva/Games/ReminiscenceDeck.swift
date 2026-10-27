@@ -5,7 +5,7 @@ import Foundation
 nonisolated struct ReminiscenceCard: Equatable, Identifiable {
     enum Picture: Equatable {
         case photo(URL)
-        case symbol(String)
+        case object(EverydayObject)
     }
 
     let id: Int
@@ -36,7 +36,7 @@ enum ReminiscenceDeck {
     ) -> [ReminiscenceCard] {
         if photos.isEmpty {
             return objects.prefix(limit).enumerated().map { index, object in
-                ReminiscenceCard(id: index, picture: .symbol(object.symbol), caption: localize(object.nameKey))
+                ReminiscenceCard(id: index, picture: .object(object), caption: localize(object.nameKey))
             }
         }
         return photos.prefix(limit).enumerated().map { index, url in

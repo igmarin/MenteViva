@@ -50,14 +50,16 @@ final class CategoryDealTests: XCTestCase {
                     let right = round.tiles.filter(\.belongs)
                     let wrong = round.tiles.filter { !$0.belongs }
                     // Every item of the category once, and nothing else belongs.
-                    XCTAssertEqual(right.map(\.emoji).sorted(), round.category.items.sorted(), "level \(level) seed \(seed)")
+                    XCTAssertEqual(
+                        right.map(\.picture.slug).sorted(), round.category.items.map(\.slug).sorted(),
+                        "level \(level) seed \(seed)")
                     // Decoys are all from other categories, never repeated.
                     XCTAssertEqual(wrong.count, decoys, "level \(level) seed \(seed)")
-                    XCTAssertEqual(Set(wrong.map(\.emoji)).count, wrong.count, "level \(level) seed \(seed)")
+                    XCTAssertEqual(Set(wrong.map(\.picture)).count, wrong.count, "level \(level) seed \(seed)")
                     XCTAssertTrue(
-                        wrong.allSatisfy { !round.category.items.contains($0.emoji) },
+                        wrong.allSatisfy { !round.category.items.contains($0.picture) },
                         "level \(level) seed \(seed)")
-                    XCTAssertEqual(Set(round.tiles.map(\.emoji)).count, round.tiles.count, "level \(level) seed \(seed)")
+                    XCTAssertEqual(Set(round.tiles.map(\.picture)).count, round.tiles.count, "level \(level) seed \(seed)")
                 }
             }
         }
