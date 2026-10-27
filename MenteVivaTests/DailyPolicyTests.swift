@@ -179,7 +179,7 @@ final class DailyPolicyTests: XCTestCase {
 
     // MARK: The real payload (docs/jev-json/011)
 
-    func testGivenArchivedLivePayloadWhenPlanThenSameTopThreeSetAsJevAndSensibleDifficulty() throws {
+    func testGivenArchivedLivePayloadWhenPlanThenRestedColorClashJoinsAndSensibleDifficulty() throws {
         let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
         let data = try Data(contentsOf: root.appendingPathComponent("docs/jev-json/011-daily-plan.request.json"))
         struct Envelope: Decodable { let state: PlayerStateSummary }
@@ -187,8 +187,9 @@ final class DailyPolicyTests: XCTestCase {
         // The 011 payload lists per-game means but no recentAccuracies array
         // yet — the staircase sees no strong session and holds every level.
         let p = plan(summary, hidden: [.reminiscence, .sudoku, .upOrDown, .sayings])
-        // Jev picked quick_eyes, category_fluency, memory_match for this payload.
-        XCTAssertEqual(Set(p.games), [.quickEyes, .categoryFluency, .memoryMatch])
+        // Jev picked quick_eyes, category_fluency, memory_match for this payload. Since #277, Color Clash
+        // (0.55, rested 9 days) outranks Name the Herd (0.7, played 2 days ago: 0.45), so it takes that place.
+        XCTAssertEqual(Set(p.games), [.quickEyes, .stroop, .memoryMatch])
         XCTAssertEqual(p.difficulty[.stroop], Difficulty(level: 1))
         XCTAssertEqual(p.difficulty[.mathStreaks], Difficulty(level: 1))
         XCTAssertEqual(p.difficulty[.memoryMatch], Difficulty(level: 1))
@@ -315,6 +316,31 @@ final class DailyPolicyTests: XCTestCase {
         XCTAssertEqual(plan(mixed, profile: PlayerProfile()), before)
         XCTAssertEqual(plan(mixed, profile: PlayerProfile(forWhom: .me, focus: [.justFun])), before)
         XCTAssertEqual(plan(PlayerStateSummary(games: [:]), profile: PlayerProfile()).difficulty[.sudoku], Difficulty(level: 4))
+    }
+
+    // MARK: Every visible game gets its turn (#277)
+
+    func testGivenFourteenDaysWithoutAProfileWhenDealtThenEveryVisibleGameAppears() {
+        let counts = dealtCounts(profile: PlayerProfile())
+        for game in GameID.released {
+            XCTAssertGreaterThan(counts[game, default: 0], 0, "\(game) never made the daily three")
+        }
+    }
+
+    func testGivenAnyOneFocusOverFourteenDaysWhenDealtThenEveryVisibleGameStillAppears() {
+        for area in [PlayerProfile.Focus.memory, .attention, .numbers, .words] {
+            let counts = dealtCounts(profile: PlayerProfile(focus: [area]))
+            for game in GameID.released {
+                XCTAssertGreaterThan(counts[game, default: 0], 0, "\(game) never dealt with a \(area) focus")
+            }
+        }
+    }
+
+    func testGivenFourteenDaysWhenDealtThenMemoryLaneStillLeads() {
+        let counts = dealtCounts(profile: PlayerProfile())
+        let most = counts.values.max()
+        XCTAssertEqual(counts[.memoryMatch], most)
+        XCTAssertEqual(counts.filter { $0.value == most }.count, 1, "Memory Lane leads on its own")
     }
 
     // MARK: A chosen level-up carries into the next days (#266)
