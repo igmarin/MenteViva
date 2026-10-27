@@ -189,8 +189,9 @@ final class DailyPolicyTests: XCTestCase {
         let p = plan(summary, hidden: [.reminiscence, .sudoku, .upOrDown, .sayings, .repeatSequence, .tangram])
         // Jev picked quick_eyes, category_fluency, memory_match for this payload. Since #277 the rested
         // 0.55 games outrank Name the Herd (0.7, played 2 days ago: 0.45), and since #279 Number Trail,
-        // unplayed for 14 days, takes the last place from Color Clash (rested 9).
-        XCTAssertEqual(Set(p.games), [.quickEyes, .mathStreaks, .memoryMatch])
+        // unplayed for 14 days, takes the last place from Color Clash (rested 9). Tile Pairs (#221)
+        // is now released and never played, so it outranks Memory Lane in this payload.
+        XCTAssertEqual(Set(p.games), [.quickEyes, .mathStreaks, .tilePairs])
         XCTAssertEqual(p.difficulty[.stroop], Difficulty(level: 1))
         XCTAssertEqual(p.difficulty[.mathStreaks], Difficulty(level: 1))
         XCTAssertEqual(p.difficulty[.memoryMatch], Difficulty(level: 1))
@@ -381,7 +382,7 @@ final class DailyPolicyTests: XCTestCase {
             .sudoku: stats(days: 3), .upOrDown: stats(days: 1), .sayings: stats(days: 2),
             .repeatSequence: stats(days: 2), .tangram: stats(days: 2),
         ])
-        XCTAssertEqual(plan(recent).games, [.sudoku, .reminiscence, .quickEyes], "the ranking alone")
+        XCTAssertEqual(plan(recent).games, [.tilePairs, .sudoku, .reminiscence], "the ranking alone")
         // A brand-new player has every game equally rested: the ranked deal stands.
         XCTAssertEqual(plan(state()).games, [.memoryMatch, .quickEyes, .sudoku])
     }

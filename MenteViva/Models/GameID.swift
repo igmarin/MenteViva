@@ -18,7 +18,7 @@ nonisolated enum GameID: String, CaseIterable, Codable {
 
     /// Registered but not playable yet: kept out of the deal, Set up, progress and
     /// Home until the game's view ships. That ticket removes its ID here.
-    static let unreleased: Set<GameID> = [.tilePairs, .slidingBlocks]
+    static let unreleased: Set<GameID> = [.slidingBlocks]
 
     /// The games a player can see, in `allCases` order.
     static var released: [GameID] { allCases.filter { !unreleased.contains($0) } }

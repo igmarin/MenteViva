@@ -5,6 +5,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 ## [Unreleased]
 
 ### Added
+- **Tile Pairs — a mahjong-solitaire pairs game (#220/#221):** find two free tiles that match; layers offset with a shadow, free vs covered never colour alone (covered tiles are dimmed and hatched). Ten levels (8 to 72 tiles, 1–3 layers, look-alike tiles from level 5); every deal clears and a warm reshuffle mixes the tiles when stuck. Warm hints: "That one's covered — try a tile on the edge" and "Almost — those two are different"; "Show me a pair" highlights a free match. Tiles drawn in code with 18 symbols, 80–100pt targets where the board allows (≥60pt always), title2 instructions, VoiceOver only on free tiles with symbol names. Celebration records the session with its level.
 - **"Why these games" in Settings (#214):** a new screen that says plainly what the research found,
   what each game exercises, and what MenteViva is not. Every line that rests on a source carries
   that source as a link whose label names where it goes, each part is a heading the VoiceOver rotor
