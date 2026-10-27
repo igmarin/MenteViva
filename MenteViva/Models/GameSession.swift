@@ -36,6 +36,8 @@ final class GameSession {
     /// The level this session counts as: the recorded level when present,
     /// else a migrated legacy value (easy/medium/hard read as 2/4/6), else
     /// nil for sessions saved before any difficulty was recorded (#197).
+    /// Used by `PlayerStateSummary.recentAccuracies` and `LevelPolicy.shouldOffer`
+    /// to decide offers, and fed by `PlanStore.storedDifficulty` / `LevelMigration`.
     var resolvedLevel: Difficulty? {
         if level > 0 { return Difficulty(level: level) }
         guard (0...2).contains(difficulty) else { return nil }
