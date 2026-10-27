@@ -186,7 +186,7 @@ final class DailyPolicyTests: XCTestCase {
         let summary = try JSONDecoder().decode(Envelope.self, from: data).state
         // The 011 payload lists per-game means but no recentAccuracies array
         // yet — the staircase sees no strong session and holds every level.
-        let p = plan(summary, hidden: [.reminiscence, .sudoku, .upOrDown, .sayings])
+        let p = plan(summary, hidden: [.reminiscence, .sudoku, .upOrDown, .sayings, .repeatSequence])
         // Jev picked quick_eyes, category_fluency, memory_match for this payload.
         XCTAssertEqual(Set(p.games), [.quickEyes, .categoryFluency, .memoryMatch])
         XCTAssertEqual(p.difficulty[.stroop], Difficulty(level: 1))
