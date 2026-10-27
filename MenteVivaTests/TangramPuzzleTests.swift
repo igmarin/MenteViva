@@ -18,13 +18,13 @@ final class TangramPuzzleTests: XCTestCase {
     func testGivenSevenTilesWhenAreasThenClassicSizes() {
         let areas = Dictionary(
             uniqueKeysWithValues: TangramPiece.allCases.map { ($0, area(of: $0.corners)) })
-        XCTAssertEqual(areas[.large], 16, accuracy: 0.001)
-        XCTAssertEqual(areas[.large2], 16, accuracy: 0.001)
-        XCTAssertEqual(areas[.medium], 8, accuracy: 0.001)
-        XCTAssertEqual(areas[.small], 4, accuracy: 0.001)
-        XCTAssertEqual(areas[.small2], 4, accuracy: 0.001)
-        XCTAssertEqual(areas[.square], 8, accuracy: 0.001)
-        XCTAssertEqual(areas[.parallelogram], 8, accuracy: 0.001)
+        XCTAssertEqual(areas[.large] ?? 0, 16, accuracy: 0.001)
+        XCTAssertEqual(areas[.large2] ?? 0, 16, accuracy: 0.001)
+        XCTAssertEqual(areas[.medium] ?? 0, 8, accuracy: 0.001)
+        XCTAssertEqual(areas[.small] ?? 0, 4, accuracy: 0.001)
+        XCTAssertEqual(areas[.small2] ?? 0, 4, accuracy: 0.001)
+        XCTAssertEqual(areas[.square] ?? 0, 8, accuracy: 0.001)
+        XCTAssertEqual(areas[.parallelogram] ?? 0, 8, accuracy: 0.001)
     }
 
     // MARK: - The library
@@ -71,129 +71,142 @@ final class TangramPuzzleTests: XCTestCase {
 
     // MARK: - Levels
 
-    func testGivenLevelsWhenRulesThenPrefillFallsAndHelpsNeverReturn() {
+    func testGivenLevelsWhenRulesThenTheIssueTable() {
         let rules = (1...10).map { TangramPuzzle.rules(for: Difficulty(level: $0)) }
-        XCTAssertEqual(rules.map(\.prefill), [7, 6, 4, 2, 0, 0, 0, 0, 0, 0])
-        XCTAssertEqual(rules.map(\.outline), [false, false] + Array(repeating: true, count: 8))
-        XCTAssertEqual(
-            rules.map(\.matchRotation),
-            Array(repeating: false, count: 6) + Array(repeating: true, count: 4))
-        XCTAssertEqual(
-            rules.map(\.matchFlip),
-            Array(repeating: false, count: 8) + Array(repeating: true, count: 2))
+        XCTAssertEqual(rules.map(\.prefill), [4, 3, 1, 0, 0, 0, 0, 0, 0, 0])
+        XCTAssertEqual(rules.map(\.outlines), [7, 7, 7, 4, 2, 0, 0, 0, 0, 0])
+        XCTAssertEqual(rules.map(\.matchRotation), Array(repeating: false, count: 6) + Array(repeating: true, count: 4))
+        XCTAssertEqual(rules.map(\.matchFlip), Array(repeating: false, count: 8) + Array(repeating: true, count: 2))
     }
 
-    func testGivenLevelOneWhenPrefilledThenWholeGhost() {
-        let puzzle = TangramPuzzle(shape: TangramShapes.all[0], placed: [])
-        let rules = TangramPuzzle.rules(for: Difficulty(level: 1))
-        XCTAssertEqual(puzzle.prefilled(rules: rules).count, 7)
-        XCTAssertEqual(
-            puzzle.prefilled(rules: TangramPuzzle.rules(for: Difficulty(level: 5))).count, 0)
-    }
-
-    // MARK: - Snapping
-
-    func testGivenExactDropWhenSnappedThenTrue() {
-        let target = TangramShapes.all[0].placements[0]
-        XCTAssertTrue(
-            TangramPuzzle.snapped(
-                target, to: target, matchRotation: true, matchFlip: true))
-    }
-
-    func testGivenFarDropWhenSnappedThenFalse() {
-        let target = TangramShapes.all[0].placements[0]
-        let far = TangramPlacement(
-            piece: target.piece,
-            position: CGPoint(x: target.position.x + 1, y: target.position.y),
-            rotation: target.rotation, flipped: target.flipped)
-        XCTAssertFalse(
-            TangramPuzzle.snapped(
-                far, to: target, matchRotation: false, matchFlip: false))
-    }
-
-    func testGivenWrongTileWhenSnappedThenFalse() {
-        let target = TangramShapes.all[0].placements[0]
-        let other = TangramPlacement(
-            piece: target.piece == .medium ? .square : .medium,
-            position: target.position, rotation: target.rotation, flipped: target.flipped)
-        XCTAssertFalse(
-            TangramPuzzle.snapped(
-                other, to: target, matchRotation: false, matchFlip: false))
-    }
-
-    func testGivenTurnedTileWhenSnappedThenRotationOnlyMattersFromSeven() {
-        let target = TangramShapes.all[0].placements[0]
-        let turned = TangramPlacement(
-            piece: target.piece, position: target.position,
-            rotation: (target.rotation + 1) % 8, flipped: target.flipped)
-        XCTAssertTrue(
-            TangramPuzzle.snapped(
-                turned, to: target, matchRotation: false, matchFlip: false))
-        XCTAssertFalse(
-            TangramPuzzle.snapped(
-                turned, to: target, matchRotation: true, matchFlip: false))
-    }
-
-    func testGivenMirroredParallelogramWhenSnappedThenFlipMattersFromNine() {
-        let target = TangramShapes.all.map(\.placements).joined().first {
-            $0.piece == .parallelogram
-        }!
-        let mirrored = TangramPlacement(
-            piece: target.piece, position: target.position,
-            rotation: target.rotation, flipped: !target.flipped)
-        XCTAssertTrue(
-            TangramPuzzle.snapped(
-                mirrored, to: target, matchRotation: true, matchFlip: false))
-        XCTAssertFalse(
-            TangramPuzzle.snapped(
-                mirrored, to: target, matchRotation: true, matchFlip: true))
-    }
-
-    func testGivenMirroredTileWhenSnappedThenMirrorEqualsAQuarterTurn() {
-        // Every tile but the parallelogram mirrors onto its own 90° turn, so
-        // the flip state alone never places one: only the effective turn counts.
-        for piece in TangramPiece.allCases where !piece.showsFlip {
-            for rotation in 0..<8 {
-                let at = CGPoint.zero
-                let mirrored = TangramPlacement(
-                    piece: piece, position: at, rotation: rotation, flipped: true)
-                let turned = TangramPlacement(
-                    piece: piece, position: at, rotation: (rotation + 2) % 8, flipped: false)
-                XCTAssertTrue(
-                    TangramPuzzle.snapped(
-                        mirrored, to: turned, matchRotation: true, matchFlip: true),
-                    "\(piece) rotation \(rotation)")
-                let sameTurn = TangramPlacement(
-                    piece: piece, position: at, rotation: rotation, flipped: false)
-                XCTAssertFalse(
-                    TangramPuzzle.snapped(
-                        mirrored, to: sameTurn, matchRotation: true, matchFlip: true),
-                    "\(piece) rotation \(rotation)")
-                XCTAssertTrue(
-                    TangramPuzzle.snapped(
-                        mirrored, to: sameTurn, matchRotation: false, matchFlip: false),
-                    "\(piece) rotation \(rotation)")
-            }
+    func testGivenRisingLevelsWhenRulesThenNeverEasier() {
+        let rules = (1...10).map { TangramPuzzle.rules(for: Difficulty(level: $0)) }
+        for (lower, higher) in zip(rules, rules.dropFirst()) {
+            XCTAssertLessThanOrEqual(higher.prefill, lower.prefill)
+            XCTAssertLessThanOrEqual(higher.outlines, lower.outlines)
+            XCTAssertTrue(!lower.matchRotation || higher.matchRotation)
+            XCTAssertTrue(!lower.matchFlip || higher.matchFlip)
         }
     }
 
-    func testGivenAllTilesHomeWhenCorrectThenNoMisplaced() {
-        let shape = TangramShapes.all[0]
-        let puzzle = TangramPuzzle(shape: shape, placed: shape.placements)
-        XCTAssertTrue(puzzle.isCorrect(matchRotation: true, matchFlip: true))
-        XCTAssertEqual(puzzle.misplaced(matchRotation: true, matchFlip: true), 0)
+    // MARK: - Placing
+
+    func testGivenLevelOneWhenDealtThenFourSlotsFilledAndThreeLeft() {
+        let puzzle = TangramPuzzle(shape: TangramShapes.all[0], rules: rules(level: 1))
+        XCTAssertEqual(puzzle.filled.count, 4)
+        XCTAssertEqual(puzzle.freeSlots.count, 3)
+        XCTAssertFalse(puzzle.isComplete)
     }
 
-    func testGivenOneTileAwayWhenMisplacedThenCountsOne() {
+    func testGivenLevelOneWhenATileLandsNearItsSlotTurnedAnyWayThenItSnaps() {
+        for shape in TangramShapes.all {
+            var puzzle = TangramPuzzle(shape: shape, rules: rules(level: 1))
+            for slot in puzzle.freeSlots {
+                let target = shape.placements[slot]
+                let middle = TangramPuzzle.middle(of: target)
+                // A little off the middle and turned three steps: it still goes home, turned for the player.
+                let result = puzzle.place(
+                    target.piece, at: CGPoint(x: middle.x + 0.4, y: middle.y - 0.3),
+                    rotation: target.rotation + 3, flipped: !target.flipped)
+                XCTAssertEqual(result, .snapped(slot: slot), shape.key)
+            }
+            XCTAssertTrue(puzzle.isComplete, shape.key)
+        }
+    }
+
+    func testGivenAFarDropWhenPlacedThenTryAnotherSpotAndNothingFills() {
+        var puzzle = TangramPuzzle(shape: TangramShapes.all[0], rules: rules(level: 4))
+        let target = TangramShapes.all[0].placements[0]
+        let result = puzzle.place(target.piece, at: CGPoint(x: 100, y: 100), rotation: target.rotation, flipped: false)
+        XCTAssertEqual(result, .tryAnotherSpot)
+        XCTAssertTrue(puzzle.filled.isEmpty)
+        XCTAssertEqual(puzzle.attempts, 1)
+        XCTAssertEqual(puzzle.correct, 0)
+    }
+
+    func testGivenLevelSevenAndAWrongTurnWhenPlacedThenTurnItAndItStaysOut() {
         let shape = TangramShapes.all[0]
-        var placed = shape.placements
-        placed[0] = TangramPlacement(
-            piece: placed[0].piece,
-            position: CGPoint(x: placed[0].position.x + 1, y: placed[0].position.y),
-            rotation: placed[0].rotation, flipped: placed[0].flipped)
-        let puzzle = TangramPuzzle(shape: shape, placed: placed)
-        XCTAssertEqual(puzzle.misplaced(matchRotation: false, matchFlip: false), 1)
-        XCTAssertFalse(puzzle.isCorrect(matchRotation: false, matchFlip: false))
+        var puzzle = TangramPuzzle(shape: shape, rules: rules(level: 7))
+        let slot = shape.placements.firstIndex { $0.piece == .medium }!
+        let target = shape.placements[slot]
+        let result = puzzle.place(
+            target.piece, at: TangramPuzzle.middle(of: target), rotation: target.rotation + 1, flipped: target.flipped)
+        XCTAssertEqual(result, .turnIt)
+        XCTAssertFalse(puzzle.filled.contains(slot))
+    }
+
+    func testGivenLevelTenAndTheRightTurnWhenEveryTileIsPlacedThenTheShapeIsDone() {
+        for shape in TangramShapes.all {
+            var puzzle = TangramPuzzle(shape: shape, rules: rules(level: 10))
+            for target in shape.placements {
+                let result = puzzle.place(
+                    target.piece, at: TangramPuzzle.middle(of: target), rotation: target.rotation, flipped: target.flipped)
+                guard case .snapped = result else { return XCTFail("\(shape.key) \(target.piece): \(result)") }
+            }
+            XCTAssertTrue(puzzle.isComplete, shape.key)
+            XCTAssertEqual(puzzle.correct, 7, shape.key)
+        }
+    }
+
+    func testGivenASquareTurnedAQuarterWhenPlacedAtLevelTenThenItStillFits() {
+        let shape = TangramShapes.all[0]
+        var puzzle = TangramPuzzle(shape: shape, rules: rules(level: 10))
+        let slot = shape.placements.firstIndex { $0.piece == .square }!
+        let target = shape.placements[slot]
+        let result = puzzle.place(
+            .square, at: TangramPuzzle.middle(of: target), rotation: target.rotation + 2, flipped: target.flipped)
+        XCTAssertEqual(result, .snapped(slot: slot))
+    }
+
+    func testGivenAMirroredParallelogramWhenPlacedThenFlipMattersOnlyFromNine() {
+        let shape = TangramShapes.all[0]
+        let slot = shape.placements.firstIndex { $0.piece == .parallelogram }!
+        let target = shape.placements[slot]
+        let middle = TangramPuzzle.middle(of: target)
+        var eight = TangramPuzzle(shape: shape, rules: rules(level: 8))
+        XCTAssertEqual(
+            eight.place(.parallelogram, at: middle, rotation: target.rotation, flipped: !target.flipped),
+            .snapped(slot: slot))
+        var nine = TangramPuzzle(shape: shape, rules: rules(level: 9))
+        XCTAssertEqual(nine.place(.parallelogram, at: middle, rotation: target.rotation, flipped: !target.flipped), .flipIt)
+    }
+
+    func testGivenTwinTrianglesWhenOneLandsOnTheOthersSlotThenItFitsThere() {
+        let shape = TangramShapes.all[0]
+        var puzzle = TangramPuzzle(shape: shape, rules: rules(level: 10))
+        let slot = shape.placements.firstIndex { $0.piece == .large2 }!
+        let target = shape.placements[slot]
+        // The tray's other large triangle is the same tile to the player.
+        let result = puzzle.place(
+            .large, at: TangramPuzzle.middle(of: target), rotation: target.rotation, flipped: target.flipped)
+        XCTAssertEqual(result, .snapped(slot: slot))
+        XCTAssertEqual(puzzle.fittingSlots(for: .large2).count, 1)
+    }
+
+    func testGivenVoiceOverWhenATileIsPlacedInANamedSlotThenItGoesHomeAtAnyLevel() {
+        let shape = TangramShapes.all[0]
+        var puzzle = TangramPuzzle(shape: shape, rules: rules(level: 10))
+        let slot = shape.placements.firstIndex { $0.piece == .medium }!
+        let other = shape.placements.firstIndex { $0.piece == .square }!
+        XCTAssertEqual(puzzle.place(.medium, inSlot: other), .tryAnotherSpot)
+        XCTAssertEqual(puzzle.place(.medium, inSlot: slot), .snapped(slot: slot))
+        XCTAssertEqual(puzzle.attempts, 2)
+        XCTAssertEqual(puzzle.correct, 1)
+    }
+
+    func testGivenShowMeOneWhenAskedThenTheFirstFreeSlotFillsWithoutCountingAnAttempt() {
+        var puzzle = TangramPuzzle(shape: TangramShapes.all[0], rules: rules(level: 5))
+        XCTAssertEqual(puzzle.showOne(), 0)
+        XCTAssertEqual(puzzle.filled, [0])
+        XCTAssertEqual(puzzle.attempts, 0)
+        while puzzle.showOne() != nil {}
+        XCTAssertTrue(puzzle.isComplete)
+        XCTAssertNil(puzzle.showOne())
+    }
+
+    func testGivenLevelsWhenOutlinesThenTheFirstSlotsShowTheirs() {
+        let puzzle = TangramPuzzle(shape: TangramShapes.all[0], rules: rules(level: 4))
+        XCTAssertEqual(TangramShapes.all[0].placements.indices.filter(puzzle.showsOutline), [0, 1, 2, 3])
     }
 
     // MARK: - Pick
@@ -220,20 +233,23 @@ final class TangramPuzzleTests: XCTestCase {
 
     // MARK: - Helpers
 
+    private func rules(level: Int) -> TangramRules {
+        TangramPuzzle.rules(for: Difficulty(level: level))
+    }
+
     private func area(of poly: [CGPoint]) -> Double {
-        abs(
-            zip(poly, Array(poly.dropFirst()) + [poly[0]]).map { a, b in
-                a.x * b.y - b.x * a.y
-            }.reduce(0, +)) / 2
+        let next = Array(poly[1...]) + [poly[0]]
+        let twice = zip(poly, next).map { a, b in Double(a.x * b.y - b.x * a.y) }.reduce(0, +)
+        return abs(twice) / 2
     }
 
     /// Intersection area of two convex polygons (all tiles are convex).
     private func intersection(_ subject: [CGPoint], _ clip: [CGPoint]) -> Double {
         var out = subject
         for i in clip.indices {
-            let edge = (
-                clip[(i + 1) % clip.count].x - clip[i].x,
-                clip[(i + 1) % clip.count].y - clip[i].y
+            let edge: (Double, Double) = (
+                Double(clip[(i + 1) % clip.count].x - clip[i].x),
+                Double(clip[(i + 1) % clip.count].y - clip[i].y)
             )
             var next: [CGPoint] = []
             for j in out.indices {
