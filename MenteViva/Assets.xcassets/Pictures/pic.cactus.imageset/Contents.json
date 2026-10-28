@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "pic.cactus.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
