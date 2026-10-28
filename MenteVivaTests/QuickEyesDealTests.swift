@@ -40,4 +40,49 @@ final class QuickEyesDealTests: XCTestCase {
             XCTAssertTrue(QuickEyesDeal.pictures.contains(dealt.target), "seed \(seed)")
         }
     }
+
+    // MARK: #46 player-paced levels
+
+    func testGivenEachLevelWhenAskedThenTwoToFourOptionsGrowingWithTheLevel() {
+        let counts = (1...10).map { QuickEyesDeal.optionCount(for: Difficulty(level: $0)) }
+        XCTAssertEqual(counts, [2, 2, 3, 3, 4, 4, 4, 4, 4, 4])
+        XCTAssertEqual(counts, counts.sorted())
+    }
+
+    func testGivenAnOptionCountWhenDealtThenThatManyDifferentPicturesWithTheTarget() {
+        for count in 2...4 {
+            for seed in 1...200 {
+                var generator = SeededGenerator(state: UInt64(seed))
+                let dealt = QuickEyesDeal.make(optionCount: count, using: &generator)
+                XCTAssertEqual(Set(dealt.options).count, count, "count \(count) seed \(seed)")
+                XCTAssertEqual(dealt.options.filter { $0 == dealt.target }.count, 1, "count \(count) seed \(seed)")
+            }
+        }
+    }
+
+    func testGivenLevelFiveAndSixWhenAskedThenOnlyFiveAndBelowArePaced() {
+        XCTAssertTrue(QuickEyesDeal.isPaced(Difficulty(level: 1)))
+        XCTAssertTrue(QuickEyesDeal.isPaced(Difficulty(level: 5)))
+        XCTAssertFalse(QuickEyesDeal.isPaced(Difficulty(level: 6)))
+        XCTAssertFalse(QuickEyesDeal.isPaced(Difficulty(level: 10)))
+    }
+
+    func testGivenThreeQuickRightRoundsWhenRecordedThenTheInviteShowsOnceOnTheThird() {
+        var invite = FasterInvite()
+        XCTAssertFalse(invite.record(rightFirstTry: true, look: 0.5))
+        XCTAssertFalse(invite.record(rightFirstTry: true, look: 0.5))
+        XCTAssertTrue(invite.record(rightFirstTry: true, look: 0.5))
+        XCTAssertFalse(invite.record(rightFirstTry: true, look: 0.5))
+    }
+
+    func testGivenAMissOrASlowLookWhenRecordedThenTheStreakStartsOver() {
+        var invite = FasterInvite()
+        XCTAssertFalse(invite.record(rightFirstTry: true, look: 0.5))
+        XCTAssertFalse(invite.record(rightFirstTry: false, look: 0.5))
+        XCTAssertFalse(invite.record(rightFirstTry: true, look: 0.5))
+        XCTAssertFalse(invite.record(rightFirstTry: true, look: 1.5))
+        XCTAssertFalse(invite.record(rightFirstTry: true, look: 0.5))
+        XCTAssertFalse(invite.record(rightFirstTry: true, look: 0.5))
+        XCTAssertTrue(invite.record(rightFirstTry: true, look: 0.5))
+    }
 }
