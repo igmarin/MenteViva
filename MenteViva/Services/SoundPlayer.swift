@@ -98,7 +98,10 @@ enum SoundPlayer {
     private static func configureSession() {
         let session = AVAudioSession.sharedInstance()
         guard session.category != .ambient, !CaptionSpeaker.isSpeaking else { return }
-        try? session.setCategory(.ambient, options: [.mixWithOthers])
+        // Off the main thread: changing the category of an active session can block.
+        CaptionSpeaker.sessionQueue.async {
+            try? session.setCategory(.ambient, options: [.mixWithOthers])
+        }
     }
 
     /// Each tone is synthesized once, then reused: four short buffers, so a tap

@@ -85,13 +85,19 @@ struct TilePairsView: View {
                     if let deal {
                         let tileSize = tileSize(for: deal, in: size)
                         let boardDims = boardDimensions(for: deal, tileSize: tileSize)
+                        // A board that still doesn't fit at the smallest tile (a wide fallback
+                        // line, a short screen) shrinks to the space instead of spilling over
+                        // the screen edge and the Show me a pair button.
+                        let fitScale = min(
+                            1, size.width / max(boardDims.width, 1), size.height / max(boardDims.height, 1))
                         ZStack(alignment: .topLeading) {
                             ForEach(deal.tiles.sorted(by: { $0.layer < $1.layer }), id: \.id) { tile in
                                 tileButton(tile, tileSize: tileSize)
                             }
                         }
                         .frame(width: boardDims.width, height: boardDims.height)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .scaleEffect(fitScale)
+                        .frame(width: size.width, height: size.height)
                     }
                 }
         }

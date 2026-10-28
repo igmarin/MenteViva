@@ -25,7 +25,7 @@ enum CaptionSpeaker {
     private static let synthesizer = AVSpeechSynthesizer()
     private static let sessionEnder = SessionEnder()
     /// One serial queue, so activate and deactivate run in the order they were asked.
-    nonisolated private static let sessionQueue = DispatchQueue(label: "CaptionSpeaker.session", qos: .userInitiated)
+    nonisolated static let sessionQueue = DispatchQueue(label: "CaptionSpeaker.session", qos: .userInitiated)
 
     /// True while a name is being read, so other audio code leaves the session alone.
     static var isSpeaking: Bool { synthesizer.isSpeaking }
@@ -54,7 +54,7 @@ enum CaptionSpeaker {
 
     /// Speech must be heard with the silent switch on: asking to hear a name is
     /// an explicit request, unlike the ambient game tones.
-    static func configureSession(_ session: AVAudioSession = .sharedInstance()) throws {
+    nonisolated static func configureSession(_ session: AVAudioSession = .sharedInstance()) throws {
         try session.setCategory(.playback, mode: .spokenAudio, options: [.duckOthers])
     }
 
@@ -65,8 +65,8 @@ enum CaptionSpeaker {
 
     static func speak(_ text: String) {
         synthesizer.stopSpeaking(at: .immediate)
-        try? configureSession()
         CaptionSpeaker.sessionQueue.async {
+            try? configureSession()
             try? AVAudioSession.sharedInstance().setActive(true)
         }
         let utterance = AVSpeechUtterance(string: text)
