@@ -2,6 +2,19 @@
 
 Newest first. Format: date — decision — why — what would make us revisit.
 
+## 2026-10-28 — #323 samples completed: eight pictures checked at game size
+
+The eight individual samples (dog, apple, teapot, sunflower, key, sailboat,
+violin, moon) are finished and sit in `docs/design/art-samples/` with
+`sheet.png`: the same files on cream and dark tiles and in grayscale, at
+100pt and at Name the Herd's actual 52pt. All eight read unnamed at 52pt,
+stay distinct in grayscale, and keep a visible outline on both tiles, so
+batches #325–#328 are unblocked on art direction. The samples were generated
+with the Muse built-in image tool (model not exposed); they are docs
+samples, not shipping assets, and #226 still confirms the output-rights basis
+before any batch ships generated pictures in the app. See
+[ip-clearance.md](ip-clearance.md#ai-generated-pictures).
+
 ## 2026-10-27 — Original retro illustrations, shared styling and a recognizable card mark (#323)
 
 **Decision (owner):** after reviewing the original eight-object concept sheet,

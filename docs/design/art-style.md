@@ -7,9 +7,20 @@ is #336 and the icon/wordmark is #337. Illustration batches #325–#328 stay ass
 
 ![Owner-approved concept](art-samples/retro-direction-approved.png)
 
-This is the approved **visual reference**, not a shipping asset sheet. Eight
-individual samples, actual-size light/dark/grayscale checks and provenance still
-need completing in #323 before the batches start. The direction needs no second approval.
+This is the approved **visual reference**, not a shipping asset sheet. The
+direction needs no second approval.
+
+## Samples (#323, completed 2026-10-28)
+
+Eight individual samples live beside the reference: `dog.png`, `apple.png`,
+`teapot.png`, `sunflower.png`, `key.png`, `sailboat.png`, `violin.png`,
+`moon.png` (transparent 600×600 PNG, ≤120 KB each). `sheet.png` shows the same
+files on cream (`#FFF1D0`) and dark-surround (`#211E1B`) tiles and in
+grayscale, at 100pt and at Name the Herd's actual 52pt. All eight stay
+recognizable unnamed at 52pt, stay distinct in grayscale, and keep a visible
+outline on both tiles. Exact prompts are in `art-samples/prompts/`; provenance
+is in [ip-clearance.md](../ip-clearance.md#ai-generated-pictures). Batches
+#325–#328 copy this sheet; they do not reinterpret it.
 
 ## Look and palette
 

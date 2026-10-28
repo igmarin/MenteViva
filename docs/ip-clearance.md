@@ -113,6 +113,19 @@ contributions may have a different status. The [US Copyright Office's report ann
 explains that prompts alone do not establish human authorship. Do not promise
 exclusive rights in generated pixels.
 
+**#323 samples (2026-10-28):** the eight style samples in
+`design/art-samples/` (`dog`, `apple`, `teapot`, `sunflower`, `key`,
+`sailboat`, `violin`, `moon`) were generated with the Muse built-in
+image-generation tool (`muse.image_generation`). That tool does not expose
+its model identifier or version; none is asserted here. The samples were
+generated from text prompts only, with no input reference image; white
+backgrounds were removed locally and the files were resized to transparent
+600×600 PNG. Because the provider behind the Muse tool is not exposed,
+the OpenAI output-rights quotation above is **not** asserted for these eight
+files. They are design samples in `docs/`, not shipping app assets. Before any
+batch (#325–#328) ships generated pictures in the app, #226 must confirm the
+output-rights basis for the actual generation tool used.
+
 **Every batch:** append a complete prompt/tool/date row per new slug to
 `art-prompts.md`, record the selected files here, and check resemblance to
 existing characters, distinctive accessories, poses, compositions and branding.
