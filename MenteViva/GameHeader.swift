@@ -11,7 +11,7 @@ extension View {
         navigationTitle(AppLanguage.localized(game.title))
             .navigationBarTitleDisplayMode(.inline)
             .tint(game.ink)
-            // Cream paper behind every game and its bar (#336); tiles keep their own washes.
+            // Cream paper behind every game, and its bar once content scrolls under it (#336).
             .background(Color.paper.ignoresSafeArea())
             .toolbarBackground(Color.paper, for: .navigationBar)
             .toolbar {

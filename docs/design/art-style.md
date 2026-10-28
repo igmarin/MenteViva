@@ -95,7 +95,7 @@ pass 4.5:1 on cream (lowest 4.77:1) and on the dark surround.
 | Token | Light | Dark | Use |
 |---|---|---|---|
 | `paper` | `#FFF1D0` | `#211E1B` | Page behind games, every card/tile/panel face. Replaces `systemBackground` |
-| `espresso` | `#2B2118` | `#FFF1D0` | Card outlines (2pt), outline buttons, hard print shadow base |
+| `espresso` | `#2B2118` | `#FFF1D0` | Card outlines (2pt) and outline buttons (hard print shadows are 25% black) |
 | `brand` | `#246456` | `#78C4AE` | App tint, primary button fill; label is `paper` (6.2:1 / 8.1:1) |
 | `amber` (mustard) | `#E7AC45` | `#E7AC45` | Fill only: played tick, stamp, "Almost" wash (24%). Never text on paper |
 | `onAmber` | `#2B2118` | `#2B2118` | Text/tick on mustard (7.8:1) |
@@ -105,8 +105,8 @@ pass 4.5:1 on cream (lowest 4.77:1) and on the dark surround.
 
 Usage rules:
 
-- Answer colors (Color Clash words and swatches, Tile Pairs and Sudoku states) are
-  mechanics, not theme; they do not use these tokens.
+- Answer colors (Color Clash word, shape and swatches) are mechanics, not theme: the
+  stimulus keeps the system background plate it was checked on. Tile Pairs tiles use `paper`.
 - Selection and completion keep a shape cue (tick, thick outline); color is never the only signal.
 - Mustard is never text on paper. Headings stay native New York (`.serif`), controls SF Rounded.
-- `ContrastTests` checks every pairing above in both modes.
+- `ContrastTests` checks the text pairings above in both modes at 4.5:1; outlines and the `table` gradient carry no text and are not tested.

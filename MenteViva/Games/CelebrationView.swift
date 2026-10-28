@@ -277,7 +277,7 @@ struct CheckBadge: View {
     var body: some View {
         Image(systemName: "checkmark.circle.fill")
             .font(.title2)
-            // The game's ink behind a background-coloured tick: 3:1+ in both modes.
+            // The game's ink behind a paper-coloured tick: 3:1+ in both modes.
             .foregroundStyle(Color.paper, .tint)
             .padding(6)
             .accessibilityHidden(true)
