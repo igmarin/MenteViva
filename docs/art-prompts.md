@@ -17,10 +17,10 @@ model/version that the tool does not expose. See [style](design/art-style.md) an
 | Slug | Prompt | Date | Tool / model / version |
 |---|---|---|---|
 | dog (sample, #323) | [Prompt](design/art-samples/prompts/dog.prompt.txt) | 2026-10-28 | Muse built-in image generation (`muse.image_generation`); model/version not exposed |
-| apple (sample, #323) | [Prompt](design/art-samples/prompts/apple.prompt.txt) | 2026-10-28 | Muse built-in image generation (`muse.image_generation`); model/version not exposed |
+| apple (sample, #323; revised 2026-10-28 to match approved sheet) | [Prompt](design/art-samples/prompts/apple.prompt.txt) | 2026-10-28 | Muse built-in image generation (`muse.image_generation`); model/version not exposed |
 | teapot (sample, #323) | [Prompt](design/art-samples/prompts/teapot.prompt.txt) | 2026-10-28 | Muse built-in image generation (`muse.image_generation`); model/version not exposed |
 | sunflower (sample, #323) | [Prompt](design/art-samples/prompts/sunflower.prompt.txt) | 2026-10-28 | Muse built-in image generation (`muse.image_generation`); model/version not exposed |
 | key (sample, #323) | [Prompt](design/art-samples/prompts/key.prompt.txt) | 2026-10-28 | Muse built-in image generation (`muse.image_generation`); model/version not exposed |
 | sailboat (sample, #323) | [Prompt](design/art-samples/prompts/sailboat.prompt.txt) | 2026-10-28 | Muse built-in image generation (`muse.image_generation`); model/version not exposed |
 | violin (sample, #323) | [Prompt](design/art-samples/prompts/violin.prompt.txt) | 2026-10-28 | Muse built-in image generation (`muse.image_generation`); model/version not exposed |
-| moon (sample, #323) | [Prompt](design/art-samples/prompts/moon.prompt.txt) | 2026-10-28 | Muse built-in image generation (`muse.image_generation`); model/version not exposed |
+| moon (sample, #323; revised 2026-10-28 to match approved sheet) | [Prompt](design/art-samples/prompts/moon.prompt.txt) | 2026-10-28 | Muse built-in image generation (`muse.image_generation`); model/version not exposed |
