@@ -2,6 +2,35 @@
 
 Newest first. Format: date — decision — why — what would make us revisit.
 
+## 2026-10-27 — Original retro illustrations, shared styling and a recognizable card mark (#323)
+
+**Decision (owner):** after reviewing the original eight-object concept sheet,
+the owner approved vintage cartoon curves and mid-century print colors for the
+game pictures. This replaces #323's generic-flat brief and the paper-cut exploration.
+One [style sheet](design/art-style.md), fixed prompt and approved reference guide
+all four batches (#325–#328). Familiar silhouettes, selective faces, bold ink and
+limited fills carry the style; game-size pictures stay clean and readable.
+
+The owner also asked to carry this direction through the rest of the app and
+its logo. **#336** retunes shared colors, outlines, native typography and calm
+feedback in the existing layouts. **#337** evolves the existing card icon and
+wordmark after small-size studies; the owner selects the icon before replacement.
+Navigation, mechanics, large controls, VoiceOver and Reduce Motion stay intact.
+Mechanically meaningful game colors remain correct.
+
+**Evidence:** Jev 021 (`jev-json/021-retro-art-direction.*.json`, jev-1.14.0)
+scored the direction 1.53/2 (55% strong, 43% reasonable with checks), selected
+occasional faces at 100%, and styling-only alignment at 96%. Asked from the dev
+machine; the app remains offline. The owner decides, not Jev.
+
+Approval is of the direction, not proof of technical or legal clearance. #323
+still needs individual samples and actual-size light/dark/grayscale validation;
+#226 retains final review. Third-party example images are discussion references,
+never copied, traced or shipped, and the concept was generated without image inputs.
+
+Revisit when: actual-size playtests cannot distinguish a set, the art reads as
+childish or too close to an existing character, or #226 flags a design or provenance.
+
 ## 2026-10-27 — Privacy stance: no analytics, no age data, no uploads (#189)
 
 **Decision (owner, from the 2026-10-26 legal-risk audit):** MenteViva carries none of the

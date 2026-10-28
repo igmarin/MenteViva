@@ -87,6 +87,39 @@ We keep this app free of third-party art, fonts, sounds, puzzles or code. On 202
 
 If any third-party asset is ever added, list it here: file, source URL, licence, and date.
 
+## AI-generated pictures
+
+The original retro concept at `design/art-samples/retro-direction-approved.png`
+was generated on 2026-10-27 with OpenAI's built-in image-generation tool in Codex.
+The tool did not expose its model identifier or version; none is asserted here.
+Its exact text prompt is stored beside the image and listed in `art-prompts.md`.
+It used no input reference image. The owner approved the direction; the sheet
+is not a shipping catalogue asset or a legal clearance.
+
+**Output rights:** OpenAI's [Terms of Use, Content → Ownership of content](https://openai.com/policies/terms-of-use/)
+(effective 2026-01-01, checked 2026-10-27) state:
+
+> We hereby assign to you all our right, title, and interest, if any, in and to Output.
+
+This is the output-rights basis for using selected generated illustrations in
+the distributed app, including commercial distribution, subject to the applicable
+service/account terms and others' rights. It is not a promise of uniqueness,
+copyright protection or non-infringement. Confirm the applicable account terms
+in #226 before release rather than treating this quotation as legal sign-off.
+
+**Copyright:** AI-generated expression may not itself be protectable; the owner
+accepts that others could reuse it in an open-source project. Human-authored
+contributions may have a different status. The [US Copyright Office's report announcement](https://www.copyright.gov/newsnet/2025/1060.html)
+explains that prompts alone do not establish human authorship. Do not promise
+exclusive rights in generated pixels.
+
+**Every batch:** append a complete prompt/tool/date row per new slug to
+`art-prompts.md`, record the selected files here, and check resemblance to
+existing characters, distinctive accessories, poses, compositions and branding.
+Use original designs; do not copy or trace a third-party example even where a
+licence appears permissive. Log the actual provider/model/version when exposed,
+or say it is unexposed. #226 must review this section and the final chosen assets.
+
 ## Footnote
 
 This file is a good-faith, preliminary screening with warm, plain language — not legal advice. It is
