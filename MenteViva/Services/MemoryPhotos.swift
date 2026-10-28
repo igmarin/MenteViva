@@ -38,6 +38,7 @@ nonisolated enum MemoryPhotos {
     }
 
     static func add(_ data: Data, to folder: URL = folder) throws {
+        defer { GameAvailability.invalidate() }
         guard all(in: folder).count < maxCount else { throw AddError.albumFull }
         try store(data, in: folder)
     }
@@ -88,6 +89,7 @@ nonisolated enum MemoryPhotos {
         // The whole batch is what the family waits on after the picker closes;
         // photo.downscale inside shows which photo cost what.
         HotPath.measure("photo.import") {
+            defer { GameAvailability.invalidate() }
             var result = AddResult()
             // Listed once for the batch, not once per photo.
             var count = all(in: folder).count
@@ -119,6 +121,7 @@ nonisolated enum MemoryPhotos {
     }
 
     static func remove(_ url: URL) {
+        GameAvailability.invalidate()
         try? FileManager.default.removeItem(at: url)
         try? FileManager.default.removeItem(at: captionFile(for: url))
     }
@@ -151,6 +154,7 @@ nonisolated enum MemoryPhotos {
 
     /// Saves the trimmed text, cut to `maxCaptionLength`; empty text removes the caption.
     static func setCaption(_ text: String, for photo: URL) throws {
+        defer { GameAvailability.invalidate() }
         let file = captionFile(for: photo)
         let caption = String(text.trimmingCharacters(in: .whitespacesAndNewlines).prefix(maxCaptionLength))
         if caption.isEmpty {
@@ -165,9 +169,30 @@ nonisolated enum MemoryPhotos {
 
 /// Games that cannot be played yet, kept off Home, the plan and the family's list (#142).
 nonisolated enum GameAvailability {
+    private static let lock = NSLock()
+    nonisolated(unsafe) private static var cached: Set<GameID>?
+
     /// Games that need the family's own photos and names (Set up → Photos) have nothing to deal
-    /// until enough are there.
+    /// until enough are there. Views ask on every render, so the answer for the app's own album is
+    /// kept until a photo or caption changes (`invalidate()`); another folder is always read fresh.
     static func unavailable(in folder: URL = MemoryPhotos.folder) -> Set<GameID> {
+        guard folder == MemoryPhotos.folder else { return read(folder) }
+        lock.lock()
+        defer { lock.unlock() }
+        if let cached { return cached }
+        let fresh = read(folder)
+        cached = fresh
+        return fresh
+    }
+
+    /// The album changed: the next question reads the disk again.
+    static func invalidate() {
+        lock.lock()
+        cached = nil
+        lock.unlock()
+    }
+
+    private static func read(_ folder: URL) -> Set<GameID> {
         PhotoCaptionDeal.eligible(MemoryPhotos.captioned(in: folder)).count < PhotoCaptionDeal.minPairs
             ? [.photoCaptions] : []
     }

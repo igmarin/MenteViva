@@ -87,4 +87,13 @@ final class PhotoCaptionDealTests: XCTestCase {
         try MemoryPhotos.setCaption("Abuela", for: folder.appendingPathComponent("3.jpg"))
         XCTAssertEqual(GameAvailability.unavailable(in: folder), [])
     }
+
+    func testGivenTheAppsAlbumWhenItChangesThenTheAnswerIsKeptUntilInvalidated() {
+        GameAvailability.invalidate()
+        let first = GameAvailability.unavailable()
+        // Whatever is on disk, a second ask returns the kept answer without reading again.
+        XCTAssertEqual(GameAvailability.unavailable(), first)
+        GameAvailability.invalidate()
+        XCTAssertEqual(GameAvailability.unavailable(), first, "nothing changed on disk")
+    }
 }
