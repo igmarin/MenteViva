@@ -1,6 +1,6 @@
 # App icon studies (#337)
 
-Studies only. **The owner picks A, B or C (or asks for changes) before anything replaces the current icon**; that will be a follow-up commit/PR. Sheet: [`art-samples/icon/icon-studies.png`](art-samples/icon/icon-studies.png) (each study and the current icon at 1024, 180, 60, 40 px on light and dark home-screen backgrounds). Masters: `art-samples/icon/study-{a,b,c}.png`, 1024×1024, opaque, square. Prompts and tool disclosure: [art-prompts.md](../art-prompts.md#icon-studies-337). Direction: [art-style.md](art-style.md).
+**Status: owner picked A (decisions.md 2026-10-28); the shipped icon is redrawn natively from `tools/generate_icon.swift`.** Original brief: studies only. **The owner picks A, B or C (or asks for changes) before anything replaces the current icon**; that will be a follow-up commit/PR. Sheet: [`art-samples/icon/icon-studies.png`](art-samples/icon/icon-studies.png) (each study and the current icon at 1024, 180, 60, 40 px on light and dark home-screen backgrounds). Masters: `art-samples/icon/study-{a,b,c}.png`, 1024×1024, opaque, square. Prompts and tool disclosure: [art-prompts.md](../art-prompts.md#icon-studies-337). Direction: [art-style.md](art-style.md).
 
 ## Brand placements today (none changed here)
 

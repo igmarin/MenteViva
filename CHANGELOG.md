@@ -4,6 +4,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 
 ## [Unreleased]
 
+- **A new app icon (#337):** the icon is now a single cream card with a jade panel and a mustard disc on dark jade, in the same retro colors as the new pictures.
 ### Added
 - **Our own pictures for travels, music and home (#328):** Memory Lane's travels and music-and-home themes show original illustrations (map, suitcase, mountain, beach, tent, lighthouse, helicopter, violin, trumpet, piano, radio, yarn, accordion, picture frame, telephone, sofa) instead of emoji.
 - **New pictures for Memory Lane's kitchen table and garden (#327):** 18 original retro illustrations (teapot, bread, cheese, wine glass, croissant, lemon, olives, honey, cake, chocolate, egg, rose, tulip, potted plant, pear, tree, pine, ladybug), checked side by side with their themes at 100pt and 52pt on light and dark tiles and in grayscale.
