@@ -1,0 +1,36 @@
+{
+  "model": "jev-latest",
+  "state": {
+    "product": "MenteViva is a free, fully offline iOS collection of calm mini games, EN and ES, zero third-party dependencies. Older adults are the reference audience. Large controls, easy-to-name pictures, warm copy, and no medical claims remain requirements.",
+    "current_design": "Card Table: framed game cards with distinct game colors, native serif headings and rounded system controls, shared game header and calm celebrations. Game content currently uses emoji or system symbols; a merged catalogue can resolve original illustrations incrementally.",
+    "approved_art_direction": "The owner approved an original vintage rubber-hose cartoon and mid-century printed-card direction after viewing an eight-object concept sheet. Bold espresso outlines, fluid C/S curves, familiar silhouettes, restrained exaggeration, selective friendly faces, and limited flat colors. No copied characters, poses, compositions, source images, logos, or named-artist prompts. Production pictures must be simpler and cleaner than presentation art, transparent 600x600 PNG under 120 KB, at most four flat fills, no fine grain at small tile sizes.",
+    "palette": "Cream FFF1D0, espresso 2B2118, dark tomato AF3F32, honey mustard E7AC45, muted jade 246456, faded blue 35566D. Calculated sRGB text contrast on cream: espresso14.06, tomato5.24, jade6.18, blue6.93. Mustard is an accent fill with espresso text (7.79), not text on cream (1.81). Dark surround211E1B with cream text14.80. Actual screens still need verification.",
+    "validation": "Pictures are reviewed in complete game sets, in grayscale and on actual light/dark tile backgrounds. Include 100pt and actual rendered sizes: category game52pt; memory pictures half the shorter card side. Same image in both appearances. All localization, VoiceOver, touch-target, Reduce Motion, original-content provenance and legal-review requirements remain.",
+    "rollout": "One shared style sheet and fixed prompt template for all four illustration batches, with the approved concept attached to the epic and tickets. Catalogue already merged. Style direction is approved; individual samples, provenance and technical checks are still pending. Assets stay separate from Swift app styling. Proposed later app work: apply coherent palette, outlines, headings and calm feedback to existing screens without navigation changes; evolve existing card-based app icon and wordmark after small-size studies, rather than replace brand recognition."
+  },
+  "questions": {
+    "art_fit": {
+      "type": "score",
+      "instructions": "Assess the proposed original retro illustration direction for adult-friendly calm games and small-picture recognition. This is evidence, not legal clearance or a substitute for owner approval.",
+      "criteria": ["0 = poor fit", "1 = reasonable with the stated checks", "2 = strong fit"]
+    },
+    "faces_policy": {
+      "type": "choice",
+      "instructions": "Which face policy best balances charm, object recognition, maturity and avoiding a collection of similar-looking mascots?",
+      "criteria": {
+        "selective": "Occasional subtle faces, with object silhouette always primary",
+        "all": "Faces on every game picture",
+        "none": "No faces on any object"
+      }
+    },
+    "app_alignment": {
+      "type": "choice",
+      "instructions": "Choose a scope that achieves visual coherence while protecting accessibility and release progress.",
+      "criteria": {
+        "styling_only": "Retune colors, outlines, native typography and calm feedback in existing layouts; icon evolves in a separate small-size study",
+        "assets_only": "Ship pictures with no app palette or icon work",
+        "full_redesign": "Rebuild navigation, screens, branding and game layouts together"
+      }
+    }
+  }
+}
