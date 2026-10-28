@@ -1,12 +1,19 @@
 import Foundation
 
-/// Direction a block slides. One move may cover several empty cells in this
-/// direction while the path stays clear — that is one player action, not one
-/// cell at a time, so the minimal path length is a human count.
+// MARK: - Blocks and moves
+
+/// One rectangular block on the board. The big block is always 2×2.
+nonisolated struct SlidingBlock: Hashable, Equatable, Sendable {
+    var x: Int
+    var y: Int
+    var w: Int
+    var h: Int
+}
+
+/// Cardinal slide direction.
 nonisolated enum SlidingDirection: String, CaseIterable, Hashable, Sendable {
     case up, down, left, right
 
-    /// Step for the block's origin.
     var dx: Int {
         switch self {
         case .left: -1
@@ -24,123 +31,102 @@ nonisolated enum SlidingDirection: String, CaseIterable, Hashable, Sendable {
     }
 }
 
-/// One rectangular block on the board. `id` is stable; id 0 is the big 2×2
-/// target that must reach the exit. Width and height are in cells.
-nonisolated struct SlidingBlock: Equatable, Hashable, Sendable {
-    let id: Int
-    var x: Int
-    var y: Int
-    let w: Int
-    let h: Int
+/// One slide: block `block` moves `steps` cells toward `direction`.
+nonisolated struct SlidingMove: Hashable, Equatable, Sendable {
+    var block: Int
+    var direction: SlidingDirection
+    var steps: Int
 }
 
-/// One player move: slide `blockId` `steps` cells toward `direction`.
-/// Steps ≥1 and the whole slide is one counted move.
-nonisolated struct SlidingMove: Equatable, Hashable, Sendable {
-    let blockId: Int
-    let direction: SlidingDirection
-    let steps: Int
-}
+// Alias so the spec's `Move` name works inside and outside the puzzle.
+typealias Move = SlidingMove
 
-/// Huarong-Dao-style sliding puzzle: a w×h board, rectangular blocks, one
-/// 2×2 big block that must reach the bottom-centre exit. Moves slide one
-/// block one or more empty cells in a cardinal direction while the path is
-/// clear. `solve()` is breadth-first and returns the shortest move list.
-nonisolated struct SlidingBlocksPuzzle: Equatable, Hashable, Sendable {
+// MARK: - Puzzle
+
+/// A Huarong-Dao-style sliding puzzle (#222). The board is w×h cells, filled with
+/// rectangular blocks and one 2×2 big block that must reach the exit at the
+/// bottom centre. A move slides one block one or more cells in a cardinal
+/// direction while the path stays clear; each slide counts as one move.
+nonisolated struct SlidingBlocksPuzzle: Hashable, Sendable {
     let width: Int
     let height: Int
-    /// Blocks sorted by id. id 0 is the big target (2×2).
     var blocks: [SlidingBlock]
+    /// Index of the big block in `blocks`.
+    let bigIndex: Int
 
-    // MARK: - Levels (#222)
+    /// Moves the player has made in this session. The view owns undo/stack; the
+    /// logic only counts so history can record `attempts = movesMade` and
+    /// `correct = minMoves` (efficiency, capped at 1).
+    var movesMade: Int = 0
+    /// History of block layouts for undo; stores previous `blocks` snapshots.
+    var history: [[SlidingBlock]] = []
 
-    /// Board size per level 1...10. Levels 1–2 are 3×4, 3–4 are 4×4,
-    /// 5–10 are 4×5 so difficulty rises with both size and path length.
-    static let boardSizePerLevel: [(width: Int, height: Int)] = [
-        (3, 4), (3, 4), (4, 4), (4, 4), (4, 5),
-        (4, 5), (4, 5), (4, 5), (4, 5), (4, 5),
-    ]
+    /// Where the big block must arrive: centred horizontally, flush with the
+    /// bottom. For odd widths the exit favours the left centre.
+    var exitX: Int { (width - bigBlock.w) / 2 }
+    var exitY: Int { height - bigBlock.h }
 
-    /// Minimum-move band per level. Level 10 is open-ended.
-    /// Bands are chosen so a 4×5 Huarong-Dao puzzle counted with
-    /// multi-cell slides (one slide = one move) can actually reach them;
-    /// the 4×5 diameter with our block set tops around 30 multi-cell moves,
-    /// so 40–60 / 60+ would be unreachable and every generated puzzle would
-    /// fail its band check. Levels 9–10 are therefore 30–40 and 30+ (still
-    /// monotonic and still rising with level, verified by tests).
-    static let minMovesPerLevel: [ClosedRange<Int>] = [
-        1...3, 3...5, 5...8, 8...12, 12...16,
-        16...22, 16...30, 16...35, 16...40, 16...1_000,
-    ]
+    var bigBlock: SlidingBlock { blocks[bigIndex] }
 
-    /// Board size for a `Difficulty` via `Difficulty.values(_:)`.
-    static func boardSize(for difficulty: Difficulty) -> (width: Int, height: Int) {
-        difficulty.values(boardSizePerLevel)
-    }
+    var isSolved: Bool { bigBlock.x == exitX && bigBlock.y == exitY }
 
-    /// Minimum-move band for a `Difficulty`.
-    static func minMoves(for difficulty: Difficulty) -> ClosedRange<Int> {
-        difficulty.values(minMovesPerLevel)
-    }
-
-    // MARK: - Exit / solved
-
-    /// Column where the 2-wide exit sits: centred, integer floor.
-    var exitX: Int { (width - 2) / 2 }
-
-    /// Whether the big block sits in the exit: its top at `height-2` and
-    /// centred horizontally. This is the only win condition.
-    var isSolved: Bool {
-        guard let target = blocks.first(where: { $0.id == 0 }) else { return false }
-        return target.x == exitX && target.y == height - 2
-    }
+    /// Minimum moves from the current position, or nil if unsolvable. Kept small
+    /// and pure so tests and the hint can call it directly.
+    var minMoves: Int? { solve()?.count }
 
     // MARK: - Moves
 
-    /// All legal slides from this state. Each slide may cover several cells;
-    /// one direction with N empty cells produces N distinct moves (1...N steps).
-    func moves() -> [SlidingMove] { Self.moves(from: self) }
+    /// Legal slides from the current board.
+    func moves() -> [SlidingMove] { Self.legalMoves(width: width, height: height, blocks: blocks) }
 
-    /// Pure function form required by the spec: `moves(from:)`.
-    static func moves(from puzzle: SlidingBlocksPuzzle) -> [SlidingMove] {
-        // Occupancy: cell -> block id or nil.
-        var grid: [[Int?]] = Array(repeating: Array(repeating: nil, count: puzzle.width), count: puzzle.height)
-        for b in puzzle.blocks {
-            for dy in 0..<b.h {
-                for dx in 0..<b.w {
-                    grid[b.y + dy][b.x + dx] = b.id
+    /// Spec spelling: legal slides from `state`.
+    func moves(from state: SlidingBlocksPuzzle) -> [SlidingMove] {
+        Self.legalMoves(width: state.width, height: state.height, blocks: state.blocks)
+    }
+
+    /// Board occupancy for move checks: cell -> block index or nil.
+    static func occupancy(width: Int, height: Int, blocks: [SlidingBlock]) -> [Int?] {
+        var grid = [Int?](repeating: nil, count: width * height)
+        for (index, block) in blocks.enumerated() {
+            for dy in 0..<block.h {
+                for dx in 0..<block.w {
+                    let x = block.x + dx
+                    let y = block.y + dy
+                    guard x >= 0, x < width, y >= 0, y < height else { continue }
+                    grid[y * width + x] = index
                 }
             }
         }
+        return grid
+    }
+
+    static func legalMoves(width: Int, height: Int, blocks: [SlidingBlock]) -> [SlidingMove] {
+        let grid = occupancy(width: width, height: height, blocks: blocks)
         var out: [SlidingMove] = []
-        for block in puzzle.blocks {
-            for dir in SlidingDirection.allCases {
-                var maxSteps = 0
-                // Grow step by step, checking the whole leading edge.
-                outer: for step in 1...max(puzzle.width, puzzle.height) {
-                    switch dir {
-                    case .up:
-                        let ny = block.y - step
-                        if ny < 0 { break outer }
-                        for dx in 0..<block.w where grid[ny][block.x + dx] != nil { break outer }
-                    case .down:
-                        let ny = block.y + block.h - 1 + step
-                        if ny >= puzzle.height { break outer }
-                        for dx in 0..<block.w where grid[ny][block.x + dx] != nil { break outer }
-                    case .left:
-                        let nx = block.x - step
-                        if nx < 0 { break outer }
-                        for dy in 0..<block.h where grid[block.y + dy][nx] != nil { break outer }
-                    case .right:
-                        let nx = block.x + block.w - 1 + step
-                        if nx >= puzzle.width { break outer }
-                        for dy in 0..<block.h where grid[block.y + dy][nx] != nil { break outer }
+        for (index, block) in blocks.enumerated() {
+            for direction in SlidingDirection.allCases {
+                var steps = 0
+                while true {
+                    steps += 1
+                    let nx = block.x + direction.dx * steps
+                    let ny = block.y + direction.dy * steps
+                    // Destination rectangle must stay inside the board.
+                    guard nx >= 0, ny >= 0, nx + block.w <= width, ny + block.h <= height else { break }
+                    var clear = true
+                    for dy in 0..<block.h where clear {
+                        for dx in 0..<block.w where clear {
+                            let x = nx + dx
+                            let y = ny + dy
+                            let cell = grid[y * width + x]
+                            if let owner = cell, owner != index {
+                                clear = false
+                            }
+                        }
                     }
-                    maxSteps = step
-                }
-                if maxSteps > 0 {
-                    for s in 1...maxSteps {
-                        out.append(SlidingMove(blockId: block.id, direction: dir, steps: s))
+                    if clear {
+                        out.append(SlidingMove(block: index, direction: direction, steps: steps))
+                    } else {
+                        break
                     }
                 }
             }
@@ -148,67 +134,137 @@ nonisolated struct SlidingBlocksPuzzle: Equatable, Hashable, Sendable {
         return out
     }
 
-    /// Puzzle after applying one move. Assumes the move is legal.
-    func applying(_ move: SlidingMove) -> SlidingBlocksPuzzle {
-        var next = self
-        if let idx = next.blocks.firstIndex(where: { $0.id == move.blockId }) {
-            next.blocks[idx].x += move.direction.dx * move.steps
-            next.blocks[idx].y += move.direction.dy * move.steps
+    /// Board after `move`, or nil if illegal.
+    func applying(_ move: SlidingMove) -> SlidingBlocksPuzzle? {
+        guard blocks.indices.contains(move.block) else { return nil }
+        let block = blocks[move.block]
+        let nx = block.x + move.direction.dx * move.steps
+        let ny = block.y + move.direction.dy * move.steps
+        guard nx >= 0, ny >= 0, nx + block.w <= width, ny + block.h <= height else { return nil }
+        let grid = Self.occupancy(width: width, height: height, blocks: blocks)
+        for dy in 0..<block.h {
+            for dx in 0..<block.w {
+                let x = nx + dx
+                let y = ny + dy
+                if let owner = grid[y * width + x], owner != move.block { return nil }
+            }
         }
-        // Keep blocks sorted by id so hashing is stable.
-        next.blocks.sort { $0.id < $1.id }
+        var next = self
+        next.blocks[move.block].x = nx
+        next.blocks[move.block].y = ny
+        // Don't carry history/movesMade into solver states.
+        next.history = []
+        next.movesMade = 0
         return next
     }
 
-    // MARK: - Solver (BFS shortest)
+    /// Apply `move` to this mutable puzzle, recording history.
+    @discardableResult
+    mutating func apply(_ move: SlidingMove) -> Bool {
+        guard let next = applying(move) else { return false }
+        history.append(blocks)
+        blocks = next.blocks
+        movesMade += 1
+        return true
+    }
 
-    /// Shortest move list from this state to the exit, or nil if unsolvable.
-    /// Breadth-first guarantees minimal moves; each edge is one slide.
-    func solve() -> [SlidingMove]? { Self.solve(from: self) }
+    mutating func undo() -> Bool {
+        guard let previous = history.popLast() else { return false }
+        blocks = previous
+        movesMade = max(0, movesMade - 1)
+        return true
+    }
 
-    /// Pure form. BFS with a hashed visited set and parent map for reconstruction.
-    static func solve(from start: SlidingBlocksPuzzle) -> [SlidingMove]? {
-        if start.isSolved { return [] }
-        // Queue with head index to avoid O(n) removeFirst.
-        var queue: [SlidingBlocksPuzzle] = [start]
+    mutating func reset(to initialBlocks: [SlidingBlock]) {
+        blocks = initialBlocks
+        history.removeAll()
+        movesMade = 0
+    }
+
+    // MARK: - Solver (BFS, shortest)
+
+    /// Shortest slide sequence from the current board, or nil if unsolvable.
+    /// Breadth-first keeps the first solution shortest; an already solved board
+    /// returns an empty list. Stores predecessors to avoid copying paths.
+    func solve() -> [SlidingMove]? {
+        if isSolved { return [] }
+        var queue: [SlidingBlocksPuzzle] = [self]
+        var cameFrom: [Int] = [-1]
+        var moveFrom: [SlidingMove?] = [nil]
+        var visited: Set<SlidingBlocksPuzzle> = [self]
         var head = 0
-        var visited: Set<SlidingBlocksPuzzle> = [start]
-        // parent[state] = (previous state, move that got there)
-        var parent: [SlidingBlocksPuzzle: (SlidingBlocksPuzzle, SlidingMove)] = [:]
-
         while head < queue.count {
             let current = queue[head]
             head += 1
-            for move in moves(from: current) {
-                let next = current.applying(move)
+            let currentIndex = head - 1
+            for move in current.moves() {
+                guard let next = current.applying(move) else { continue }
                 if visited.contains(next) { continue }
-                visited.insert(next)
-                parent[next] = (current, move)
                 if next.isSolved {
                     // Reconstruct path.
                     var path: [SlidingMove] = [move]
-                    var node = current
-                    while let entry = parent[node] {
-                        path.append(entry.1)
-                        node = entry.0
+                    var idx = currentIndex
+                    while idx != 0 {
+                        if let m = moveFrom[idx] { path.append(m) }
+                        idx = cameFrom[idx]
                     }
-                    path.reverse()
-                    return path
+                    return path.reversed()
                 }
+                visited.insert(next)
                 queue.append(next)
+                cameFrom.append(currentIndex)
+                moveFrom.append(move)
             }
+            if visited.count > 800000 { break }
         }
         return nil
     }
 
-    /// First move of the shortest solution from this state, or nil if
-    /// unsolvable or already solved. Stays fast for 4×5 (BFS below
-    /// 50 ms in Release; otherwise precompute).
-    func hint() -> SlidingMove? { Self.hint(from: self) }
+    /// Spec spelling that takes an explicit state.
+    func solve(from state: SlidingBlocksPuzzle) -> [SlidingMove]? { state.solve() }
 
-    /// Pure form required by the spec.
-    static func hint(from puzzle: SlidingBlocksPuzzle) -> SlidingMove? {
-        guard let path = solve(from: puzzle), let first = path.first else { return nil }
-        return first
+    /// First step of the shortest solution from the current board, or nil when
+    /// solved or unsolvable. Stays fast on 4×5 by reusing `solve()`; the
+    /// generator and tests bound its cost under 50 ms or precompute it.
+    func hint() -> SlidingMove? { solve()?.first }
+
+    /// Spec spelling.
+    func hint(from state: SlidingBlocksPuzzle) -> SlidingMove? { state.hint() }
+
+    // MARK: - Helpers for levels
+
+    /// Whether the board has no overlapping blocks and stays inside the frame.
+    var isValid: Bool {
+        var grid = [Bool](repeating: false, count: width * height)
+        for block in blocks {
+            if block.x < 0 || block.y < 0 || block.x + block.w > width || block.y + block.h > height { return false }
+            for dy in 0..<block.h {
+                for dx in 0..<block.w {
+                    let index = (block.y + dy) * width + (block.x + dx)
+                    if grid[index] { return false }
+                    grid[index] = true
+                }
+            }
+        }
+        return true
+    }
+
+    // Hash only the layout, not the transient history/movesMade, so the solver's
+    // visited set does not treat the same board as different after undo.
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(width)
+        hasher.combine(height)
+        hasher.combine(bigIndex)
+        for block in blocks {
+            hasher.combine(block.x)
+            hasher.combine(block.y)
+            hasher.combine(block.w)
+            hasher.combine(block.h)
+        }
+    }
+
+    static func == (lhs: SlidingBlocksPuzzle, rhs: SlidingBlocksPuzzle) -> Bool {
+        lhs.width == rhs.width && lhs.height == rhs.height && lhs.bigIndex == rhs.bigIndex
+            && lhs.blocks == rhs.blocks
     }
 }
