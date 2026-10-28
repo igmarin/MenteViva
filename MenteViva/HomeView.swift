@@ -60,6 +60,7 @@ struct HomeView: View {
                     .padding()
                 }
             }
+            .pageBackground()
             // Cards take their name from a function, not the environment, so without
             // a new identity they keep the old language until the app restarts.
             .id(appLanguage)

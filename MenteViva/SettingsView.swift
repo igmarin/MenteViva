@@ -151,6 +151,7 @@ struct SettingsView: View {
                     .font(.body)
                 }
             }
+            .listPageBackground()
             .navigationTitle(AppLanguage.localized("settings.title"))
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {

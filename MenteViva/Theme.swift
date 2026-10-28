@@ -29,6 +29,25 @@ extension Color {
     }
 }
 
+extension View {
+    /// The page behind a top-level screen (#356): `paper` under the content and
+    /// in its navigation bar, so no screen falls back to the system white in
+    /// light mode or black in dark mode. The colour follows the device
+    /// appearance on its own; there is no in-app appearance switch.
+    func pageBackground() -> some View {
+        scrollContentBackground(.hidden)
+            .background(Color.paper.ignoresSafeArea())
+            .toolbarBackground(Color.paper, for: .navigationBar)
+    }
+
+    /// `pageBackground` for a `List` (#356): the system grouped background is
+    /// hidden so `paper` shows, while rows keep their native surface and stay
+    /// one step up from the page in both modes.
+    func listPageBackground() -> some View {
+        pageBackground()
+    }
+}
+
 extension ShapeStyle where Self == LinearGradient {
     /// The icon's gradient, jade to mustard: the table Home deals today's games on.
     static var table: LinearGradient {
