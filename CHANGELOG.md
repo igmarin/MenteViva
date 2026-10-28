@@ -31,6 +31,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 - **Levels 1–10 for four games (#203–#206):** Name the Herd (2–11 decoys), Finish the Saying (2–5 choices, same-theme from level 6), Number Trail (ops and caps per level, cap 120 at 10), Color Clash (matching chance 0.85→0 and 6 colours/shapes at levels 9–10).
 
 ### Changed
+- **New app icon in the retro card style (#337):** the icon is now a single cream card with a jade panel and a mustard disc on dark jade, in the same retro colors as the new pictures.
 - **One retro look across the app (#336):** cards, buttons, game screens and the celebration now use the approved cream, espresso, jade and mustard palette (a dark surround in dark mode) with espresso outlines and a hard print shadow, so the app matches the new pictures. Layout, games, copy and every control size are unchanged; each game keeps its own colour.
 - **Warmer tones an iPhone speaker can play (#240):** the sounds now fade in over 10 ms and die away gently instead of stopping after a fraction of the note, with a soft second harmonic for warmth. The "not quite" tone moves up from 180 Hz to 280 Hz, still the lowest and softest, so a phone speaker actually plays it. The tone maker is now a pure `ToneSynth`, tested for headroom and pitch.
 
