@@ -23,7 +23,9 @@ Common ground: cream card, espresso ink, jade identity, one mustard accent, flat
 
 ## Review at 40px
 
-All three read at 40px: A as a framed card with a gold disc, B as two cards, C as a smiling card. Notes: B is lowest contrast against a light home screen (cream on pale grey) and its jade is lighter than the `#246456` token; C's face is the smallest detail and starts to blur (eyes and smile survive, cheeks merge); A has the strongest silhouette on both backgrounds. Colors come from the image model, so exact hex values drift slightly from the tokens; the selected study would be redrawn in `tools/generate_icon.swift` with exact tokens.
+All three read at 40px: A as a framed card with a gold disc, B as two cards, C as a smiling card. Notes (independent subagent review agreed): B is weakest at 40px: cream on a pale home screen has little edge contrast, and the back card's thin jade ring is the only cue for a "pair", so it can read as one green card. C's face survives (eyes, smile; eye highlights vanish, harmless). A has the strongest silhouette on both backgrounds; its inner frame lines are the finest detail and are not essential.
+
+Palette drift (image model output, not exact tokens): A's ground is darker than `#246456` (about `#0F4A44`); B's jade is lighter; C's card is warmer tan than `#FFF1D0` and its ground is a teal near the token; the mustard in A and C is more orange than `#E7AC45`. The selected study would be redrawn in `tools/generate_icon.swift` with exact tokens.
 
 ## Recommendation: A
 
