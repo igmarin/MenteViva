@@ -113,6 +113,8 @@ contributions may have a different status. The [US Copyright Office's report ann
 explains that prompts alone do not establish human authorship. Do not promise
 exclusive rights in generated pixels.
 
+**#326 pictures (2026-10-28):** eleven pictures (guitar, coffee, star, bee, cactus, clock, house, chair, umbrella, book, lamp) were generated with the OpenAI Images API, model `gpt-image-1.5`, from text prompts only (no input image; no artist, studio or brand named). White backgrounds were removed locally. Sunflower, moon and key are the #323 samples copied unchanged. Prompts: `design/art-samples/prompts/`.
+
 **#323 samples (2026-10-28):** the eight style samples in
 `design/art-samples/` (`dog`, `apple`, `teapot`, `sunflower`, `key`,
 `sailboat`, `violin`, `moon`) were generated with the Muse built-in
@@ -125,6 +127,17 @@ the OpenAI output-rights quotation above is **not** asserted for these eight
 files. They are design samples in `docs/`, not shipping app assets. Before any
 batch (#325–#328) ships generated pictures in the app, #226 must confirm the
 output-rights basis for the actual generation tool used.
+
+**#325 Name the Herd (2026-10-28):** 21 files in `Assets.xcassets/Pictures/`.
+18 (cat, lion, frog, turtle, butterfly, elephant, banana, grapes, orange,
+strawberry, watermelon, peach, car, bus, airplane, rocket, bicycle, train) were
+generated from text prompts only, no reference image, with OpenAI's built-in
+image-generation tool driven through `codex exec` (Codex CLI 0.165.0; model/version
+not exposed). Post-processing is local (Pillow): background and enclosed white
+removed, cropped, resized, cream outer edge added. **Pending #226:** dog, apple and
+sailboat are the Muse-generated #323 samples copied unchanged (rights basis
+not asserted, see above). Resemblance check: original designs, no named
+characters, brands or accessories.
 
 **Every batch:** append a complete prompt/tool/date row per new slug to
 `art-prompts.md`, record the selected files here, and check resemblance to

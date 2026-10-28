@@ -35,6 +35,8 @@
 		6C996EBFBA06751F0000001D /* SayingsDeck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F0F3C38239D199500000017; };
 		91BD5DE598C764EF0000001D /* SayingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C722A92D1DB44C8500000017; };
 		D0A2FBFCA4EDE3390000001E /* SequenceDeal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D85078037720D6F00000018; };
+		CE4F73426A29B77700000025 /* SlidingBlocksLevels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1596F47817E45DBD0000001F; };
+		780DFBCFE4935E5400000025 /* SlidingBlocksPuzzle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5284C906BFE178020000001F; };
 		C7D857DBE8864C870000001E /* SudokuPuzzle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89178D58C0F95C6D00000018; };
 		7F1CAF5CBD717E560000001C /* SudokuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D87F63700842679400000016; };
 		8B420A94EF3D39A30000001F /* TangramPieces.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED97DEB4ADDB300900000019; };
@@ -118,6 +120,7 @@
 		F3781E2CF00E20FA00000033 /* RoundProgressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690FA2BE3DFB9D180000002D; };
 		FB1929E3C0D7D72A00000031 /* SayingsDeckTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDDCB81B01A478280000002B; };
 		F7D49C3705471CF100000034 /* SayingsStringsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66D3C1612A1009B70000002E; };
+		AEF95E759F8083DF00000039 /* SlidingBlocksPuzzleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5278B9307F7E30D500000033; };
 		C41E87AF625987A200000032 /* SudokuPuzzleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD3387532B6DCD100000002C; };
 		507BDE26F60C722300000033 /* TangramPuzzleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9F3AC793082C890000002D; };
 		75073BC363161AA600000033 /* TilePairsDealTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3531B453913EE440000002D; };
@@ -158,6 +161,8 @@
 		9F0F3C38239D199500000017 /* SayingsDeck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/SayingsDeck.swift; sourceTree = "<group>"; };
 		C722A92D1DB44C8500000017 /* SayingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/SayingsView.swift; sourceTree = "<group>"; };
 		9D85078037720D6F00000018 /* SequenceDeal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/SequenceDeal.swift; sourceTree = "<group>"; };
+		1596F47817E45DBD0000001F /* SlidingBlocksLevels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/SlidingBlocksLevels.swift; sourceTree = "<group>"; };
+		5284C906BFE178020000001F /* SlidingBlocksPuzzle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/SlidingBlocksPuzzle.swift; sourceTree = "<group>"; };
 		89178D58C0F95C6D00000018 /* SudokuPuzzle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/SudokuPuzzle.swift; sourceTree = "<group>"; };
 		D87F63700842679400000016 /* SudokuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/SudokuView.swift; sourceTree = "<group>"; };
 		ED97DEB4ADDB300900000019 /* TangramPieces.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/TangramPieces.swift; sourceTree = "<group>"; };
@@ -241,6 +246,7 @@
 		690FA2BE3DFB9D180000002D /* RoundProgressTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/RoundProgressTests.swift; sourceTree = SOURCE_ROOT; };
 		CDDCB81B01A478280000002B /* SayingsDeckTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/SayingsDeckTests.swift; sourceTree = SOURCE_ROOT; };
 		66D3C1612A1009B70000002E /* SayingsStringsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/SayingsStringsTests.swift; sourceTree = SOURCE_ROOT; };
+		5278B9307F7E30D500000033 /* SlidingBlocksPuzzleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/SlidingBlocksPuzzleTests.swift; sourceTree = SOURCE_ROOT; };
 		CD3387532B6DCD100000002C /* SudokuPuzzleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/SudokuPuzzleTests.swift; sourceTree = SOURCE_ROOT; };
 		7B9F3AC793082C890000002D /* TangramPuzzleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/TangramPuzzleTests.swift; sourceTree = SOURCE_ROOT; };
 		B3531B453913EE440000002D /* TilePairsDealTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/TilePairsDealTests.swift; sourceTree = SOURCE_ROOT; };
@@ -307,6 +313,8 @@
 				9F0F3C38239D199500000017 /* SayingsDeck.swift */,
 				C722A92D1DB44C8500000017 /* SayingsView.swift */,
 				9D85078037720D6F00000018 /* SequenceDeal.swift */,
+				1596F47817E45DBD0000001F /* SlidingBlocksLevels.swift */,
+				5284C906BFE178020000001F /* SlidingBlocksPuzzle.swift */,
 				89178D58C0F95C6D00000018 /* SudokuPuzzle.swift */,
 				D87F63700842679400000016 /* SudokuView.swift */,
 				ED97DEB4ADDB300900000019 /* TangramPieces.swift */,
@@ -401,6 +409,7 @@
 				690FA2BE3DFB9D180000002D /* RoundProgressTests.swift */,
 				CDDCB81B01A478280000002B /* SayingsDeckTests.swift */,
 				66D3C1612A1009B70000002E /* SayingsStringsTests.swift */,
+				5278B9307F7E30D500000033 /* SlidingBlocksPuzzleTests.swift */,
 				CD3387532B6DCD100000002C /* SudokuPuzzleTests.swift */,
 				7B9F3AC793082C890000002D /* TangramPuzzleTests.swift */,
 				B3531B453913EE440000002D /* TilePairsDealTests.swift */,
@@ -506,6 +515,8 @@
 				6C996EBFBA06751F0000001D /* SayingsDeck.swift in Sources */,
 				91BD5DE598C764EF0000001D /* SayingsView.swift in Sources */,
 				D0A2FBFCA4EDE3390000001E /* SequenceDeal.swift in Sources */,
+				CE4F73426A29B77700000025 /* SlidingBlocksLevels.swift in Sources */,
+				780DFBCFE4935E5400000025 /* SlidingBlocksPuzzle.swift in Sources */,
 				C7D857DBE8864C870000001E /* SudokuPuzzle.swift in Sources */,
 				7F1CAF5CBD717E560000001C /* SudokuView.swift in Sources */,
 				8B420A94EF3D39A30000001F /* TangramPieces.swift in Sources */,
@@ -597,6 +608,7 @@
 				F3781E2CF00E20FA00000033 /* RoundProgressTests.swift in Sources */,
 				FB1929E3C0D7D72A00000031 /* SayingsDeckTests.swift in Sources */,
 				F7D49C3705471CF100000034 /* SayingsStringsTests.swift in Sources */,
+				AEF95E759F8083DF00000039 /* SlidingBlocksPuzzleTests.swift in Sources */,
 				C41E87AF625987A200000032 /* SudokuPuzzleTests.swift in Sources */,
 				507BDE26F60C722300000033 /* TangramPuzzleTests.swift in Sources */,
 				75073BC363161AA600000033 /* TilePairsDealTests.swift in Sources */,
