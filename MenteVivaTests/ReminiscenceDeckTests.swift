@@ -29,7 +29,7 @@ final class ReminiscenceDeckTests: XCTestCase {
     func testGivenNoPhotosWhenDealtThenFiveObjectCardsNamedByLocalizedKey() {
         let cards = ReminiscenceDeck.deal(photos: [], captions: [:], localize: { "L:" + $0 })
         XCTAssertEqual(cards.count, 5)
-        XCTAssertEqual(cards[0].picture, .symbol(EverydayObjects.all[0].symbol))
+        XCTAssertEqual(cards[0].picture, .object(EverydayObjects.all[0]))
         XCTAssertEqual(cards[0].caption, "L:" + EverydayObjects.all[0].nameKey)
         XCTAssertEqual(EverydayObjects.all[0].nameKey, "object.cup")
     }
@@ -57,7 +57,7 @@ final class ReminiscenceDeckTests: XCTestCase {
             let cards = ReminiscenceDeck.dealSession(photos: [], captions: [:], using: &generator)
             seen.formUnion(
                 cards.compactMap { card in
-                    if case .symbol(let name) = card.picture { name } else { nil }
+                    if case .object(let object) = card.picture { object.symbol } else { nil }
                 })
         }
         XCTAssertEqual(seen, Set(EverydayObjects.all.map(\.symbol)))

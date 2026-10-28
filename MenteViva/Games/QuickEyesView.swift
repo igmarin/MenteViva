@@ -10,7 +10,6 @@ struct QuickEyesView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dynamicTypeSize) private var typeSize
 
-    private let emojis = ["🌻", "🐢", "🍎", "🎸", "🌙", "☕️", "🦋", "🍊", "🚗", "⭐", "🐝", "🌵"]
     private static let totalRounds = 12
     /// Flash length in seconds for levels 1...10: where it starts and the floor it shrinks to (#200).
     /// Levels 2, 4 and 6 keep the old easy, medium and hard pairs, so migrated players notice nothing.
@@ -36,8 +35,8 @@ struct QuickEyesView: View {
     @State private var difficulty = Difficulty.stored(.quickEyes)
     @State private var phase: Phase = .showing
     @State private var progress = RoundProgress(totalRounds: Self.totalRounds)
-    @State private var target = "🌻"
-    @State private var options: [String] = []
+    @State private var target = GamePictures.named("sunflower")
+    @State private var options: [GamePicture] = []
     @State private var displayTime = QuickEyesView.displayTimes(for: Difficulty.stored(.quickEyes)).start
     @State private var correct = 0
     @State private var speedBonus = 0
@@ -46,7 +45,7 @@ struct QuickEyesView: View {
     @State private var startedAt = Date.now
     @State private var revealTask: Task<Void, Never>?
     /// The answer beat (#235): set by a tap, cleared when the next picture flashes.
-    @State private var beat: AnswerBeat<String>?
+    @State private var beat: AnswerBeat<GamePicture>?
     @State private var showCelebration = false
     @State private var finalDetail = ""
 
@@ -71,9 +70,9 @@ struct QuickEyesView: View {
 
             switch phase {
             case .showing:
-                Text(target)
-                    .font(.system(size: 120))
-                    .accessibilityLabel(String(format: AppLanguage.localized("game.quickeyes.a11y.flash %@"), target))
+                PictureView(picture: target, size: 120)
+                    .accessibilityLabel(
+                        String(format: AppLanguage.localized("game.quickeyes.a11y.flash %@"), name(of: target)))
             case .choosing:
                 VStack(spacing: 16) {
                     if missedLastRound {
@@ -90,16 +89,15 @@ struct QuickEyesView: View {
                     Text(AppLanguage.localized("game.quickeyes.prompt"))
                         .font(.title2)
                     LazyVGrid(columns: columns, spacing: 16) {
-                        ForEach(options, id: \.self) { emoji in
+                        ForEach(options, id: \.self) { picture in
                             Button {
-                                choose(emoji)
+                                choose(picture)
                             } label: {
-                                Text(emoji)
-                                    .font(.system(size: 56))
+                                PictureView(picture: picture, size: 56)
                             }
                             .buttonStyle(AnswerTileStyle())
-                            .answerMark(beat?.mark(for: emoji) ?? .plain)
-                            .accessibilityLabel(emoji)
+                            .answerMark(beat?.mark(for: picture) ?? .plain)
+                            .accessibilityLabel(name(of: picture))
                         }
                     }
                 }
@@ -139,14 +137,15 @@ struct QuickEyesView: View {
 
     private func startRound() {
         revealTask?.cancel()
-        target = emojis.randomElement() ?? "🌻"
-        let distractors = emojis.filter { $0 != target }.shuffled().prefix(3)
-        options = (distractors + [target]).shuffled()
+        var generator = SystemRandomNumberGenerator()
+        let round = QuickEyesDeal.make(using: &generator)
+        target = round.target
+        options = round.options
         phase = .showing
         // VoiceOver needs time to speak the picture; hold it longer (#64).
         let hold = UIAccessibility.isVoiceOverRunning ? max(displayTime, Self.voiceOverHold) : displayTime
         AccessibilityNotification.Announcement(
-            String(format: AppLanguage.localized("game.quickeyes.a11y.flash %@"), target)
+            String(format: AppLanguage.localized("game.quickeyes.a11y.flash %@"), name(of: target))
         ).post()
         revealTask = Task { @MainActor in
             try? await Task.sleep(for: .seconds(hold))
@@ -157,9 +156,14 @@ struct QuickEyesView: View {
     }
 
     /// Shows the answer for a beat (#235), ignoring taps meanwhile, then flashes the next picture.
-    private func choose(_ emoji: String) {
+    /// A picture's name in the app's language (#324), for VoiceOver.
+    private func name(of picture: GamePicture) -> String {
+        AppLanguage.localized(picture.nameKey)
+    }
+
+    private func choose(_ picture: GamePicture) {
         guard phase == .choosing, beat == nil, !progress.isFinished else { return }
-        let answer = AnswerBeat(tapped: emoji, right: target)
+        let answer = AnswerBeat(tapped: picture, right: target)
         beat = answer
         if answer.isRight {
             correct += 1
@@ -174,7 +178,7 @@ struct QuickEyesView: View {
             missedLastRound = true
             Feedback.play(.miss)
             AccessibilityNotification.Announcement(
-                String(format: AppLanguage.localized("game.answer.was %@"), target)
+                String(format: AppLanguage.localized("game.answer.was %@"), name(of: target))
             ).post()
             // Relax one step after a miss so the next round feels kinder.
             displayTime = min(startDisplayTime, displayTime / shrinkFactor)

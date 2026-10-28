@@ -22,6 +22,8 @@ screen of real content, split it — long docs don't get read.
 | [device-support.md](device-support.md) | What hardware/OS we claim and what we verified | Living |
 | [decisions.md](decisions.md) | Every significant decision, with date and reason | Living log |
 | [design/](design/) | Card Table redesign: review of the old app and the spec it was built from (HTML, open in a browser) | Shipped (#154–#159) |
+| [design/art-style.md](design/art-style.md) | Approved retro illustration direction, palette, fixed prompt and picture checks | Samples completed (#323); batches #325–#328 next |
+| [art-prompts.md](art-prompts.md) | Exact prompts and actual tool disclosures for selected art | Living |
 | [research-2026-09.md](research-2026-09.md) | Evidence + market scan behind the decisions | Snapshot |
 | [research-2026-09-22.md](research-2026-09-22.md) | Market and segment numbers (60+, caregivers, iOS floor) | Snapshot |
 | [statistics-rationale.md](statistics-rationale.md) | What our numbers support, and what copy may say | Current |

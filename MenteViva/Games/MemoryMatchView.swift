@@ -13,21 +13,12 @@ struct MemoryMatchView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
-    /// Four grown-up sets of 12 pairs (#199 needs 12 faces at level 10). One is
-    /// drawn per game; emoji carry their own VoiceOver names, so themes need
-    /// no extra strings.
-    static let themes: [[String]] = [
-        ["☕️", "🫖", "🍞", "🧀", "🍷", "🥐", "🍋", "🫒", "🍵", "🥖", "🍰", "🍫"],  // kitchen table
-        ["🌹", "🌻", "🌷", "🪴", "🍐", "🌳", "🦋", "🐝", "🍎", "🌲", "🐞", "🍇"],  // the garden
-        ["⛵️", "🚂", "✈️", "🗺️", "🧳", "⛰️", "🏖️", "🚲", "🚗", "🏕️", "🗽", "🚁"],  // travels
-        ["🎻", "🎺", "🎹", "📻", "🕰️", "📚", "🧶", "🪑", "🎸", "🖼️", "📞", "🛋️"],  // music and home
-    ]
     private static let spacing: CGFloat = 12
     /// Icon-teal card back (Card Table theme): calm, not childish, the same in light and dark.
     private static let cardBack = Color(UIColor(rgb: 0x23685F))
 
     @State private var difficulty = Difficulty.stored(.memoryMatch)
-    @State private var faces: [Face] = []
+    @State private var faces: [MemoryFace] = []
     /// Decoded once per deal so flipping never re-reads the disk.
     @State private var photoImages: [URL: UIImage] = [:]
 
@@ -43,22 +34,10 @@ struct MemoryMatchView: View {
     @State private var cardPositions: [Int: Int] = [:]
     @State private var flipBackTask: Task<Void, Never>?
 
-    enum Face: Hashable {
-        case emoji(String)
-        case photo(URL)
-    }
-
     struct Card: Identifiable {
         /// The card's index into the board; `MemoryBoard` taps by this id.
         let id: Int
-        let face: Face
-    }
-
-    /// The board's pairs: photos first (already shuffled by the caller), then
-    /// the theme's emoji for any pairs the photos don't cover.
-    static func faces(photos: [URL], theme: [String], pairs: Int) -> [Face] {
-        let fromPhotos = photos.prefix(pairs).map(Face.photo)
-        return fromPhotos + theme.prefix(pairs - fromPhotos.count).map(Face.emoji)
+        let face: MemoryFace
     }
 
     /// Pairs per level 1...10 (#199). Levels 2/4/6 keep the old easy/medium/hard
@@ -252,9 +231,8 @@ struct MemoryMatchView: View {
                     .scaledToFill()
                     .frame(width: size.width - 10, height: size.height - 10)
                     .clipShape(RoundedRectangle(cornerRadius: 14))
-            } else if case .emoji(let emoji) = card.face {
-                Text(emoji)
-                    .font(.system(size: min(size.width, size.height) * 0.5))
+            } else if case .picture(let picture) = card.face {
+                PictureView(picture: picture, size: min(size.width, size.height) * 0.5)
             }
         }
         .rotation3DEffect(
@@ -268,30 +246,30 @@ struct MemoryMatchView: View {
     private func dealCards(size: CGSize) {
         flipBackTask?.cancel()
         flipBackTask = nil
-        let photos = MemoryPhotos.all().shuffled()
-        faces = Self.faces(
-            photos: photos, theme: Self.themes.randomElement() ?? Self.themes[0],
-            pairs: Self.cappedPairs(for: difficulty, in: size))
+        var generator = SystemRandomNumberGenerator()
+        let deal = MemoryDeal.make(
+            photos: MemoryPhotos.all(), pairs: Self.cappedPairs(for: difficulty, in: size),
+            using: &generator)
+        faces = deal.faces
         photoImages = Dictionary(
             uniqueKeysWithValues: faces.compactMap { face in
                 guard case .photo(let url) = face, let image = UIImage(contentsOfFile: url.path) else { return nil }
                 return (url, image)
             })
-        let shuffled = (faces + faces).shuffled()
-        cards = shuffled.enumerated().map { Card(id: $0, face: $1) }
         // The board taps by card id; each face occurs exactly twice, so its
-        // first position is the pair identity both copies share.
-        board.deal(pairs: shuffled.map { faces.firstIndex(of: $0) ?? 0 })
+        // index in the deal's pairs is the identity both copies share.
+        cards = deal.order.enumerated().map { Card(id: $0, face: deal.faces[$1]) }
+        board.deal(pairs: deal.order)
         cardPositions = Dictionary(uniqueKeysWithValues: cards.indices.map { (cards[$0].id, $0 + 1) })
         moves = 0
         startedAt = .now
     }
 
-    /// Emoji carry their own VoiceOver names; photos are numbered so a pair can
-    /// still be matched by ear.
-    private func label(_ face: Face) -> String {
+    /// Pictures say their name in the app's language (#324); photos are
+    /// numbered so a pair can still be matched by ear.
+    private func label(_ face: MemoryFace) -> String {
         switch face {
-        case .emoji(let emoji): emoji
+        case .picture(let picture): AppLanguage.localized(picture.nameKey)
         case .photo:
             String(
                 format: AppLanguage.localized("game.memory.photo %lld"),

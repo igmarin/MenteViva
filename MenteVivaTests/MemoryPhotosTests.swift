@@ -142,22 +142,24 @@ final class MemoryPhotosTests: XCTestCase {
 
     // MARK: Board faces
 
-    private let theme = ["☕️", "🫖", "🍞", "🧀", "🍷", "🥐", "🍋", "🫒"]
+    private let theme = GamePictures.named([
+        "coffee", "teapot", "bread", "cheese", "wine_glass", "croissant", "lemon", "olives",
+    ])
 
-    func testGivenNoPhotosWhenDealingThenThemeEmojiFillTheBoard() {
-        let faces = MemoryMatchView.faces(photos: [], theme: theme, pairs: 4)
-        XCTAssertEqual(faces, theme.prefix(4).map(MemoryMatchView.Face.emoji))
+    func testGivenNoPhotosWhenDealingThenThemePicturesFillTheBoard() {
+        let faces = MemoryDeal.faces(photos: [], theme: theme, pairs: 4)
+        XCTAssertEqual(faces, theme.prefix(4).map(MemoryFace.picture))
     }
 
-    func testGivenSomePhotosWhenDealingThenPhotosComeFirstAndEmojiFillTheRest() {
+    func testGivenSomePhotosWhenDealingThenPhotosComeFirstAndPicturesFillTheRest() {
         let photos = [URL(fileURLWithPath: "/a.jpg"), URL(fileURLWithPath: "/b.jpg")]
-        let faces = MemoryMatchView.faces(photos: photos, theme: theme, pairs: 4)
-        XCTAssertEqual(faces, [.photo(photos[0]), .photo(photos[1]), .emoji("☕️"), .emoji("🫖")])
+        let faces = MemoryDeal.faces(photos: photos, theme: theme, pairs: 4)
+        XCTAssertEqual(faces, [.photo(photos[0]), .photo(photos[1]), .picture(theme[0]), .picture(theme[1])])
     }
 
     func testGivenMorePhotosThanPairsWhenDealingThenOnlyPhotosAreUsed() {
         let photos = (0..<6).map { URL(fileURLWithPath: "/\($0).jpg") }
-        let faces = MemoryMatchView.faces(photos: photos, theme: theme, pairs: 4)
-        XCTAssertEqual(faces, photos.prefix(4).map(MemoryMatchView.Face.photo))
+        let faces = MemoryDeal.faces(photos: photos, theme: theme, pairs: 4)
+        XCTAssertEqual(faces, photos.prefix(4).map(MemoryFace.photo))
     }
 }

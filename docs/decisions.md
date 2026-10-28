@@ -2,6 +2,93 @@
 
 Newest first. Format: date — decision — why — what would make us revisit.
 
+## 2026-10-28 — #323 samples completed: eight pictures checked at game size
+
+The eight individual samples (dog, apple, teapot, sunflower, key, sailboat,
+violin, moon) are finished and sit in `docs/design/art-samples/` with
+`sheet.png`: the same files on cream and dark tiles and in grayscale, at
+100pt and at Name the Herd's actual 52pt. All eight read unnamed at 52pt,
+stay distinct in grayscale, and keep a visible outline on both tiles, so
+batches #325–#328 are unblocked on art direction. The samples were generated
+with the Muse built-in image tool (model not exposed); they are docs
+samples, not shipping assets, and #226 still confirms the output-rights basis
+before any batch ships generated pictures in the app. See
+[ip-clearance.md](ip-clearance.md#ai-generated-pictures).
+
+## 2026-10-27 — Original retro illustrations, shared styling and a recognizable card mark (#323)
+
+**Decision (owner):** after reviewing the original eight-object concept sheet,
+the owner approved vintage cartoon curves and mid-century print colors for the
+game pictures. This replaces #323's generic-flat brief and the paper-cut exploration.
+One [style sheet](design/art-style.md), fixed prompt and approved reference guide
+all four batches (#325–#328). Familiar silhouettes, selective faces, bold ink and
+limited fills carry the style; game-size pictures stay clean and readable.
+
+The owner also asked to carry this direction through the rest of the app and
+its logo. **#336** retunes shared colors, outlines, native typography and calm
+feedback in the existing layouts. **#337** evolves the existing card icon and
+wordmark after small-size studies; the owner selects the icon before replacement.
+Navigation, mechanics, large controls, VoiceOver and Reduce Motion stay intact.
+Mechanically meaningful game colors remain correct.
+
+**Evidence:** Jev 021 (`jev-json/021-retro-art-direction.*.json`, jev-1.14.0)
+scored the direction 1.53/2 (55% strong, 43% reasonable with checks), selected
+occasional faces at 100%, and styling-only alignment at 96%. Asked from the dev
+machine; the app remains offline. The owner decides, not Jev.
+
+Approval is of the direction, not proof of technical or legal clearance. #323
+still needs individual samples and actual-size light/dark/grayscale validation;
+#226 retains final review. Third-party example images are discussion references,
+never copied, traced or shipped, and the concept was generated without image inputs.
+
+Revisit when: actual-size playtests cannot distinguish a set, the art reads as
+childish or too close to an existing character, or #226 flags a design or provenance.
+
+## 2026-10-27 — Privacy stance: no analytics, no age data, no uploads (#189)
+
+**Decision (owner, from the 2026-10-26 legal-risk audit):** MenteViva carries none of the
+exposures below today, by design. Each line is a rule, so nobody reintroduces one by accident.
+
+- **No analytics, session replay or crash-reporting SDKs.** Zero third-party dependencies, and the
+  app makes no network calls (2026-10-26), so nothing leaves the device. Adding one would break the
+  privacy policy. Revisit when: a ticket proposes any SDK; it needs a new entry and a policy rewrite first.
+- **No accounts, no age gate, no age data.** The policy says we collect no age information and the
+  app is not directed at children. A gate would mean collecting what we promise not to.
+  Revisit when: a store or law requires an age signal; Apple's own age-rating API is the first place to look.
+- **No external fonts.** The app uses system fonts and `site/` loads only local CSS. Google Fonts
+  appear only in internal `docs/design/*.html` mockups; inline them if those are ever published.
+  Revisit when: a page under `site/` or a published mockup links any third-party host.
+- **No user-shared content.** Memory photos stay in private on-device storage and are never
+  uploaded, so no DMCA agent is needed. Revisit when: sharing between users is added (#11 family sharing).
+- **No marketing email.** Revisit when: a list is ever started; then an unsubscribe link and a
+  postal address go in every send.
+- **No price to show.** v1.0 is free with no in-app purchase (entry below), so renewal terms and
+  price copy are not needed. Revisit when: a price or subscription returns; then renewal terms go
+  next to the buy button, EN + ES.
+
+## 2026-10-27 — v1.0 is free; support stays outside the app (#228)
+
+**Decision (owner):** MenteViva ships **free** on the App Store, with no price and no in-app
+purchase. The project stays open (Apache-2.0) during the hackathon and with Muse. Anyone who wants
+to support it does so through a link **outside the app** only: the README and the support site.
+This replaces the one-time $12.99 lean (2026-09-20, Jev 003).
+
+- **Free + nothing to pay inside the app**: zero StoreKit code, no Paid Apps Agreement for v1.0,
+  and no App Review risk. A link inside the app to Ko-fi, PayPal or GitHub Sponsors is the risky
+  case: developers report rejections under guideline 3.1.1 even when the tip unlocks nothing.
+- **Never "donation"**: that word belongs to registered charities (guideline 3.2.2). The README
+  and site say "support MenteViva" or "leave a tip".
+- **A player never sees a payment prompt**: it fits the warm, no-pressure tone for an older
+  player on their own.
+- **Still needed**: the Apple Developer Program (#224) costs $99 a year for a free app too.
+  App Privacy stays "Data Not Collected"; the listing (#232) shows the price as free.
+- **Earlier entries stand**: the Apache-2.0 entry (2026-10-27) already lets anyone, the owner
+  included, sell builds later; this entry decides only how v1.0 is offered.
+
+Revisit when: support outside the app doesn't cover the yearly $99, or players ask for a way to
+tip inside the app. Then an in-app tip jar (a consumable in-app purchase, one Settings row, never
+during play) becomes a ticket; it needs the Paid Apps Agreement and StoreKit code.
+
 ## 2026-10-27 — The reference player is "an older family member"; no diagnosis in the repo
 
 **Decision (owner):** the docs no longer name the reference player's diagnosis or tie a health

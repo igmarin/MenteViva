@@ -23,10 +23,11 @@ speaks to the player and never pitches (Jev 009).
 
 ## Commercial intent
 
-The goal is to sell this to families like ours. A stranger must be able to
+The goal is to reach families like ours. A stranger must be able to
 install it with nobody explaining it: self-serve onboarding, in-app settings
 (language, sound, bigger text), privacy policy, support contact, EN + ES store
-assets, one-time $12.99 with Family Sharing (decided for beta, #21).
+assets. v1.0 is free, with support links only outside the app (decisions
+2026-10-27, #228; the earlier one-time $12.99 lean was #21).
 Publishing waits on the paid Developer Program (decisions 2026-09-20).
 
 **Marketing ceiling: "Fun mental exercise".** Games exercise memory and attention;

@@ -22,9 +22,9 @@ final class MemoryMatchLevelsTests: XCTestCase {
     }
 
     func testGivenLevelTenWhenFacesThenEveryThemeSuppliesTwelvePairs() {
-        for theme in MemoryMatchView.themes {
+        for theme in MemoryDeal.themes {
             XCTAssertGreaterThanOrEqual(Set(theme).count, 12)
-            XCTAssertEqual(MemoryMatchView.faces(photos: [], theme: theme, pairs: 12).count, 12)
+            XCTAssertEqual(MemoryDeal.faces(photos: [], theme: theme, pairs: 12).count, 12)
         }
     }
 

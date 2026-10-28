@@ -55,10 +55,22 @@ nonisolated enum PlanStore {
     /// Lives here because only `PlanStore` knows its keys.
     @discardableResult
     static func raiseByChoice(_ game: GameID, today: String, defaults: UserDefaults = .standard) -> Difficulty? {
-        var levels = storedDifficulty(defaults: defaults)
-        let current = levels[game] ?? Difficulty(level: 4)
+        let current = storedDifficulty(defaults: defaults)[game] ?? Difficulty(level: 4)
         guard current.level < Difficulty.range.upperBound else { return nil }
         let next = Difficulty(level: current.level + 1)
+        move(game, to: next, reason: .chosen, today: today, defaults: defaults)
+        return next
+    }
+
+    /// One level change made right now, outside the daily staircase (a chosen "Yes, let's try" or a
+    /// warm-up session, #213): stores the level, counts the staircase from today, and patches today's
+    /// saved plan in place so Home and the next open agree.
+    static func move(
+        _ game: GameID, to next: Difficulty, reason: LevelChange.Reason, today: String,
+        defaults: UserDefaults = .standard
+    ) {
+        var levels = storedDifficulty(defaults: defaults)
+        let current = levels[game] ?? Difficulty(level: 4)
         levels[game] = next
         save(levels: levels, defaults: defaults)
         var changed = lastDifficultyChange(defaults: defaults)
@@ -68,12 +80,25 @@ nonisolated enum PlanStore {
             var difficulty = cached.difficulty
             difficulty[game] = next
             var changes = cached.changes
-            changes[game] = LevelChange(previous: current, reason: .chosen)
+            changes[game] = LevelChange(previous: current, reason: reason)
             save(
                 plan: DailyPlan(dayStamp: today, games: cached.games, difficulty: difficulty, changes: changes),
                 defaults: defaults)
         }
-        return next
+    }
+
+    /// Replaces today's plan with the warm-up's games (#213), each at `level`, and counts the
+    /// staircase from today so earlier sessions don't weigh in. Other games keep their levels.
+    static func beginWarmUp(games: [GameID], at level: Difficulty, today: String, defaults: UserDefaults = .standard) {
+        var levels = storedDifficulty(defaults: defaults)
+        var changed = lastDifficultyChange(defaults: defaults)
+        for game in games {
+            levels[game] = level
+            changed[game] = today
+        }
+        save(levels: levels, defaults: defaults)
+        save(changes: changed, defaults: defaults)
+        save(plan: DailyPlan(dayStamp: today, games: games, difficulty: levels), defaults: defaults)
     }
 
     private static func save(plan: DailyPlan, defaults: UserDefaults) {

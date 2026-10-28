@@ -9,6 +9,7 @@ struct MyPlanView: View {
     /// The saved answers. Loaded once when the screen is made; this screen is the only writer
     /// while it is open.
     @State private var profile = ProfileStore.load()
+    @Environment(\.dismiss) private var dismiss
 
     var body: some View {
         ScrollView {
@@ -16,6 +17,7 @@ struct MyPlanView: View {
                 ForEach(OnboardingSteps.questions, id: \.rawValue) { question in
                     section(question)
                 }
+                warmUp
                 Text(AppLanguage.localized("myplan.note"))
                     .font(.footnote)
                     .foregroundStyle(.secondary)
@@ -45,6 +47,26 @@ struct MyPlanView: View {
                 .buttonStyle(.plain)
                 .accessibilityAddTraits(chosen ? [.isSelected] : [])
             }
+        }
+    }
+
+    /// The warm-up can always be started from here (#213), including by someone who was set up by
+    /// a family member and so was not offered it. Today's plan becomes the three games, so the
+    /// screen closes and Home shows them.
+    private var warmUp: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text(AppLanguage.localized("warmup.offer.title"))
+                .font(.title2.weight(.semibold))
+                .fixedSize(horizontal: false, vertical: true)
+                .accessibilityAddTraits(.isHeader)
+            Button {
+                WarmUpStore.start(profile: profile, today: PlanStore.dayStamp())
+                dismiss()
+            } label: {
+                ProfileAnswerTile(text: AppLanguage.localized("warmup.accept"), chosen: false)
+            }
+            .buttonStyle(.plain)
+            .accessibilityHint(AppLanguage.localized("warmup.accept.hint"))
         }
     }
 

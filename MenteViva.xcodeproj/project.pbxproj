@@ -11,16 +11,21 @@
 		82CA8D7C6E784B6200000014 /* GameCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86B5E610ECF1EC500000000E; };
 		3FF1DA3530DADEF500000016 /* GameHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87A1ECDA07DDDD0B00000010; };
 		4A60D6FD0D8845180000001C /* AnswerBeat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D692C5E9BB2335600000016; };
+		B645E9FD0A4B45280000001E /* CategoryDeal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92460BFA86F86A0600000018; };
 		2526D29DE5FE6C8300000025 /* CategoryFluencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 915FB304D5C7D9690000001F; };
 		1DA22A903C3C9B3500000021 /* CelebrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4174FC9AF3B1DBCB0000001B; };
+		B16AB042763F700800000020 /* ColorClashDeal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539B6DE05DDF57660000001A; };
 		B59E327BE0BD12A700000020 /* ColorClashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7571F11C435CE80D0000001A; };
 		20A285961D1E7F0B0000001D /* FitOrScroll.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81FBBB825DCFF1C100000017; };
 		D456BAA2EE44DD2900000022 /* LevelExplainLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80ED0207C93C607F0000001C; };
 		A120B5E94542D41F00000020 /* MathStreakView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B13B6166437470950000001A; };
 		934DA6B35D17C6F90000001D /* MemoryBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82D743B92F69A1AF00000017; };
+		2C26F128CAE066EF0000001C /* MemoryDeal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F600D269255E8500000016; };
 		18180C4157C1561D00000021 /* MemoryMatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 250E769752DD6A430000001B; };
 		3B89FA1FCE6129CF00000019 /* MissCue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86AF3B4C1D5F21E500000013; };
 		253F249A6FF746A300000025 /* NumberTrailQuestion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4D45FC480DA5090000001F; };
+		F2E513BC326D993F0000001D /* PictureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D76316028DAED7B500000017; };
+		17BB594169B12A7F0000001F /* QuickEyesDeal.swift in Sources */ = {isa = PBXBuildFile; fileRef = E685D4510ACEA17500000019; };
 		06316652C0C975F40000001F /* QuickEyesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D757F5352AE1A200000019; };
 		AD020DC30561DD5000000022 /* ReminiscenceDeck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A9D512184D7D07E0000001C; };
 		A87005C5B52DA39800000022 /* ReminiscenceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11EA4E85E31685D60000001C; };
@@ -59,6 +64,7 @@
 		9A0F9B11E98286F400000024 /* EverydayObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = D939A12670747AA20000001E; };
 		5BDF348CC430543800000023 /* FamilySettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D5B4260F3371760000001D; };
 		CDF4B3708A1458A800000028 /* FirstPlayGuideStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC77BCD3286198600000022; };
+		D04651F1B7BE937800000021 /* GamePictures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 403EDBB59A6CD1360000001B; };
 		EB1D5656AAE8FB090000001C /* HotPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66F53A1E32AAD85F00000016; };
 		B655A39EA9B5D68F00000023 /* LevelMigration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA5E65A5CDB56250000001D; };
 		2EAE227B2A482B2400000024 /* LevelOfferStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E124490D58C484320000001E; };
@@ -72,6 +78,7 @@
 		8C75A9CE4133529700000020 /* SoundPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B94116EB608F25D0000001A; };
 		AF37EB13F2EEFE670000001D /* TodayRun.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41FBA96AED75794D00000017; };
 		6E7766AC7993A7F70000001E /* ToneSynth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C9F9D8CE41D23D00000018; };
+		FE60E174F34AF1B50000001B /* WarmUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3409ED0E4B86E64B00000015; };
 		D9207C4B070633A000000022 /* WeeklySummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DCDF59CF4AC6AE0000001C; };
 		5C8E2594068C583000000015 /* SetUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA9A8EDB47F7F15E0000000F; };
 		F1CAEDFBEAB27E7A00000018 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881D5FFD680EE69800000012; };
@@ -81,7 +88,9 @@
 		F506C5A65F14390000000031 /* AppLanguageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE643EB3378B20E0000002B; };
 		4534EC198FDAD8AC00000034 /* CaptionSpeakerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD28529EBCF4FB0A0000002E; };
 		67F61994F2F1071500000034 /* CaptionStringsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDA8FA1BF6ABDB2B0000002E; };
+		68D5916C1521743B00000032 /* CategoryDealTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37487EBC4F766E910000002C; };
 		F08ED95C221EC29F00000039 /* CelebrationHeadlineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C55DCECC243D31500000033; };
+		6DF988A17F46565B00000034 /* ColorClashDealTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CA9280CB18F6B10000002E; };
 		9F9B2B4F803D01DB0000002E /* ContrastTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF326128D400FE3100000028; };
 		D251CDE1271D51A600000031 /* DailyPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A13B966464CCDD440000002B; };
 		30AC8D27570BF6EA00000031 /* DayGroupingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B2C1FA22781E7680000002B; };
@@ -91,9 +100,11 @@
 		68E9DA3C26CDDAAA00000034 /* FamilySettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E952D4EA684697A80000002E; };
 		D2CC4A8C508F31C900000034 /* FirstPlayGuideTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F44282B9FAD59F0000002E; };
 		6B2AC072C6B8EED40000002C /* GameIDTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60D8C63A3D78C8200000026; };
+		ECC3D25F0AB53DBA00000032 /* GamePicturesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B9467A2348279580000002C; };
 		1C320C298D4269F400000036 /* GameSessionStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE35901B6A0B75A200000030; };
 		EE07AD69390E5FDA00000032 /* LevelExplainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65152AEC3FEF3E780000002C; };
 		578160CE8C24557000000031 /* MemoryBoardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2EEF523201AB21E0000002B; };
+		6B009816AE0FE1DA00000030 /* MemoryDealTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D55FC27F498CD0780000002A; };
 		A34345BFC3478D0200000037 /* MemoryMatchLevelsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CECEA05CC9D6BF000000031; };
 		19A5511F2D9320B700000032 /* MemoryPhotosTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982802FDA721007D0000002C; };
 		4E437CEEEEB1E47600000039 /* NumberTrailQuestionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B15A3FA40FC93B400000033; };
@@ -103,6 +114,7 @@
 		2E81FDB867FC926B00000038 /* PlayerStateSummaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9231182AE986A100000032; };
 		56E513B81D42ABF300000033 /* PluralStringsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478EE86492C1F2390000002D; };
 		B881D90E62998BE900000033 /* ProgressRatesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7420A39CEC074ABF0000002D; };
+		9C33891BEB57002A00000033 /* QuickEyesDealTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2EDDDF03A4E9280000002D; };
 		8014E3CE95A477CB00000036 /* ReminiscenceDeckTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AC3CFEA0009500100000030; };
 		F54A8747C07E0F3800000039 /* ReminiscenceSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE180630A87047600000033; };
 		F3781E2CF00E20FA00000033 /* RoundProgressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690FA2BE3DFB9D180000002D; };
@@ -115,6 +127,7 @@
 		854BEF814FB113CF0000002E /* TodayRunTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92F4CC37A2FE5BE500000028; };
 		BF3BF8B08BEED1310000002F /* ToneSynthTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B995186993817700000029; };
 		54286FE8DD94251F00000032 /* UpOrDownDealTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A88D996E3D1849950000002C; };
+		857E81F94A1E2E790000002C /* WarmUpTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1AB509F1BF452F00000026; };
 		0EEED9F3112B457400000033 /* WeeklySummaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2CB27B32AF72D220000002D; };
 		D45AEF3BDEB8E3E30000003A /* WhyTheseGamesStringsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F6AD437F92C1C900000034; };
 
@@ -124,16 +137,21 @@
 		86B5E610ECF1EC500000000E /* GameCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCard.swift; sourceTree = "<group>"; };
 		87A1ECDA07DDDD0B00000010 /* GameHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameHeader.swift; sourceTree = "<group>"; };
 		8D692C5E9BB2335600000016 /* AnswerBeat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/AnswerBeat.swift; sourceTree = "<group>"; };
+		92460BFA86F86A0600000018 /* CategoryDeal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/CategoryDeal.swift; sourceTree = "<group>"; };
 		915FB304D5C7D9690000001F /* CategoryFluencyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/CategoryFluencyView.swift; sourceTree = "<group>"; };
 		4174FC9AF3B1DBCB0000001B /* CelebrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/CelebrationView.swift; sourceTree = "<group>"; };
+		539B6DE05DDF57660000001A /* ColorClashDeal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/ColorClashDeal.swift; sourceTree = "<group>"; };
 		7571F11C435CE80D0000001A /* ColorClashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/ColorClashView.swift; sourceTree = "<group>"; };
 		81FBBB825DCFF1C100000017 /* FitOrScroll.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/FitOrScroll.swift; sourceTree = "<group>"; };
 		80ED0207C93C607F0000001C /* LevelExplainLine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/LevelExplainLine.swift; sourceTree = "<group>"; };
 		B13B6166437470950000001A /* MathStreakView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/MathStreakView.swift; sourceTree = "<group>"; };
 		82D743B92F69A1AF00000017 /* MemoryBoard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/MemoryBoard.swift; sourceTree = "<group>"; };
+		88F600D269255E8500000016 /* MemoryDeal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/MemoryDeal.swift; sourceTree = "<group>"; };
 		250E769752DD6A430000001B /* MemoryMatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/MemoryMatchView.swift; sourceTree = "<group>"; };
 		86AF3B4C1D5F21E500000013 /* MissCue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/MissCue.swift; sourceTree = "<group>"; };
 		1C4D45FC480DA5090000001F /* NumberTrailQuestion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/NumberTrailQuestion.swift; sourceTree = "<group>"; };
+		D76316028DAED7B500000017 /* PictureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/PictureView.swift; sourceTree = "<group>"; };
+		E685D4510ACEA17500000019 /* QuickEyesDeal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/QuickEyesDeal.swift; sourceTree = "<group>"; };
 		B4D757F5352AE1A200000019 /* QuickEyesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/QuickEyesView.swift; sourceTree = "<group>"; };
 		7A9D512184D7D07E0000001C /* ReminiscenceDeck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/ReminiscenceDeck.swift; sourceTree = "<group>"; };
 		11EA4E85E31685D60000001C /* ReminiscenceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/ReminiscenceView.swift; sourceTree = "<group>"; };
@@ -172,6 +190,7 @@
 		D939A12670747AA20000001E /* EverydayObjects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/EverydayObjects.swift; sourceTree = "<group>"; };
 		74D5B4260F3371760000001D /* FamilySettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/FamilySettings.swift; sourceTree = "<group>"; };
 		7BC77BCD3286198600000022 /* FirstPlayGuideStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/FirstPlayGuideStore.swift; sourceTree = "<group>"; };
+		403EDBB59A6CD1360000001B /* GamePictures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/GamePictures.swift; sourceTree = "<group>"; };
 		66F53A1E32AAD85F00000016 /* HotPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/HotPath.swift; sourceTree = "<group>"; };
 		0EA5E65A5CDB56250000001D /* LevelMigration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/LevelMigration.swift; sourceTree = "<group>"; };
 		E124490D58C484320000001E /* LevelOfferStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/LevelOfferStore.swift; sourceTree = "<group>"; };
@@ -185,6 +204,7 @@
 		6B94116EB608F25D0000001A /* SoundPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/SoundPlayer.swift; sourceTree = "<group>"; };
 		41FBA96AED75794D00000017 /* TodayRun.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/TodayRun.swift; sourceTree = "<group>"; };
 		50C9F9D8CE41D23D00000018 /* ToneSynth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/ToneSynth.swift; sourceTree = "<group>"; };
+		3409ED0E4B86E64B00000015 /* WarmUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/WarmUp.swift; sourceTree = "<group>"; };
 		E5DCDF59CF4AC6AE0000001C /* WeeklySummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/WeeklySummary.swift; sourceTree = "<group>"; };
 		CA9A8EDB47F7F15E0000000F /* SetUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetUpView.swift; sourceTree = "<group>"; };
 		881D5FFD680EE69800000012 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -194,7 +214,9 @@
 		6BE643EB3378B20E0000002B /* AppLanguageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/AppLanguageTests.swift; sourceTree = SOURCE_ROOT; };
 		DD28529EBCF4FB0A0000002E /* CaptionSpeakerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/CaptionSpeakerTests.swift; sourceTree = SOURCE_ROOT; };
 		DDA8FA1BF6ABDB2B0000002E /* CaptionStringsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/CaptionStringsTests.swift; sourceTree = SOURCE_ROOT; };
+		37487EBC4F766E910000002C /* CategoryDealTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/CategoryDealTests.swift; sourceTree = SOURCE_ROOT; };
 		4C55DCECC243D31500000033 /* CelebrationHeadlineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/CelebrationHeadlineTests.swift; sourceTree = SOURCE_ROOT; };
+		97CA9280CB18F6B10000002E /* ColorClashDealTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/ColorClashDealTests.swift; sourceTree = SOURCE_ROOT; };
 		FF326128D400FE3100000028 /* ContrastTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/ContrastTests.swift; sourceTree = SOURCE_ROOT; };
 		A13B966464CCDD440000002B /* DailyPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/DailyPolicyTests.swift; sourceTree = SOURCE_ROOT; };
 		8B2C1FA22781E7680000002B /* DayGroupingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/DayGroupingTests.swift; sourceTree = SOURCE_ROOT; };
@@ -204,9 +226,11 @@
 		E952D4EA684697A80000002E /* FamilySettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/FamilySettingsTests.swift; sourceTree = SOURCE_ROOT; };
 		36F44282B9FAD59F0000002E /* FirstPlayGuideTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/FirstPlayGuideTests.swift; sourceTree = SOURCE_ROOT; };
 		A60D8C63A3D78C8200000026 /* GameIDTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/GameIDTests.swift; sourceTree = SOURCE_ROOT; };
+		5B9467A2348279580000002C /* GamePicturesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/GamePicturesTests.swift; sourceTree = SOURCE_ROOT; };
 		DE35901B6A0B75A200000030 /* GameSessionStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/GameSessionStoreTests.swift; sourceTree = SOURCE_ROOT; };
 		65152AEC3FEF3E780000002C /* LevelExplainTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/LevelExplainTests.swift; sourceTree = SOURCE_ROOT; };
 		A2EEF523201AB21E0000002B /* MemoryBoardTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/MemoryBoardTests.swift; sourceTree = SOURCE_ROOT; };
+		D55FC27F498CD0780000002A /* MemoryDealTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/MemoryDealTests.swift; sourceTree = SOURCE_ROOT; };
 		5CECEA05CC9D6BF000000031 /* MemoryMatchLevelsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/MemoryMatchLevelsTests.swift; sourceTree = SOURCE_ROOT; };
 		982802FDA721007D0000002C /* MemoryPhotosTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/MemoryPhotosTests.swift; sourceTree = SOURCE_ROOT; };
 		7B15A3FA40FC93B400000033 /* NumberTrailQuestionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/NumberTrailQuestionTests.swift; sourceTree = SOURCE_ROOT; };
@@ -216,6 +240,7 @@
 		7D9231182AE986A100000032 /* PlayerStateSummaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/PlayerStateSummaryTests.swift; sourceTree = SOURCE_ROOT; };
 		478EE86492C1F2390000002D /* PluralStringsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/PluralStringsTests.swift; sourceTree = SOURCE_ROOT; };
 		7420A39CEC074ABF0000002D /* ProgressRatesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/ProgressRatesTests.swift; sourceTree = SOURCE_ROOT; };
+		EA2EDDDF03A4E9280000002D /* QuickEyesDealTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/QuickEyesDealTests.swift; sourceTree = SOURCE_ROOT; };
 		6AC3CFEA0009500100000030 /* ReminiscenceDeckTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/ReminiscenceDeckTests.swift; sourceTree = SOURCE_ROOT; };
 		4BE180630A87047600000033 /* ReminiscenceSessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/ReminiscenceSessionTests.swift; sourceTree = SOURCE_ROOT; };
 		690FA2BE3DFB9D180000002D /* RoundProgressTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/RoundProgressTests.swift; sourceTree = SOURCE_ROOT; };
@@ -228,6 +253,7 @@
 		92F4CC37A2FE5BE500000028 /* TodayRunTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/TodayRunTests.swift; sourceTree = SOURCE_ROOT; };
 		D4B995186993817700000029 /* ToneSynthTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/ToneSynthTests.swift; sourceTree = SOURCE_ROOT; };
 		A88D996E3D1849950000002C /* UpOrDownDealTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/UpOrDownDealTests.swift; sourceTree = SOURCE_ROOT; };
+		2E1AB509F1BF452F00000026 /* WarmUpTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/WarmUpTests.swift; sourceTree = SOURCE_ROOT; };
 		A2CB27B32AF72D220000002D /* WeeklySummaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/WeeklySummaryTests.swift; sourceTree = SOURCE_ROOT; };
 		31F6AD437F92C1C900000034 /* WhyTheseGamesStringsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/WhyTheseGamesStringsTests.swift; sourceTree = SOURCE_ROOT; };
 		5D90A9FDEC5CFCA50000000D /* MenteViva.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MenteViva.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -263,16 +289,21 @@
 				86B5E610ECF1EC500000000E /* GameCard.swift */,
 				87A1ECDA07DDDD0B00000010 /* GameHeader.swift */,
 				8D692C5E9BB2335600000016 /* AnswerBeat.swift */,
+				92460BFA86F86A0600000018 /* CategoryDeal.swift */,
 				915FB304D5C7D9690000001F /* CategoryFluencyView.swift */,
 				4174FC9AF3B1DBCB0000001B /* CelebrationView.swift */,
+				539B6DE05DDF57660000001A /* ColorClashDeal.swift */,
 				7571F11C435CE80D0000001A /* ColorClashView.swift */,
 				81FBBB825DCFF1C100000017 /* FitOrScroll.swift */,
 				80ED0207C93C607F0000001C /* LevelExplainLine.swift */,
 				B13B6166437470950000001A /* MathStreakView.swift */,
 				82D743B92F69A1AF00000017 /* MemoryBoard.swift */,
+				88F600D269255E8500000016 /* MemoryDeal.swift */,
 				250E769752DD6A430000001B /* MemoryMatchView.swift */,
 				86AF3B4C1D5F21E500000013 /* MissCue.swift */,
 				1C4D45FC480DA5090000001F /* NumberTrailQuestion.swift */,
+				D76316028DAED7B500000017 /* PictureView.swift */,
+				E685D4510ACEA17500000019 /* QuickEyesDeal.swift */,
 				B4D757F5352AE1A200000019 /* QuickEyesView.swift */,
 				7A9D512184D7D07E0000001C /* ReminiscenceDeck.swift */,
 				11EA4E85E31685D60000001C /* ReminiscenceView.swift */,
@@ -311,6 +342,7 @@
 				D939A12670747AA20000001E /* EverydayObjects.swift */,
 				74D5B4260F3371760000001D /* FamilySettings.swift */,
 				7BC77BCD3286198600000022 /* FirstPlayGuideStore.swift */,
+				403EDBB59A6CD1360000001B /* GamePictures.swift */,
 				66F53A1E32AAD85F00000016 /* HotPath.swift */,
 				0EA5E65A5CDB56250000001D /* LevelMigration.swift */,
 				E124490D58C484320000001E /* LevelOfferStore.swift */,
@@ -324,6 +356,7 @@
 				6B94116EB608F25D0000001A /* SoundPlayer.swift */,
 				41FBA96AED75794D00000017 /* TodayRun.swift */,
 				50C9F9D8CE41D23D00000018 /* ToneSynth.swift */,
+				3409ED0E4B86E64B00000015 /* WarmUp.swift */,
 				E5DCDF59CF4AC6AE0000001C /* WeeklySummary.swift */,
 				CA9A8EDB47F7F15E0000000F /* SetUpView.swift */,
 				881D5FFD680EE69800000012 /* SettingsView.swift */,
@@ -344,7 +377,9 @@
 				6BE643EB3378B20E0000002B /* AppLanguageTests.swift */,
 				DD28529EBCF4FB0A0000002E /* CaptionSpeakerTests.swift */,
 				DDA8FA1BF6ABDB2B0000002E /* CaptionStringsTests.swift */,
+				37487EBC4F766E910000002C /* CategoryDealTests.swift */,
 				4C55DCECC243D31500000033 /* CelebrationHeadlineTests.swift */,
+				97CA9280CB18F6B10000002E /* ColorClashDealTests.swift */,
 				FF326128D400FE3100000028 /* ContrastTests.swift */,
 				A13B966464CCDD440000002B /* DailyPolicyTests.swift */,
 				8B2C1FA22781E7680000002B /* DayGroupingTests.swift */,
@@ -354,9 +389,11 @@
 				E952D4EA684697A80000002E /* FamilySettingsTests.swift */,
 				36F44282B9FAD59F0000002E /* FirstPlayGuideTests.swift */,
 				A60D8C63A3D78C8200000026 /* GameIDTests.swift */,
+				5B9467A2348279580000002C /* GamePicturesTests.swift */,
 				DE35901B6A0B75A200000030 /* GameSessionStoreTests.swift */,
 				65152AEC3FEF3E780000002C /* LevelExplainTests.swift */,
 				A2EEF523201AB21E0000002B /* MemoryBoardTests.swift */,
+				D55FC27F498CD0780000002A /* MemoryDealTests.swift */,
 				5CECEA05CC9D6BF000000031 /* MemoryMatchLevelsTests.swift */,
 				982802FDA721007D0000002C /* MemoryPhotosTests.swift */,
 				7B15A3FA40FC93B400000033 /* NumberTrailQuestionTests.swift */,
@@ -366,6 +403,7 @@
 				7D9231182AE986A100000032 /* PlayerStateSummaryTests.swift */,
 				478EE86492C1F2390000002D /* PluralStringsTests.swift */,
 				7420A39CEC074ABF0000002D /* ProgressRatesTests.swift */,
+				EA2EDDDF03A4E9280000002D /* QuickEyesDealTests.swift */,
 				6AC3CFEA0009500100000030 /* ReminiscenceDeckTests.swift */,
 				4BE180630A87047600000033 /* ReminiscenceSessionTests.swift */,
 				690FA2BE3DFB9D180000002D /* RoundProgressTests.swift */,
@@ -378,6 +416,7 @@
 				92F4CC37A2FE5BE500000028 /* TodayRunTests.swift */,
 				D4B995186993817700000029 /* ToneSynthTests.swift */,
 				A88D996E3D1849950000002C /* UpOrDownDealTests.swift */,
+				2E1AB509F1BF452F00000026 /* WarmUpTests.swift */,
 				A2CB27B32AF72D220000002D /* WeeklySummaryTests.swift */,
 				31F6AD437F92C1C900000034 /* WhyTheseGamesStringsTests.swift */,
 			);
@@ -452,16 +491,21 @@
 				82CA8D7C6E784B6200000014 /* GameCard.swift in Sources */,
 				3FF1DA3530DADEF500000016 /* GameHeader.swift in Sources */,
 				4A60D6FD0D8845180000001C /* AnswerBeat.swift in Sources */,
+				B645E9FD0A4B45280000001E /* CategoryDeal.swift in Sources */,
 				2526D29DE5FE6C8300000025 /* CategoryFluencyView.swift in Sources */,
 				1DA22A903C3C9B3500000021 /* CelebrationView.swift in Sources */,
+				B16AB042763F700800000020 /* ColorClashDeal.swift in Sources */,
 				B59E327BE0BD12A700000020 /* ColorClashView.swift in Sources */,
 				20A285961D1E7F0B0000001D /* FitOrScroll.swift in Sources */,
 				D456BAA2EE44DD2900000022 /* LevelExplainLine.swift in Sources */,
 				A120B5E94542D41F00000020 /* MathStreakView.swift in Sources */,
 				934DA6B35D17C6F90000001D /* MemoryBoard.swift in Sources */,
+				2C26F128CAE066EF0000001C /* MemoryDeal.swift in Sources */,
 				18180C4157C1561D00000021 /* MemoryMatchView.swift in Sources */,
 				3B89FA1FCE6129CF00000019 /* MissCue.swift in Sources */,
 				253F249A6FF746A300000025 /* NumberTrailQuestion.swift in Sources */,
+				F2E513BC326D993F0000001D /* PictureView.swift in Sources */,
+				17BB594169B12A7F0000001F /* QuickEyesDeal.swift in Sources */,
 				06316652C0C975F40000001F /* QuickEyesView.swift in Sources */,
 				AD020DC30561DD5000000022 /* ReminiscenceDeck.swift in Sources */,
 				A87005C5B52DA39800000022 /* ReminiscenceView.swift in Sources */,
@@ -500,6 +544,7 @@
 				9A0F9B11E98286F400000024 /* EverydayObjects.swift in Sources */,
 				5BDF348CC430543800000023 /* FamilySettings.swift in Sources */,
 				CDF4B3708A1458A800000028 /* FirstPlayGuideStore.swift in Sources */,
+				D04651F1B7BE937800000021 /* GamePictures.swift in Sources */,
 				EB1D5656AAE8FB090000001C /* HotPath.swift in Sources */,
 				B655A39EA9B5D68F00000023 /* LevelMigration.swift in Sources */,
 				2EAE227B2A482B2400000024 /* LevelOfferStore.swift in Sources */,
@@ -513,6 +558,7 @@
 				8C75A9CE4133529700000020 /* SoundPlayer.swift in Sources */,
 				AF37EB13F2EEFE670000001D /* TodayRun.swift in Sources */,
 				6E7766AC7993A7F70000001E /* ToneSynth.swift in Sources */,
+				FE60E174F34AF1B50000001B /* WarmUp.swift in Sources */,
 				D9207C4B070633A000000022 /* WeeklySummary.swift in Sources */,
 				5C8E2594068C583000000015 /* SetUpView.swift in Sources */,
 				F1CAEDFBEAB27E7A00000018 /* SettingsView.swift in Sources */,
@@ -530,7 +576,9 @@
 				F506C5A65F14390000000031 /* AppLanguageTests.swift in Sources */,
 				4534EC198FDAD8AC00000034 /* CaptionSpeakerTests.swift in Sources */,
 				67F61994F2F1071500000034 /* CaptionStringsTests.swift in Sources */,
+				68D5916C1521743B00000032 /* CategoryDealTests.swift in Sources */,
 				F08ED95C221EC29F00000039 /* CelebrationHeadlineTests.swift in Sources */,
+				6DF988A17F46565B00000034 /* ColorClashDealTests.swift in Sources */,
 				9F9B2B4F803D01DB0000002E /* ContrastTests.swift in Sources */,
 				D251CDE1271D51A600000031 /* DailyPolicyTests.swift in Sources */,
 				30AC8D27570BF6EA00000031 /* DayGroupingTests.swift in Sources */,
@@ -540,9 +588,11 @@
 				68E9DA3C26CDDAAA00000034 /* FamilySettingsTests.swift in Sources */,
 				D2CC4A8C508F31C900000034 /* FirstPlayGuideTests.swift in Sources */,
 				6B2AC072C6B8EED40000002C /* GameIDTests.swift in Sources */,
+				ECC3D25F0AB53DBA00000032 /* GamePicturesTests.swift in Sources */,
 				1C320C298D4269F400000036 /* GameSessionStoreTests.swift in Sources */,
 				EE07AD69390E5FDA00000032 /* LevelExplainTests.swift in Sources */,
 				578160CE8C24557000000031 /* MemoryBoardTests.swift in Sources */,
+				6B009816AE0FE1DA00000030 /* MemoryDealTests.swift in Sources */,
 				A34345BFC3478D0200000037 /* MemoryMatchLevelsTests.swift in Sources */,
 				19A5511F2D9320B700000032 /* MemoryPhotosTests.swift in Sources */,
 				4E437CEEEEB1E47600000039 /* NumberTrailQuestionTests.swift in Sources */,
@@ -552,6 +602,7 @@
 				2E81FDB867FC926B00000038 /* PlayerStateSummaryTests.swift in Sources */,
 				56E513B81D42ABF300000033 /* PluralStringsTests.swift in Sources */,
 				B881D90E62998BE900000033 /* ProgressRatesTests.swift in Sources */,
+				9C33891BEB57002A00000033 /* QuickEyesDealTests.swift in Sources */,
 				8014E3CE95A477CB00000036 /* ReminiscenceDeckTests.swift in Sources */,
 				F54A8747C07E0F3800000039 /* ReminiscenceSessionTests.swift in Sources */,
 				F3781E2CF00E20FA00000033 /* RoundProgressTests.swift in Sources */,
@@ -564,6 +615,7 @@
 				854BEF814FB113CF0000002E /* TodayRunTests.swift in Sources */,
 				BF3BF8B08BEED1310000002F /* ToneSynthTests.swift in Sources */,
 				54286FE8DD94251F00000032 /* UpOrDownDealTests.swift in Sources */,
+				857E81F94A1E2E790000002C /* WarmUpTests.swift in Sources */,
 				0EEED9F3112B457400000033 /* WeeklySummaryTests.swift in Sources */,
 				D45AEF3BDEB8E3E30000003A /* WhyTheseGamesStringsTests.swift in Sources */,
 			);

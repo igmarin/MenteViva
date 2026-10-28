@@ -1,8 +1,8 @@
-# Why these games — words for review (#210)
+# Why these games (#210)
 
-Draft copy for the "Why these games" section, EN and ES side by side. **Not wired to any screen yet:**
-the owner approves the text in the issue first, then the screen ticket starts. Keys are ready for
-`Localizable.xcstrings` (`why.*`, EN + ES in the same commit, conventions §3).
+The copy for the "Why these games" section, EN and ES side by side. **Approved by the owner on
+2026-10-27** (#210); the Settings screen shows it (#214). Any change to these lines goes through the
+owner again. Keys live in `Localizable.xcstrings` (`why.*`, EN + ES in the same commit, conventions §3).
 
 Rules this text follows (`research-2026-09.md` §1, `statistics-rationale.md` §4): a game *exercises*,
 it never promises; no percentages; no score or "age" of any kind; nothing about disease. Each part is

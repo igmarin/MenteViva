@@ -81,13 +81,13 @@ final class DifficultyMappingTests: XCTestCase {
 
     func testGivenDifficultiesWhenStroopMatchingChanceThenEasyMostHardNone() {
         XCTAssertEqual(
-            [Difficulty(level: 2), Difficulty(level: 4), Difficulty(level: 6)].map(ColorClashView.matchingChance),
+            [Difficulty(level: 2), Difficulty(level: 4), Difficulty(level: 6)].map(ColorClashDeal.matchingChance),
             [0.7, 0.25, 0])
     }
 
     func testGivenDifficultiesWhenDecoysThenEasyHasFewestAndMediumIsOriginal() {
         XCTAssertEqual(
-            [Difficulty(level: 2), Difficulty(level: 4), Difficulty(level: 6)].map(CategoryFluencyView.decoyCount),
+            [Difficulty(level: 2), Difficulty(level: 4), Difficulty(level: 6)].map(CategoryDeal.decoyCount),
             [3, 5, 7])
     }
 

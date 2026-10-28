@@ -30,7 +30,9 @@ struct OnboardingView: View {
 
     var body: some View {
         VStack(spacing: 24) {
-            if let question {
+            if step > OnboardingSteps.stepCount {
+                warmUpOffer
+            } else if let question {
                 questionStep(question)
             } else {
                 welcome
@@ -233,6 +235,54 @@ struct OnboardingView: View {
         }
     }
 
+    // MARK: After the questions - the warm-up offer (#213)
+
+    /// Offered once, after the last question, and only to someone playing for themselves. Two
+    /// big buttons and nothing else: no score is promised and none is shown afterwards.
+    private var warmUpOffer: some View {
+        VStack(spacing: 16) {
+            Spacer(minLength: 0)
+
+            Text(AppLanguage.localized("warmup.offer.title"))
+                .font(.title2.weight(.semibold))
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
+                .accessibilityAddTraits(.isHeader)
+
+            Button {
+                WarmUpStore.start(profile: profile, today: PlanStore.dayStamp())
+                hasSeenOnboarding = true
+            } label: {
+                Text(AppLanguage.localized("warmup.accept"))
+                    .font(.title2.weight(.semibold))
+                    .frame(maxWidth: .infinity, minHeight: 100)
+                    .foregroundStyle(Color(.systemBackground))
+                    .background(Color.brand, in: .rect(cornerRadius: 20))
+            }
+            .buttonStyle(.plain)
+            .accessibilityHint(AppLanguage.localized("warmup.accept.hint"))
+
+            Button {
+                hasSeenOnboarding = true
+            } label: {
+                Text(AppLanguage.localized("warmup.notnow"))
+                    .font(.title2)
+            }
+            .buttonStyle(AnswerTileStyle(strength: 0.10))
+
+            Spacer(minLength: 0)
+
+            Button {
+                back()
+            } label: {
+                Text(AppLanguage.localized("onboarding.back"))
+                    .font(.title2)
+            }
+            .buttonStyle(AnswerTileStyle(strength: 0.10))
+            .accessibilityHint(AppLanguage.localized("onboarding.back.hint"))
+        }
+    }
+
     // MARK: Answers
 
     /// Answers save as they are given, so a flow left half-way keeps what was answered. A
@@ -243,14 +293,14 @@ struct OnboardingView: View {
         if !question.allowsMultiple { next() }
     }
 
-    /// Forward: the next question, or Home once the last one is done. Skip calls this too,
-    /// leaving the profile exactly as it is.
+    /// Forward: the next question, then the warm-up offer when it applies (#213), then Home.
+    /// Skip calls this too, leaving the profile exactly as it is.
     private func next() {
-        guard step < OnboardingSteps.stepCount else {
+        if step < OnboardingSteps.stepCount || (step == OnboardingSteps.stepCount && WarmUp.isOffered(to: profile)) {
+            step += 1
+        } else {
             hasSeenOnboarding = true
-            return
         }
-        step += 1
     }
 
     /// Back: the previous question, or the welcome screen.

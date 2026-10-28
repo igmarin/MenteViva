@@ -53,6 +53,7 @@ run "lint" xcrun swift-format lint --strict -r MenteViva MenteVivaTests tools
 run "claims" ./tools/check_claims.sh
 run "signposts vs docs" ./tools/check_signposts.sh
 run "project file" ./tools/check_project_files.sh
+run "site placeholders" sh -c './tools/build_site.sh ci-check@example.com && rm -rf site-out'
 
 udid="$(simulator)"
 if [ -n "$udid" ]; then
