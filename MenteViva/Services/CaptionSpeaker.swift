@@ -24,31 +24,20 @@ enum CaptionSpeaker {
 
     private static let synthesizer = AVSpeechSynthesizer()
     private static let sessionEnder = SessionEnder()
-    /// One serial queue, so activate and deactivate run in the order they were asked.
-    nonisolated static let sessionQueue = DispatchQueue(label: "CaptionSpeaker.session", qos: .userInitiated)
-
-    /// True while a name is being read, so other audio code leaves the session alone.
-    static var isSpeaking: Bool { synthesizer.isSpeaking }
+    /// The latest name asked for; a name set up after a newer one (or a stop) never plays.
+    private static var requested: AVSpeechUtterance?
 
     /// Gives other audio its volume back (ducking ends when the session deactivates)
-    /// once the voice has finished or been cut off. Skipped when a newer utterance
-    /// is already speaking, so replacing one name with another is never cut short.
+    /// once the voice has finished or been cut off. `AudioSession` skips it when a
+    /// newer name already owns the session, so replacing one name is never cut short.
     /// `nonisolated`: AVFoundation calls the delegate off the main thread.
     nonisolated private final class SessionEnder: NSObject, AVSpeechSynthesizerDelegate {
         func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
-            end(synthesizer)
+            AudioSession.endSpeech(ObjectIdentifier(utterance))
         }
 
         func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didCancel utterance: AVSpeechUtterance) {
-            end(synthesizer)
-        }
-
-        private func end(_ synthesizer: AVSpeechSynthesizer) {
-            guard !synthesizer.isSpeaking else { return }
-            // Off the main thread: the call can block (the async API needs iOS 27).
-            CaptionSpeaker.sessionQueue.async {
-                try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
-            }
+            AudioSession.endSpeech(ObjectIdentifier(utterance))
         }
     }
 
@@ -60,21 +49,28 @@ enum CaptionSpeaker {
 
     /// Cuts the voice off, so a name never carries over onto the next photo.
     static func stop() {
+        requested = nil
         synthesizer.stopSpeaking(at: .immediate)
     }
 
+    /// Speaks only once the session is .playback, so the first name is never
+    /// muted by the silent switch.
     static func speak(_ text: String) {
         synthesizer.stopSpeaking(at: .immediate)
-        CaptionSpeaker.sessionQueue.async {
-            try? configureSession()
-            try? AVAudioSession.sharedInstance().setActive(true)
-        }
         let utterance = AVSpeechUtterance(string: text)
         // A language with no installed voice still speaks, in English, not silently.
         utterance.voice =
             AVSpeechSynthesisVoice(language: voiceLanguage(for: AppLanguage.selected()))
             ?? AVSpeechSynthesisVoice(language: "en-US")
         synthesizer.delegate = sessionEnder
-        synthesizer.speak(utterance)
+        requested = utterance
+        let id = ObjectIdentifier(utterance)
+        AudioSession.beginSpeech(id) {
+            guard requested === utterance else {
+                AudioSession.endSpeech(id)
+                return
+            }
+            synthesizer.speak(utterance)
+        }
     }
 }

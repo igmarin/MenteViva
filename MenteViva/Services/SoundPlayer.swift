@@ -41,8 +41,9 @@ enum SoundPlayer {
     /// The shared UserDefaults key used by Settings and feedback playback.
     static let enabledKey = "soundEnabled"
 
-    private static var engine: AVAudioEngine?
-    private static var playerNode: AVAudioPlayerNode?
+    /// Used only on `AudioSession`'s queue.
+    nonisolated(unsafe) private static var engine: AVAudioEngine?
+    nonisolated(unsafe) private static var playerNode: AVAudioPlayerNode?
 
     /// Whether sound and haptics are currently allowed.
     ///
@@ -59,48 +60,36 @@ enum SoundPlayer {
     ///
     /// - Parameter event: The moment whose tone to play.
     static func play(_ event: Feedback.Event) {
-        guard isEnabled else { return }
-        configureSession()
-
-        if engine == nil {
-            let e = AVAudioEngine()
-            engine = e
-        }
-        guard let engine else { return }
-
-        guard let format = AVAudioFormat(standardFormatWithSampleRate: ToneSynth.sampleRate, channels: 1),
+        guard isEnabled,
+            let format = AVAudioFormat(standardFormatWithSampleRate: ToneSynth.sampleRate, channels: 1),
             let buffer = cachedBuffer(for: event, format: format)
         else { return }
 
-        if playerNode == nil {
-            let player = AVAudioPlayerNode()
-            engine.attach(player)
-            engine.connect(player, to: engine.mainMixerNode, format: format)
-            playerNode = player
-        }
-        guard let playerNode else { return }
+        // On the session queue: the category is set before the engine starts,
+        // and starting it (which can block) stays off the main thread.
+        AudioSession.playTone {
+            if engine == nil {
+                engine = AVAudioEngine()
+            }
+            guard let engine else { return }
 
-        if !engine.isRunning {
-            engine.prepare()
-            try? engine.start()
-        }
+            if playerNode == nil {
+                let player = AVAudioPlayerNode()
+                engine.attach(player)
+                engine.connect(player, to: engine.mainMixerNode, format: format)
+                playerNode = player
+            }
+            guard let playerNode else { return }
 
-        // Reuse the node. The .interrupts option stops the previous short tone
-        // without requiring graph mutation from the audio render thread.
-        playerNode.scheduleBuffer(buffer, at: nil, options: .interrupts)
-        playerNode.play()
-    }
+            if !engine.isRunning {
+                engine.prepare()
+                try? engine.start()
+            }
 
-    /// .ambient respects the silent switch and mixes with other audio. Set only
-    /// when it isn't already, and never while a name is being spoken: that
-    /// session is .playback, and flipping it mid-utterance would drop the voice
-    /// below the silent switch and end its ducking.
-    private static func configureSession() {
-        let session = AVAudioSession.sharedInstance()
-        guard session.category != .ambient, !CaptionSpeaker.isSpeaking else { return }
-        // Off the main thread: changing the category of an active session can block.
-        CaptionSpeaker.sessionQueue.async {
-            try? session.setCategory(.ambient, options: [.mixWithOthers])
+            // Reuse the node. The .interrupts option stops the previous short tone
+            // without requiring graph mutation from the audio render thread.
+            playerNode.scheduleBuffer(buffer, at: nil, options: .interrupts)
+            playerNode.play()
         }
     }
 
@@ -125,5 +114,49 @@ enum SoundPlayer {
         buffer.frameLength = totalFrames
         for (i, sample) in samples.enumerated() { channel[i] = sample }
         return buffer
+    }
+}
+
+/// The one owner of the shared AVAudioSession, for spoken names and game tones
+/// alike. Every session call runs on one serial queue, so a check ("is a name
+/// being spoken?") and the change it guards run together and in order, and
+/// none of them blocks the main thread (the async session API needs iOS 27).
+nonisolated enum AudioSession {
+    private static let queue = DispatchQueue(label: "AudioSession", qos: .userInitiated)
+    /// The utterance that owns the session (.playback), if any. Used only on `queue`.
+    nonisolated(unsafe) private static var speech: ObjectIdentifier?
+
+    /// Hands the session to `utterance` (.playback, active), then runs `start` on
+    /// the main thread, so speech never begins under the old category.
+    static func beginSpeech(_ utterance: ObjectIdentifier, then start: @escaping @MainActor () -> Void) {
+        queue.async {
+            speech = utterance
+            try? CaptionSpeaker.configureSession()
+            try? AVAudioSession.sharedInstance().setActive(true)
+            DispatchQueue.main.async { start() }
+        }
+    }
+
+    /// Gives the session back once `utterance` is done, unless a newer name
+    /// already owns it.
+    static func endSpeech(_ utterance: ObjectIdentifier) {
+        queue.async {
+            guard speech == utterance else { return }
+            speech = nil
+            try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+        }
+    }
+
+    /// Runs `play` under .ambient (respects the silent switch, mixes with other
+    /// audio). While a name is being spoken the category is left alone: flipping
+    /// it mid-utterance would drop the voice below the silent switch.
+    static func playTone(_ play: @escaping @Sendable () -> Void) {
+        queue.async {
+            let session = AVAudioSession.sharedInstance()
+            if speech == nil, session.category != .ambient {
+                try? session.setCategory(.ambient, options: [.mixWithOthers])
+            }
+            play()
+        }
     }
 }

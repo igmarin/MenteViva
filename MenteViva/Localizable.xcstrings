@@ -3747,6 +3747,23 @@
         }
       }
     },
+    "Level %lld" : {
+      "comment" : "Difficulty.title: a level's name on the family screens.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Level %lld"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nivel %lld"
+          }
+        }
+      }
+    },
     "myplan.note" : {
       "localizations" : {
         "en" : {
