@@ -1,0 +1,35 @@
+# App icon studies (#337)
+
+Studies only. **The owner picks A, B or C (or asks for changes) before anything replaces the current icon**; that will be a follow-up commit/PR. Sheet: [`art-samples/icon/icon-studies.png`](art-samples/icon/icon-studies.png) (each study and the current icon at 1024, 180, 60, 40 px on light and dark home-screen backgrounds). Masters: `art-samples/icon/study-{a,b,c}.png`, 1024×1024, opaque, square. Prompts and tool disclosure: [art-prompts.md](../art-prompts.md#icon-studies-337). Direction: [art-style.md](art-style.md).
+
+## Brand placements today (none changed here)
+
+1. **App icon**: `MenteViva/Assets.xcassets/AppIcon.appiconset/icon-1024.png`, rendered by `tools/generate_icon.swift` (tilted white card, jade frame, two cards, amber dot, teal-to-amber gradient).
+2. **Home-screen name**: `INFOPLIST_KEY_CFBundleDisplayName = "Mente Viva"` (via `tools/generate_project.swift`).
+3. **In-app wordmark**: system-typography text from `app.title` ("Mente Viva"): `HomeView` navigation title, `OnboardingView` heading. No drawn logo.
+4. **README**: title `# Mente Viva 🧠` (emoji) and the trademark note on the name and icon. No image.
+5. **Support site**: `site/index.html` `<h1>`, nav text and `<title>` in `site/en`, `site/es`. Text only; no favicon or image.
+6. **Docs**: `docs/ip-clearance.md` names `icon-1024.png` as the only bundled image.
+
+So a selected icon changes only (1) and its provenance entry; the wordmark stays system typography everywhere. (The 🧠 in the README title is outside this ticket; it sits oddly with the "no brain glyph" icon rule, so flag it to the owner.)
+
+## The studies
+
+Common ground: cream card, espresso ink, jade identity, one mustard accent, flat fills, no lettering, no gradient or shadow.
+
+- **A: "The dealt card".** Closest evolution. Keeps the single tilted card and framed panel; swaps white/teal-amber gradient for a cream card with an espresso outline, a jade panel, one big mustard disc, on dark jade. Drops the second card and the tiny dot for one bold disc.
+- **B: "The pair".** Keeps the memory-pair idea of the current two cards but makes it the whole icon: a cream back card and a jade front card with mustard disc, on cream. Lightest, most "Memory Lane"; names the game, not the app.
+- **C: "The friendly card".** Upright cream card with a simple smile and mustard cheeks on jade. Furthest from today's mark, warmest, ties to the "selective friendly faces" direction.
+
+## Review at 40px
+
+All three read at 40px: A as a framed card with a gold disc, B as two cards, C as a smiling card. Notes: B is lowest contrast against a light home screen (cream on pale grey) and its jade is lighter than the `#246456` token; C's face is the smallest detail and starts to blur (eyes and smile survive, cheeks merge); A has the strongest silhouette on both backgrounds. Colors come from the image model, so exact hex values drift slightly from the tokens; the selected study would be redrawn in `tools/generate_icon.swift` with exact tokens.
+
+## Recommendation: A
+
+1. Clearest at 40px and on both backgrounds; one shape, one accent.
+2. Most recognizable evolution of today's card (single tilted framed card), so existing users still find it.
+3. No face or character: stays inside "no dense character illustration" and the no-medical-glyph rule.
+4. Easy to redraw natively with exact tokens (rounded rects and a circle), keeping `generate_icon.swift` reproducible with no AI asset to clear in #226.
+
+B is the runner-up. C is charming but the least like today's mark and the least robust when small.
