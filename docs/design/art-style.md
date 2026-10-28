@@ -85,3 +85,28 @@ generation prompt, and do not supply third-party source images.
 
 Provenance: [AI-generated pictures](../ip-clearance.md#ai-generated-pictures).
 Exact approved concept prompt: [reference prompt](art-samples/retro-direction-approved.prompt.txt).
+
+## App tokens (#336)
+
+Implemented in `MenteViva/Theme.swift` as semantic light/dark colors. Views use
+the token, never the hex. Each game keeps its own `GameID.ink`; all 13 still
+pass 4.5:1 on cream (lowest 4.77:1) and on the dark surround.
+
+| Token | Light | Dark | Use |
+|---|---|---|---|
+| `paper` | `#FFF1D0` | `#211E1B` | Page behind games, every card/tile/panel face. Replaces `systemBackground` |
+| `espresso` | `#2B2118` | `#FFF1D0` | Card outlines (2pt), outline buttons, hard print shadow base |
+| `brand` | `#246456` | `#78C4AE` | App tint, primary button fill; label is `paper` (6.2:1 / 8.1:1) |
+| `amber` (mustard) | `#E7AC45` | `#E7AC45` | Fill only: played tick, stamp, "Almost" wash (24%). Never text on paper |
+| `onAmber` | `#2B2118` | `#2B2118` | Text/tick on mustard (7.8:1) |
+| `tomato` (`todaysPick`) | `#AF3F32` | `#F5A290` | Warm emphasis text, incl. on the mustard wash (4.56:1 / 5.0:1) |
+| `fadedBlue` | `#35566D` | `#9DBBD3` | Secondary action labels (6.9:1 on cream) |
+| `table` gradient | `#246456` → `#7FA58F` → `#E7AC45` | `#123F3C` → `#2D4A3F` → `#6A5024` | Home's table and the celebration backdrop; only cards sit on it, no text |
+
+Usage rules:
+
+- Answer colors (Color Clash words and swatches, Tile Pairs and Sudoku states) are
+  mechanics, not theme; they do not use these tokens.
+- Selection and completion keep a shape cue (tick, thick outline); color is never the only signal.
+- Mustard is never text on paper. Headings stay native New York (`.serif`), controls SF Rounded.
+- `ContrastTests` checks every pairing above in both modes.

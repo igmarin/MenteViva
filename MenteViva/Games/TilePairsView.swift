@@ -142,7 +142,7 @@ struct TilePairsView: View {
     ) -> some View {
         ZStack {
             RoundedRectangle(cornerRadius: 10)
-                .fill(Color(.systemBackground))
+                .fill(Color.paper)
             RoundedRectangle(cornerRadius: 10)
                 .strokeBorder(
                     highlighted ? Color.amber : (selected ? GameID.tilePairs.ink : Color.secondary.opacity(0.4)),

@@ -65,7 +65,7 @@ struct CelebrationView: View {
                         .font(.title2.weight(.semibold))
                         .frame(maxWidth: .infinity, minHeight: 100)
                         .background(Color.brand, in: .rect(cornerRadius: 20))
-                        .foregroundStyle(Color(.systemBackground))
+                        .foregroundStyle(Color.paper)
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel(AppLanguage.localized("level.offer.yes"))
@@ -78,8 +78,8 @@ struct CelebrationView: View {
                         .font(.title2.weight(.semibold))
                         .frame(maxWidth: .infinity, minHeight: 100)
                         .background(Color.clear, in: .rect(cornerRadius: 20))
-                        .overlay { RoundedRectangle(cornerRadius: 20).strokeBorder(.secondary, lineWidth: 2) }
-                        .foregroundStyle(Color.primary)
+                        .overlay { RoundedRectangle(cornerRadius: 20).strokeBorder(Color.espresso, lineWidth: 2) }
+                        .foregroundStyle(Color.fadedBlue)
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel(AppLanguage.localized("level.offer.keep"))
@@ -101,7 +101,8 @@ struct CelebrationView: View {
                     .font(.headline.weight(.heavy))
                     .padding(.horizontal, 16)
                     .padding(.vertical, 10)
-                    .background(Color(.systemBackground), in: .capsule)
+                    .background(Color.paper, in: .capsule)
+                    .overlay(Capsule().strokeBorder(Color.espresso, lineWidth: 2))
                 }
                 card
             }
@@ -138,14 +139,14 @@ struct CelebrationView: View {
             .frame(maxWidth: .infinity)
             .background {
                 UnevenRoundedRectangle(topLeadingRadius: 36, topTrailingRadius: 36)
-                    .fill(Color(.systemBackground))
+                    .fill(Color.paper)
                     .ignoresSafeArea(edges: .bottom)
             }
         }
         .fitOrScroll()
         // The sheet's paper continues under the home indicator.
         .background(alignment: .bottom) {
-            Color(.systemBackground).frame(height: 200).ignoresSafeArea(edges: .bottom)
+            Color.paper.frame(height: 200).ignoresSafeArea(edges: .bottom)
         }
         .background(.table)
         .onAppear {
@@ -219,14 +220,14 @@ extension View {
         modifier(CelebrationCover(isPresented: isPresented, game: game, detail: detail, onPlayAgain: onPlayAgain))
     }
 
-    /// A 100pt action: icon-teal fill with background-coloured text, or an outline.
+    /// A 100pt action: jade fill with paper-coloured text, or an espresso outline with a blue label.
     fileprivate func bigButton(filled: Bool) -> some View {
         font(.title2.weight(.semibold))
-            .foregroundStyle(filled ? Color(.systemBackground) : Color.primary)
+            .foregroundStyle(filled ? Color.paper : Color.fadedBlue)
             .frame(maxWidth: .infinity, minHeight: 100)
             .background(filled ? Color.brand : Color.clear, in: .rect(cornerRadius: 20))
             .overlay {
-                if !filled { RoundedRectangle(cornerRadius: 20).strokeBorder(.secondary, lineWidth: 2) }
+                if !filled { RoundedRectangle(cornerRadius: 20).strokeBorder(Color.espresso, lineWidth: 2) }
             }
     }
 }
@@ -277,7 +278,7 @@ struct CheckBadge: View {
         Image(systemName: "checkmark.circle.fill")
             .font(.title2)
             // The game's ink behind a background-coloured tick: 3:1+ in both modes.
-            .foregroundStyle(Color(.systemBackground), .tint)
+            .foregroundStyle(Color.paper, .tint)
             .padding(6)
             .accessibilityHidden(true)
     }

@@ -1,17 +1,28 @@
 import SwiftUI
 
-/// The Card Table palette (docs/design/2026-10-12-card-table.html), taken from
-/// the app icon. Light and dark values live in one colour, built the same way
-/// as `todaysPick`; ContrastTests checks every pairing that carries text.
+/// The Card Table palette (docs/design/2026-10-12-card-table.html) in the approved
+/// retro colours (docs/design/art-style.md, "App tokens"). Light and dark values
+/// live in one colour, built the same way as `todaysPick`; ContrastTests checks
+/// every pairing that carries text.
 extension Color {
-    /// Icon teal: the app's tint and the fill of primary buttons, whose label
-    /// uses the background colour (7.8:1 light, 11:1 dark).
-    static let brand = Color(light: 0x1E5B57, dark: 0x7CCBBE)
-    /// Icon amber: the one warm accent in each emblem, the played tick and the
-    /// "Added to your week" stamp. Never used as text itself.
-    static let amber = Color(light: 0xF2B24C, dark: 0xF0B45A)
-    /// Text and ticks on amber: a dark brown, since amber is light in both modes.
-    static let onAmber = Color(UIColor(rgb: 0x2A1A05))
+    /// The page and every card's face: cream in light mode, the dark surround in
+    /// dark mode. Replaces `systemBackground`, so text on it is checked here.
+    static let paper = Color(light: 0xFFF1D0, dark: 0x211E1B)
+    /// Outlines and the hard print shadow: espresso on cream, cream on the dark
+    /// surround, so a card's edge shows in both modes.
+    static let espresso = Color(light: 0x2B2118, dark: 0xFFF1D0)
+    /// Muted jade: the app's tint and the fill of primary buttons, whose label
+    /// uses `paper` (6.2:1 light, 8.1:1 dark).
+    static let brand = Color(light: 0x246456, dark: 0x78C4AE)
+    /// Honey mustard: the one warm accent in each emblem, the played tick and the
+    /// "Added to your week" stamp. A fill only, never text on paper (1.8:1).
+    static let amber = Color(light: 0xE7AC45, dark: 0xE7AC45)
+    /// Text and ticks on mustard: espresso in both modes (7.8:1).
+    static let onAmber = Color(UIColor(rgb: 0x2B2118))
+    /// Dark tomato: warm emphasis text (5.2:1 on cream, 7.5:1 on the dark surround).
+    static let tomato = Color(light: 0xAF3F32, dark: 0xF5A290)
+    /// Faded blue: the label of secondary actions (6.9:1 on cream).
+    static let fadedBlue = Color(light: 0x35566D, dark: 0x9DBBD3)
 
     init(light: UInt32, dark: UInt32) {
         self.init(UIColor { $0.userInterfaceStyle == .dark ? UIColor(rgb: dark) : UIColor(rgb: light) })
@@ -19,12 +30,12 @@ extension Color {
 }
 
 extension ShapeStyle where Self == LinearGradient {
-    /// The icon's gradient, teal to amber: the table Home deals today's games on.
+    /// The icon's gradient, jade to mustard: the table Home deals today's games on.
     static var table: LinearGradient {
         LinearGradient(
             colors: [
-                Color(light: 0x2F7470, dark: 0x123F3C), Color(light: 0x8DAF98, dark: 0x2D4A3F),
-                Color(light: 0xEDBB6C, dark: 0x6A5024),
+                Color(light: 0x246456, dark: 0x123F3C), Color(light: 0x7FA58F, dark: 0x2D4A3F),
+                Color(light: 0xE7AC45, dark: 0x6A5024),
             ],
             startPoint: .bottomLeading, endPoint: .topTrailing)
     }

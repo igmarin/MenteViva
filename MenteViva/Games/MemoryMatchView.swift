@@ -222,7 +222,7 @@ struct MemoryMatchView: View {
             RoundedRectangle(cornerRadius: 18)
                 .fill(
                     found
-                        ? AnyShapeStyle(.tint.opacity(0.16)) : AnyShapeStyle(Color(.systemBackground)))
+                        ? AnyShapeStyle(.tint.opacity(0.16)) : AnyShapeStyle(Color.paper))
             RoundedRectangle(cornerRadius: 18)
                 .strokeBorder(.black.opacity(0.12), lineWidth: 1)
             if case .photo(let url) = card.face, let image = photoImages[url] {

@@ -2,7 +2,8 @@ import SwiftUI
 
 extension View {
     /// The shared game header (Card Table, step 3): the game's name small and
-    /// centred instead of a large title, the game's ink as the tint, and a
+    /// centred instead of a large title, the game's ink as the tint, cream paper
+    /// behind the page (dark surround in dark mode), and a
     /// speaker that reads the instruction aloud. Tapping it is asking to hear
     /// it, so it speaks even with "Read names aloud" off, like the photo
     /// speaker (#139).
@@ -10,6 +11,9 @@ extension View {
         navigationTitle(AppLanguage.localized(game.title))
             .navigationBarTitleDisplayMode(.inline)
             .tint(game.ink)
+            // Cream paper behind every game and its bar (#336); tiles keep their own washes.
+            .background(Color.paper.ignoresSafeArea())
+            .toolbarBackground(Color.paper, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {

@@ -79,7 +79,7 @@ struct OnboardingView: View {
                 Text(AppLanguage.localized("onboarding.start"))
                     .font(.title2.weight(.semibold))
                     .frame(maxWidth: .infinity, minHeight: 100)
-                    .foregroundStyle(Color(.systemBackground))
+                    .foregroundStyle(Color.paper)
                     .background(Color.brand, in: .rect(cornerRadius: 20))
             }
             .buttonStyle(.plain)
@@ -126,7 +126,7 @@ struct OnboardingView: View {
                     Text(AppLanguage.localized("onboarding.next"))
                         .font(.title2.weight(.semibold))
                         .frame(maxWidth: .infinity, minHeight: 100)
-                        .foregroundStyle(Color(.systemBackground))
+                        .foregroundStyle(Color.paper)
                         .background(Color.brand, in: .rect(cornerRadius: 20))
                 }
                 .buttonStyle(.plain)
@@ -256,7 +256,7 @@ struct OnboardingView: View {
                 Text(AppLanguage.localized("warmup.accept"))
                     .font(.title2.weight(.semibold))
                     .frame(maxWidth: .infinity, minHeight: 100)
-                    .foregroundStyle(Color(.systemBackground))
+                    .foregroundStyle(Color.paper)
                     .background(Color.brand, in: .rect(cornerRadius: 20))
             }
             .buttonStyle(.plain)

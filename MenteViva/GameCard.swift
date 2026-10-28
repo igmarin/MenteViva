@@ -31,7 +31,7 @@ struct GameCard: View {
             Text(title)
                 .font((hand ? Font.headline : .title3).weight(.heavy))
                 .fontDesign(.rounded)
-                .foregroundStyle(Color(.systemBackground))
+                .foregroundStyle(Color.paper)
                 .multilineTextAlignment(.center)
                 .lineLimit(2)
                 .minimumScaleFactor(0.7)
@@ -42,12 +42,13 @@ struct GameCard: View {
         .padding(6)
         .frame(width: hand ? 112 : nil, height: hand ? 164 : nil)
         .frame(minHeight: hand ? nil : 180)
-        .background(Color(.systemBackground), in: .rect(cornerRadius: 18))
-        .overlay(RoundedRectangle(cornerRadius: 18).strokeBorder(.primary.opacity(0.08)))
+        .background(Color.paper, in: .rect(cornerRadius: 18))
+        .overlay(RoundedRectangle(cornerRadius: 18).strokeBorder(Color.espresso, lineWidth: 2))
         .overlay(alignment: .topTrailing) {
             if playedToday { PlayedCheck().offset(x: 10, y: -10) }
         }
-        .shadow(color: .black.opacity(0.12), radius: 8, y: 4)
+        // A hard print shadow, not a soft blur: the retro card edge.
+        .shadow(color: .black.opacity(0.25), radius: 0, x: 3, y: 3)
         .accessibilityElement(children: .combine)
         .accessibilityLabel(Text(title))
         .accessibilityValue(Text(playedToday ? AppLanguage.localized("home.today.played") : ""))
@@ -81,7 +82,8 @@ struct GameRow: View {
         }
         .padding(14)
         .frame(maxWidth: .infinity, minHeight: 100)
-        .background(Color(.systemBackground), in: .rect(cornerRadius: 20))
+        .background(Color.paper, in: .rect(cornerRadius: 20))
+        .overlay(RoundedRectangle(cornerRadius: 20).strokeBorder(Color.espresso, lineWidth: 2))
         .accessibilityElement(children: .combine)
         .accessibilityLabel(Text(title))
         .accessibilityValue(Text(playedToday ? AppLanguage.localized("home.today.played") : ""))
@@ -96,7 +98,7 @@ struct PlayedCheck: View {
             .foregroundStyle(Color.onAmber)
             .frame(width: 36, height: 36)
             .background(Color.amber, in: .circle)
-            .overlay(Circle().strokeBorder(Color(.systemBackground), lineWidth: 3))
+            .overlay(Circle().strokeBorder(Color.paper, lineWidth: 3))
             .accessibilityHidden(true)
     }
 }
@@ -314,7 +316,7 @@ struct WeekBoard: View {
                     let fromTop = shown.count - 1 - index
                     RoundedRectangle(cornerRadius: 6)
                         .fill(game.ink)
-                        .overlay(RoundedRectangle(cornerRadius: 6).strokeBorder(Color(.systemBackground), lineWidth: 2))
+                        .overlay(RoundedRectangle(cornerRadius: 6).strokeBorder(Color.paper, lineWidth: 2))
                         .frame(width: 26, height: 36)
                         .rotationEffect(.degrees(fromTop == 0 ? 0 : (fromTop == 1 ? -11 : 10)))
                         .offset(x: fromTop == 0 ? 0 : (fromTop == 1 ? -4 : 4))
