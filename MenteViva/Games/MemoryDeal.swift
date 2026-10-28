@@ -6,6 +6,8 @@ import Foundation
 nonisolated enum MemoryFace: Hashable {
     case picture(GamePicture)
     case photo(URL)
+    /// A photo's caption, on its own card (#142).
+    case caption(String)
 }
 
 /// Memory Lane's deal (#244): the theme, the pairs the board shows and the

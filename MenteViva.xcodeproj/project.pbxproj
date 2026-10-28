@@ -24,6 +24,7 @@
 		18180C4157C1561D00000021 /* MemoryMatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 250E769752DD6A430000001B; };
 		3B89FA1FCE6129CF00000019 /* MissCue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86AF3B4C1D5F21E500000013; };
 		253F249A6FF746A300000025 /* NumberTrailQuestion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4D45FC480DA5090000001F; };
+		4886BCC1D06920BA00000022 /* PhotoCaptionDeal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81C292C7FFAD74580000001C; };
 		F2E513BC326D993F0000001D /* PictureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D76316028DAED7B500000017; };
 		17BB594169B12A7F0000001F /* QuickEyesDeal.swift in Sources */ = {isa = PBXBuildFile; fileRef = E685D4510ACEA17500000019; };
 		06316652C0C975F40000001F /* QuickEyesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D757F5352AE1A200000019; };
@@ -111,6 +112,7 @@
 		4E437CEEEEB1E47600000039 /* NumberTrailQuestionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B15A3FA40FC93B400000033; };
 		EB52E9FDB69CB05300000035 /* OnboardingStepsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C62977BDFEFF990000002F; };
 		74DF40655A8016C000000037 /* OnboardingStringsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35341DEF1F26544E00000031; };
+		CA75114F293B893100000036 /* PhotoCaptionDealTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28474CB38505F97700000030; };
 		288A7358D7C5AA1900000033 /* PlayerProfileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B056BE6CAA0C14F0000002D; };
 		2E81FDB867FC926B00000038 /* PlayerStateSummaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9231182AE986A100000032; };
 		56E513B81D42ABF300000033 /* PluralStringsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478EE86492C1F2390000002D; };
@@ -151,6 +153,7 @@
 		250E769752DD6A430000001B /* MemoryMatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/MemoryMatchView.swift; sourceTree = "<group>"; };
 		86AF3B4C1D5F21E500000013 /* MissCue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/MissCue.swift; sourceTree = "<group>"; };
 		1C4D45FC480DA5090000001F /* NumberTrailQuestion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/NumberTrailQuestion.swift; sourceTree = "<group>"; };
+		81C292C7FFAD74580000001C /* PhotoCaptionDeal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/PhotoCaptionDeal.swift; sourceTree = "<group>"; };
 		D76316028DAED7B500000017 /* PictureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/PictureView.swift; sourceTree = "<group>"; };
 		E685D4510ACEA17500000019 /* QuickEyesDeal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/QuickEyesDeal.swift; sourceTree = "<group>"; };
 		B4D757F5352AE1A200000019 /* QuickEyesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/QuickEyesView.swift; sourceTree = "<group>"; };
@@ -238,6 +241,7 @@
 		7B15A3FA40FC93B400000033 /* NumberTrailQuestionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/NumberTrailQuestionTests.swift; sourceTree = SOURCE_ROOT; };
 		83C62977BDFEFF990000002F /* OnboardingStepsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/OnboardingStepsTests.swift; sourceTree = SOURCE_ROOT; };
 		35341DEF1F26544E00000031 /* OnboardingStringsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/OnboardingStringsTests.swift; sourceTree = SOURCE_ROOT; };
+		28474CB38505F97700000030 /* PhotoCaptionDealTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/PhotoCaptionDealTests.swift; sourceTree = SOURCE_ROOT; };
 		5B056BE6CAA0C14F0000002D /* PlayerProfileTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/PlayerProfileTests.swift; sourceTree = SOURCE_ROOT; };
 		7D9231182AE986A100000032 /* PlayerStateSummaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/PlayerStateSummaryTests.swift; sourceTree = SOURCE_ROOT; };
 		478EE86492C1F2390000002D /* PluralStringsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/PluralStringsTests.swift; sourceTree = SOURCE_ROOT; };
@@ -304,6 +308,7 @@
 				250E769752DD6A430000001B /* MemoryMatchView.swift */,
 				86AF3B4C1D5F21E500000013 /* MissCue.swift */,
 				1C4D45FC480DA5090000001F /* NumberTrailQuestion.swift */,
+				81C292C7FFAD74580000001C /* PhotoCaptionDeal.swift */,
 				D76316028DAED7B500000017 /* PictureView.swift */,
 				E685D4510ACEA17500000019 /* QuickEyesDeal.swift */,
 				B4D757F5352AE1A200000019 /* QuickEyesView.swift */,
@@ -402,6 +407,7 @@
 				7B15A3FA40FC93B400000033 /* NumberTrailQuestionTests.swift */,
 				83C62977BDFEFF990000002F /* OnboardingStepsTests.swift */,
 				35341DEF1F26544E00000031 /* OnboardingStringsTests.swift */,
+				28474CB38505F97700000030 /* PhotoCaptionDealTests.swift */,
 				5B056BE6CAA0C14F0000002D /* PlayerProfileTests.swift */,
 				7D9231182AE986A100000032 /* PlayerStateSummaryTests.swift */,
 				478EE86492C1F2390000002D /* PluralStringsTests.swift */,
@@ -507,6 +513,7 @@
 				18180C4157C1561D00000021 /* MemoryMatchView.swift in Sources */,
 				3B89FA1FCE6129CF00000019 /* MissCue.swift in Sources */,
 				253F249A6FF746A300000025 /* NumberTrailQuestion.swift in Sources */,
+				4886BCC1D06920BA00000022 /* PhotoCaptionDeal.swift in Sources */,
 				F2E513BC326D993F0000001D /* PictureView.swift in Sources */,
 				17BB594169B12A7F0000001F /* QuickEyesDeal.swift in Sources */,
 				06316652C0C975F40000001F /* QuickEyesView.swift in Sources */,
@@ -602,6 +609,7 @@
 				4E437CEEEEB1E47600000039 /* NumberTrailQuestionTests.swift in Sources */,
 				EB52E9FDB69CB05300000035 /* OnboardingStepsTests.swift in Sources */,
 				74DF40655A8016C000000037 /* OnboardingStringsTests.swift in Sources */,
+				CA75114F293B893100000036 /* PhotoCaptionDealTests.swift in Sources */,
 				288A7358D7C5AA1900000033 /* PlayerProfileTests.swift in Sources */,
 				2E81FDB867FC926B00000038 /* PlayerStateSummaryTests.swift in Sources */,
 				56E513B81D42ABF300000033 /* PluralStringsTests.swift in Sources */,

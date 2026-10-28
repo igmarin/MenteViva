@@ -29,7 +29,9 @@ struct CelebrationView: View {
     /// Today's games from the plan saved for today; nil before there is one.
     private var today: TodayRun? {
         guard let plan = PlanStore.cachedPlan(), plan.dayStamp == PlanStore.dayStamp() else { return nil }
-        return TodayRun(plan: plan.games, hidden: FamilySettings.hidden(from: hiddenGames), sessions: sessions)
+        return TodayRun(
+            plan: plan.games, hidden: FamilySettings.hidden(from: hiddenGames).union(GameAvailability.unavailable()),
+            sessions: sessions)
     }
 
     /// Offer context for #207 2: strong game, not pinned, below 10, once per day.

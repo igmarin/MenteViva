@@ -86,6 +86,7 @@ extension GameID {
         case .tangram: Color(light: 0xA3246B, dark: 0xF08CC2)
         case .tilePairs: Color(light: 0x4B5563, dark: 0xB8C0CC)
         case .slidingBlocks: Color(light: 0xA14A0E, dark: 0xF2A56B)
+        case .photoCaptions: Color(light: 0x6D5A0B, dark: 0xE0CB6A)
         }
     }
 }

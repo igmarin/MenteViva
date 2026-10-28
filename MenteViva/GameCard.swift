@@ -257,6 +257,19 @@ struct Emblem: View {
             context.fill(Path(roundedRect: CGRect(x: 14, y: 14, width: 16, height: 16), cornerRadius: 3), with: ink)
             context.fill(Path(roundedRect: CGRect(x: 14, y: 36, width: 28, height: 14), cornerRadius: 3), with: ink)
             context.fill(Path(roundedRect: CGRect(x: 36, y: 22, width: 16, height: 16), cornerRadius: 3), with: amber)
+        case .photoCaptions:
+            // A photo frame over a name line, with an amber sun in the frame.
+            context.stroke(Path(roundedRect: CGRect(x: 10, y: 8, width: 44, height: 32), cornerRadius: 6), with: ink, style: line)
+            context.fill(circle(24, 20, 5), with: amber)
+            var hill = Path()
+            hill.addLines([
+                CGPoint(x: 14, y: 36), CGPoint(x: 28, y: 24), CGPoint(x: 38, y: 32), CGPoint(x: 46, y: 26), CGPoint(x: 50, y: 36),
+            ])
+            context.stroke(hill, with: ink, style: line)
+            var name = Path()
+            name.move(to: CGPoint(x: 16, y: 50))
+            name.addLine(to: CGPoint(x: 48, y: 50))
+            context.stroke(name, with: ink, style: line)
         }
     }
 

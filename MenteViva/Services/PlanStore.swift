@@ -26,7 +26,7 @@ nonisolated enum PlanStore {
             lastChange: lastDifficultyChange(defaults: defaults),
             dayStamp: stamp,
             pinned: FamilySettings.pinned(defaults: defaults),
-            hidden: FamilySettings.hidden(defaults: defaults),
+            hidden: FamilySettings.hidden(defaults: defaults).union(GameAvailability.unavailable()),
             profile: ProfileStore.load(defaults: defaults))
         cache(plan, defaults: defaults)
         return plan

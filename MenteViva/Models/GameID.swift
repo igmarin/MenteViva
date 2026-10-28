@@ -15,6 +15,7 @@ nonisolated enum GameID: String, CaseIterable, Codable {
     case tangram = "tangram"
     case tilePairs = "tile_pairs"
     case slidingBlocks = "sliding_blocks"
+    case photoCaptions = "photo_captions"
 
     /// Registered but not playable yet: kept out of the deal, Set up, progress and
     /// Home until the game's view ships. That ticket removes its ID here.
@@ -38,6 +39,7 @@ nonisolated enum GameID: String, CaseIterable, Codable {
         case .tangram: "🔷"
         case .tilePairs: "🀄"
         case .slidingBlocks: "🧱"
+        case .photoCaptions: "🖼️"
         }
     }
 
@@ -56,6 +58,7 @@ nonisolated enum GameID: String, CaseIterable, Codable {
         case .tangram: "game.tangram.title"
         case .tilePairs: "game.tilepairs.title"
         case .slidingBlocks: "game.sliding.title"
+        case .photoCaptions: "game.photocaptions.title"
         }
     }
 

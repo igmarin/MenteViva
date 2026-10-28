@@ -58,6 +58,7 @@ nonisolated enum DailyPolicy {
         .memoryMatch: 1.0, .quickEyes: 0.8, .categoryFluency: 0.7, .stroop: 0.55, .mathStreaks: 0.55,
         .reminiscence: 0.7, .sudoku: 0.8, .upOrDown: 0.8, .sayings: 0.8,
         .repeatSequence: 0.8, .tangram: 0.8, .tilePairs: 0.8, .slidingBlocks: 0.8,
+        .photoCaptions: 0.8,
     ]
     static let gamesPerDay = 3
 
@@ -91,6 +92,8 @@ nonisolated enum DailyPolicy {
         .tilePairs: .attention,
         /// Sliding Blocks: the moves that free a block.
         .slidingBlocks: .attention,
+        /// Names and Faces: whose name goes with whose photo.
+        .photoCaptions: .memory,
     ]
 
     /// A game in a chosen area counts this much more in the mix score. Only the order of the scores
@@ -151,6 +154,9 @@ nonisolated enum DailyPolicy {
         .upOrDown: Threshold(strong: 0.90, weak: 0.65),
         /// Finish the Saying: the familiar ending picked. Accuracy is correct / attempts.
         .sayings: Threshold(strong: 0.90, weak: 0.65),
+        /// Names and Faces counts moves as attempts and pairs as correct, like Memory Lane, so it
+        /// takes Memory Lane's thresholds.
+        .photoCaptions: Threshold(strong: 0.65, weak: 0.45),
     ]
 
     /// Strong accuracy for a game (at or above counts as strong).

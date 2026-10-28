@@ -26,7 +26,10 @@ struct HomeView: View {
     /// Only read to re-key the screen: a language change must redraw every name.
     @AppStorage(AppLanguage.storageKey) private var appLanguage = AppLanguage.system.rawValue
 
-    private var hidden: Set<GameID> { FamilySettings.hidden(from: hiddenGames) }
+    /// Games the family hid, plus games with nothing to play yet (#142); the photos can change
+    /// whenever Set up is visited, so it is read again each time Home appears.
+    @State private var unavailable = GameAvailability.unavailable()
+    private var hidden: Set<GameID> { FamilySettings.hidden(from: hiddenGames).union(unavailable) }
     private var today: TodayRun { TodayRun(plan: plan, hidden: hidden, sessions: sessions) }
     private var week: [(day: Date, games: [GameID])] {
         DayGrouping.thisWeek(sessions, date: \.playedAt).map { (day: $0.day, games: $0.items.compactMap(\.game)) }
@@ -87,10 +90,16 @@ struct HomeView: View {
         // On the stack, not its root: the root disappears on every push, which
         // restarted the plan (a fetch) on every Back.
         // Keyed by day, it runs at launch and again when the day rolls over.
-        .task(id: planDay) { refreshPlan() }
+        .task(id: planDay) {
+            unavailable = GameAvailability.unavailable()
+            refreshPlan()
+        }
         // Settings -> My plan can start the warm-up (#213), which replaces today's plan.
         .onChange(of: showSettings) { _, shown in
-            if !shown { refreshPlan() }
+            if !shown {
+                unavailable = GameAvailability.unavailable()
+                refreshPlan()
+            }
         }
         .onChange(of: scenePhase) { _, phase in
             if phase == .active { planDay = PlanStore.dayStamp() }
@@ -310,6 +319,7 @@ struct HomeView: View {
         case .tangram: TangramView()
         case .tilePairs: TilePairsView()
         case .slidingBlocks: SlidingBlocksView()
+        case .photoCaptions: MemoryMatchView(variant: .captions)
         }
     }
 }
