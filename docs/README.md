@@ -18,9 +18,12 @@ screen of real content, split it — long docs don't get read.
 | [playtest-session-1.md](playtest-session-1.md) | Printable session sheet for dad's playtest (#6) — findings map to #44/#46/#47 | Done |
 | [playtest-session-2.md](playtest-session-2.md) | Printable session sheet for playtest #2: the Card Table redesign and Jev 015's open questions | Current |
 | [playtest-session-3.md](playtest-session-3.md) | Printable session sheet for playtest #3: Sudoku, Up or Down and Finish the Saying (#179–#181) | Current |
+| [playtest-outside.md](playtest-outside.md) | Kit for testers outside the family: invite (EN + ES), sheet per tester, findings template (#33) | Current |
 | [install-runbook.md](install-runbook.md) | Installing on a device with a free Apple ID (7-day expiry) | Current |
 | [device-support.md](device-support.md) | What hardware/OS we claim and what we verified | Living |
-| [decisions.md](decisions.md) | Every significant decision, with date and reason | Living log |
+| [decisions.md](decisions.md) | Every significant decision, with date and reason: an index of month files in [decisions/](decisions/), plus the entry template | Living log |
+| [handoffs/](handoffs/) | Notes one agent session left for the next: what was done, what's open | Snapshots, newest by file name |
+| [superpowers/](superpowers/) | Design specs (`specs/`) and step-by-step build plans (`plans/`) for bigger features: the reminiscence game and the three new games | Shipped |
 | [design/](design/) | Card Table redesign: review of the old app and the spec it was built from (HTML, open in a browser) | Shipped (#154–#159) |
 | [design/art-style.md](design/art-style.md) | Approved retro illustration direction, palette, fixed prompt and picture checks | Samples completed (#323); batches #325–#328 next |
 | [art-prompts.md](art-prompts.md) | Exact prompts and actual tool disclosures for selected art | Living |
@@ -32,6 +35,7 @@ screen of real content, split it — long docs don't get read.
 | [es-review-packet.md](es-review-packet.md) | Spanish strings for the native-speaker review (#12) | Current |
 | [question-audit.md](question-audit.md) | The real questions, checked (against wrong questions) | Living |
 | [roadmap.md](roadmap.md) | What happens next, in order | Living |
+| [languages.md](languages.md) | Which language next, and who validates it (#40) | Waiting on validators |
 | [review-2026-10-gamefeel.md](review-2026-10-gamefeel.md) | Game feel and UX of the nine games, against the gamedev skills (#230) | Snapshot |
 | [ip-clearance.md](ip-clearance.md) | Can we use this game, name or asset? The per-game checklist | Living |
 | [store-listing.md](store-listing.md) | App Store copy + screenshots (EN/ES), drafted early | Draft |
