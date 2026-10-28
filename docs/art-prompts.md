@@ -14,6 +14,8 @@ model/version that the tool does not expose. See [style](design/art-style.md) an
 
 ## Production pictures
 
+The #328 prompts ask for a plain pure white background (as the #323 violin sample did); the white was then flood-filled to transparent, cropped and fitted to 600×600 with Pillow. The "subtle friendly face" sentence of the fixed paragraph is dropped because none of these objects has a face.
+
 | Slug | Prompt | Date | Tool / model / version |
 |---|---|---|---|
 | apple (sample, #323; revised 2026-10-28 to match approved sheet) | [Prompt](design/art-samples/prompts/apple.prompt.txt) | 2026-10-28 | Muse built-in image generation (`muse.image_generation`); model/version not exposed |
@@ -22,6 +24,22 @@ model/version that the tool does not expose. See [style](design/art-style.md) an
 | sailboat (sample, #323) | [Prompt](design/art-samples/prompts/sailboat.prompt.txt) | 2026-10-28 | Muse built-in image generation (`muse.image_generation`); model/version not exposed |
 | violin (sample, #323) | [Prompt](design/art-samples/prompts/violin.prompt.txt) | 2026-10-28 | Muse built-in image generation (`muse.image_generation`); model/version not exposed |
 | moon (sample, #323; revised 2026-10-28 to match approved sheet) | [Prompt](design/art-samples/prompts/moon.prompt.txt) | 2026-10-28 | Muse built-in image generation (`muse.image_generation`); model/version not exposed |
+| map (#328) | [Prompt](design/art-samples/prompts/pic.map.prompt.txt) | 2026-10-28 | Codex CLI 0.165.0 built-in image generation tool (`codex exec`); model/version not exposed |
+| suitcase (#328) | [Prompt](design/art-samples/prompts/pic.suitcase.prompt.txt) | 2026-10-28 | Codex CLI 0.165.0 built-in image generation tool (`codex exec`); model/version not exposed |
+| mountain (#328) | [Prompt](design/art-samples/prompts/pic.mountain.prompt.txt) | 2026-10-28 | Codex CLI 0.165.0 built-in image generation tool (`codex exec`); model/version not exposed |
+| beach (#328) | [Prompt](design/art-samples/prompts/pic.beach.prompt.txt) | 2026-10-28 | Codex CLI 0.165.0 built-in image generation tool (`codex exec`); model/version not exposed |
+| tent (#328) | [Prompt](design/art-samples/prompts/pic.tent.prompt.txt) | 2026-10-28 | Codex CLI 0.165.0 built-in image generation tool (`codex exec`); model/version not exposed |
+| lighthouse (#328) | [Prompt](design/art-samples/prompts/pic.lighthouse.prompt.txt) | 2026-10-28 | Codex CLI 0.165.0 built-in image generation tool (`codex exec`); model/version not exposed |
+| helicopter (#328) | [Prompt](design/art-samples/prompts/pic.helicopter.prompt.txt) | 2026-10-28 | Codex CLI 0.165.0 built-in image generation tool (`codex exec`); model/version not exposed |
+| trumpet (#328) | [Prompt](design/art-samples/prompts/pic.trumpet.prompt.txt) | 2026-10-28 | Codex CLI 0.165.0 built-in image generation tool (`codex exec`); model/version not exposed |
+| piano (#328) | [Prompt](design/art-samples/prompts/pic.piano.prompt.txt) | 2026-10-28 | Codex CLI 0.165.0 built-in image generation tool (`codex exec`); model/version not exposed |
+| radio (#328) | [Prompt](design/art-samples/prompts/pic.radio.prompt.txt) | 2026-10-28 | Codex CLI 0.165.0 built-in image generation tool (`codex exec`); model/version not exposed |
+| yarn (#328) | [Prompt](design/art-samples/prompts/pic.yarn.prompt.txt) | 2026-10-28 | Codex CLI 0.165.0 built-in image generation tool (`codex exec`); model/version not exposed |
+| accordion (#328) | [Prompt](design/art-samples/prompts/pic.accordion.prompt.txt) | 2026-10-28 | Codex CLI 0.165.0 built-in image generation tool (`codex exec`); model/version not exposed |
+| picture_frame (#328) | [Prompt](design/art-samples/prompts/pic.picture_frame.prompt.txt) | 2026-10-28 | Codex CLI 0.165.0 built-in image generation tool (`codex exec`); model/version not exposed |
+| telephone (#328) | [Prompt](design/art-samples/prompts/pic.telephone.prompt.txt) | 2026-10-28 | Codex CLI 0.165.0 built-in image generation tool (`codex exec`); model/version not exposed |
+| sofa (#328) | [Prompt](design/art-samples/prompts/pic.sofa.prompt.txt) | 2026-10-28 | Codex CLI 0.165.0 built-in image generation tool (`codex exec`); model/version not exposed |
+| violin (#328; reused unchanged from the #323 sample, not regenerated) | [Prompt](design/art-samples/prompts/violin.prompt.txt) | 2026-10-28 | Muse built-in image generation (`muse.image_generation`); model/version not exposed |
 | teapot (reused from the #323 sample, #327; no new generation) | [Prompt](design/art-samples/prompts/teapot.prompt.txt) | 2026-10-28 | Muse built-in image generation (`muse.image_generation`); model/version not exposed |
 | bread (#327) | [Prompt](design/art-samples/prompts/bread.prompt.txt) | 2026-10-28 | OpenAI built-in image-generation tool driven through `codex exec` (codex-cli 0.165.0); image model/version not exposed |
 | cheese (#327) | [Prompt](design/art-samples/prompts/cheese.prompt.txt) | 2026-10-28 | OpenAI built-in image-generation tool driven through `codex exec` (codex-cli 0.165.0); image model/version not exposed |

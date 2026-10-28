@@ -5,6 +5,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 ## [Unreleased]
 
 ### Added
+- **Our own pictures for travels, music and home (#328):** Memory Lane's travels and music-and-home themes show original illustrations (map, suitcase, mountain, beach, tent, lighthouse, helicopter, violin, trumpet, piano, radio, yarn, accordion, picture frame, telephone, sofa) instead of emoji.
 - **New pictures for Memory Lane's kitchen table and garden (#327):** 18 original retro illustrations (teapot, bread, cheese, wine glass, croissant, lemon, olives, honey, cake, chocolate, egg, rose, tulip, potted plant, pear, tree, pine, ladybug), checked side by side with their themes at 100pt and 52pt on light and dark tiles and in grayscale.
 - **New pictures in Name the Herd (#325):** 21 original retro illustrations (dog, cat, lion, frog, turtle, butterfly, elephant; apple, banana, grapes, orange, strawberry, watermelon, peach; car, bus, airplane, rocket, bicycle, train, sailboat) replace the emoji, checked at 52pt on light and dark tiles and in grayscale.
 - **Our own pictures in Quick Eyes and Remember Together (#326):** fourteen original retro illustrations (sunflower, guitar, moon, coffee, star, bee, cactus; clock, key, house, chair, umbrella, book, lamp) ready for the games to show in place of emoji, checked at 100pt and 52pt on light and dark tiles and in grayscale.
