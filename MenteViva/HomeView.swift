@@ -23,6 +23,8 @@ struct HomeView: View {
     @Environment(\.scenePhase) private var scenePhase
     /// Games the family hid on this device (#108).
     @AppStorage(FamilySettings.hiddenKey) private var hiddenGames = ""
+    /// Only read to re-key the screen: a language change must redraw every name.
+    @AppStorage(AppLanguage.storageKey) private var appLanguage = AppLanguage.system.rawValue
 
     private var hidden: Set<GameID> { FamilySettings.hidden(from: hiddenGames) }
     private var today: TodayRun { TodayRun(plan: plan, hidden: hidden, sessions: sessions) }
@@ -58,6 +60,9 @@ struct HomeView: View {
                     .padding()
                 }
             }
+            // Cards take their name from a function, not the environment, so without
+            // a new identity they keep the old language until the app restarts.
+            .id(appLanguage)
             .navigationTitle(AppLanguage.localized("app.title"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
