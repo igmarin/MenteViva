@@ -56,6 +56,14 @@ jobs:
           exit 1
         }
 
+    - name: Fail if the Sliding Blocks puzzles drifted from their generator (#222)
+      run: |
+        swift -O tools/generate_sliding_blocks.swift
+        git diff --exit-code -- MenteViva/Games/SlidingBlocksLevels.swift || {
+          echo "::error::SlidingBlocksLevels.swift doesn't match its seed. Run 'swift -O tools/generate_sliding_blocks.swift' and commit."
+          exit 1
+        }
+
     - name: Lint (Apple swift-format, ships with Xcode)
       run: xcrun swift-format lint --strict --recursive MenteViva MenteVivaTests tools
 
