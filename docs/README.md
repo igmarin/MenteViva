@@ -20,7 +20,9 @@ screen of real content, split it — long docs don't get read.
 | [playtest-session-3.md](playtest-session-3.md) | Printable session sheet for playtest #3: Sudoku, Up or Down and Finish the Saying (#179–#181) | Current |
 | [install-runbook.md](install-runbook.md) | Installing on a device with a free Apple ID (7-day expiry) | Current |
 | [device-support.md](device-support.md) | What hardware/OS we claim and what we verified | Living |
-| [decisions.md](decisions.md) | Every significant decision, with date and reason | Living log |
+| [decisions.md](decisions.md) | Every significant decision, with date and reason: an index of month files in [decisions/](decisions/), plus the entry template | Living log |
+| [handoffs/](handoffs/) | Notes one agent session left for the next: what was done, what's open | Snapshots, newest by file name |
+| [superpowers/](superpowers/) | Design specs (`specs/`) and step-by-step build plans (`plans/`) for bigger features: the reminiscence game and the three new games | Shipped |
 | [design/](design/) | Card Table redesign: review of the old app and the spec it was built from (HTML, open in a browser) | Shipped (#154–#159) |
 | [design/art-style.md](design/art-style.md) | Approved retro illustration direction, palette, fixed prompt and picture checks | Samples completed (#323); batches #325–#328 next |
 | [art-prompts.md](art-prompts.md) | Exact prompts and actual tool disclosures for selected art | Living |
