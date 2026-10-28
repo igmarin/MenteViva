@@ -12,14 +12,17 @@ Decision: [../../decisions/2026-10.md](../../decisions/2026-10.md), 2026-10-28.
 
 1. **Reveal (levels 1–5):** the picture shows with one "Got it" button, at least 100pt tall (AGENTS.md
    floor for game controls). Tapping it hides the picture and shows the choices.
-2. **Miss:** the picture shows again, the wrong tapped option fades, and the player picks again. The
-   round is never replaced and no copy says wrong; use "Almost — look again".
+2. **Miss:** the picture comes back above the choices, the wrong tapped option fades, and the player
+   picks again. The round is never replaced and no copy says wrong; use "Almost — look again". Only a
+   first-try right answer counts as correct.
 3. **Right:** the existing answer beat (#235), then the next round.
 4. **Quick mode (levels 6–10):** unchanged flash and shrink curve.
-5. **Quiet speed measure:** store the look time per round (reveal to "Got it"). It feeds the caregiver
-   screen only, never the player (#45).
-6. **Faster-round invite:** after three right rounds in a row with a look time under 1.0s, offer once per
-   session "Want a faster one?". Yes raises the level by one; no changes nothing.
+5. **Quiet speed measure:** the look time per round (reveal to "Got it") is kept in the session. Saving
+   it for the caregiver screen needs a `GameSession` change and is a follow-up; it never shows to the
+   player (#45).
+6. **Faster-round invite:** after three first-try right rounds in a row, each looked at for under 1.0s,
+   offer once per game "Want a faster one?". Yes flashes the picture for the rest of that game, at the
+   level's own flash times; no changes nothing. The stored level is never changed by the invite.
 
 ## Touches
 

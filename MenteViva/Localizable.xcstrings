@@ -1789,6 +1789,22 @@
         }
       }
     },
+    "game.quickeyes.gotit" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Got it"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Listo"
+          }
+        }
+      }
+    },
     "game.quickeyes.instruction" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -1802,6 +1818,86 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aparecerá una imagen por un instante. Mírala bien y luego tócala"
+          }
+        }
+      }
+    },
+    "game.quickeyes.instruction.paced" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A picture appears. Look as long as you like, tap “Got it”, then tap the one you saw"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aparecerá una imagen. Mírala el tiempo que quieras, toca «Listo» y luego toca la que viste"
+          }
+        }
+      }
+    },
+    "game.quickeyes.invite.no" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No, this is fine"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No, así está bien"
+          }
+        }
+      }
+    },
+    "game.quickeyes.invite.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Want a faster one?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Quieres una más rápida?"
+          }
+        }
+      }
+    },
+    "game.quickeyes.invite.yes" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yes, a faster one"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sí, más rápida"
+          }
+        }
+      }
+    },
+    "game.quickeyes.lookagain" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Almost — look again"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casi — mira otra vez"
           }
         }
       }
