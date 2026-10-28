@@ -85,7 +85,7 @@ postponed until the trigger in decisions.md 2026-09-20):**
 
 - [ ] Medical-claims review: copy stays "games for an active mind",
       never "prevents/treats dementia" (research §1, App Store 1.4.1).
-- [ ] Privacy policy page (what leaves the device: jev-integration.md §privacy).
+- [ ] Privacy policy page (drafted, #34; the app makes no network calls).
 - [ ] Age rating + positioning decision.
 - [x] Business model: v1.0 is free; support links live outside the app (decisions.md 2026-10-27, #228).
 - [ ] ES/EN native review sign-off.

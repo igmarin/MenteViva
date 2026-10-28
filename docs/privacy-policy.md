@@ -32,8 +32,8 @@ names may be included in your own iPhone or iPad backup (for example iCloud
 Backup), which belongs to you and which you control in Apple's Settings. Optionally the app can read a name aloud using your
 device's built-in voice; that happens on the device.
 
-**What leaves the device: nothing.** The app works fully offline, and its daily game
-suggestion is worked out on your device. The app makes no network requests at all.
+**What leaves the device: normally, nothing.** The app works fully offline, and its daily game
+suggestion is worked out on your device. The app makes no network requests at all. The research links in "Why these games" open in your browser only when you tap them.
 
 **Sharing is your choice.** The "share your week" button uses the standard
 iOS share sheet — something leaves your device only when you choose to send

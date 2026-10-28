@@ -17,9 +17,11 @@ for lang in en:hello es:hola; do
         echo "$dir must only mention $want." >&2
         exit 1
     fi
-    if ! grep -rq "mailto:$want" "$dir"; then
-        echo "$dir has no mailto:$want link." >&2
-        exit 1
-    fi
+    for page in privacy support; do
+        if ! grep -q "mailto:$want" "$dir/$page.html"; then
+            echo "$dir/$page.html has no mailto:$want link." >&2
+            exit 1
+        fi
+    done
 done
 echo "Site pages have no placeholders and the right support address."
