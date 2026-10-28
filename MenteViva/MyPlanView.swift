@@ -25,6 +25,7 @@ struct MyPlanView: View {
             }
             .padding()
         }
+        .pageBackground()
         .navigationTitle(AppLanguage.localized("myplan.title"))
     }
 

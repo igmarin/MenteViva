@@ -50,6 +50,7 @@ struct WhyTheseGamesView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding()
         }
+        .pageBackground()
         .navigationTitle(AppLanguage.localized("why.title"))
     }
 

@@ -26,6 +26,7 @@ struct SetUpView: View {
 
             FamilyPhotosSection()
         }
+        .listPageBackground()
         .navigationTitle(AppLanguage.localized("setup.title"))
     }
 }
@@ -270,6 +271,7 @@ private struct FamilyGameView: View {
                 }
             }
         }
+        .listPageBackground()
         .navigationTitle(AppLanguage.localized(game.title))
     }
 

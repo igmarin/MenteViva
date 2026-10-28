@@ -41,6 +41,7 @@ struct OnboardingView: View {
         // At the largest text sizes the screens scroll, so the answers and Skip stay reachable.
         .fitOrScroll()
         .padding(24)
+        .background(Color.paper.ignoresSafeArea())
     }
 
     // MARK: Step 1 - the welcome screen, kept as it was

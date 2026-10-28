@@ -46,6 +46,7 @@ struct MyProgressView: View {
                 }
             }
         }
+        .listPageBackground()
         .navigationTitle(AppLanguage.localized("progress.title"))
         .toolbar {
             if !rates.isEmpty {

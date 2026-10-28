@@ -4,6 +4,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 
 ## [Unreleased]
 
+### Fixed
+- **Every screen now sits on the cream paper background (#356):** Home, the first-run screens, Settings and its lists no longer open on plain white. In Dark Mode the same screens use the dark surround instead of black, following the phone's own appearance setting.
+
 ### Added
 - **Sliding Blocks — slide the blocks to free the big one (#222/#223):** a new game with levels 1–10 (3×4 boards of 1–3 slides up to 4×5 boards of 60+, generated offline and checked solvable). Tap a block and only the 100pt arrows it can follow appear, or drag it where it fits; VoiceOver names each block by size, place and cell ("big block, top middle, row 1, column 2"), and repeated one-cell moves the same way count as one slide and offers "move left/right/up/down" only where it can go, so the puzzle can be solved by ear. Undo, "Start over" and "Show me a move" (100pt each); Reduce Motion moves blocks instantly. The big block is amber and striped, never colour alone, and the exit is a gap in the board's edge with a chevron. It ends with "It's out!" and the usual celebration, and the session is saved with its level.
 - **Our own pictures for travels, music and home (#328):** Memory Lane's travels and music-and-home themes show original illustrations (map, suitcase, mountain, beach, tent, lighthouse, helicopter, violin, trumpet, piano, radio, yarn, accordion, picture frame, telephone, sofa) instead of emoji.

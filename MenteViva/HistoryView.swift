@@ -41,6 +41,7 @@ struct HistoryView: View {
                 sessionList(snapshot)
             }
         }
+        .pageBackground()
         .navigationTitle(AppLanguage.localized("history.title"))
         .toolbar {
             if snapshot.weekCount > 0 {
@@ -98,6 +99,7 @@ struct HistoryView: View {
                     .font(.title3.weight(.semibold))
             }
         }
+        .listPageBackground()
     }
 
     /// One row per day (#140): the day, then one chip per game with its count.
