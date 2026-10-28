@@ -14,6 +14,8 @@ model/version that the tool does not expose. See [style](design/art-style.md) an
 
 ## Production pictures
 
+The #328 prompts ask for a plain pure white background (as the #323 violin sample did); the white was then flood-filled to transparent, cropped and fitted to 600×600 with Pillow. The "subtle friendly face" sentence of the fixed paragraph is dropped because none of these objects has a face.
+
 | Slug | Prompt | Date | Tool / model / version |
 |---|---|---|---|
 | dog (sample, #323) | [Prompt](design/art-samples/prompts/dog.prompt.txt) | 2026-10-28 | Muse built-in image generation (`muse.image_generation`); model/version not exposed |
