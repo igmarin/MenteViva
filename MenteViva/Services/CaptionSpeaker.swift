@@ -24,6 +24,8 @@ enum CaptionSpeaker {
 
     private static let synthesizer = AVSpeechSynthesizer()
     private static let sessionEnder = SessionEnder()
+    /// One serial queue, so activate and deactivate run in the order they were asked.
+    nonisolated private static let sessionQueue = DispatchQueue(label: "CaptionSpeaker.session", qos: .userInitiated)
 
     /// True while a name is being read, so other audio code leaves the session alone.
     static var isSpeaking: Bool { synthesizer.isSpeaking }
@@ -43,7 +45,10 @@ enum CaptionSpeaker {
 
         private func end(_ synthesizer: AVSpeechSynthesizer) {
             guard !synthesizer.isSpeaking else { return }
-            try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+            // Off the main thread: the call can block (the async API needs iOS 27).
+            CaptionSpeaker.sessionQueue.async {
+                try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+            }
         }
     }
 
@@ -61,7 +66,9 @@ enum CaptionSpeaker {
     static func speak(_ text: String) {
         synthesizer.stopSpeaking(at: .immediate)
         try? configureSession()
-        try? AVAudioSession.sharedInstance().setActive(true)
+        CaptionSpeaker.sessionQueue.async {
+            try? AVAudioSession.sharedInstance().setActive(true)
+        }
         let utterance = AVSpeechUtterance(string: text)
         // A language with no installed voice still speaks, in English, not silently.
         utterance.voice =
