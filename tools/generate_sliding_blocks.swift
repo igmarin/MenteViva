@@ -1,137 +1,118 @@
-#!/usr/bin/env swift  // Generates MenteViva/Games/SlidingBlocksLevels.swift — 30 puzzles per level, seeded.  // Run: swift tools/generate_sliding_blocks.swift [seed]  // Foundation only, deterministic.
+// Generates MenteViva/Games/SlidingBlocksLevels.swift: 30 puzzles per level (#222).
+// Run: swift -O tools/generate_sliding_blocks.swift [seed]   (default seed 42; ~15 s)
+// Foundation only. The same seed writes the same file, byte for byte; CI checks it.
+//
+// How: lay out a random board, explore every position it can reach, then
+// measure each position's true minimum moves with one breadth-first search
+// that starts from *all* solved positions at once. A position joins a level
+// when its minimum falls in that level's band. One move = one block sliding
+// any number of cells in one direction. Same-shaped blocks are
+// interchangeable, so a position is its grid of cell codes, not a block order.
 import Foundation
 
-// MARK: - Shared types (mirror MenteViva/Games/SlidingBlocksPuzzle.swift)
+// MARK: - Positions (mirror MenteViva/Games/SlidingBlocksPuzzle.swift)
 
-struct SlidingBlock: Hashable, Equatable {
+// Cell codes, 3 bits each, row-major: 0 empty, 1 big 2×2, 2 small 1×1,
+// 3/4 wide 2×1 left/right, 5/6 tall 1×2 top/bottom.
+let layoutCharacters: [Character] = [".", "B", "o", "<", ">", "^", "v"]
+
+struct Block {
     var x: Int
     var y: Int
     var w: Int
     var h: Int
 }
 
-enum SlidingDirection: CaseIterable {
-    case up, down, left, right
-    var dx: Int {
-        switch self {
-        case .left: -1
-        case .right: 1
-        default: 0
-        }
-    }
+struct Board {
+    let width: Int
+    let height: Int
+    var exitX: Int { (width - 2) / 2 }
+    var exitY: Int { height - 2 }
 
-    var dy: Int {
-        switch self {
-        case .up: -1
-        case .down: 1
-        default: 0
-        }
-    }
-}
-
-struct SlidingMove: Hashable, Equatable {
-    var block: Int
-    var direction: SlidingDirection
-    var steps: Int
-}
-
-struct Puzzle: Hashable {
-    var width: Int
-    var height: Int
-    var blocks: [SlidingBlock]
-    var bigIndex: Int
-    var exitX: Int { (width - blocks[bigIndex].w) / 2 }
-    var exitY: Int { height - blocks[bigIndex].h }
-    var isSolved: Bool { blocks[bigIndex].x == exitX && blocks[bigIndex].y == exitY }
-
-    func occupancy() -> [Int?] {
-        var grid = [Int?](repeating: nil, count: width * height)
-        for (idx, b) in blocks.enumerated() {
+    func key(_ blocks: [Block]) -> UInt64 {
+        var key: UInt64 = 0
+        for (index, b) in blocks.enumerated() {
             for dy in 0..<b.h {
                 for dx in 0..<b.w {
-                    let x = b.x + dx
-                    let y = b.y + dy
-                    if x < 0 || x >= width || y < 0 || y >= height { continue }
-                    grid[y * width + x] = idx
+                    let code: UInt64
+                    if index == 0 {
+                        code = 1
+                    } else if b.w == 2 {
+                        code = dx == 0 ? 3 : 4
+                    } else if b.h == 2 {
+                        code = dy == 0 ? 5 : 6
+                    } else {
+                        code = 2
+                    }
+                    key |= code << UInt64(3 * ((b.y + dy) * width + b.x + dx))
                 }
             }
         }
-        return grid
+        return key
     }
 
-    func legalMoves() -> [SlidingMove] {
-        let grid = occupancy()
-        var out: [SlidingMove] = []
-        for (idx, b) in blocks.enumerated() {
-            for dir in SlidingDirection.allCases {
-                var steps = 0
+    /// Big block first, the rest in reading order.
+    func blocks(_ key: UInt64) -> [Block] {
+        var big: Block?
+        var others: [Block] = []
+        for cell in 0..<(width * height) {
+            let x = cell % width
+            let y = cell / width
+            switch (key >> UInt64(3 * cell)) & 7 {
+            case 1 where big == nil: big = Block(x: x, y: y, w: 2, h: 2)
+            case 2: others.append(Block(x: x, y: y, w: 1, h: 1))
+            case 3: others.append(Block(x: x, y: y, w: 2, h: 1))
+            case 5: others.append(Block(x: x, y: y, w: 1, h: 2))
+            default: break
+            }
+        }
+        return [big!] + others
+    }
+
+    func isSolved(_ key: UInt64) -> Bool {
+        // Big cells on both corners of the exit square: the 2×2 is exactly there.
+        func code(_ x: Int, _ y: Int) -> UInt64 { (key >> UInt64(3 * (y * width + x))) & 7 }
+        return code(exitX, exitY) == 1 && code(exitX + 1, exitY + 1) == 1
+    }
+
+    func neighbours(_ key: UInt64) -> [UInt64] {
+        let blocks = blocks(key)
+        var owner = [Int](repeating: -1, count: width * height)
+        for (index, b) in blocks.enumerated() {
+            for dy in 0..<b.h { for dx in 0..<b.w { owner[(b.y + dy) * width + b.x + dx] = index } }
+        }
+        var out: [UInt64] = []
+        for (index, b) in blocks.enumerated() {
+            for (dx, dy) in [(0, -1), (0, 1), (-1, 0), (1, 0)] {
+                var steps = 1
                 while true {
-                    steps += 1
-                    let nx = b.x + dir.dx * steps
-                    let ny = b.y + dir.dy * steps
+                    let nx = b.x + dx * steps
+                    let ny = b.y + dy * steps
                     guard nx >= 0, ny >= 0, nx + b.w <= width, ny + b.h <= height else { break }
                     var clear = true
-                    for dy in 0..<b.h where clear {
-                        for dx in 0..<b.w where clear {
-                            let x = nx + dx
-                            let y = ny + dy
-                            let cell = grid[y * width + x]
-                            if let owner = cell, owner != idx { clear = false }
+                    for cy in ny..<(ny + b.h) {
+                        for cx in nx..<(nx + b.w) where owner[cy * width + cx] != -1 && owner[cy * width + cx] != index {
+                            clear = false
                         }
                     }
-                    if clear {
-                        out.append(SlidingMove(block: idx, direction: dir, steps: steps))
-                    } else {
-                        break
-                    }
+                    guard clear else { break }
+                    var moved = blocks
+                    moved[index].x = nx
+                    moved[index].y = ny
+                    out.append(self.key(moved))
+                    steps += 1
                 }
             }
         }
         return out
     }
 
-    func applying(_ move: SlidingMove) -> Puzzle? {
-        guard blocks.indices.contains(move.block) else { return nil }
-        let b = blocks[move.block]
-        let nx = b.x + move.direction.dx * move.steps
-        let ny = b.y + move.direction.dy * move.steps
-        guard nx >= 0, ny >= 0, nx + b.w <= width, ny + b.h <= height else { return nil }
-        let grid = occupancy()
-        for dy in 0..<b.h {
-            for dx in 0..<b.w {
-                let x = nx + dx
-                let y = ny + dy
-                if let owner = grid[y * width + x], owner != move.block { return nil }
-            }
+    func layout(_ key: UInt64) -> String {
+        var rows: [String] = []
+        for y in 0..<height {
+            rows.append(String((0..<width).map { layoutCharacters[Int((key >> UInt64(3 * (y * width + $0))) & 7)] }))
         }
-        var next = self
-        next.blocks[move.block].x = nx
-        next.blocks[move.block].y = ny
-        return next
-    }
-
-    func solve() -> [SlidingMove]? {
-        if isSolved { return [] }
-        var queue: [Puzzle] = [self]
-        var paths: [[SlidingMove]] = [[]]
-        var visited: Set<Puzzle> = [self]
-        var head = 0
-        while head < queue.count {
-            let cur = queue[head]
-            let path = paths[head]
-            head += 1
-            for move in cur.legalMoves() {
-                guard let nxt = cur.applying(move) else { continue }
-                if visited.contains(nxt) { continue }
-                let nextPath = path + [move]
-                if nxt.isSolved { return nextPath }
-                visited.insert(nxt)
-                queue.append(nxt)
-                paths.append(nextPath)
-            }
-            if visited.count > 600000 { break }
-        }
-        return nil
+        return rows.joined(separator: "/")
     }
 }
 
@@ -145,317 +126,151 @@ struct SeededRNG: RandomNumberGenerator {
     }
 }
 
-// MARK: - Band config
+// MARK: - Levels
 
-let boardSizes: [(w: Int, h: Int)] = [
-    (3, 4), (3, 4), (4, 4), (4, 4), (4, 5), (4, 5), (4, 5), (4, 5), (4, 5), (4, 5),
-]
-let bands: [(min: Int, max: Int?)] = [
-    (1, 3), (3, 5), (5, 8), (8, 12), (12, 16), (16, 22), (22, 30), (30, 40), (40, 60), (60, nil),
-]
-let scrambleStepsPerLevel: [(lo: Int, hi: Int)] = [
-    (2, 6), (3, 8), (6, 12), (9, 18), (13, 22), (17, 30), (24, 42), (32, 60), (45, 85), (70, 120),
-]
-
-// Group levels by board size to share BFS work.
-let sizeGroups: [(size: (w: Int, h: Int), levels: [Int])] = [
-    ((3, 4), [0, 1]),
-    ((4, 4), [2, 3]),
-    ((4, 5), [4, 5, 6, 7, 8, 9]),
-]
-
-// MARK: - Random filling
-
-func randomFilling(width: Int, height: Int, bigX: Int, bigY: Int, rng: inout SeededRNG) -> [SlidingBlock]? {
-    // Place big first.
-    var blocks: [SlidingBlock] = [SlidingBlock(x: bigX, y: bigY, w: 2, h: 2)]
-    var grid = [[Bool]](repeating: [Bool](repeating: false, count: width), count: height)
-    for dy in 0..<2 {
-        for dx in 0..<2 { grid[bigY + dy][bigX + dx] = true }
-    }
-    var empties = width * height - 4
-    // We want exactly 2 empties at the end.
-    let targetEmpties = 2
-    let targetFilled = width * height - targetEmpties
-    var attempts = 0
-    let maxAttempts = 500
-    while empties > targetEmpties, attempts < maxAttempts {
-        attempts += 1
-        // Collect empty cells.
-        var emptyCells: [(Int, Int)] = []
-        for y in 0..<height {
-            for x in 0..<width where !grid[y][x] { emptyCells.append((x, y)) }
-        }
-        guard !emptyCells.isEmpty else { break }
-        emptyCells.shuffle(using: &rng)
-        let (ex, ey) = emptyCells[0]
-        // Pick size.
-        let choices: [(Int, Int)] = [(1, 1), (1, 2), (2, 1)]
-        let shuffled = choices.shuffled(using: &rng)
-        var placed = false
-        for (bw, bh) in shuffled {
-            if ex + bw > width || ey + bh > height { continue }
-            // Need all cells empty.
-            var ok = true
-            for dy in 0..<bh where ok {
-                for dx in 0..<bw where ok {
-                    if grid[ey + dy][ex + dx] { ok = false }
-                }
-            }
-            if !ok { continue }
-            // Don't leave single isolated cell that can't be filled with allowed sizes?
-            // Simple check: remaining empties after placement must be reachable.
-            // But we just place.
-            for dy in 0..<bh { for dx in 0..<bw { grid[ey + dy][ex + dx] = true } }
-            blocks.append(SlidingBlock(x: ex, y: ey, w: bw, h: bh))
-            empties -= bw * bh
-            placed = true
-            break
-        }
-        if !placed {
-            // Try next empty cell next iteration; count as attempt.
-            continue
-        }
-    }
-    let filled = blocks.reduce(0) { $0 + $1.w * $1.h }
-    if filled != targetFilled { return nil }
-    // Validate no overlaps already done.
-    return blocks
+struct Level {
+    let width: Int
+    let height: Int
+    let minMoves: Int
+    let maxMoves: Int?
+    func contains(_ moves: Int) -> Bool { moves >= minMoves && moves <= (maxMoves ?? .max) }
 }
 
-func generateSolvedTemplate(width: Int, height: Int, rng: inout SeededRNG) -> Puzzle? {
-    let bigW = 2
-    let bigH = 2
-    let exitX = (width - bigW) / 2
-    let exitY = height - bigH
-    guard let blocks = randomFilling(width: width, height: height, bigX: exitX, bigY: exitY, rng: &rng) else { return nil }
-    // big is at 0.
-    return Puzzle(width: width, height: height, blocks: blocks, bigIndex: 0)
-}
-
-func scramble(puzzle: Puzzle, steps: Int, rng: inout SeededRNG) -> Puzzle {
-    var cur = puzzle
-    for _ in 0..<steps {
-        let moves = cur.legalMoves()
-        guard !moves.isEmpty else { break }
-        let move = moves.randomElement(using: &rng)!
-        if let nxt = cur.applying(move) { cur = nxt }
-    }
-    return cur
-}
+let levels: [Level] = [
+    Level(width: 3, height: 4, minMoves: 1, maxMoves: 3),
+    Level(width: 3, height: 4, minMoves: 3, maxMoves: 5),
+    Level(width: 4, height: 4, minMoves: 5, maxMoves: 8),
+    Level(width: 4, height: 4, minMoves: 8, maxMoves: 12),
+    Level(width: 4, height: 5, minMoves: 12, maxMoves: 16),
+    Level(width: 4, height: 5, minMoves: 16, maxMoves: 22),
+    Level(width: 4, height: 5, minMoves: 22, maxMoves: 30),
+    Level(width: 4, height: 5, minMoves: 30, maxMoves: 40),
+    Level(width: 4, height: 5, minMoves: 40, maxMoves: 60),
+    Level(width: 4, height: 5, minMoves: 60, maxMoves: nil),
+]
+let perLevel = 30
+/// Puzzles one random board may give each level, so a level isn't 30 near-copies.
+let perBoardPerLevel = 3
 
 // MARK: - Generation
 
-func generateAll(seed: UInt64) -> [[Puzzle]] {
-    var rng = SeededRNG(state: seed)
-    var allLevels: [[Puzzle]] = Array(repeating: [], count: 10)
-    // Group by board size to reuse BFS work.
-    for group in sizeGroups {
-        let (w, h) = (group.size.w, group.size.h)
-        let levelIndices = group.levels
-        // Pools per level index.
-        var pools: [Int: [Puzzle]] = [:]
-        for idx in levelIndices { pools[idx] = [] }
-        var templatesTried = 0
-        let isDeepGroup = levelIndices.contains(9)
-        let maxTemplates = isDeepGroup ? 5 : 12
-        while pools.contains(where: { $0.value.count < 30 }) && templatesTried < maxTemplates {
-            templatesTried += 1
-            guard let start = generateSolvedTemplate(width: w, height: h, rng: &rng) else { continue }
-            // BFS outward from solved start.
-            var queue: [Puzzle] = [start]
-            var depth: [Int] = [0]
-            var visited: Set<Puzzle> = [start]
-            var head = 0
-            // Cap visited to keep runtime bounded; deep levels need larger caps.
-            let maxVisited = isDeepGroup ? 400000 : 300000
-            while head < queue.count {
-                let cur = queue[head]
-                let d = depth[head]
-                head += 1
-                if d > 0, !cur.isSolved {
-                    for lvl in levelIndices where pools[lvl]!.count < 30 {
-                        let band = bands[lvl]
-                        let inBand: Bool
-                        if let hi = band.max { inBand = d >= band.min && d <= hi } else { inBand = d >= band.min }
-                        if inBand {
-                            pools[lvl]!.append(cur)
-                            break
-                        }
-                    }
-                }
-                if pools.allSatisfy({ $0.value.count >= 30 }) { break }
-                if d >= 80 { continue }
-                for m in cur.legalMoves() {
-                    guard let nxt = cur.applying(m) else { continue }
-                    if visited.contains(nxt) { continue }
-                    visited.insert(nxt)
-                    queue.append(nxt)
-                    depth.append(d + 1)
-                }
-                if visited.count > maxVisited { break }
-            }
-            // Shuffle each pool deterministically to avoid bias toward BFS order.
-            for idx in levelIndices {
-                pools[idx]!.shuffle(using: &rng)
-            }
-        }
-        // If any level still short, fall back.
-        for idx in levelIndices {
-            var remaining = 30 - pools[idx]!.count
-            if remaining > 0 {
-                fputs("Fallback for level \(idx+1): need \(remaining) more\n", stderr)
-                var seen = Set(pools[idx]!)
-                var attempts = 0
-                while remaining > 0, attempts < 80 {
-                    attempts += 1
-                    if idx < 4 {
-                        // Shallow: random fill is fast and accurate.
-                        let w = boardSizes[idx].w
-                        let h = boardSizes[idx].h
-                        let band = bands[idx]
-                        let bx = Int.random(in: 0...(w - 2), using: &rng)
-                        let by = Int.random(in: 0...(h - 2), using: &rng)
-                        if bx == (w - 2) / 2, by == h - 2 { continue }
-                        guard let blocks = randomFilling(width: w, height: h, bigX: bx, bigY: by, rng: &rng) else { continue }
-                        let cand = Puzzle(width: w, height: h, blocks: blocks, bigIndex: 0)
-                        if cand.isSolved { continue }
-                        guard let sol = cand.solve() else { continue }
-                        let ok: Bool
-                        if let hi = band.max { ok = sol.count >= band.min && sol.count <= hi } else { ok = sol.count >= band.min }
-                        if ok, !seen.contains(cand) {
-                            seen.insert(cand)
-                            pools[idx]!.append(cand)
-                            remaining -= 1
-                        }
-                    } else {
-                        let isDeep = idx == 9
-                        guard let tmpl = generateSolvedTemplate(width: w, height: h, rng: &rng) else { continue }
-                        var queue: [Puzzle] = [tmpl]
-                        var depthArr: [Int] = [0]
-                        var visited: Set<Puzzle> = [tmpl]
-                        var head = 0
-                        let maxVisited = isDeep ? 600000 : 300000
-                        while head < queue.count {
-                            let cur = queue[head]
-                            let d = depthArr[head]
-                            head += 1
-                            if d > 0, !cur.isSolved {
-                                let band = bands[idx]
-                                let inBand: Bool
-                                if let hi = band.max { inBand = d >= band.min && d <= hi } else { inBand = d >= band.min }
-                                if inBand, !seen.contains(cur) {
-                                    seen.insert(cur)
-                                    pools[idx]!.append(cur)
-                                    remaining -= 1
-                                    if remaining == 0 { break }
-                                }
-                            }
-                            if remaining == 0 { break }
-                            if d >= 80 { continue }
-                            for m in cur.legalMoves() {
-                                guard let nxt = cur.applying(m) else { continue }
-                                if visited.contains(nxt) { continue }
-                                visited.insert(nxt)
-                                queue.append(nxt)
-                                depthArr.append(d + 1)
-                            }
-                            if visited.count > maxVisited { break }
-                        }
-                    }
-                }
-                if remaining > 0 {
-                    fputs("Warning: level \(idx+1) only \(pools[idx]!.count) puzzles\n", stderr)
-                }
-            }
-            allLevels[idx] = pools[idx]!
-        }
+/// A random full board: the big block anywhere, small pieces until two cells
+/// stay empty. Tall pieces are favoured: they are what makes a board deep.
+func randomBoard(_ board: Board, rng: inout SeededRNG) -> UInt64 {
+    let cells = board.width * board.height
+    var filled = [Bool](repeating: false, count: cells)
+    let bx = Int.random(in: 0...(board.width - 2), using: &rng)
+    let by = Int.random(in: 0...(board.height - 2), using: &rng)
+    var blocks = [Block(x: bx, y: by, w: 2, h: 2)]
+    for dy in 0..<2 { for dx in 0..<2 { filled[(by + dy) * board.width + bx + dx] = true } }
+    var empty = cells - 4
+    let shapes: [(w: Int, h: Int)] = [(1, 2), (1, 2), (1, 2), (2, 1), (1, 1), (1, 1)]
+    while empty > 2 {
+        let open = (0..<cells).filter { !filled[$0] }
+        let cell = open[Int.random(in: open.indices, using: &rng)]
+        let x = cell % board.width
+        let y = cell / board.width
+        let shape = shapes[Int.random(in: shapes.indices, using: &rng)]
+        let fits =
+            shape.w * shape.h <= empty - 2 && x + shape.w <= board.width && y + shape.h <= board.height
+            && !filled[(y + shape.h - 1) * board.width + x + shape.w - 1]
+        let (w, h) = fits ? shape : (1, 1)
+        for dy in 0..<h { for dx in 0..<w { filled[(y + dy) * board.width + x + dx] = true } }
+        blocks.append(Block(x: x, y: y, w: w, h: h))
+        empty -= w * h
     }
-    // Post-verify only shallow levels (1-4) where solve is fast and band mismatches were common.
-    // Deep levels are trusted via depth proxy; test samples them.
-    for lvl in 0..<4 {
-        let band = bands[lvl]
-        for idx in 0..<allLevels[lvl].count {
-            let p = allLevels[lvl][idx]
-            let ok: Bool
-            if let sol = p.solve() {
-                if let hi = band.max { ok = sol.count >= band.min && sol.count <= hi } else { ok = sol.count >= band.min }
+    return board.key(blocks)
+}
+
+/// Every position reachable from `start`, in discovery order, with its true
+/// minimum moves (nil when no position of the component is solved).
+func minimumMoves(from start: UInt64, on board: Board) -> [(key: UInt64, moves: Int)]? {
+    var order = [start]
+    var index: [UInt64: Int] = [start: 0]
+    var edges: [[Int]] = []
+    var head = 0
+    while head < order.count {
+        var next: [Int] = []
+        for key in board.neighbours(order[head]) {
+            if let known = index[key] {
+                next.append(known)
             } else {
-                ok = false
+                index[key] = order.count
+                next.append(order.count)
+                order.append(key)
             }
-            if ok { continue }
-            var found: Puzzle? = nil
-            var attempts = 0
-            while found == nil, attempts < 300 {
-                attempts += 1
-                let w = boardSizes[lvl].w
-                let h = boardSizes[lvl].h
-                let bx = Int.random(in: 0...(w - 2), using: &rng)
-                let by = Int.random(in: 0...(h - 2), using: &rng)
-                if bx == (w - 2) / 2, by == h - 2 { continue }
-                guard let blocks = randomFilling(width: w, height: h, bigX: bx, bigY: by, rng: &rng) else { continue }
-                let cand = Puzzle(width: w, height: h, blocks: blocks, bigIndex: 0)
-                if cand.isSolved { continue }
-                guard let sol2 = cand.solve() else { continue }
-                let ok2: Bool
-                if let hi = band.max { ok2 = sol2.count >= band.min && sol2.count <= hi } else { ok2 = sol2.count >= band.min }
-                if ok2 { found = cand }
-            }
-            if let f = found { allLevels[lvl][idx] = f }
+        }
+        edges.append(next)
+        head += 1
+    }
+    var moves = [Int](repeating: -1, count: order.count)
+    var queue = order.indices.filter { board.isSolved(order[$0]) }
+    guard !queue.isEmpty else { return nil }
+    for i in queue { moves[i] = 0 }
+    head = 0
+    while head < queue.count {
+        let current = queue[head]
+        head += 1
+        for n in edges[current] where moves[n] == -1 {
+            moves[n] = moves[current] + 1
+            queue.append(n)
         }
     }
-    return allLevels
+    return order.indices.map { (order[$0], moves[$0]) }
+}
+
+func generate(seed: UInt64) -> [[(key: UInt64, moves: Int)]] {
+    var rng = SeededRNG(state: seed)
+    var picked: [[(key: UInt64, moves: Int)]] = levels.map { _ in [] }
+    var used = Set<UInt64>()
+    var boardsTried = 0
+    while let level = picked.indices.first(where: { picked[$0].count < perLevel }) {
+        boardsTried += 1
+        guard boardsTried <= 20_000 else {
+            fputs("Gave up: level \(level + 1) has \(picked[level].count) of \(perLevel) puzzles\n", stderr)
+            exit(1)
+        }
+        let board = Board(width: levels[level].width, height: levels[level].height)
+        guard let positions = minimumMoves(from: randomBoard(board, rng: &rng), on: board) else { continue }
+        for (l, spec) in levels.enumerated()
+        where spec.width == board.width && spec.height == board.height && picked[l].count < perLevel {
+            var fits = positions.filter { spec.contains($0.moves) && !used.contains($0.key) }
+            fits.shuffle(using: &rng)
+            for position in fits.prefix(min(perBoardPerLevel, perLevel - picked[l].count)) {
+                used.insert(position.key)
+                picked[l].append(position)
+            }
+        }
+    }
+    fputs("\(boardsTried) random boards explored\n", stderr)
+    return picked
 }
 
 // MARK: - Emit
 
-func emit(levels: [[Puzzle]], to path: String) {
-    var out = ""
-    out += "// Generated by tools/generate_sliding_blocks.swift — do not edit.\n"
-    out += "// Seed is deterministic; re-running with the same seed writes identical content.\n"
-    out += "import Foundation\n\n"
-    out += "/// Pre-generated puzzles, 30 per level band (#222). Each puzzle is a\n"
-    out += "/// width×height board with rectangular blocks; blocks[0] is the 2×2 big\n"
-    out += "/// block that must reach the bottom centre. Generated offline so the app\n"
-    out += "/// never invents content at runtime.\n"
-    out += "enum SlidingBlocksLevels {\n"
-    out += "    struct PuzzleData: Hashable, Sendable {\n"
-    out += "        let width: Int\n"
-    out += "        let height: Int\n"
-    out += "        let blocks: [SlidingBlock]\n"
-    out += "        let bigIndex: Int\n"
-    out += "    }\n\n"
-    out += "    static let all: [[PuzzleData]] = [\n"
-    for levelIdx in 0..<levels.count {
-        let maxStr = bands[levelIdx].max.map(String.init) ?? "+"
-        out +=
-            "        [ // Level \(levelIdx + 1) \(boardSizes[levelIdx].w)x\(boardSizes[levelIdx].h)  moves \(bands[levelIdx].min)..\(maxStr)\n"
-        for puzzle in levels[levelIdx] {
-            let blocksStr = puzzle.blocks.map { "SlidingBlock(x: \($0.x), y: \($0.y), w: \($0.w), h: \($0.h))" }.joined(
-                separator: ", ")
-            out +=
-                "            PuzzleData(width: \(puzzle.width), height: \(puzzle.height), blocks: [\(blocksStr)], bigIndex: \(puzzle.bigIndex)),\n"
+func emit(_ picked: [[(key: UInt64, moves: Int)]], seed: UInt64, to path: String) {
+    var out = """
+        // Generated by tools/generate_sliding_blocks.swift (seed \(seed)). Do not edit.
+        // Layout codes: see SlidingBlocksPuzzle.init(width:height:layout:).
+
+        nonisolated extension SlidingBlocksLevels {
+            static let all: [[PuzzleData]] = [
+
+        """
+    for (l, spec) in levels.enumerated() {
+        let board = Board(width: spec.width, height: spec.height)
+        let band = spec.maxMoves.map { "\(spec.minMoves)–\($0)" } ?? "\(spec.minMoves)+"
+        out += "        [  // Level \(l + 1): \(spec.width)×\(spec.height), \(band) moves\n"
+        for position in picked[l] {
+            out += "            PuzzleData(width: \(spec.width), height: \(spec.height), minMoves: \(position.moves), "
+            out += "layout: \"\(board.layout(position.key))\"),\n"
         }
         out += "        ],\n"
     }
-    out += "    ]\n\n"
-    out += "    /// Deterministic pick for a level.\n"
-    out +=
-        "    static func puzzle(for difficulty: Difficulty, using generator: inout some RandomNumberGenerator) -> SlidingBlocksPuzzle {\n"
-    out += "        let idx = Int.random(in: 0..<30, using: &generator)\n"
-    out += "        let data = all[difficulty.level - 1][idx]\n"
-    out +=
-        "        return SlidingBlocksPuzzle(width: data.width, height: data.height, blocks: data.blocks, bigIndex: data.bigIndex)\n"
-    out += "    }\n\n"
-    out += "    /// Puzzles for a level without randomness (tests).\n"
-    out += "    static func puzzles(for level: Int) -> [PuzzleData] {\n"
-    out += "        precondition((1...10).contains(level))\n"
-    out += "        return all[level - 1]\n"
-    out += "    }\n"
-    out += "}\n"
+    out += "    ]\n}\n"
     do {
         try out.write(toFile: path, atomically: true, encoding: .utf8)
-        print("Wrote \(levels.map(\.count).reduce(0,+)) puzzles to \(path)")
+        print("Wrote \(picked.map(\.count).reduce(0, +)) puzzles to \(path)")
     } catch {
         fputs("Failed to write \(path): \(error)\n", stderr)
         exit(1)
@@ -464,20 +279,6 @@ func emit(levels: [[Puzzle]], to path: String) {
 
 // MARK: - Main
 
-let seed: UInt64 = {
-    if CommandLine.arguments.count > 1, let v = UInt64(CommandLine.arguments[1]) { return v }
-    return 42
-}()
-
-let scriptPath =
-    CommandLine.arguments.first { $0.hasSuffix("generate_sliding_blocks.swift") } ?? "tools/generate_sliding_blocks.swift"
-let root = URL(fileURLWithPath: scriptPath).standardizedFileURL.deletingLastPathComponent().deletingLastPathComponent()
-let outPath: String
-if FileManager.default.fileExists(atPath: root.appendingPathComponent("MenteViva/Games").path) {
-    outPath = root.appendingPathComponent("MenteViva/Games/SlidingBlocksLevels.swift").path
-} else {
-    outPath = "MenteViva/Games/SlidingBlocksLevels.swift"
-}
-
-let levels = generateAll(seed: seed)
-emit(levels: levels, to: outPath)
+let seed = CommandLine.arguments.dropFirst().first.flatMap { UInt64($0) } ?? 42
+let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
+emit(generate(seed: seed), seed: seed, to: root.appendingPathComponent("MenteViva/Games/SlidingBlocksLevels.swift").path)

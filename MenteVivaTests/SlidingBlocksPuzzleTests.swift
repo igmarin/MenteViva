@@ -12,169 +12,122 @@ final class SlidingBlocksPuzzleTests: XCTestCase {
         }
     }
 
-    private func puzzle(for level: Int, index: Int = 0) -> SlidingBlocksPuzzle {
-        let data = SlidingBlocksLevels.puzzles(for: level)[index]
-        return SlidingBlocksPuzzle(width: data.width, height: data.height, blocks: data.blocks, bigIndex: data.bigIndex)
-    }
+    private let bands: [ClosedRange<Int>] = [
+        1...3, 3...5, 5...8, 8...12, 12...16, 16...22, 22...30, 30...40, 40...60, 60...Int.max,
+    ]
 
     // MARK: - Levels
 
     func testGivenLevelsWhenBoardSizesThenSpec() {
-        let sizes = (1...10).map { SlidingBlocksLevels.puzzles(for: $0)[0] }
-        XCTAssertEqual(sizes[0].width, 3)
-        XCTAssertEqual(sizes[0].height, 4)
-        XCTAssertEqual(sizes[1].width, 3)
-        XCTAssertEqual(sizes[1].height, 4)
-        XCTAssertEqual(sizes[2].width, 4)
-        XCTAssertEqual(sizes[2].height, 4)
-        XCTAssertEqual(sizes[3].width, 4)
-        XCTAssertEqual(sizes[3].height, 4)
-        for i in 4...9 {
-            XCTAssertEqual(sizes[i].width, 4, "level \(i + 1)")
-            XCTAssertEqual(sizes[i].height, 5, "level \(i + 1)")
+        let sizes = [(3, 4), (3, 4), (4, 4), (4, 4), (4, 5), (4, 5), (4, 5), (4, 5), (4, 5), (4, 5)]
+        for level in 1...10 {
+            for data in SlidingBlocksLevels.puzzles(for: level) {
+                XCTAssertEqual(data.width, sizes[level - 1].0, "level \(level)")
+                XCTAssertEqual(data.height, sizes[level - 1].1, "level \(level)")
+                XCTAssertTrue(data.puzzle.isValid, "level \(level) \(data.layout)")
+            }
+        }
+    }
+
+    func testGivenEveryLevelThenThirtyDistinctUnsolvedPuzzlesInBand() {
+        var seen = Set<SlidingBlocksPuzzle>()
+        for level in 1...10 {
+            let puzzles = SlidingBlocksLevels.puzzles(for: level)
+            XCTAssertEqual(puzzles.count, 30, "level \(level)")
+            for data in puzzles {
+                XCTAssertTrue(bands[level - 1].contains(data.minMoves), "level \(level) \(data.layout)")
+                XCTAssertFalse(data.puzzle.isSolved, "level \(level) \(data.layout)")
+                XCTAssertTrue(seen.insert(data.puzzle).inserted, "duplicate \(data.layout)")
+            }
         }
     }
 
     func testGivenEveryGeneratedPuzzleWhenSolvedThenMinMovesWithinBand() {
-        let bands: [(min: Int, max: Int?)] = [
-            (1, 3), (3, 5), (5, 8), (8, 12), (12, 16), (16, 22), (22, 30), (30, 40), (40, 60), (60, nil),
-        ]
-        // Sample every level. Shallow levels are verified exactly; deep levels are
-        // sampled for solvability and non-triviality (generation verified bands offline).
+        // Every small-board puzzle, and the first of each 4×5 level (those take
+        // about a second each in a debug build; the generator measured all 300).
         for level in 1...10 {
-            let band = bands[level - 1]
             let puzzles = SlidingBlocksLevels.puzzles(for: level)
-            XCTAssertEqual(puzzles.count, 30, "level \(level)")
-            if level <= 4 {
-                for idx in 0..<5 {
-                    let p = puzzle(for: level, index: idx)
-                    guard let solution = p.solve() else { return XCTFail("level \(level) idx \(idx) unsolvable") }
-                    let moves = solution.count
-                    let hi = band.max!
-                    XCTAssertGreaterThanOrEqual(moves, band.min, "level \(level) idx \(idx)")
-                    XCTAssertLessThanOrEqual(moves, hi, "level \(level) idx \(idx)")
-                }
-            } else {
-                // Deep: check solvable; band is trusted from generation (isSolved check not needed).
-                for idx in 0..<3 {
-                    let p = puzzle(for: level, index: idx)
-                    XCTAssertNotNil(p.solve(), "level \(level) idx \(idx) unsolvable")
-                }
+            for data in level <= 4 ? puzzles : [puzzles[0]] {
+                guard let solution = data.puzzle.solve() else { return XCTFail("level \(level) \(data.layout) unsolvable") }
+                XCTAssertEqual(solution.count, data.minMoves, "level \(level) \(data.layout)")
+                XCTAssertTrue(bands[level - 1].contains(solution.count), "level \(level) \(data.layout)")
             }
         }
     }
+
+    func testGivenDifficultyWhenPuzzlePickedThenFromThatLevel() {
+        var rng = SeededRNG(state: 7)
+        for level in 1...10 {
+            let data = SlidingBlocksLevels.puzzle(for: Difficulty(level: level), using: &rng)
+            XCTAssertTrue(SlidingBlocksLevels.puzzles(for: level).contains(data), "level \(level)")
+        }
+    }
+
+    // MARK: - Moves
 
     func testGivenSolvedStateWhenSolveThenEmpty() {
-        // Big at exit is solved.
-        let p = SlidingBlocksPuzzle(
-            width: 3, height: 4,
-            blocks: [
-                SlidingBlock(x: 0, y: 2, w: 2, h: 2), SlidingBlock(x: 2, y: 0, w: 1, h: 1),
-            ], bigIndex: 0)
-        // Put big at exit (0,2) for 3x4 is already at exit ( (3-2)/2=0, 4-2=2)
+        let p = SlidingBlocksPuzzle(width: 3, height: 4, layout: "o.^/..v/BBo/BBo")
         XCTAssertTrue(p.isSolved)
         XCTAssertEqual(p.solve(), [])
-        XCTAssertNil(p.hint())
+        XCTAssertNil(SlidingBlocksMap(from: p).hint(from: p))
     }
 
-    func testGivenBlockedPathWhenMovesThenOnlyLegalSlides() {
-        // 3x4 board, big at (0,0) blocked on right and bottom by other blocks.
-        let p = SlidingBlocksPuzzle(
-            width: 3, height: 4,
-            blocks: [
-                SlidingBlock(x: 0, y: 0, w: 2, h: 2),  // big
-                SlidingBlock(x: 2, y: 0, w: 1, h: 2),  // vertical on right
-                SlidingBlock(x: 0, y: 2, w: 1, h: 1),
-                SlidingBlock(x: 1, y: 2, w: 1, h: 1),
-            ], bigIndex: 0)
-        let moves = p.moves()
-        // Big cannot move right (blocked by vertical) nor down (blocked by smalls), but can move? Let's just check that every returned move is actually applicable and no illegal move is included.
-        for m in moves {
-            XCTAssertNotNil(p.applying(m), "move \(m) should be legal")
-        }
-        // Ensure a clearly illegal move is not present: big down 1 from (0,0) to (0,1) would overlap vertical? Actually big down 1 would occupy (0,1)-(1,2) overlapping? Check.
-        let illegal = SlidingMove(block: 0, direction: .right, steps: 1)
-        if p.applying(illegal) == nil {
-            XCTAssertFalse(moves.contains(illegal))
-        }
+    func testGivenLayoutWhenParsedThenBigFirstAndShapes() {
+        let p = SlidingBlocksPuzzle(width: 3, height: 4, layout: "BB^/BBv/<>o/.o.")
+        XCTAssertEqual(p.bigIndex, 0)
+        XCTAssertEqual(
+            p.blocks,
+            [
+                SlidingBlock(x: 0, y: 0, w: 2, h: 2), SlidingBlock(x: 2, y: 0, w: 1, h: 2),
+                SlidingBlock(x: 0, y: 2, w: 2, h: 1), SlidingBlock(x: 2, y: 2, w: 1, h: 1),
+                SlidingBlock(x: 1, y: 3, w: 1, h: 1),
+            ])
     }
 
-    func testGivenMidGameWhenHintThenLegalAndKeepsSolvable() {
-        for level in [1, 4, 6] {
-            var p = puzzle(for: level, index: 0)
-            guard let solution = p.solve(), !solution.isEmpty else { continue }
-            // Play a few moves along the solution to reach a mid-game state.
-            let mid = min(2, solution.count - 1)
-            for i in 0..<mid {
-                XCTAssertTrue(p.apply(solution[i]))
-            }
-            XCTAssertFalse(p.isSolved)
-            guard let hint = p.hint() else { return XCTFail("hint nil level \(level)") }
-            XCTAssertTrue(p.moves().contains(hint), "hint must be legal")
-            guard let after = p.applying(hint) else { return XCTFail("hint not applicable") }
-            XCTAssertNotNil(after.solve(), "hint must keep solvable")
-        }
+    func testGivenIllegalMovesWhenApplyingThenRejected() {
+        // Row 3 is "oo.": the corner cell is free, but the left 1×1 can't jump the middle one to reach it.
+        let p = SlidingBlocksPuzzle(width: 3, height: 4, layout: "BB^/BBv/<>./oo.")
+        let left = p.blocks.firstIndex(of: SlidingBlock(x: 0, y: 3, w: 1, h: 1))!
+        let middle = p.blocks.firstIndex(of: SlidingBlock(x: 1, y: 3, w: 1, h: 1))!
+        XCTAssertNotNil(p.applying(SlidingMove(block: middle, direction: .right, steps: 1)))
+        XCTAssertNil(p.applying(SlidingMove(block: left, direction: .right, steps: 2)), "jumps a block")
+        XCTAssertNil(p.applying(SlidingMove(block: middle, direction: .right, steps: 0)), "zero steps")
+        XCTAssertNil(p.applying(SlidingMove(block: 0, direction: .right, steps: 1)), "big is blocked")
+        for move in p.moves() { XCTAssertNotNil(p.applying(move), "\(move) should be legal") }
     }
 
-    func testGivenGeneratorTwiceWithSameSeedThenIdenticalOutput() throws {
-        // Run the generator twice in-process via the same logic? Instead we check file determinism:
-        // the committed levels file was generated with seed 42; regenerating with same seed must match.
-        // We simulate by generating two small puzzle sets with same seed and comparing.
-        // Use the tool's logic: generate a single puzzle set for 3x4 via helper.
-        func onePuzzle(seed: UInt64) -> SlidingBlocksPuzzle {
-            var rng = SeededRNG(state: seed)
-            // Reuse the same random filling as the tool.
-            let w = 3
-            let h = 4
-            let bx = (w - 2) / 2
-            let by = h - 2
-            var blocks: [SlidingBlock]? = nil
-            while blocks == nil {
-                var grid = [[Bool]](repeating: [Bool](repeating: false, count: w), count: h)
-                for dy in 0..<2 { for dx in 0..<2 { grid[by + dy][bx + dx] = true } }
-                var b: [SlidingBlock] = [SlidingBlock(x: bx, y: by, w: 2, h: 2)]
-                var empties = w * h - 4
-                let target = w * h - 2
-                var attempts = 0
-                while empties > 2, attempts < 500 {
-                    attempts += 1
-                    var cells: [(Int, Int)] = []
-                    for y in 0..<h { for x in 0..<w where !grid[y][x] { cells.append((x, y)) } }
-                    if cells.isEmpty { break }
-                    cells.shuffle(using: &rng)
-                    let (ex, ey) = cells[0]
-                    let choices: [(Int, Int)] = [(1, 1), (1, 2), (2, 1)]
-                    let shuffled = choices.shuffled(using: &rng)
-                    var placed = false
-                    for (bw, bh) in shuffled {
-                        if ex + bw > w || ey + bh > h { continue }
-                        var ok = true
-                        for dy in 0..<bh where ok { for dx in 0..<bw where ok { if grid[ey + dy][ex + dx] { ok = false } } }
-                        if !ok { continue }
-                        for dy in 0..<bh { for dx in 0..<bw { grid[ey + dy][ex + dx] = true } }
-                        b.append(SlidingBlock(x: ex, y: ey, w: bw, h: bh))
-                        empties -= bw * bh
-                        placed = true
-                        break
-                    }
-                    if !placed { continue }
+    func testGivenSameShapedBlocksSwappedThenSamePosition() {
+        let a = SlidingBlocksPuzzle(width: 3, height: 4, layout: "BBo/BBo/^.o/v.o")
+        var swapped = a.blocks
+        swapped.swapAt(1, 2)
+        XCTAssertEqual(SlidingBlocksPuzzle(width: 3, height: 4, blocks: swapped, bigIndex: 0), a)
+    }
+
+    // MARK: - Hints
+
+    func testGivenMidGameWhenHintThenLegalAndOneMoveCloser() {
+        for level in [2, 4] {
+            var p = SlidingBlocksLevels.puzzles(for: level)[0].puzzle
+            let map = SlidingBlocksMap(from: p)
+            for _ in 0..<2 {
+                guard let left = map.minMoves(from: p), let hint = map.hint(from: p) else {
+                    return XCTFail("no hint, level \(level)")
                 }
-                let filled = b.reduce(0) { $0 + $1.w * $1.h }
-                if filled == target { blocks = b }
+                XCTAssertTrue(p.moves().contains(hint), "hint must be legal")
+                XCTAssertTrue(p.apply(hint))
+                XCTAssertEqual(map.minMoves(from: p), left - 1, "level \(level)")
             }
-            return SlidingBlocksPuzzle(width: w, height: h, blocks: blocks!, bigIndex: 0)
         }
-        let a = onePuzzle(seed: 99)
-        let b = onePuzzle(seed: 99)
-        XCTAssertEqual(a, b)
     }
 
-    func testGivenHintPerformanceThenUnder50msFor4x5() {
-        let p = puzzle(for: 6, index: 0)  // 4x5, 16-22 moves
+    func testGivenDeepestLevelWhenMapBuiltThenHintsAreLookups() {
+        let data = SlidingBlocksLevels.puzzles(for: 10)[0]
+        let p = data.puzzle
+        let map = SlidingBlocksMap(from: p)
+        XCTAssertEqual(map.minMoves(from: p), data.minMoves)
         let start = Date()
-        _ = p.hint()
-        let elapsed = Date().timeIntervalSince(start)
-        // Allow generous in debug; release will be faster. 0.3s in debug still means <50ms in release.
-        XCTAssertLessThan(elapsed, 0.5, "hint took \(elapsed)s, should be <50ms in release")
+        let hint = map.hint(from: p)
+        XCTAssertLessThan(Date().timeIntervalSince(start), 0.05, "a hint is a lookup once the map exists")
+        XCTAssertNotNil(hint)
     }
 }
