@@ -41,6 +41,11 @@ a `View`, `@State` for the round, `Difficulty.stored(.game)` read once on open, 
 `modelContext.record(GameSession(...))` when it finishes. Games with real logic keep it in a separate pure
 file (`SudokuPuzzle`, `UpOrDownDeal`, `SayingsDeck`, `NumberTrailQuestion`) so it is tested without a screen.
 
+Names and Faces (#142) is Memory Lane's board with each family photo paired to its caption
+(`MemoryMatchView(variant: .captions)`, deal in `PhotoCaptionDeal`). It needs four photos with different
+captions; until then `GameAvailability` keeps it off Home, out of the daily plan and out of the family's
+"last game visible" count.
+
 ## How today's three are chosen
 
 `DailyPolicy.plan` scores every game and takes the top three:

@@ -223,7 +223,10 @@ private struct FamilyGameView: View {
 
     private var hidden: Set<GameID> { FamilySettings.hidden(from: hiddenGames) }
     /// The last game on Home can't be hidden: the app must always have one to play.
-    private var isLastVisible: Bool { !hidden.contains(game) && hidden.count == GameID.released.count - 1 }
+    private var isLastVisible: Bool {
+        let unplayable = hidden.union(GameAvailability.unavailable())
+        return !unplayable.contains(game) && unplayable.count == GameID.released.count - 1
+    }
 
     var body: some View {
         List {

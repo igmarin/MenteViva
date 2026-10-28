@@ -62,7 +62,7 @@ final class WhyTheseGamesStringsTests: XCTestCase {
     func testGivenEveryGameLineWhenReadThenItSaysWhatTheGameExercises() throws {
         let strings = try catalog()
         let gameKeys = try keysOfTheScreen().filter { $0.hasPrefix("why.game.") }
-        XCTAssertEqual(gameKeys.count, 13, "one line per game (docs/why-these-games.md §2)")
+        XCTAssertEqual(gameKeys.count, 14, "one line per game (docs/why-these-games.md §2)")
         for key in gameKeys where key != "why.game.reminiscence" {
             for language in ["en", "es"] {
                 let text = try XCTUnwrap(value(strings[key], language)).lowercased()

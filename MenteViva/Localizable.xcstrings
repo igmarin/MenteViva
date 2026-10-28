@@ -1755,6 +1755,38 @@
         }
       }
     },
+    "game.photocaptions.instruction" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turn over a photo and a name. Find the name that goes with each photo"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Voltea una foto y un nombre. Encuentra el nombre que va con cada foto"
+          }
+        }
+      }
+    },
+    "game.photocaptions.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Names and Faces"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nombres y Caras"
+          }
+        }
+      }
+    },
     "game.quickeyes.a11y.flash %@" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -9916,6 +9948,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Camino de Memoria ejercita recordar dónde está cada cosa."
+          }
+        }
+      }
+    },
+    "why.game.photocaptions" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Names and Faces exercises matching a name to a face."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nombres y Caras ejercita unir un nombre con una cara."
           }
         }
       }

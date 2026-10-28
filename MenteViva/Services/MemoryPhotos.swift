@@ -144,6 +144,11 @@ nonisolated enum MemoryPhotos {
         }
     }
 
+    /// Photos that have a caption, oldest first, each with its caption (#142).
+    static func captioned(in folder: URL = folder) -> [(photo: URL, caption: String)] {
+        all(in: folder).compactMap { url in caption(for: url).map { (url, $0) } }
+    }
+
     /// Saves the trimmed text, cut to `maxCaptionLength`; empty text removes the caption.
     static func setCaption(_ text: String, for photo: URL) throws {
         let file = captionFile(for: photo)
@@ -155,5 +160,15 @@ nonisolated enum MemoryPhotos {
         } else {
             try Data(caption.utf8).write(to: file, options: writeOptions)
         }
+    }
+}
+
+/// Games that cannot be played yet, kept off Home, the plan and the family's list (#142).
+nonisolated enum GameAvailability {
+    /// Games that need the family's own photos and names (Set up → Photos) have nothing to deal
+    /// until enough are there.
+    static func unavailable(in folder: URL = MemoryPhotos.folder) -> Set<GameID> {
+        PhotoCaptionDeal.eligible(MemoryPhotos.captioned(in: folder)).count < PhotoCaptionDeal.minPairs
+            ? [.photoCaptions] : []
     }
 }

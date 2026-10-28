@@ -14,7 +14,7 @@ final class GameIDTests: XCTestCase {
         ]
         XCTAssertEqual(Array(raw.prefix(existing.count)), existing)
         XCTAssertEqual(
-            Set(raw).subtracting(existing), ["repeat_sequence", "tangram", "tile_pairs", "sliding_blocks"])
+            Set(raw).subtracting(existing), ["repeat_sequence", "tangram", "tile_pairs", "sliding_blocks", "photo_captions"])
     }
 
     func testGivenUnreleasedGamesWhenReleasedThenTheyAreLeftOut() {
@@ -23,6 +23,7 @@ final class GameIDTests: XCTestCase {
         XCTAssertEqual(GameID.released.count, GameID.allCases.count)
         XCTAssertTrue(GameID.released.contains(.slidingBlocks))
         XCTAssertTrue(GameID.released.contains(.tilePairs))
+        XCTAssertTrue(GameID.released.contains(.photoCaptions))
         XCTAssertTrue(GameID.released.contains(.tangram))
         XCTAssertTrue(GameID.released.contains(.repeatSequence))
     }

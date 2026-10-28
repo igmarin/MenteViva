@@ -9,7 +9,24 @@ import SwiftUI
 /// card is visible without scrolling. Found pairs keep a checkmark, not just a tint.
 /// #110: family photos added in Set up become cards first; the theme's
 /// emoji fill whatever pairs the photos don't cover.
+/// #142: the `.captions` variant (Names and Faces) is the same board with each photo paired to
+/// its caption instead of to a twin.
 struct MemoryMatchView: View {
+    /// Which game this board plays: Memory Lane, or Names and Faces.
+    enum Variant {
+        case classic, captions
+
+        var game: GameID { self == .classic ? .memoryMatch : .photoCaptions }
+        var instructionKey: String { self == .classic ? "game.memory.instruction" : "game.photocaptions.instruction" }
+    }
+
+    let variant: Variant
+
+    init(variant: Variant = .classic) {
+        self.variant = variant
+        _difficulty = State(initialValue: Difficulty.stored(variant.game))
+    }
+
     @Environment(\.modelContext) private var modelContext
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
@@ -17,7 +34,9 @@ struct MemoryMatchView: View {
     /// Icon-teal card back (Card Table theme): calm, not childish, the same in light and dark.
     private static let cardBack = Color(UIColor(rgb: 0x23685F))
 
-    @State private var difficulty = Difficulty.stored(.memoryMatch)
+    @State private var difficulty: Difficulty
+    /// Names and Faces: the captioned photos a board can use, read again for each deal.
+    @State private var captioned: [(photo: URL, caption: String)] = []
     @State private var faces: [MemoryFace] = []
     /// Decoded once per deal so flipping never re-reads the disk.
     @State private var photoImages: [URL: UIImage] = [:]
@@ -59,10 +78,31 @@ struct MemoryMatchView: View {
     /// first layout pass, an extreme split screen) a small real game beats a
     /// one-pair board, and the cards still shrink to fit.
     static func cappedPairs(for difficulty: Difficulty, in size: CGSize) -> Int {
-        let floor = pairsPerLevel[0]
-        var pairs = pairCount(for: difficulty)
+        fittedPairs(wanted: pairCount(for: difficulty), floor: pairsPerLevel[0], in: size)
+    }
+
+    /// `wanted` pairs, taken down one at a time to no fewer than `floor` until every card fits.
+    static func fittedPairs(wanted: Int, floor: Int, in size: CGSize) -> Int {
+        var pairs = wanted
         while pairs > floor && !cardsFit(pairs: pairs, in: size) { pairs -= 1 }
         return pairs
+    }
+
+    /// The pairs this board deals in `size`; Names and Faces never asks for more than its photos give.
+    private func pairs(in size: CGSize) -> Int {
+        pairs(in: size, captioned: captioned)
+    }
+
+    private func pairs(in size: CGSize, captioned: [(photo: URL, caption: String)]) -> Int {
+        switch variant {
+        case .classic:
+            return Self.cappedPairs(for: difficulty, in: size)
+        case .captions:
+            let available = PhotoCaptionDeal.eligible(captioned).count
+            return Self.fittedPairs(
+                wanted: min(PhotoCaptionDeal.pairCount(for: difficulty), available),
+                floor: min(PhotoCaptionDeal.minPairs, available), in: size)
+        }
     }
 
     /// Whether `pairs` pairs fit in `size` with every card at its minimum.
@@ -98,8 +138,8 @@ struct MemoryMatchView: View {
     var body: some View {
         VStack(spacing: 24) {
             LevelExplainBanner(
-                change: PlanStore.cachedPlan()?.changes[GameID.memoryMatch], game: GameID.memoryMatch, hasStarted: moves > 0)
-            Text(AppLanguage.localized("game.memory.instruction"))
+                change: PlanStore.cachedPlan()?.changes[variant.game], game: variant.game, hasStarted: moves > 0)
+            Text(AppLanguage.localized(variant.instructionKey))
                 .font(.title2)
                 .multilineTextAlignment(.center)
 
@@ -145,20 +185,20 @@ struct MemoryMatchView: View {
                     // board can still grow (the level note above goes away) or turn with
                     // the phone; the cards already dealt just resize, so a game in
                     // progress is never thrown away.
-                    if moves == 0, cards.count != Self.cappedPairs(for: difficulty, in: size) * 2 {
+                    if moves == 0, cards.count != pairs(in: size) * 2 {
                         deal(size: size)
                     }
                 }
             }
         }
         .padding()
-        .gameHeader(.memoryMatch, instruction: AppLanguage.localized("game.memory.instruction"))
+        .gameHeader(variant.game, instruction: AppLanguage.localized(variant.instructionKey))
         .onDisappear {
             flipBackTask?.cancel()
             flipBackTask = nil
         }
         .celebration(
-            isPresented: $showCelebration, game: .memoryMatch, detail: finalDetail,
+            isPresented: $showCelebration, game: variant.game, detail: finalDetail,
             onPlayAgain: { deal(size: boardSize) })
     }
 
@@ -233,6 +273,13 @@ struct MemoryMatchView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 14))
             } else if case .picture(let picture) = card.face {
                 PictureView(picture: picture, size: min(size.width, size.height) * 0.5)
+            } else if case .caption(let text) = card.face {
+                Text(text)
+                    .font(.title3.weight(.semibold))
+                    .foregroundStyle(Color.espresso)
+                    .multilineTextAlignment(.center)
+                    .minimumScaleFactor(0.5)
+                    .padding(8)
             }
         }
         .rotation3DEffect(
@@ -247,19 +294,30 @@ struct MemoryMatchView: View {
         flipBackTask?.cancel()
         flipBackTask = nil
         var generator = SystemRandomNumberGenerator()
-        let deal = MemoryDeal.make(
-            photos: MemoryPhotos.all(), pairs: Self.cappedPairs(for: difficulty, in: size),
-            using: &generator)
-        faces = deal.faces
+        // `cards` lie in order; `pairIDs` says which cards belong together (index-aligned).
+        let layout: (faces: [MemoryFace], cards: [MemoryFace], pairIDs: [Int])
+        switch variant {
+        case .classic:
+            let deal = MemoryDeal.make(
+                photos: MemoryPhotos.all(), pairs: Self.cappedPairs(for: difficulty, in: size), using: &generator)
+            // Each face occurs exactly twice, so its index in the deal's pairs is the identity both copies share.
+            layout = (deal.faces, deal.order.map { deal.faces[$0] }, deal.order)
+        case .captions:
+            let list = MemoryPhotos.captioned()
+            captioned = list
+            let dealt = PhotoCaptionDeal.make(
+                captioned: list, pairs: pairs(in: size, captioned: list), using: &generator)
+            layout = (dealt.cards.filter { if case .photo = $0 { true } else { false } }, dealt.cards, dealt.pairIDs)
+        }
+        faces = layout.faces
         photoImages = Dictionary(
             uniqueKeysWithValues: faces.compactMap { face in
                 guard case .photo(let url) = face, let image = UIImage(contentsOfFile: url.path) else { return nil }
                 return (url, image)
             })
-        // The board taps by card id; each face occurs exactly twice, so its
-        // index in the deal's pairs is the identity both copies share.
-        cards = deal.order.enumerated().map { Card(id: $0, face: deal.faces[$1]) }
-        board.deal(pairs: deal.order)
+        // The board taps by card id.
+        cards = layout.cards.enumerated().map { Card(id: $0, face: $1) }
+        board.deal(pairs: layout.pairIDs)
         cardPositions = Dictionary(uniqueKeysWithValues: cards.indices.map { (cards[$0].id, $0 + 1) })
         moves = 0
         startedAt = .now
@@ -274,6 +332,7 @@ struct MemoryMatchView: View {
             String(
                 format: AppLanguage.localized("game.memory.photo %lld"),
                 (faces.firstIndex(of: face) ?? 0) + 1)
+        case .caption(let text): text
         }
     }
 
@@ -319,7 +378,7 @@ struct MemoryMatchView: View {
         // player sees progress, not points.
         modelContext.record(
             GameSession(
-                gameID: .memoryMatch, score: score,
+                gameID: variant.game, score: score,
                 rounds: faces.count, durationSeconds: elapsed,
                 correct: faces.count, attempts: moves,
                 difficulty: difficulty))
