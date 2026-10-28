@@ -48,8 +48,8 @@ children. We collect no age information from anyone.
 **Changes.** If this policy changes, the new version replaces this one at the
 same address, with the date updated above.
 
-**Contact.** Questions or requests: **the support email** (`site/` takes it as a
-build argument, `tools/build_site.sh`). We answer in English or Spanish.
+**Contact.** Questions or requests: **hello@nebulaideas.com** (Spanish page:
+hola@nebulaideas.com). We answer in English or Spanish.
 
 ---
 
