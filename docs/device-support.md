@@ -28,23 +28,37 @@ app — the App Store enforces this for us; no code check needed.
 
 ## What we've verified
 
+Refreshed 2026-10-28 on `main` (445 tests). Only the iOS 27.0 simulator
+runtime is installed on the dev Mac (`xcrun simctl list runtimes`), so
+iOS 17 is verified on physical hardware, never on a simulator.
+
 | Device | OS | Result |
 |---|---|---|
-| iPad (owner's, older model) | iOS 17+ | Installed via Xcode, playtested — the first real device the app ran on |
-| iPhone 17 (simulator) | iOS 27.0 | Build + full 41-test suite green, 2026-09-22, after the #43/#45 UI changes |
-| iPhone 18 Pro (simulator, iOS 27) | 27.0 | All screens exercised, screenshots reviewed |
-| iPad Pro 13" (simulator, iOS 27) | 27.0 | Layout checked (4-across tile grid) |
+| iPad Viejita — iPad Pro 10.5" (2017, the oldest iPad Pro that runs iOS 17) | iOS 17.7.11 (21H461, `xcrun devicectl` 2026-10-28) | Physical. Playtests run on it (`playtest-session-2/3/4.md`); it caught an iOS-17-only freeze in My progress that the iOS 27 simulators missed (#172, fixed). This is our floor device: if it runs here, the claim holds |
+| iPhone 17 (simulator) | iOS 27.0 | Build + full test suite green, 2026-10-28: 445 tests, 0 failures |
+| iPad Pro 13" (simulator) | iOS 27.0 | Full test suite green, 2026-10-28: 445 tests, 0 failures; layout checked (4-across tile grid) |
+| iPhone 18 Pro (simulator) | iOS 27.0 | All screens exercised, screenshots reviewed (2026-09) |
 | Mac Catalyst | — | Not supported, not planned |
 
 ## What we have NOT verified (open, tracked in #36)
 
-- A **current physical iPhone** — only simulators so far. Owner task: any
-  recent iPhone + free-account install (docs/install-runbook.md), one game of
-  Memory Lane, landscape rotation check.
-- The oldest OS exactly (17.0, not 17.x) — we don't own a device pinned there;
-  the owner's iPad is our floor-proxy.
+- A **current physical iPhone** — only simulators so far. This is the last
+  box for #36, and only the owner can tick it:
+  1. Install on any recent iPhone with the free-account path in
+     [install-runbook.md](install-runbook.md) (Cmd+R from Xcode; re-trust under
+     Settings > General > VPN & Device Management on first install).
+  2. Play one full game of Memory Lane to the celebration screen.
+  3. Rotate to landscape mid-game and back; nothing should clip or scroll
+     the board away.
+  4. Comment on #36 with the iPhone model + exact iOS version
+     (Settings > General > About). Then this row moves up to the table.
+- The oldest OS exactly (17.0, not 17.x) — no device we own is pinned there;
+  iPad Viejita on 17.7.11 is the floor-proxy.
 - Split-screen / Slide Over on iPad.
 - VoiceOver with a real person (part of the a11y checklist on #5).
+
+Re-run this matrix when the deployment target changes, a new iOS major
+lands, or a game adds a board that must fit without scrolling.
 
 ## Layout expectations
 
@@ -54,7 +68,7 @@ app — the App Store enforces this for us; no code check needed.
 | Memory Lane board | every card visible, no scroll: `gridFit` picks the columns that make cards largest (4/6/8 pairs; cards stay ≥60pt, tested) | same, larger cards |
 | Category Fluency grid | adaptive, min 100pt | more columns |
 | Other games | fixed layouts, no grid | same, centered |
-| My Week rows | full width, 72pt tall | full width |
+| My Week rows | full width, 100pt minimum height | full width |
 
 ## When someone reports a device-specific problem
 
