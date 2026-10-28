@@ -5,7 +5,8 @@ Instructions for AI agents (and humans in a hurry) working on MenteViva.
 ## Read first, in order
 
 1. `docs/conventions.md` — the 9 rules. Violating one = rejected PR.
-2. `docs/decisions.md` — what's decided and why. Don't re-litigate; append.
+2. `docs/decisions.md` — what's decided and why (an index of month files). Don't re-litigate; add
+   new entries to the top of the current month's file, using the template there.
 3. `docs/roadmap.md` — what phase we're in. Work outside "Now" needs a reason.
 
 ## Non-negotiables
