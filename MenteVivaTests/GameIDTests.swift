@@ -18,9 +18,10 @@ final class GameIDTests: XCTestCase {
     }
 
     func testGivenUnreleasedGamesWhenReleasedThenTheyAreLeftOut() {
-        XCTAssertEqual(GameID.unreleased.count, 1)
+        XCTAssertEqual(GameID.unreleased.count, 0)
         XCTAssertTrue(Set(GameID.released).isDisjoint(with: GameID.unreleased))
-        XCTAssertEqual(GameID.released.count, GameID.allCases.count - 1)
+        XCTAssertEqual(GameID.released.count, GameID.allCases.count)
+        XCTAssertTrue(GameID.released.contains(.slidingBlocks))
         XCTAssertTrue(GameID.released.contains(.tilePairs))
         XCTAssertTrue(GameID.released.contains(.tangram))
         XCTAssertTrue(GameID.released.contains(.repeatSequence))

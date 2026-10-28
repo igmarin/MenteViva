@@ -191,7 +191,9 @@ final class DailyPolicyTests: XCTestCase {
         // 0.55 games outrank Name the Herd (0.7, played 2 days ago: 0.45), and since #279 Number Trail,
         // unplayed for 14 days, takes the last place from Color Clash (rested 9). Tile Pairs (#221)
         // is now released and never played, so it outranks Memory Lane in this payload.
-        XCTAssertEqual(Set(p.games), [.quickEyes, .mathStreaks, .tilePairs])
+        // Sliding Blocks (#223) is released and never played too, so it takes the last place
+        // from Quick Eyes.
+        XCTAssertEqual(Set(p.games), [.tilePairs, .slidingBlocks, .mathStreaks])
         XCTAssertEqual(p.difficulty[.stroop], Difficulty(level: 1))
         XCTAssertEqual(p.difficulty[.mathStreaks], Difficulty(level: 1))
         XCTAssertEqual(p.difficulty[.memoryMatch], Difficulty(level: 1))
@@ -382,7 +384,9 @@ final class DailyPolicyTests: XCTestCase {
             .sudoku: stats(days: 3), .upOrDown: stats(days: 1), .sayings: stats(days: 2),
             .repeatSequence: stats(days: 2), .tangram: stats(days: 2),
         ])
-        XCTAssertEqual(plan(recent).games, [.tilePairs, .sudoku, .reminiscence], "the ranking alone")
+        // The fixture plays every released game but the two newest (Tile Pairs, Sliding Blocks):
+        // never played, they top the ranking.
+        XCTAssertEqual(plan(recent).games, [.tilePairs, .slidingBlocks, .sudoku], "the ranking alone")
         // A brand-new player has every game equally rested: the ranked deal stands.
         XCTAssertEqual(plan(state()).games, [.memoryMatch, .quickEyes, .sudoku])
     }
