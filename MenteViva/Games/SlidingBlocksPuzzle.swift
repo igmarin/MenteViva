@@ -308,7 +308,9 @@ nonisolated struct SlidingBlocksPuzzle: Hashable, Sendable {
 nonisolated struct SlidingBlocksMap: Sendable {
     private let movesToSolve: [UInt64: Int]
 
-    init(from puzzle: SlidingBlocksPuzzle) {
+    /// `isCancelled` lets a background build stop early: the table is then
+    /// partial and must be discarded. The default never stops (tests, tools).
+    init(from puzzle: SlidingBlocksPuzzle, isCancelled: () -> Bool = { false }) {
         // Every reachable position, then breadth-first back from all solved ones.
         var index: [UInt64: Int] = [puzzle.layoutKey: 0]
         var keys = [puzzle.layoutKey]
@@ -316,7 +318,7 @@ nonisolated struct SlidingBlocksMap: Sendable {
         var solved: [Int] = []
         var queue = [puzzle]
         var head = 0
-        while head < queue.count {
+        while head < queue.count, !isCancelled() {
             let current = queue[head]
             if current.isSolved { solved.append(head) }
             var next: [Int] = []
@@ -339,7 +341,7 @@ nonisolated struct SlidingBlocksMap: Sendable {
         for i in solved { moves[i] = 0 }
         var frontier = solved
         head = 0
-        while head < frontier.count {
+        while head < frontier.count, !isCancelled() {
             let current = frontier[head]
             head += 1
             for n in neighbours[current] where moves[n] == -1 {

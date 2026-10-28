@@ -2155,6 +2155,23 @@
         }
       }
     },
+    "game.sliding.tapblock" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tap a block to move it."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toca un bloque para moverlo."
+          }
+        }
+      }
+    },
     "game.sliding.undo" : {
       "extractionState" : "manual",
       "localizations" : {

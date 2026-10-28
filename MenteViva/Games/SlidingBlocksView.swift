@@ -23,6 +23,9 @@ struct SlidingBlocksView: View {
     /// Fewest-moves table for "Show me a move"; built off the main thread after
     /// each deal (about 0.3 s on a Mac for a 4×5 board).
     @State private var hintMap: SlidingBlocksMap?
+    /// The running hint-table build: a new deal (or leaving the screen) cancels
+    /// it, and the search itself stops early on cancellation.
+    @State private var hintBuild: Task<SlidingBlocksMap, Never>?
     /// Guards the async hint-table build: a table is kept only for the deal that asked for it.
     @State private var dealID = 0
     @State private var startedAt = Date.now
@@ -43,12 +46,15 @@ struct SlidingBlocksView: View {
             board
                 .frame(minHeight: 340)
 
+            moveArrows
+
             controls
         }
         .padding()
         .fitOrScroll()
         .gameHeader(.slidingBlocks, instruction: instruction)
         .onAppear(perform: dealIfNeeded)
+        .onDisappear { hintBuild?.cancel() }
         .celebration(isPresented: $showCelebration, game: .slidingBlocks, detail: finalDetail, onPlayAgain: deal)
     }
 
@@ -65,11 +71,6 @@ struct SlidingBlocksView: View {
                         .frame(width: boardWidth, height: boardHeight)
                     ForEach(puzzle.blocks.indices, id: \.self) { index in
                         blockView(index, puzzle: puzzle, cell: cell)
-                    }
-                    if let selected, selected < puzzle.blocks.count {
-                        ForEach(directions(for: selected, in: puzzle), id: \.self) { direction in
-                            arrowButton(direction, for: selected, puzzle: puzzle, cell: cell)
-                        }
                     }
                 }
                 .frame(width: boardWidth, height: boardHeight)
@@ -148,7 +149,6 @@ struct SlidingBlocksView: View {
         .zIndex(dragged == index ? 2 : (isSelected ? 1 : 0))
         // Reduce Motion: moves land at once, with no slide (issue spec).
         .animation(reduceMotion ? nil : .easeInOut(duration: 0.25), value: puzzle)
-        .animation(reduceMotion ? nil : .easeInOut(duration: 0.25), value: selected)
         .simultaneousGesture(drag(for: index, cell: cell, puzzle: puzzle))
         .accessibilityLabel(blockLabel(index, puzzle: puzzle))
         .accessibilityAddTraits(isSelected ? .isSelected : [])
@@ -163,43 +163,31 @@ struct SlidingBlocksView: View {
         }
     }
 
-    /// One 100pt arrow per direction the selected block can slide; nothing for
-    /// the directions it can't (issue spec).
-    private func arrowButton(
-        _ direction: SlidingDirection, for index: Int, puzzle: SlidingBlocksPuzzle, cell: CGFloat
-    ) -> some View {
-        Button {
-            apply(SlidingMove(block: index, direction: direction, steps: 1))
-        } label: {
-            Image(systemName: direction.arrowSymbol)
-                .font(.title.weight(.bold))
-                .foregroundStyle(Color.paper)
-                .frame(width: 100, height: 100)
-                .background(Color.brand, in: Circle())
-                .shadow(color: .black.opacity(0.2), radius: 4, y: 2)
-        }
-        .buttonStyle(.plain)
-        .position(arrowPosition(direction, for: index, puzzle: puzzle, cell: cell))
-        .accessibilityLabel(AppLanguage.localized("game.sliding.move.\(direction.rawValue)"))
-    }
-
-    /// Just outside the block's edge in the move's direction, clamped so the
-    /// 100pt circle stays on the board.
-    private func arrowPosition(
-        _ direction: SlidingDirection, for index: Int, puzzle: SlidingBlocksPuzzle, cell: CGFloat
-    ) -> CGPoint {
-        let block = puzzle.blocks[index]
-        let rect = CGRect(
-            x: CGFloat(block.x) * cell, y: CGFloat(block.y) * cell,
-            width: CGFloat(block.w) * cell, height: CGFloat(block.h) * cell)
-        let half: CGFloat = 50
-        let boardWidth = CGFloat(puzzle.width) * cell
-        let boardHeight = CGFloat(puzzle.height) * cell
-        switch direction {
-        case .left: return CGPoint(x: max(half, rect.minX - half), y: rect.midY)
-        case .right: return CGPoint(x: min(boardWidth - half, rect.maxX + half), y: rect.midY)
-        case .up: return CGPoint(x: rect.midX, y: max(half, rect.minY - half))
-        case .down: return CGPoint(x: rect.midX, y: min(boardHeight - half, rect.maxY + half))
+    /// One 100pt arrow tile per direction the selected block can slide; nothing
+    /// for the directions it can't (issue spec). They sit in their own row
+    /// under the board, never over another block (PR #348 review). Before
+    /// anything is picked, the row says what to do, so its height never jumps.
+    private var moveArrows: some View {
+        Group {
+            if let selected, let puzzle, selected < puzzle.blocks.count {
+                HStack(spacing: 12) {
+                    ForEach(directions(for: selected, in: puzzle), id: \.self) { direction in
+                        Button {
+                            apply(SlidingMove(block: selected, direction: direction, steps: 1))
+                        } label: {
+                            Image(systemName: direction.arrowSymbol)
+                                .font(.title.weight(.bold))
+                        }
+                        .buttonStyle(AnswerTileStyle(minHeight: 100))
+                        .accessibilityLabel(AppLanguage.localized("game.sliding.move.\(direction.rawValue)"))
+                    }
+                }
+            } else {
+                Text(AppLanguage.localized("game.sliding.tapblock"))
+                    .font(.title2)
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity, minHeight: 100)
+            }
         }
     }
 
@@ -340,11 +328,19 @@ struct SlidingBlocksView: View {
         startedAt = .now
         dealID += 1
         hintMap = nil
+        hintBuild?.cancel()
         let deal = dealID
+        // Detached so the board stays responsive; the search stops early when
+        // this task is cancelled (re-deal or leaving the screen).
+        let work = Task.detached(priority: .userInitiated) {
+            SlidingBlocksMap(from: fresh) { Task.isCancelled }
+        }
+        hintBuild = work
         Task { @MainActor in
-            let map = await Task.detached(priority: .userInitiated) { SlidingBlocksMap(from: fresh) }.value
-            // A newer deal (or "Play again") makes this table useless: drop it.
-            if dealID == deal { hintMap = map }
+            let map = await work.value
+            // A cancelled or superseded build holds a partial table: drop it.
+            guard !work.isCancelled, dealID == deal else { return }
+            hintMap = map
         }
     }
 
