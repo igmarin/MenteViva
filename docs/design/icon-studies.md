@@ -4,9 +4,9 @@
 
 Sheet: [`art-samples/icon/icon-studies.png`](art-samples/icon/icon-studies.png) (each study and the current icon at 1024, 180, 60, 40 px on light and dark home-screen backgrounds). Masters: `art-samples/icon/study-{a,b,c}.png`, 1024×1024, opaque, square. Prompts and tool disclosure: [art-prompts.md](../art-prompts.md#icon-studies-337). Direction: [art-style.md](art-style.md).
 
-## Brand placements today (none changed here)
+## Brand placements before #337 (only the icon image changed)
 
-1. **App icon**: `MenteViva/Assets.xcassets/AppIcon.appiconset/icon-1024.png`, rendered by `tools/generate_icon.swift` (tilted white card, jade frame, two cards, amber dot, teal-to-amber gradient).
+1. **App icon** (before #337; now the retro card, see "Final icon" below): `MenteViva/Assets.xcassets/AppIcon.appiconset/icon-1024.png`, rendered by `tools/generate_icon.swift` (tilted white card, jade frame, two cards, amber dot, teal-to-amber gradient).
 2. **Home-screen name**: `INFOPLIST_KEY_CFBundleDisplayName = "Mente Viva"` (via `tools/generate_project.swift`).
 3. **In-app wordmark**: system-typography text from `app.title` ("Mente Viva"): `HomeView` navigation title, `OnboardingView` heading. No drawn logo.
 4. **README**: title `# Mente Viva 🧠` (emoji) and the trademark note on the name and icon. No image.

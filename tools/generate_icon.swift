@@ -61,7 +61,7 @@ func rounded(_ width: CGFloat, _ height: CGFloat, _ radius: CGFloat) -> CGPath {
         cornerWidth: radius * unit, cornerHeight: radius * unit, transform: nil)
 }
 
-/// Fills `path` then draws a rounded `ink` outline of `line` units over its edge.
+/// Fills `path` then draws a rounded espresso outline of `line` units over its edge.
 func inked(_ path: CGPath, fill: CGColor, line: CGFloat) {
     ctx.addPath(path)
     ctx.setFillColor(fill)
