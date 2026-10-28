@@ -1,6 +1,8 @@
 # App icon studies (#337)
 
-**Status: owner picked A (decisions.md 2026-10-28); the shipped icon is redrawn natively from `tools/generate_icon.swift`.** Original brief: studies only. **The owner picks A, B or C (or asks for changes) before anything replaces the current icon**; that will be a follow-up commit/PR. Sheet: [`art-samples/icon/icon-studies.png`](art-samples/icon/icon-studies.png) (each study and the current icon at 1024, 180, 60, 40 px on light and dark home-screen backgrounds). Masters: `art-samples/icon/study-{a,b,c}.png`, 1024×1024, opaque, square. Prompts and tool disclosure: [art-prompts.md](../art-prompts.md#icon-studies-337). Direction: [art-style.md](art-style.md).
+**Status: the owner selected study A on 2026-10-28. Studies B and C were not selected.** The shipped icon is a native redraw of A (below). Studies and sheet below are kept as the record.
+
+Sheet: [`art-samples/icon/icon-studies.png`](art-samples/icon/icon-studies.png) (each study and the current icon at 1024, 180, 60, 40 px on light and dark home-screen backgrounds). Masters: `art-samples/icon/study-{a,b,c}.png`, 1024×1024, opaque, square. Prompts and tool disclosure: [art-prompts.md](../art-prompts.md#icon-studies-337). Direction: [art-style.md](art-style.md).
 
 ## Brand placements today (none changed here)
 
@@ -35,3 +37,9 @@ Palette drift (image model output, not exact tokens): A's ground is darker than 
 4. Easy to redraw natively with exact tokens (rounded rects and a circle), keeping `generate_icon.swift` reproducible with no AI asset to clear in #226.
 
 B is the runner-up. C is charming but the least like today's mark and the least robust when small.
+
+## Final icon (selected 2026-10-28)
+
+Drawn by `tools/generate_icon.swift` (`swift tools/generate_icon.swift` regenerates `AppIcon.appiconset/icon-1024.png` byte-for-byte; checked twice). Sheet: [`art-samples/icon/icon-final.png`](art-samples/icon/icon-final.png), the installed icon beside the previous one at 1024/180/60/40 px on light and dark; read at 40px, the card, the jade panel and the gold disc all stay distinct.
+
+Exact tokens: cream `#FFF1D0` card, espresso `#2B2118` outlines (card and disc), muted jade `#246456` panel, honey mustard `#E7AC45` disc, ground `#143F36` (jade darkened so the cream card stands off it). Flat fills, no gradient, no shadow, opaque 1024×1024 RGB PNG (no alpha), square corners (iOS rounds them). The study's inner frame line around the jade panel is dropped: jade on cream already separates and the line blurred at 40px. The wordmark stays system typography; README and site are unchanged.

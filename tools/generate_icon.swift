@@ -77,7 +77,11 @@ func inked(_ path: CGPath, fill: CGColor, line: CGFloat) {
 ctx.translateBy(x: mid, y: 50 * unit)
 ctx.rotate(by: -6 * .pi / 180)
 inked(rounded(54, 71, 9), fill: cream, line: 2.6)
-inked(rounded(41, 58, 6), fill: jade, line: 2)
+// The jade panel has no outline of its own: jade on cream already separates, and a
+// second line would blur at 40 px.
+ctx.addPath(rounded(41, 58, 6))
+ctx.setFillColor(jade)
+ctx.fillPath()
 let disc = CGRect(x: -16 * unit, y: -16 * unit, width: 32 * unit, height: 32 * unit)
 ctx.addEllipse(in: disc)
 ctx.setFillColor(mustard)
