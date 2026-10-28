@@ -301,6 +301,9 @@ let appSettings =
         ("CURRENT_PROJECT_VERSION", "1"),
         ("GENERATE_INFOPLIST_FILE", "YES"),
         ("INFOPLIST_KEY_CFBundleDisplayName", "\"Mente Viva\""),
+        // No network and no custom crypto (AGENTS.md), so App Store Connect never asks the
+        // export-compliance question again on each upload.
+        ("INFOPLIST_KEY_ITSAppUsesNonExemptEncryption", "NO"),
         ("INFOPLIST_KEY_UIApplicationSceneManifest_Generation", "YES"),
         ("INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents", "YES"),
         ("INFOPLIST_KEY_UILaunchScreen_Generation", "YES"),

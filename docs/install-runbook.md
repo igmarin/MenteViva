@@ -1,7 +1,9 @@
-# Install runbook (free Apple ID, no paid account)
+# Install runbook
 
-For the current bootstrapping phase: **no TestFlight, no App Store, no CloudKit.**
-Every install is a signed build from this Mac, and it expires 7 days later.
+**Testers (family, seniors) install through TestFlight**: no cable, builds last 90 days, no re-sign.
+The owner-side steps and the beta review text are in [testflight-beta.md](testflight-beta.md).
+**Everything below is the free-Apple-ID path for dev devices only**: a signed build from this Mac that
+expires 7 days later. Don't use it for testers once TestFlight is live.
 
 Team: Ismael Marin Cabrera (Personal Team), `VB42T7NYX2` — already pre-filled by
 the generator, so Xcode never asks.
@@ -32,7 +34,7 @@ xcrun devicectl device install app --device "$DEV" \
   ~/Library/Developer/Xcode/DerivedData/MenteViva-*/Build/Products/Debug-iphoneos/MenteViva.app
 ```
 
-## The 7-day expiry
+## The 7-day expiry (dev devices only)
 
 A free-account build **stops launching when its provisioning profile expires**,
 7 days after the *profile* was created, not after the build was signed. Xcode
@@ -70,11 +72,10 @@ Xcode makes a new 7-day one. The file to move is `<UUID>.mobileprovision`, where
 
 ## What cannot work in this mode (don't fight it)
 
-- **TestFlight** — needs the paid program.
+- **TestFlight** — needs the paid program (#224); see [testflight-beta.md](testflight-beta.md).
 - **CloudKit / family sharing / push** — need the iCloud entitlement; the app
   falls back to an on-device store (see `MenteVivaApp.swift`, `LOCAL_ONLY`).
-- **Installs lasting longer than a week.**
-- **Remote testers** — they must bring the device to this Mac.
+- **Installs lasting longer than a week, and remote testers** — use TestFlight for both.
 
 ## Privacy and support pages (Cloudflare Pages, #34)
 
