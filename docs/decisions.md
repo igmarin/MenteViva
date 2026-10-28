@@ -2,6 +2,17 @@
 
 Newest first. Format: date — decision — why — what would make us revisit.
 
+## 2026-10-28 — App icon: study A, the dealt card (#337)
+
+The owner picked study A from `docs/design/icon-studies.md`: one tilted cream
+card with an espresso outline, a jade panel and one mustard disc, on dark
+jade. Why: clearest at 40px on light and dark home screens, the closest
+evolution of today's single tilted card, no face or character. The wordmark
+stays system typography. The study master is a reference only; the shipped
+icon is redrawn natively in `tools/generate_icon.swift` with exact palette
+tokens, as a follow-up PR (no AppIcon change in the studies PR). Revisit if
+the redrawn icon loses recognizability at 40px next to the current one.
+
 ## 2026-10-28 — #323 samples completed: eight pictures checked at game size
 
 The eight individual samples (dog, apple, teapot, sunflower, key, sailboat,
