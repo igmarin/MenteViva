@@ -2,6 +2,20 @@
 
 Newest first. Format: date — decision — why — what would make us revisit.
 
+## 2026-10-28 — Keep the legacy level migration until the playtest iPad has run it (#333)
+
+**Decision (owner):** `LevelMigration` stays for now. It converts the old
+easy/medium/hard pins and plan levels (0/1/2) into levels 2/4/6. It shipped
+on 2026-10-26 (#264, PR #269), and the playtest iPad was last installed
+before that and keeps its data across installs. Removing the migration now
+would quietly reset the player's pins to Auto and their per-game levels to
+the default.
+
+**Remove when:** the playtest iPad has opened a build from 2026-10-26 or
+later (the v0.3 playtest, #231). Remove it before v1.0 (#194) at the latest:
+App Store installs never had the old keys. The removal list is in
+`LevelMigration.swift`.
+
 ## 2026-10-28 — #323 samples completed: eight pictures checked at game size
 
 The eight individual samples (dog, apple, teapot, sunflower, key, sailboat,

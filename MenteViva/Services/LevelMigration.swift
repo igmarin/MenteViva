@@ -11,6 +11,12 @@ import Foundation
 /// After that, `FamilySettings.pinned()` and `PlanStore.storedDifficulty()` are
 /// pure reads (no writes). The underlying migrations remain idempotent: they
 /// skip when the new key already exists.
+///
+/// Remove it (#333) once the playtest iPad has launched a build with it (#231);
+/// remove it before v1.0 at the latest, since App Store installs never had
+/// legacy keys. Goes with it: `migrateLegacyPins`, `legacyPinKey`,
+/// `PlanStore.migrateLegacyLevels` and its legacy key, and their tests.
+/// See docs/decisions.md 2026-10-28.
 nonisolated enum LevelMigration {
     /// Marker that the one-time migration has run. One key for both migrations,
     /// so a second launch does not even check legacy keys.
