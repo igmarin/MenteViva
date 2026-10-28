@@ -5,6 +5,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 ## [Unreleased]
 
 ### Added
+- **Sliding Blocks — slide the blocks to free the big one (#222/#223):** a new game with levels 1–10 (3×4 boards of 1–3 slides up to 4×5 boards of 60+, generated offline and checked solvable). Tap a block and only the 100pt arrows it can follow appear, or drag it where it fits; VoiceOver names each block by size, place and cell ("big block, top middle, row 1, column 2"), and repeated one-cell moves the same way count as one slide and offers "move left/right/up/down" only where it can go, so the puzzle can be solved by ear. Undo, "Start over" and "Show me a move" (100pt each); Reduce Motion moves blocks instantly. The big block is amber and striped, never colour alone, and the exit is a gap in the board's edge with a chevron. It ends with "It's out!" and the usual celebration, and the session is saved with its level.
 - **Our own pictures for travels, music and home (#328):** Memory Lane's travels and music-and-home themes show original illustrations (map, suitcase, mountain, beach, tent, lighthouse, helicopter, violin, trumpet, piano, radio, yarn, accordion, picture frame, telephone, sofa) instead of emoji.
 - **New pictures for Memory Lane's kitchen table and garden (#327):** 18 original retro illustrations (teapot, bread, cheese, wine glass, croissant, lemon, olives, honey, cake, chocolate, egg, rose, tulip, potted plant, pear, tree, pine, ladybug), checked side by side with their themes at 100pt and 52pt on light and dark tiles and in grayscale.
 - **New pictures in Name the Herd (#325):** 21 original retro illustrations (dog, cat, lion, frog, turtle, butterfly, elephant; apple, banana, grapes, orange, strawberry, watermelon, peach; car, bus, airplane, rocket, bicycle, train, sailboat) replace the emoji, checked at 52pt on light and dark tiles and in grayscale.
@@ -34,6 +35,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 - **Warmer tones an iPhone speaker can play (#240):** the sounds now fade in over 10 ms and die away gently instead of stopping after a fraction of the note, with a soft second harmonic for warmth. The "not quite" tone moves up from 180 Hz to 280 Hz, still the lowest and softest, so a phone speaker actually plays it. The tone maker is now a pure `ToneSynth`, tested for headroom and pitch.
 
 ### Fixed
+- **Tile Pairs opens from Home again (#221 follow-up):** since its screen shipped, the card (and a daily plan that deals it) led to a blank screen; it now opens the game.
 - **One migration at launch, reads stay pure (#264):** pre-level pins and plan levels used to migrate inside every `pinned()` / `storedDifficulty()` read (Home renders, the plan, Set up). Now `LevelMigration.runOnce` batches both at launch behind one `level.migration.done` flag and reads do not write.
 
 ### Changed

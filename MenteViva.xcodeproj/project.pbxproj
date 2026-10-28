@@ -37,6 +37,7 @@
 		D0A2FBFCA4EDE3390000001E /* SequenceDeal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D85078037720D6F00000018; };
 		CE4F73426A29B77700000025 /* SlidingBlocksLevels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1596F47817E45DBD0000001F; };
 		780DFBCFE4935E5400000025 /* SlidingBlocksPuzzle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5284C906BFE178020000001F; };
+		9B3521E6D17B91E500000023 /* SlidingBlocksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58E6A8D45E597F5B0000001D; };
 		C7D857DBE8864C870000001E /* SudokuPuzzle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89178D58C0F95C6D00000018; };
 		7F1CAF5CBD717E560000001C /* SudokuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D87F63700842679400000016; };
 		8B420A94EF3D39A30000001F /* TangramPieces.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED97DEB4ADDB300900000019; };
@@ -163,6 +164,7 @@
 		9D85078037720D6F00000018 /* SequenceDeal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/SequenceDeal.swift; sourceTree = "<group>"; };
 		1596F47817E45DBD0000001F /* SlidingBlocksLevels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/SlidingBlocksLevels.swift; sourceTree = "<group>"; };
 		5284C906BFE178020000001F /* SlidingBlocksPuzzle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/SlidingBlocksPuzzle.swift; sourceTree = "<group>"; };
+		58E6A8D45E597F5B0000001D /* SlidingBlocksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/SlidingBlocksView.swift; sourceTree = "<group>"; };
 		89178D58C0F95C6D00000018 /* SudokuPuzzle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/SudokuPuzzle.swift; sourceTree = "<group>"; };
 		D87F63700842679400000016 /* SudokuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/SudokuView.swift; sourceTree = "<group>"; };
 		ED97DEB4ADDB300900000019 /* TangramPieces.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/TangramPieces.swift; sourceTree = "<group>"; };
@@ -315,6 +317,7 @@
 				9D85078037720D6F00000018 /* SequenceDeal.swift */,
 				1596F47817E45DBD0000001F /* SlidingBlocksLevels.swift */,
 				5284C906BFE178020000001F /* SlidingBlocksPuzzle.swift */,
+				58E6A8D45E597F5B0000001D /* SlidingBlocksView.swift */,
 				89178D58C0F95C6D00000018 /* SudokuPuzzle.swift */,
 				D87F63700842679400000016 /* SudokuView.swift */,
 				ED97DEB4ADDB300900000019 /* TangramPieces.swift */,
@@ -517,6 +520,7 @@
 				D0A2FBFCA4EDE3390000001E /* SequenceDeal.swift in Sources */,
 				CE4F73426A29B77700000025 /* SlidingBlocksLevels.swift in Sources */,
 				780DFBCFE4935E5400000025 /* SlidingBlocksPuzzle.swift in Sources */,
+				9B3521E6D17B91E500000023 /* SlidingBlocksView.swift in Sources */,
 				C7D857DBE8864C870000001E /* SudokuPuzzle.swift in Sources */,
 				7F1CAF5CBD717E560000001C /* SudokuView.swift in Sources */,
 				8B420A94EF3D39A30000001F /* TangramPieces.swift in Sources */,
