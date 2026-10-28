@@ -76,6 +76,26 @@ Xcode makes a new 7-day one. The file to move is `<UUID>.mobileprovision`, where
 - **Installs lasting longer than a week.**
 - **Remote testers** — they must bring the device to this Mac.
 
+## Privacy and support pages (Cloudflare Pages, #34)
+
+The pages are plain files in `site/`; nothing to build. `tools/check_site.sh` guards them (pre-push, CI).
+The live URL does not exist until the owner does this, once:
+
+1. Cloudflare dashboard → **Workers & Pages** → **Create** → **Pages** → **Connect to Git** → pick
+   `igmarin/menteviva` (grant the Cloudflare GitHub app access to that repo if asked).
+2. Project name `menteviva` (gives `menteviva.pages.dev`; take another if it is used).
+   Production branch `main`. Framework preset **None**. Build command: empty. Build output directory:
+   `site`. **Save and Deploy**.
+3. OWNER TODO, domain: project → **Custom domains** → **Set up a custom domain** → enter the
+   subdomain (e.g. `menteviva.<your domain>`) → follow the DNS step. Optional: `.pages.dev` works.
+4. Open `https://<host>/en/privacy.html` and `/es/privacy.html` in a browser and check both load.
+5. App Store Connect → the app → **App Information** → **Privacy Policy URL**: `https://<host>/en/privacy.html`.
+   **Support URL** (version page): `https://<host>/en/support.html`. For the Spanish localization use
+   the `/es/` pages.
+6. Then, and only then, a ticket adds the link in Settings with the same URL.
+
+Pushes to `main` redeploy; PR branches get preview URLs.
+
 ## CloudKit later
 
 ```sh

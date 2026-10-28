@@ -18,7 +18,7 @@ Español. Everything switches, including the games.
 **Where is my progress?** On your device, only. There is no account and
 nothing to sign into — if the app is deleted, its stored sessions go with it.
 
-**Something looks wrong.** Write to **[TODO-owner: support email]** — tell us
+**Something looks wrong.** Write to **hello@nebulaideas.com** (Spanish page: **hola@nebulaideas.com**) — tell us
 the device model and what you saw (a photo of the screen helps a lot). We
 answer in English or Spanish.
 

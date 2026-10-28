@@ -32,8 +32,7 @@ jobs:
       - name: Project file lists every .swift file
         run: ./tools/check_project_files.sh
 
-      # The support address stays out of the repo; build_site.sh fills SUPPORT_EMAIL in at publish
-      # time and refuses to build if a placeholder is left (#188). Building with a dummy address
-      # here proves no new placeholder or TODO can reach a published page.
-      - name: Site builds with every placeholder filled
-        run: ./tools/build_site.sh ci-check@example.com && rm -rf site-out
+      # site/ is published as it is (Cloudflare Pages, no build), so no placeholder or TODO may
+      # remain and each language links its own support address (#188, #34).
+      - name: Site pages have no placeholders
+        run: ./tools/check_site.sh
