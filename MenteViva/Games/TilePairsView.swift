@@ -134,7 +134,7 @@ struct TilePairsView: View {
         .frame(width: tileSize, height: tileSize)
     }
 
-    /// Tile face: white card with the 18 symbols drawn in code, game ink on a
+    /// Tile face: paper card with the 18 symbols drawn in code, game ink on a
     /// paper background. Covered tiles are dimmed and hatched so free vs covered
     /// never relies on colour alone (WCAG 1.4.1).
     private func tileFace(
@@ -142,7 +142,7 @@ struct TilePairsView: View {
     ) -> some View {
         ZStack {
             RoundedRectangle(cornerRadius: 10)
-                .fill(Color(.systemBackground))
+                .fill(Color.paper)
             RoundedRectangle(cornerRadius: 10)
                 .strokeBorder(
                     highlighted ? Color.amber : (selected ? GameID.tilePairs.ink : Color.secondary.opacity(0.4)),

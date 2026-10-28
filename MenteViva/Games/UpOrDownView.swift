@@ -142,7 +142,7 @@ struct UpOrDownView: View {
         .foregroundStyle(ink)
         .minimumScaleFactor(0.5)
         .frame(width: width, height: width * 1.4)
-        .background(Color(.systemBackground), in: .rect(cornerRadius: 10))
+        .background(Color.paper, in: .rect(cornerRadius: 10))
         .overlay { RoundedRectangle(cornerRadius: 10).strokeBorder(GameID.upOrDown.ink, lineWidth: 2) }
     }
 

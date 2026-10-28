@@ -58,6 +58,11 @@ struct ColorClashView: View {
                     .font(.system(size: shapeSize, weight: .bold))
                     .foregroundStyle(ink.color)
             }
+            // The ink is the answer, so it sits on the system background it was
+            // checked against, not on cream (#336).
+            .padding(.horizontal, 20)
+            .padding(.vertical, 8)
+            .background(Color(.systemBackground), in: .rect(cornerRadius: 16))
             .accessibilityElement(children: .ignore)
             .accessibilityLabel(stimulusLabel)
             .accessibilityHint(AppLanguage.localized("game.colorclash.a11y.stimulus.hint"))

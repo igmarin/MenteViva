@@ -157,7 +157,7 @@ struct TangramView: View {
         } label: {
             Self.drawing(of: tile)
                 .frame(width: 100, height: 100)
-                .background(Color(.systemBackground), in: .rect(cornerRadius: 16))
+                .background(Color.paper, in: .rect(cornerRadius: 16))
                 .overlay {
                     RoundedRectangle(cornerRadius: 16)
                         .strokeBorder(

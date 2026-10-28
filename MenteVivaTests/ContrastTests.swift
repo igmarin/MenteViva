@@ -4,11 +4,12 @@ import XCTest
 @testable import MenteViva
 
 /// WCAG AA (4.5:1 for text) in light and dark mode for every text pairing the
-/// Card Table theme adds. Game inks carry text both ways: as text on the
-/// background (back buttons), and under the background colour on each card's
-/// name band; contrast is symmetric, so one test covers both. Primary buttons
-/// put the background colour on a brand-teal fill. The warm text that was the
-/// "Today's pick" badge (#118) now sits on Quick Eyes' soft amber note.
+/// Card Table theme adds, on `paper` (cream, or the dark surround). Game inks
+/// carry text both ways: as text on the paper (back buttons), and under the
+/// paper colour on each card's name band; contrast is symmetric, so one test
+/// covers both. Primary buttons put the paper colour on a brand-jade fill. The
+/// warm text that was the "Today's pick" badge (#118) now sits on Quick Eyes'
+/// soft mustard note.
 final class ContrastTests: XCTestCase {
     private typealias RGB = (Double, Double, Double)
     private let styles: [UIUserInterfaceStyle] = [.light, .dark]
@@ -35,7 +36,7 @@ final class ContrastTests: XCTestCase {
     /// `color` at `alpha` over the background, as SwiftUI draws `.opacity(alpha)`.
     private func wash(_ color: Color, _ alpha: Double, _ style: UIUserInterfaceStyle) -> RGB {
         let tint = rgb(UIColor(color), style)
-        let base = rgb(.systemBackground, style)
+        let base = rgb(UIColor(Color.paper), style)
         return (
             tint.0 * alpha + base.0 * (1 - alpha), tint.1 * alpha + base.1 * (1 - alpha),
             tint.2 * alpha + base.2 * (1 - alpha)
@@ -45,7 +46,7 @@ final class ContrastTests: XCTestCase {
     func testGivenEveryGameInkWhenUsedAsTextThenContrastIsAtLeastAAInBothModes() {
         for style in styles {
             for game in GameID.allCases {
-                let ratio = contrast(rgb(UIColor(game.ink), style), rgb(.systemBackground, style))
+                let ratio = contrast(rgb(UIColor(game.ink), style), rgb(UIColor(Color.paper), style))
                 XCTAssertGreaterThanOrEqual(ratio, 4.5, "\(game), style \(style.rawValue)")
             }
         }
@@ -67,9 +68,20 @@ final class ContrastTests: XCTestCase {
         }
     }
 
-    func testGivenBrandButtonWhenLabelUsesTheBackgroundColorThenContrastIsAtLeastAAInBothModes() {
+    /// Retro tokens (#336): espresso outlines and tomato/blue labels sit on paper.
+    func testGivenTheRetroTokensWhenUsedAsTextOrOutlinesOnPaperThenContrastIsAtLeastAAInBothModes() {
         for style in styles {
-            let ratio = contrast(rgb(.systemBackground, style), rgb(UIColor(Color.brand), style))
+            let paper = rgb(UIColor(Color.paper), style)
+            for (name, color) in [("espresso", Color.espresso), ("tomato", .tomato), ("fadedBlue", .fadedBlue)] {
+                let ratio = contrast(rgb(UIColor(color), style), paper)
+                XCTAssertGreaterThanOrEqual(ratio, 4.5, "\(name), style \(style.rawValue)")
+            }
+        }
+    }
+
+    func testGivenBrandButtonWhenLabelUsesPaperThenContrastIsAtLeastAAInBothModes() {
+        for style in styles {
+            let ratio = contrast(rgb(UIColor(Color.paper), style), rgb(UIColor(Color.brand), style))
             XCTAssertGreaterThanOrEqual(ratio, 4.5, "style \(style.rawValue)")
         }
     }

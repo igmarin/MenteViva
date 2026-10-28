@@ -102,7 +102,7 @@ private struct FirstPlayGuide: ViewModifier {
             .buttonStyle(AnswerTileStyle(strength: 0.08, minHeight: 100))
         }
         .padding(20)
-        .background(Color(.systemBackground), in: .rect(cornerRadius: 20))
+        .background(Color.paper, in: .rect(cornerRadius: 20))
     }
 
     /// Reads the line aloud, unless VoiceOver is on: it reads the card itself, and two voices clash.

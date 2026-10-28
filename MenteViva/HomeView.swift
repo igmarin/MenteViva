@@ -171,7 +171,7 @@ struct HomeView: View {
                 HStack(spacing: 14) {
                     Image(systemName: "play.fill")
                         .font(.title3)
-                        .foregroundStyle(Color(.systemBackground))
+                        .foregroundStyle(Color.paper)
                         .frame(width: 46, height: 46)
                         .background(Color.brand, in: .circle)
                         .accessibilityHidden(true)
@@ -189,7 +189,8 @@ struct HomeView: View {
                 }
                 .padding(.horizontal, 16)
                 .frame(maxWidth: .infinity, minHeight: 100)
-                .background(Color(.systemBackground), in: .rect(cornerRadius: 26))
+                .background(Color.paper, in: .rect(cornerRadius: 26))
+                .overlay(RoundedRectangle(cornerRadius: 26).strokeBorder(Color.espresso, lineWidth: 2))
             }
             .buttonStyle(CardPressStyle())
         }
@@ -215,7 +216,7 @@ struct HomeView: View {
     private var weekCard: some View {
         weekLink {
             weekBoardCard
-                .shadow(color: .black.opacity(0.12), radius: 8, y: 4)
+                .shadow(color: .black.opacity(0.25), radius: 0, x: 3, y: 3)
         }
     }
 
@@ -233,8 +234,8 @@ struct HomeView: View {
         }
         .padding(16)
         .frame(maxWidth: .infinity, minHeight: 100)
-        .background(Color(.systemBackground), in: .rect(cornerRadius: 24))
-        .overlay(RoundedRectangle(cornerRadius: 24).strokeBorder(.primary.opacity(0.08)))
+        .background(Color.paper, in: .rect(cornerRadius: 24))
+        .overlay(RoundedRectangle(cornerRadius: 24).strokeBorder(Color.espresso, lineWidth: 2))
     }
 
     /// My Week's door: the board itself, read by VoiceOver as "My Week".
@@ -308,13 +309,10 @@ struct HomeView: View {
 }
 
 extension Color {
-    /// Warm text: deep orange in light mode, system orange in dark mode. Was the
-    /// "Today's pick" badge (#118: plain orange was 1.65:1 in light mode); now
-    /// the text of Quick Eyes' soft amber "Almost" note. ContrastTests checks it.
-    static let todaysPick = Color(
-        UIColor { traits in
-            traits.userInterfaceStyle == .dark ? .systemOrange : UIColor(red: 0.55, green: 0.27, blue: 0, alpha: 1)
-        })
+    /// Warm text: dark tomato (#336). Was the "Today's pick" badge (#118: plain
+    /// orange was 1.65:1 in light mode); now the text of the soft mustard "Almost"
+    /// notes. ContrastTests checks it.
+    static let todaysPick = Color.tomato
 }
 
 #Preview {
