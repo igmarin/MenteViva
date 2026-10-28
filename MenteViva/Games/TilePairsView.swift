@@ -85,13 +85,22 @@ struct TilePairsView: View {
                     if let deal {
                         let tileSize = tileSize(for: deal, in: size)
                         let boardDims = boardDimensions(for: deal, tileSize: tileSize)
-                        ZStack(alignment: .topLeading) {
-                            ForEach(deal.tiles.sorted(by: { $0.layer < $1.layer }), id: \.id) { tile in
-                                tileButton(tile, tileSize: tileSize)
+                        // A board that still doesn't fit at the smallest tile (a wide fallback
+                        // line, a short screen after the first move) scrolls inside its space
+                        // instead of spilling over the screen edge and the Show me a pair
+                        // button. Never scaled: tiles stay ≥60pt (#220).
+                        let fitsSpace = boardDims.width <= size.width && boardDims.height <= size.height
+                        ScrollView([.horizontal, .vertical]) {
+                            ZStack(alignment: .topLeading) {
+                                ForEach(deal.tiles.sorted(by: { $0.layer < $1.layer }), id: \.id) { tile in
+                                    tileButton(tile, tileSize: tileSize)
+                                }
                             }
+                            .frame(width: boardDims.width, height: boardDims.height)
+                            .frame(minWidth: size.width, minHeight: size.height)
                         }
-                        .frame(width: boardDims.width, height: boardDims.height)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .scrollDisabled(fitsSpace)
+                        .frame(width: size.width, height: size.height)
                     }
                 }
         }

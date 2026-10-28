@@ -145,7 +145,7 @@ nonisolated struct TilePairsDeal {
         let all = TilePairsSymbol.allCases
         let look = d.values(lookAlikePerLevel)
         let pool: [TilePairsSymbol] = look ? all : Array(all.prefix(12))
-        var shuffled = pool.shuffled(using: &g)
+        let shuffled = pool.shuffled(using: &g)
         var pairSyms: [TilePairsSymbol] = (0..<pairs).map { shuffled[$0 % shuffled.count] }
         pairSyms.shuffle(using: &g)
         for _ in 0..<50 {
@@ -169,7 +169,7 @@ nonisolated struct TilePairsDeal {
         var rem = Set(pos.indices)
         var assign: [Int: TilePairsSymbol] = [:]
         var order: [[Int]] = []
-        var shuffled = pairSymbols.shuffled(using: &g)
+        let shuffled = pairSymbols.shuffled(using: &g)
         var idx = 0
         func free(_ set: Set<Int>) -> [Int] {
             set.filter { i in

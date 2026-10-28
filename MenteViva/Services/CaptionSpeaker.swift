@@ -24,50 +24,53 @@ enum CaptionSpeaker {
 
     private static let synthesizer = AVSpeechSynthesizer()
     private static let sessionEnder = SessionEnder()
-
-    /// True while a name is being read, so other audio code leaves the session alone.
-    static var isSpeaking: Bool { synthesizer.isSpeaking }
+    /// The latest name asked for; a name set up after a newer one (or a stop) never plays.
+    private static var requested: AVSpeechUtterance?
 
     /// Gives other audio its volume back (ducking ends when the session deactivates)
-    /// once the voice has finished or been cut off. Skipped when a newer utterance
-    /// is already speaking, so replacing one name with another is never cut short.
+    /// once the voice has finished or been cut off. `AudioSession` skips it when a
+    /// newer name already owns the session, so replacing one name is never cut short.
     /// `nonisolated`: AVFoundation calls the delegate off the main thread.
     nonisolated private final class SessionEnder: NSObject, AVSpeechSynthesizerDelegate {
         func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
-            end(synthesizer)
+            AudioSession.endSpeech(ObjectIdentifier(utterance))
         }
 
         func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didCancel utterance: AVSpeechUtterance) {
-            end(synthesizer)
-        }
-
-        private func end(_ synthesizer: AVSpeechSynthesizer) {
-            guard !synthesizer.isSpeaking else { return }
-            try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+            AudioSession.endSpeech(ObjectIdentifier(utterance))
         }
     }
 
     /// Speech must be heard with the silent switch on: asking to hear a name is
     /// an explicit request, unlike the ambient game tones.
-    static func configureSession(_ session: AVAudioSession = .sharedInstance()) throws {
+    nonisolated static func configureSession(_ session: AVAudioSession = .sharedInstance()) throws {
         try session.setCategory(.playback, mode: .spokenAudio, options: [.duckOthers])
     }
 
     /// Cuts the voice off, so a name never carries over onto the next photo.
     static func stop() {
+        requested = nil
         synthesizer.stopSpeaking(at: .immediate)
     }
 
+    /// Speaks only once the session is .playback, so the first name is never
+    /// muted by the silent switch.
     static func speak(_ text: String) {
         synthesizer.stopSpeaking(at: .immediate)
-        try? configureSession()
-        try? AVAudioSession.sharedInstance().setActive(true)
         let utterance = AVSpeechUtterance(string: text)
         // A language with no installed voice still speaks, in English, not silently.
         utterance.voice =
             AVSpeechSynthesisVoice(language: voiceLanguage(for: AppLanguage.selected()))
             ?? AVSpeechSynthesisVoice(language: "en-US")
         synthesizer.delegate = sessionEnder
-        synthesizer.speak(utterance)
+        requested = utterance
+        let id = ObjectIdentifier(utterance)
+        AudioSession.beginSpeech(id) {
+            guard requested === utterance else {
+                AudioSession.endSpeech(id)
+                return
+            }
+            synthesizer.speak(utterance)
+        }
     }
 }

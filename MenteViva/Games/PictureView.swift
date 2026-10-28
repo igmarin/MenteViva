@@ -23,7 +23,7 @@ struct PictureView: View {
     }
 
     /// Whether the app ships an image of that name.
-    static func bundleHasAsset(_ name: String) -> Bool {
+    nonisolated static func bundleHasAsset(_ name: String) -> Bool {
         UIImage(named: name) != nil
     }
 }
