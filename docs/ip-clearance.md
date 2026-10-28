@@ -113,6 +113,8 @@ contributions may have a different status. The [US Copyright Office's report ann
 explains that prompts alone do not establish human authorship. Do not promise
 exclusive rights in generated pixels.
 
+**#326 pictures (2026-10-28):** eleven pictures (guitar, coffee, star, bee, cactus, clock, house, chair, umbrella, book, lamp) were generated with the OpenAI Images API, model `gpt-image-1.5`, from text prompts only (no input image; no artist, studio or brand named). White backgrounds were removed locally. Sunflower, moon and key are the #323 samples copied unchanged. Prompts: `design/art-samples/prompts/`.
+
 **#323 samples (2026-10-28):** the eight style samples in
 `design/art-samples/` (`dog`, `apple`, `teapot`, `sunflower`, `key`,
 `sailboat`, `violin`, `moon`) were generated with the Muse built-in
