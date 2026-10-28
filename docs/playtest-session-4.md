@@ -65,7 +65,7 @@ First launch of this build?                Y / N    (N = used My plan)
 Starting levels (My progress):
   Memory Lane   Color Clash   Name the Herd   Number Trail   Remember Together
   Quick Eyes    Sudoku        Up or Down      Finish the Saying   Repeat the Sequence
-  Tangram       Tile Pairs    Sliding Blocks
+  Tangram       Tile Pairs    Sliding Blocks  Names and Faces
 ```
 
 ## Part C — onboarding, alone (day 1, first five minutes)
@@ -212,7 +212,7 @@ Did it feel like a test? His words:
 
 ### D3. Does any new game feel like a test?
 
-The one question that matters across all thirteen games. Ask in his words, not
+The one question that matters across all fourteen games. Ask in his words, not
 yours: "Did this one feel like a game, or like homework?"
 
 ```
