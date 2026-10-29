@@ -30,8 +30,8 @@ to both; the player never sees a sales pitch inside the app.
 | Age rating | 4+ (answers below) | |
 | Languages | English (US), Spanish (Mexico and Spain) | |
 | Copyright | 2026 Ismael Marin Cabrera | |
-| Support URL | `https://<site host>/en/support.html` (#34, Cloudflare Pages, see install-runbook.md) | `/es/support.html` |
-| Privacy policy URL | `https://<site host>/en/privacy.html` | `/es/privacy.html` |
+| Support URL | `https://menteviva-e4s.pages.dev/en/support` | `https://menteviva-e4s.pages.dev/es/support` |
+| Privacy policy URL | `https://menteviva-e4s.pages.dev/en/privacy` | `https://menteviva-e4s.pages.dev/es/privacy` |
 | Marketing URL (optional) | https://github.com/igmarin/menteviva | |
 
 **Why Games › Puzzle:** every game is a puzzle or a card game, and a game category keeps the app out

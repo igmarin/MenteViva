@@ -138,6 +138,20 @@ struct SettingsView: View {
                     Text(String(format: AppLanguage.localized("settings.privacy.backup %@"), device))
                         .font(.body)
                         .foregroundStyle(.secondary)
+                    if let policy = URL(string: AppLanguage.localized("settings.privacy.policy.url")) {
+                        Link(destination: policy) {
+                            Label(AppLanguage.localized("settings.privacy.policy"), systemImage: "hand.raised")
+                                .font(.title3)
+                                .frame(maxWidth: .infinity, minHeight: 100, alignment: .leading)
+                        }
+                    }
+                    if let support = URL(string: AppLanguage.localized("settings.privacy.support.url")) {
+                        Link(destination: support) {
+                            Label(AppLanguage.localized("settings.privacy.support"), systemImage: "questionmark.circle")
+                                .font(.title3)
+                                .frame(maxWidth: .infinity, minHeight: 100, alignment: .leading)
+                        }
+                    }
                 } header: {
                     Text(AppLanguage.localized("settings.privacy.title"))
                         .font(.title3)
