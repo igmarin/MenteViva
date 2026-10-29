@@ -8203,6 +8203,30 @@
         }
       }
     },
+    "settings.privacy.policy" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Privacy policy" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Política de privacidad" } }
+      }
+    },
+    "settings.privacy.policy.url" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "https://menteviva-e4s.pages.dev/en/privacy" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "https://menteviva-e4s.pages.dev/es/privacy" } }
+      }
+    },
+    "settings.privacy.support" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Help and support" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Ayuda y soporte" } }
+      }
+    },
+    "settings.privacy.support.url" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "https://menteviva-e4s.pages.dev/en/support" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "https://menteviva-e4s.pages.dev/es/support" } }
+      }
+    },
     "settings.privacy.photos" : {
       "extractionState" : "stale",
       "localizations" : {
