@@ -21,12 +21,13 @@ final class CaptionStringsTests: XCTestCase {
     }
 
     /// The notice shown while typing a name must match where it is stored: in the
-    /// app's folder, which the user's own device backup may include.
-    func testGivenCaptionPrivacyNoticeWhenReadThenItMentionsTheUsersOwnBackup() throws {
+    /// app's folder; adding a photo excludes it from new device backups.
+    func testGivenCaptionPrivacyNoticeWhenReadThenItMentionsDeviceBackups() throws {
         let entry = try XCTUnwrap(catalog()["family.caption.privacy"] as? [String: Any])
         let localizations = try XCTUnwrap(entry["localizations"] as? [String: [String: [String: String]]])
-        XCTAssertTrue(try XCTUnwrap(localizations["en"]?["stringUnit"]?["value"]).contains("backup"))
-        XCTAssertTrue(try XCTUnwrap(localizations["es"]?["stringUnit"]?["value"]).contains("copia de seguridad"))
+        XCTAssertTrue(try XCTUnwrap(localizations["en"]?["stringUnit"]?["value"]).contains("excluded from new device backups"))
+        XCTAssertTrue(
+            try XCTUnwrap(localizations["es"]?["stringUnit"]?["value"]).contains("se excluyen de las nuevas copias de seguridad"))
     }
 
     func testGivenCaptionSheetKeysWhenCatalogReadThenEveryKeyHasEnglishAndSpanish() throws {

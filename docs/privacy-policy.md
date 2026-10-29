@@ -7,7 +7,7 @@ policy changes. The App Store "App Privacy" label must match it.
 ---
 
 **Mente Viva — Privacy Policy**
-Last updated: 2026-10-23
+Last updated: 2026-10-28
 
 **The short version:** Mente Viva does not receive your personal data. No account,
 no ads, no tracking. Your games, your photos and any names you add stay on your device.
@@ -27,9 +27,9 @@ copy when you tap Remove (or delete the app).
 words (a person, a nickname, a place, an event). It is stored next to the photo,
 in the app's private storage on this device, and nowhere else: it is never
 uploaded, never part of a share, and never sent to any service. Removing the
-photo removes its name. Like everything an app keeps on your device, photos and
-names may be included in your own iPhone or iPad backup (for example iCloud
-Backup), which belongs to you and which you control in Apple's Settings. Optionally the app can read a name aloud using your
+photo removes its name. Photos added in this version and their names are excluded
+from new device backups, so they will not be restored from those backups. Photos
+added in an older version may still be included. An older backup may also contain a copy. Optionally the app can read a name aloud using your
 device's built-in voice; that happens on the device.
 
 **What leaves the device: normally, nothing.** The app works fully offline, and its daily game
@@ -55,12 +55,9 @@ hola@nebulaideas.com). We answer in English or Spanish.
 
 ## Notes for us (not part of the published page)
 
-- **Backups (PR #144 review):** photos and captions live in Application Support, which iOS
-  backs up by default. We chose to say so in the policy and the in-app text instead of excluding the
-  folder, because exclusion would lose the family's typed names whenever a phone is restored. Our
-  reading is that a user's own device backup is not data *we* collect, so the label stays Data Not
-  Collected; re-check that against Apple's definitions before the App Store submission (#37).
-  To switch: set `isExcludedFromBackup` on `MemoryPhotos.folder` and drop the backup sentences.
+- **Backups:** `MemoryPhotos.prepare` excludes the photo and caption folder from new device
+  backups when a photo is added. Existing folders that have not gone through this path may still be
+  included. Game sessions and other app data may be included; older backups may contain photos. Re-check the App Privacy label before submission (#37).
 
 - Matches the App Privacy label draft in [store-listing.md](store-listing.md): **Data Not Collected**.
 - Code facts backing every sentence: the app makes no network request (decisions.md 2026-10-26,
