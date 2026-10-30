@@ -73,23 +73,27 @@ struct UpOrDownView: View {
     /// The soft amber note: a near miss, or no card fits and the deck can help.
     @ViewBuilder
     private func note(for deal: UpOrDownDeal) -> some View {
-        let stuck = deal.playablePiles.isEmpty && !deal.deck.isEmpty
-        if showAlmost || stuck {
-            Text(
-                stuck
-                    ? AppLanguage.localized("game.upordown.stuck")
-                    : missNote(for: deal)
-            )
-            .font(.title2.weight(.semibold))
-            .foregroundStyle(Color.todaysPick)
-            .multilineTextAlignment(.center)
-            .padding(.horizontal, 14)
-            .padding(.vertical, 10)
-            .background(Color.amber.opacity(0.24), in: .rect(cornerRadius: 14))
+        if showAlmost || isStuck(deal) {
+            Text(noteText(for: deal))
+                .font(.title2.weight(.semibold))
+                .foregroundStyle(Color.todaysPick)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 14)
+                .padding(.vertical, 10)
+                .background(Color.amber.opacity(0.24), in: .rect(cornerRadius: 14))
         }
     }
 
-    /// The near-miss line, shown in the note and posted to VoiceOver so both say the same words.
+    private func isStuck(_ deal: UpOrDownDeal) -> Bool {
+        deal.playablePiles.isEmpty && !deal.deck.isEmpty
+    }
+
+    /// The line the note shows, also posted to VoiceOver on a miss so both say the same words.
+    private func noteText(for deal: UpOrDownDeal) -> String {
+        isStuck(deal) ? AppLanguage.localized("game.upordown.stuck") : missNote(for: deal)
+    }
+
+    /// The near-miss line.
     private func missNote(for deal: UpOrDownDeal) -> String {
         String(format: AppLanguage.localized("game.upordown.miss %@"), rankName(deal.open))
     }
@@ -233,7 +237,7 @@ struct UpOrDownView: View {
             missed = true
             showAlmost = true
             Feedback.play(.miss)
-            AccessibilityNotification.Announcement(missNote(for: current)).post()
+            AccessibilityNotification.Announcement(noteText(for: current)).post()
         }
         deal = current
         finishIfDone()

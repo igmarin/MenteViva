@@ -278,10 +278,13 @@ final class CategoryDealTests: XCTestCase {
         let strings = try XCTUnwrap(catalog["strings"] as? [String: Any])
         let entry = try XCTUnwrap(strings["game.category.miss"] as? [String: Any])
         let localizations = try XCTUnwrap(entry["localizations"] as? [String: Any])
-        for language in ["en", "es"] {
+        let expected = [
+            "en": "Not in this group, try another",
+            "es": "Ese no es de este grupo, prueba otro",
+        ]
+        for (language, line) in expected {
             let unit = try XCTUnwrap((localizations[language] as? [String: Any])?["stringUnit"] as? [String: Any])
-            let text = try XCTUnwrap(unit["value"] as? String).trimmingCharacters(in: .whitespaces)
-            XCTAssertFalse(text.isEmpty, language)
+            XCTAssertEqual(unit["value"] as? String, line, language)
         }
     }
 }
