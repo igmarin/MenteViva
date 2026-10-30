@@ -15,11 +15,19 @@ struct HomeView: View {
     @State private var showSettings = false
     /// The games opened from Home, so "Next" can swap the finished game for the next one.
     @State private var path = GamePath()
-    /// Today's picks in plan order. Empty until the on-device policy has run (a
-    /// local fetch, so effectively instant); nothing here waits on the network.
-    @State private var plan: [GameID] = []
+    /// Today's picks in plan order. Starts as the plan saved today, so the table is there in the
+    /// first frame (#383); empty only on a day's first launch, until the on-device policy has run
+    /// (a local fetch, so effectively instant). Nothing here waits on the network.
+    @State private var plan: [GameID]
     /// The day `plan` was made for; a new day (seen when the app comes back) re-plans.
     @State private var planDay = PlanStore.dayStamp()
+    /// The day whose cards have been dealt, so the deal plays once per day and not again when
+    /// the plan is made again or Home comes back from a game (#383).
+    @State private var dealtDay: String?
+    /// Today's played games as they were when a game opened. The tick on a card pops in when Home
+    /// is back on screen, not unseen behind the game that was just finished (#383). Nil at Home.
+    @State private var playedWhileAway: Set<GameID>?
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     /// Width inside the table, measured so today's cards can shrink to fit it (#365). 0 until measured.
     @State private var tableWidth: CGFloat = 0
     @Environment(\.scenePhase) private var scenePhase
@@ -32,9 +40,19 @@ struct HomeView: View {
     /// whenever Set up is visited, so it is read again each time Home appears.
     @State private var unavailable = GameAvailability.unavailable()
     private var hidden: Set<GameID> { FamilySettings.hidden(from: hiddenGames).union(unavailable) }
+    /// True until this day's cards are dealt; the cards sit below the table, unseen, until then.
+    private var undealt: Bool { HomeDeal.needsDeal(plan: plan, dealtDay: dealtDay, planDay: planDay) }
+    /// The ticks to show: what was played when a game opened, while one is open.
+    private var shownDone: Set<GameID> { playedWhileAway ?? today.done }
     private var today: TodayRun { TodayRun(plan: plan, hidden: hidden, sessions: sessions) }
     private var week: [(day: Date, games: [GameID])] {
         DayGrouping.thisWeek(sessions, date: \.playedAt).map { (day: $0.day, games: $0.items.compactMap(\.game)) }
+    }
+
+    /// The saved plan is a small local read; only the first result is kept by `State`.
+    init() {
+        _plan = State(
+            initialValue: HomeDeal.preloadedPlan(cached: PlanStore.cachedPlan(), today: PlanStore.dayStamp()))
     }
 
     /// Wider cards at accessibility text sizes (#117) so names never break
@@ -103,8 +121,20 @@ struct HomeView: View {
                 refreshPlan()
             }
         }
+        // Fires at launch when the saved plan is already on the table, and when a plan first
+        // arrives; `dealtDay` then keeps it from firing again until the day changes.
+        .onChange(of: undealt, initial: true) { _, isUndealt in
+            if isUndealt { deal() }
+        }
+        .onChange(of: path.games.isEmpty) { _, atHome in
+            playedWhileAway = atHome ? nil : today.done
+        }
         .onChange(of: scenePhase) { _, phase in
-            if phase == .active { planDay = PlanStore.dayStamp() }
+            guard phase == .active else { return }
+            let day = PlanStore.dayStamp()
+            // A new day must not deal yesterday's cards: clear them until today's plan is made.
+            if day != planDay { plan = HomeDeal.preloadedPlan(cached: PlanStore.cachedPlan(), today: day) }
+            planDay = day
         }
         .environment(path)
     }
@@ -159,11 +189,12 @@ struct HomeView: View {
         let games = today.games
         if typeSize >= .xxxLarge {
             VStack(spacing: 10) {
-                ForEach(games, id: \.self) { game in
+                ForEach(Array(games.enumerated()), id: \.element) { index, game in
                     NavigationLink(value: game) {
-                        GameRow(game: game, playedToday: today.done.contains(game))
+                        GameRow(game: game, playedToday: shownDone.contains(game))
                     }
                     .buttonStyle(CardPressStyle())
+                    .modifier(DealtIn(undealt: undealt, index: index))
                 }
             }
         } else {
@@ -174,18 +205,21 @@ struct HomeView: View {
                 tableWidth > 0
                 ? HandLayout.cardWidth(available: tableWidth, perRow: perRow) : HandLayout.fullWidth
             VStack(spacing: 10) {
-                ForEach(Array(rows.enumerated()), id: \.offset) { _, row in
+                ForEach(Array(rows.enumerated()), id: \.offset) { rowIndex, row in
                     HStack(spacing: -6) {
                         ForEach(Array(row.enumerated()), id: \.element) { index, game in
+                            // Dealt in plan order across the rows.
+                            let dealIndex = rowIndex * perRow + index
                             let tilt = (Double(index) - Double(row.count - 1) / 2) * 7
                             NavigationLink(value: game) {
                                 GameCard(
-                                    game: game, size: .hand, playedToday: today.done.contains(game),
+                                    game: game, size: .hand, playedToday: shownDone.contains(game),
                                     handWidth: cardWidth)
                             }
                             .buttonStyle(CardPressStyle())
                             .rotationEffect(.degrees(tilt))
                             .offset(y: tilt == 0 ? 0 : 8)
+                            .modifier(DealtIn(undealt: undealt, index: dealIndex))
                         }
                     }
                 }
@@ -335,6 +369,14 @@ struct HomeView: View {
 
     // MARK: - Plan
 
+    /// Marks today as dealt, which lets the cards rise into place, and gives the one light tap.
+    /// Under Reduce Motion the cards just fade in, with no tap. Nothing waits on this: the cards
+    /// can be pressed while they settle.
+    private func deal() {
+        if !today.games.isEmpty && !today.isFinished && !reduceMotion { Feedback.play(.tap) }
+        dealtDay = planDay
+    }
+
     /// Everything Home waits on before it can deal today's games: a 14-day
     /// SwiftData fetch, the summary, and the plan.
     private func refreshPlan() {
@@ -371,6 +413,27 @@ struct HomeView: View {
         case .slidingBlocks: SlidingBlocksView()
         case .photoCaptions: MemoryMatchView(variant: .captions)
         }
+    }
+}
+
+/// How one of today's cards arrives (#383): from below the table with a spring, each a little
+/// after the one before; under Reduce Motion a short fade with no movement. It only reacts to
+/// `undealt` flipping, so a card that is added later (a new plan) or a Home that comes back from
+/// a game does not move.
+private struct DealtIn: ViewModifier {
+    let undealt: Bool
+    let index: Int
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    func body(content: Content) -> some View {
+        content
+            .offset(y: undealt && !reduceMotion ? 230 : 0)
+            .opacity(undealt ? 0 : 1)
+            .animation(
+                reduceMotion
+                    ? .easeOut(duration: 0.2)
+                    : .spring(response: 0.5, dampingFraction: 0.72).delay(HomeDeal.delay(forCardAt: index)),
+                value: undealt)
     }
 }
 
