@@ -5,6 +5,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 ## [Unreleased]
 
 ### Fixed
+- **Memory Lane and Names and Faces can be played by ear (#393):** with VoiceOver on, each card you turn is spoken, a match says its name and "Pair found", and a pair that differs says both names ("Almost — Cat and Dog are different") and stays face up until your next tap. Without VoiceOver the pair still turns back after 1.2 s. EN + ES.
 - **Repeat the Sequence catches a wrong tap at once (#397):** a first tap that is not the first tile now shows "Almost — watch again" and replays the same sequence straight away, instead of after the whole sequence is tapped. A correct run stays quiet until it is complete.
 - **VoiceOver hears the gentle miss (#392):** in Sudoku, Up or Down, Finish the Saying and Name the Herd, a wrong tap is now spoken as the same warm note sighted players see (Name the Herd has a new quiet line, EN + ES), and Up or Down says "That's it!" on a right card. Each wrong tap in a row is announced.
 - **Crisper card text on Home (#366):** card titles, "This week" and the weekday labels no longer show a faint second copy of the text; the print shadow now follows the card edge only.
