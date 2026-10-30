@@ -69,6 +69,25 @@ final class MemoryPhotosTests: XCTestCase {
         XCTAssertEqual(result, MemoryPhotos.AddResult(added: 1, unreadable: 0, overLimit: 2))
     }
 
+    // MARK: A bigger album (#374)
+
+    func testGivenAlbumOfEightWhenAddingTwoThenBothAreStored() throws {
+        for _ in 0..<8 { try MemoryPhotos.add(photoData(width: 10, height: 10), to: folder) }
+        let result = MemoryPhotos.add(Array(repeating: photoData(width: 10, height: 10), count: 2), to: folder)
+        XCTAssertEqual(result, MemoryPhotos.AddResult(added: 2, unreadable: 0, overLimit: 0))
+        XCTAssertEqual(MemoryPhotos.all(in: folder).count, 10)
+    }
+
+    func testGivenAlbumAtMaxWhenAddingThenAlbumFullIsReported() throws {
+        XCTAssertEqual(MemoryPhotos.maxCount, 24)
+        let full = MemoryPhotos.add(Array(repeating: photoData(width: 10, height: 10), count: 24), to: folder)
+        XCTAssertEqual(full, MemoryPhotos.AddResult(added: 24, unreadable: 0, overLimit: 0))
+        let result = MemoryPhotos.add([photoData(width: 10, height: 10)], to: folder)
+        XCTAssertEqual(result, MemoryPhotos.AddResult(added: 0, unreadable: 0, overLimit: 1))
+        XCTAssertEqual(MemoryPhotos.all(in: folder).count, 24)
+        XCTAssertNotNil(result.note)
+    }
+
     func testGivenNothingHappenedWhenSummarizingThenThereIsNoNote() {
         XCTAssertNil(MemoryPhotos.AddResult().note)
         XCTAssertNotNil(MemoryPhotos.AddResult(added: 0, unreadable: 1, overLimit: 0).note)
