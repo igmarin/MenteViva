@@ -5,6 +5,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 ## [Unreleased]
 
 ### Fixed
+- **Repeat the Sequence catches a wrong tap at once (#397):** a first tap that is not the first tile now shows "Almost — watch again" and replays the same sequence straight away, instead of after the whole sequence is tapped. A correct run stays quiet until it is complete.
 - **VoiceOver hears the gentle miss (#392):** in Sudoku, Up or Down, Finish the Saying and Name the Herd, a wrong tap is now spoken as the same warm note sighted players see (Name the Herd has a new quiet line, EN + ES), and Up or Down says "That's it!" on a right card. Each wrong tap in a row is announced.
 - **Crisper card text on Home (#366):** card titles, "This week" and the weekday labels no longer show a faint second copy of the text; the print shadow now follows the card edge only.
 - **Today's cards fit the screen (#365):** on Home, all of today's games now sit inside the table whether 3 or 5 are dealt (five show as 3 + 2), on small phones too. From the first Bigger text step, today's games are full-width rows so no name breaks mid-word.
