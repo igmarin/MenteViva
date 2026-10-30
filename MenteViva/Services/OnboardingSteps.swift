@@ -57,6 +57,15 @@ nonisolated enum ProfileAnswer: Equatable {
     }
 }
 
+/// A screen the first run may show after the last question, outside the "N of 5" count:
+/// both are offers, so neither is a step the player has to take.
+nonisolated enum OnboardingOffer: Equatable {
+    /// "Add a few photos of people you love?" (#374).
+    case photos
+    /// "Shall we play three games to find your pace?" (#213).
+    case warmUp
+}
+
 /// The questions in order and what each one offers (#212). Pure: no view, no store, so the
 /// order rule below is a thing tests can hold on to.
 nonisolated enum OnboardingSteps {
@@ -66,6 +75,18 @@ nonisolated enum OnboardingSteps {
 
     /// How many steps the first run shows, counting the welcome screen ("2 of 5", #212).
     static let stepCount = questions.count + 1
+
+    /// The family photos are offered only while the album is empty (#374): three games are
+    /// better with them, and someone who already added photos has found Set up on their own.
+    static func offersPhotos(albumCount: Int) -> Bool {
+        albumCount == 0
+    }
+
+    /// The offers after the last question, in order: photos first, so the warm-up that follows
+    /// can already deal from them, then the warm-up when it applies (#213). Empty means Home.
+    static func afterQuestions(albumCount: Int, profile: PlayerProfile) -> [OnboardingOffer] {
+        (offersPhotos(albumCount: albumCount) ? [.photos] : []) + (WarmUp.isOffered(to: profile) ? [.warmUp] : [])
+    }
 
     /// The answers to offer, in the order to show them. With "a family member" the gentlest
     /// pace is the nearest one to the thumb, because whoever answers is choosing for someone

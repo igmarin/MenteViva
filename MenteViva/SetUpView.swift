@@ -1,7 +1,7 @@
 import PhotosUI
 import SwiftUI
 
-/// Set up (#141): the per-game choices and the Memory Lane photos, split from
+/// Set up (#141): the per-game choices and the family photos, split from
 /// My progress. Open on purpose (owner decision 2026-10-01): no lock, nothing
 /// here can break play. Everything covers this device only.
 struct SetUpView: View {
@@ -31,12 +31,36 @@ struct SetUpView: View {
     }
 }
 
-private struct CaptionTarget: Identifiable {
+/// The photo a caption sheet is open for: a sheet needs an `Identifiable` item, a URL is not one.
+struct CaptionTarget: Identifiable {
     let url: URL
     var id: URL { url }
 }
 
-/// Memory Lane photos (#110): picked with the system photo picker (no library
+/// The one way picked photos reach the album (#110, #120), shared by Set up and the first run
+/// (#374), so both import, shrink and count photos the same way and `MemoryPhotos.add` has a
+/// single caller.
+enum FamilyPhotoImport {
+    /// Loads what the picker handed over and adds it off the main actor. Returns what happened
+    /// and the new photos, oldest first, so the first run can ask for each one's name in the
+    /// order they were picked; nil when the task was cancelled mid-pick.
+    static func run(_ items: [PhotosPickerItem]) async -> (result: MemoryPhotos.AddResult, added: [URL])? {
+        var loaded: [Data?] = []
+        for item in items {
+            loaded.append(try? await item.loadTransferable(type: Data.self))
+        }
+        guard !Task.isCancelled else { return nil }
+        // Decoding, shrinking and writing up to 24 photos stays off the main actor.
+        let batch = loaded
+        return await Task.detached {
+            let before = Set(MemoryPhotos.all())
+            let result = MemoryPhotos.add(batch)
+            return (result, MemoryPhotos.all().filter { !before.contains($0) })
+        }.value
+    }
+}
+
+/// Family photos (#110, #374): picked with the system photo picker (no library
 /// permission), kept on this device only. Each has its own Remove button.
 private struct FamilyPhotosSection: View {
     @State private var photos: [URL]
@@ -109,7 +133,7 @@ private struct FamilyPhotosSection: View {
             Text(AppLanguage.localized("family.photos.header"))
                 .font(.title3.weight(.semibold))
         } footer: {
-            Text(AppLanguage.localized("family.photos.footer"))
+            Text(String(format: AppLanguage.localized("family.photos.footer %lld"), MemoryPhotos.maxCount))
                 .font(.footnote)
         }
         .sheet(item: $captioning) { target in
@@ -121,17 +145,9 @@ private struct FamilyPhotosSection: View {
         // A task, not onChange + Task: it is cancelled if Set up goes away mid-pick.
         .task(id: picked) {
             let items = picked
-            guard !items.isEmpty else { return }
-            var loaded: [Data?] = []
-            for item in items {
-                loaded.append(try? await item.loadTransferable(type: Data.self))
-            }
-            guard !Task.isCancelled else { return }
-            // Decoding, shrinking and writing up to 8 photos stays off the main actor.
-            let batch = loaded
-            let result = await Task.detached { MemoryPhotos.add(batch) }.value
+            guard !items.isEmpty, let imported = await FamilyPhotoImport.run(items) else { return }
             reload()
-            note = result.note
+            note = imported.result.note
             picked = []
             if let note { AccessibilityNotification.Announcement(note).post() }
         }
@@ -162,7 +178,7 @@ private struct PhotoThumb: View {
 
 extension MemoryPhotos.AddResult {
     /// One warm line about the last pick; nil when nothing happened. Never
-    /// "error" or "failed": a photo "couldn't be used" and the album "holds 8".
+    /// "error" or "failed": a photo "couldn't be used" and the album "holds 24".
     var note: String? {
         var parts: [String] = []
         if added > 0 {
