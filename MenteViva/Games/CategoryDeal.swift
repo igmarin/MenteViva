@@ -30,8 +30,8 @@ nonisolated enum CategoryDeal {
         var noDecoysFrom: Set<Category> {
             switch self {
             case .kitchen: [.fruits, .home]
-            case .home: [.kitchen]
-            case .plants: [.fruits]
+            case .home: [.kitchen, .plants]
+            case .plants: [.fruits, .home]
             case .fruits: [.kitchen, .plants]
             case .animals, .colors, .vehicles: []
             }

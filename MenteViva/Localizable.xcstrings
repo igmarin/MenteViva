@@ -811,13 +811,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "All the %@ found!"
+            "value" : "%@: all found!"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "¡Encontraste todos: %@!"
+            "value" : "%@: ¡todo encontrado!"
           }
         }
       }
@@ -879,13 +879,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tap all that belong to"
+            "value" : "Tap every picture for:"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Toca todos los que sean"
+            "value" : "Toca cada imagen de:"
           }
         }
       }
