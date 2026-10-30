@@ -178,7 +178,7 @@ nonisolated struct TangramPuzzle: Sendable {
 
     /// The next shape: an unseen one when any remains, so none repeats until
     /// all have been seen; seeded, so tests control it. `shapes` must not be
-    /// empty: the library always has 30, and an empty one is a programming error.
+    /// empty: the library always has 23, and an empty one is a programming error.
     static func pick<G: RandomNumberGenerator>(
         from shapes: [TangramShape] = TangramShapes.all, seen: Set<String>,
         using generator: inout G
