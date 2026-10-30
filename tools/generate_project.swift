@@ -71,6 +71,8 @@ let pbxID = oid("proj")
 let tgtID = oid("target")
 let catID = oid("xcstrings")
 let catBuildID = oid("xcstrings.build")
+let privacyID = oid("PrivacyInfo.xcprivacy")
+let privacyBuildID = oid("PrivacyInfo.xcprivacy.build")
 let assetsID = oid("Assets.xcassets")
 let assetsBuildID = oid("Assets.xcassets.build")
 let entID = oid("entitlements")
@@ -136,12 +138,14 @@ p += buildFiles + tests.builds + "\n" + fileRefs + tests.refs
 p +=
     "\t\t\(appID) /* MenteViva.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MenteViva.app; sourceTree = BUILT_PRODUCTS_DIR; };\n"
 p +=
-    "\t\t\(catID) /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = \"<group>\"; };\n\n"
+    "\t\t\(catID) /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = \"<group>\"; };\n"
+    + "\t\t\(privacyID) /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = \"<group>\"; };\n\n"
 if !localOnly {
     p +=
         "\t\t\(entID) /* MenteViva.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MenteViva.entitlements; sourceTree = \"<group>\"; };\n"
 }
 p += "\t\t\(catBuildID) /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = \(catID); };\n"
+p += "\t\t\(privacyBuildID) /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = \(privacyID); };\n"
 p +=
     "\t\t\(assetsID) /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = \"<group>\"; };\n"
 p += "\t\t\(assetsBuildID) /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = \(assetsID); };\n\n"
@@ -166,7 +170,7 @@ p +=
 p +=
     "\t\t\(grpID) /* MenteViva */ = {\n\t\t\tisa = PBXGroup;\n\t\t\tchildren = (\n\(children)"
     + (localOnly ? "" : "\t\t\t\t\(entID) /* MenteViva.entitlements */,\n")
-    + "\t\t\t\t\(catID) /* Localizable.xcstrings */,\n\t\t\t\t\(assetsID) /* Assets.xcassets */,\n"
+    + "\t\t\t\t\(catID) /* Localizable.xcstrings */,\n\t\t\t\t\(privacyID) /* PrivacyInfo.xcprivacy */,\n\t\t\t\t\(assetsID) /* Assets.xcassets */,\n"
 if hasTests { p += "\t\t\t\t\(testsGrpID) /* MenteVivaTests */,\n" }
 p += "\t\t\t);\n\t\t\tpath = MenteViva;\n\t\t\tsourceTree = \"<group>\";\n\t\t};\n\n"
 if hasTests {
@@ -200,7 +204,7 @@ p +=
 // MARK: Build phases
 
 p +=
-    "\t\t\(resID) /* Resources */ = {\n\t\t\tisa = PBXResourcesBuildPhase;\n\t\t\tbuildActionMask = 2147483647;\n\t\t\tfiles = ( \(catBuildID) /* Localizable.xcstrings in Resources */, \(assetsBuildID) /* Assets.xcassets in Resources */ );\n\t\t\trunOnlyForDeploymentPostprocessing = 0;\n\t\t};\n\n"
+    "\t\t\(resID) /* Resources */ = {\n\t\t\tisa = PBXResourcesBuildPhase;\n\t\t\tbuildActionMask = 2147483647;\n\t\t\tfiles = ( \(catBuildID) /* Localizable.xcstrings in Resources */, \(privacyBuildID) /* PrivacyInfo.xcprivacy in Resources */, \(assetsBuildID) /* Assets.xcassets in Resources */ );\n\t\t\trunOnlyForDeploymentPostprocessing = 0;\n\t\t};\n\n"
 p +=
     "\t\t\(fwID) /* Frameworks */ = {\n\t\t\tisa = PBXFrameworksBuildPhase;\n\t\t\tbuildActionMask = 2147483647;\n\t\t\tfiles = ( );\n\t\t\trunOnlyForDeploymentPostprocessing = 0;\n\t\t};\n\n"
 p +=
