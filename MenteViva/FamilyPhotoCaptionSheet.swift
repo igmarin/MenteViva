@@ -4,6 +4,9 @@ import SwiftUI
 /// what it shows. Stays on this device; the sheet says so where it is typed.
 struct FamilyPhotoCaptionSheet: View {
     let photo: URL
+    /// The line above the field. Set up asks for "a name or a few words"; the first run asks
+    /// "Who is this?", the same question Remember Together asks of a photo (#374).
+    let promptKey: String
     /// Called after a save or a removal so the photo list can refresh.
     let onChange: () -> Void
 
@@ -13,8 +16,9 @@ struct FamilyPhotoCaptionSheet: View {
     /// Set when the name couldn't be written, so the sheet stays open and says so.
     @State private var saveProblem = false
 
-    init(photo: URL, onChange: @escaping () -> Void) {
+    init(photo: URL, promptKey: String = "family.caption.field", onChange: @escaping () -> Void) {
         self.photo = photo
+        self.promptKey = promptKey
         self.onChange = onChange
         _text = State(initialValue: MemoryPhotos.caption(for: photo) ?? "")
     }
@@ -31,7 +35,7 @@ struct FamilyPhotoCaptionSheet: View {
                             .clipShape(RoundedRectangle(cornerRadius: 16))
                             .accessibilityHidden(true)
                     }
-                    Text(AppLanguage.localized("family.caption.field"))
+                    Text(AppLanguage.localized(promptKey))
                         .font(.title3.weight(.semibold))
                     TextField(AppLanguage.localized("family.caption.placeholder"), text: $text)
                         .font(.title3)
