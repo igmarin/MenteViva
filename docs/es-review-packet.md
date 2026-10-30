@@ -476,7 +476,6 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `tangram.shape.01` | Boat | Barco | TangramShapes |  |
 | `tangram.shape.02` | Fish | Pez | TangramShapes |  |
 | `tangram.shape.03` | Bird | Pájaro | TangramShapes |  |
-| `tangram.shape.04` | Cat | Gato | TangramShapes |  |
 | `tangram.shape.05` | Dog | Perro | TangramShapes |  |
 | `tangram.shape.06` | Sea turtle | Tortuga marina | TangramShapes |  |
 | `tangram.shape.07` | Rabbit | Conejo | TangramShapes |  |
@@ -485,24 +484,18 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `tangram.shape.10` | Candles | Velas | TangramShapes |  |
 | `tangram.shape.11` | Bow and arrow | Arco y flecha | TangramShapes |  |
 | `tangram.shape.12` | Mountains | Montañas | TangramShapes |  |
-| `tangram.shape.13` | Armchair | Sillón | TangramShapes |  |
 | `tangram.shape.14` | Walker | Caminante | TangramShapes |  |
 | `tangram.shape.15` | Pine | Pino | TangramShapes |  |
 | `tangram.shape.16` | Duck | Pato | TangramShapes |  |
-| `tangram.shape.17` | Frog | Rana | TangramShapes |  |
 | `tangram.shape.18` | Tent | Tienda de campaña | TangramShapes |  |
 | `tangram.shape.19` | Rocket | Cohete | TangramShapes |  |
-| `tangram.shape.20` | Butterfly | Mariposa | TangramShapes |  |
 | `tangram.shape.21` | Covered bridge | Puente cubierto | TangramShapes |  |
-| `tangram.shape.22` | Mushroom | Seta | TangramShapes |  |
 | `tangram.shape.23` | Swan | Cisne | TangramShapes |  |
-| `tangram.shape.24` | Owl | Búho | TangramShapes |  |
 | `tangram.shape.25` | Horse | Caballo | TangramShapes |  |
 | `tangram.shape.26` | Lamp | Lámpara | TangramShapes |  |
 | `tangram.shape.27` | Slide | Tobogán | TangramShapes |  |
 | `tangram.shape.28` | Snail | Caracol | TangramShapes |  |
 | `tangram.shape.29` | Penguin | Pingüino | TangramShapes |  |
-| `tangram.shape.30` | Crab | Cangrejo | TangramShapes |  |
 | `why.footer` | Educational information, not medical advice. | Información educativa, no consejo médico. | WhyTheseGamesView |  |
 | `why.game.category` | Name the Herd exercises finding words. | Nombra la Manada ejercita encontrar palabras. | WhyTheseGamesView |  |
 | `why.game.colorclash` | Color Clash exercises paying attention to what matters and ignoring the rest. | Choque de Colores ejercita fijarse en lo importante y dejar pasar lo demás. | WhyTheseGamesView |  |

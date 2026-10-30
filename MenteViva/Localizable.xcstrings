@@ -9172,23 +9172,6 @@
         }
       }
     },
-    "tangram.shape.04" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cat"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gato"
-          }
-        }
-      }
-    },
     "tangram.shape.05" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -9325,23 +9308,6 @@
         }
       }
     },
-    "tangram.shape.13" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Armchair"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sillón"
-          }
-        }
-      }
-    },
     "tangram.shape.14" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -9393,23 +9359,6 @@
         }
       }
     },
-    "tangram.shape.17" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Frog"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rana"
-          }
-        }
-      }
-    },
     "tangram.shape.18" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -9444,23 +9393,6 @@
         }
       }
     },
-    "tangram.shape.20" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Butterfly"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mariposa"
-          }
-        }
-      }
-    },
     "tangram.shape.21" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -9478,23 +9410,6 @@
         }
       }
     },
-    "tangram.shape.22" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mushroom"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Seta"
-          }
-        }
-      }
-    },
     "tangram.shape.23" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -9508,23 +9423,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cisne"
-          }
-        }
-      }
-    },
-    "tangram.shape.24" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Owl"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Búho"
           }
         }
       }
@@ -9610,23 +9508,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pingüino"
-          }
-        }
-      }
-    },
-    "tangram.shape.30" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Crab"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cangrejo"
           }
         }
       }
