@@ -87,4 +87,67 @@ final class CategoryDealTests: XCTestCase {
             XCTAssertEqual(round.tiles.count, 7 + narrow)
         }
     }
+
+    /// A fair pick is never a miss (#371): the orange fruit and the orange
+    /// colour share a name, so neither may be dealt against the other's category.
+    func testGivenColorsCategoryWhenDealtWithManySeedsThenTheOrangeFruitIsNeverADecoy() {
+        for level in 1...10 {
+            for seed in 1...500 {
+                for round in deal(level, seed: UInt64(seed)) where round.category == .colors {
+                    XCTAssertFalse(round.tiles.contains { $0.picture.slug == "orange" }, "level \(level) seed \(seed)")
+                }
+            }
+        }
+    }
+
+    func testGivenFruitsCategoryWhenDealtWithManySeedsThenTheOrangeSwatchIsNeverADecoy() {
+        for level in 1...10 {
+            for seed in 1...500 {
+                for round in deal(level, seed: UInt64(seed)) where round.category == .fruits {
+                    XCTAssertFalse(
+                        round.tiles.contains { $0.picture.slug == "color.orange" }, "level \(level) seed \(seed)")
+                }
+            }
+        }
+    }
+
+    /// The general guard for new categories: compares the names a player and
+    /// VoiceOver get, in both languages, not slugs.
+    func testGivenAnyDealWhenTilesLocalizedThenNoDecoyShareANameWithAnItemOfTheAskedCategory() throws {
+        let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
+        let data = try Data(contentsOf: root.appendingPathComponent("MenteViva/Localizable.xcstrings"))
+        let catalog = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
+        let strings = try XCTUnwrap(catalog["strings"] as? [String: Any])
+        func name(_ picture: GamePicture, _ language: String) -> String? {
+            let entry = strings[picture.nameKey] as? [String: Any]
+            let localizations = entry?["localizations"] as? [String: Any]
+            let unit = (localizations?[language] as? [String: Any])?["stringUnit"] as? [String: Any]
+            return (unit?["value"] as? String)?.lowercased()
+        }
+        for language in ["en", "es"] {
+            for level in 1...10 {
+                for seed in 1...200 {
+                    for round in deal(level, seed: UInt64(seed)) {
+                        let asked = Set(round.category.items.compactMap { name($0, language) })
+                        for tile in round.tiles where !tile.belongs {
+                            let decoyName = try XCTUnwrap(name(tile.picture, language))
+                            XCTAssertFalse(
+                                asked.contains(decoyName),
+                                "\(decoyName) [\(language)] level \(level) seed \(seed)")
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    func testGivenLevelTenWhenAnyRoundIsDealtThenItHasSevenItemsPlusTheLevelsDecoys() {
+        let decoys = CategoryDeal.fittedDecoyCount(for: Difficulty(level: 10), width: Self.wide)
+        XCTAssertEqual(decoys, 11)
+        for seed in 1...200 {
+            for round in deal(10, seed: UInt64(seed)) {
+                XCTAssertEqual(round.tiles.count, 7 + decoys, "seed \(seed)")
+            }
+        }
+    }
 }
