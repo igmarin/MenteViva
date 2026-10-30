@@ -140,8 +140,9 @@ not asserted, see above). Resemblance check: original designs, no named
 characters, brands or accessories.
 
 **#373 Home and celebration cards (2026-10-30):** no new assets were added. The
-cards reuse the existing `pic.<slug>` illustrations above (teapot, dog, piano and
-so on), so nothing here needs a new rights check beyond what #226 already covers.
+cards reuse existing `pic.<slug>` files. Five of them (teapot, dog, apple,
+sunflower, sailboat) are the #323 Muse samples still pending #226, and this
+change makes them more prominent (Home's first screen and the celebration card).
 
 **Every batch:** append a complete prompt/tool/date row per new slug to
 `art-prompts.md`, record the selected files here, and check resemblance to

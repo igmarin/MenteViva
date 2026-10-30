@@ -32,6 +32,8 @@ final class GameIDTests: XCTestCase {
     private var gamesWithHero: [GameID] { GameID.allCases.filter { $0.heroPicture != nil } }
 
     func testGivenEveryGameWhenHeroPictureThenSlugExistsInCatalogue() {
+        // GamePictures.named traps on a missing slug, so a bad slug crashes here
+        // before the assert runs. The emblem-only set below is the real pin.
         let slugs = Set(GamePictures.all.map(\.slug))
         for game in GameID.allCases {
             guard let hero = game.heroPicture else { continue }
