@@ -256,6 +256,8 @@ struct HomeView: View {
     private var weekCard: some View {
         weekLink {
             weekBoardCard
+                // compositingGroup first, so the shadow follows the card outline, not each glyph (#366).
+                .compositingGroup()
                 .shadow(color: .black.opacity(0.25), radius: 0, x: 3, y: 3)
         }
     }
