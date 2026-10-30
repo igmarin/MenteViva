@@ -31,8 +31,10 @@ struct MemoryMatchView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     private static let spacing: CGFloat = 12
-    /// Icon-teal card back (Card Table theme): calm, not childish, the same in light and dark.
-    private static let cardBack = Color(UIColor(rgb: 0x23685F))
+    /// The app icon's jade card and cream frame (#384): the same in light and dark.
+    private static let cardBack = Color(UIColor(rgb: 0x246456))
+    private static let cardFrame = Color(UIColor(rgb: 0xFFF1D0))
+    private static let cardInk = Color(UIColor(rgb: 0x2B2118))
 
     @State private var difficulty: Difficulty
     /// Names and Faces: the captioned photos a board can use, read again for each deal.
@@ -204,8 +206,8 @@ struct MemoryMatchView: View {
 
     /// A card turns over in 0.25 s, eased in and out, the face swapping at the
     /// halfway point; with Reduce Motion it cross-fades in 0.2 s instead.
-    /// Face up: a paper card with the picture. Face down: the teal back with a
-    /// small leaf. Matched pairs get a soft wash of the game's ink and the checkmark.
+    /// Face up: a paper card with the picture. Face down: the icon's jade back
+    /// with its cream frame and amber disc. Matched pairs get a soft wash of the game's ink and the checkmark.
     private func face(_ card: Card, size: CGSize) -> some View {
         let shown = isShown(card)
         let found = board.matched.contains(card.id)
@@ -223,11 +225,14 @@ struct MemoryMatchView: View {
                 .animation(swap, value: shown)
         }
         .frame(width: size.width, height: size.height)
-        .shadow(color: .black.opacity(0.15), radius: 4, y: 2)
         .rotation3DEffect(
             .degrees(shown && !reduceMotion ? 180 : 0), axis: (x: 0, y: 1, z: 0)
         )
         .animation(reduceMotion ? nil : .easeInOut(duration: 0.25), value: shown)
+        // One print shadow for the whole card, cast in screen space so it
+        // stays bottom-right while the card turns.
+        .compositingGroup()
+        .shadow(color: .black.opacity(0.25), radius: 0, x: 3, y: 3)
         // Non-color cue: matched pairs keep a checkmark (WCAG 1.4.1).
         .overlay(alignment: .topTrailing) {
             if found { CheckBadge() }
@@ -244,14 +249,20 @@ struct MemoryMatchView: View {
             || board.matched.contains(card.id)
     }
 
-    /// The calm teal back with a small leaf, the same in light and dark.
+    /// The app icon as a card back: jade, an inset cream frame, an amber disc
+    /// ringed in espresso. Drawn in shapes, the same in light and dark.
     private func cardBack(size: CGSize) -> some View {
-        ZStack {
+        let disc = min(size.width, size.height) * 0.34
+        return ZStack {
             RoundedRectangle(cornerRadius: 18)
-                .fill(AnyShapeStyle(Self.cardBack.gradient))
-            Image(systemName: "leaf.fill")
-                .font(.system(size: min(size.width, size.height) * 0.22))
-                .foregroundStyle(.white.opacity(0.35))
+                .fill(Self.cardBack)
+            RoundedRectangle(cornerRadius: 12)
+                .strokeBorder(Self.cardFrame, lineWidth: 3)
+                .padding(8)
+            Circle()
+                .fill(Color.amber)
+                .overlay(Circle().strokeBorder(Self.cardInk, lineWidth: 3))
+                .frame(width: disc, height: disc)
         }
     }
 
@@ -264,7 +275,7 @@ struct MemoryMatchView: View {
                     found
                         ? AnyShapeStyle(.tint.opacity(0.16)) : AnyShapeStyle(Color.paper))
             RoundedRectangle(cornerRadius: 18)
-                .strokeBorder(.black.opacity(0.12), lineWidth: 1)
+                .strokeBorder(Color.espresso, lineWidth: 2)
             if case .photo(let url) = card.face, let image = photoImages[url] {
                 Image(uiImage: image)
                     .resizable()
