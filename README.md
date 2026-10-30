@@ -47,7 +47,7 @@ decided by a small rule policy on the device (no network, no cost).
 
 ## Built with AI
 
-Several AI coding assistants (Claude, Muse Code and Cline) have worked on tickets, and the owner
+Several AI coding assistants, including Meta's Muse Code, have worked on tickets, and the owner
 merges every pull request. Some game pictures were made with AI image tools, then cut out, cropped
 and resized; each prompt is logged in [docs/art-prompts.md](docs/art-prompts.md). The app itself
 uses no AI at runtime.
