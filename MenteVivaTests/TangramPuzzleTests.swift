@@ -30,8 +30,8 @@ final class TangramPuzzleTests: XCTestCase {
 
     // MARK: - The library
 
-    func testGivenEveryShapeWhenCheckedThenSevenTilesNoOverlapFullArea() {
-        XCTAssertEqual(TangramShapes.all.count, 30)
+    func testGivenEveryShapeWhenCheckedThenSevenTilesNoOverlap() {
+        XCTAssertEqual(TangramShapes.all.count, 23)
         for shape in TangramShapes.all {
             XCTAssertEqual(
                 shape.placements.map(\.piece.rawValue).sorted(),
@@ -56,7 +56,7 @@ final class TangramPuzzleTests: XCTestCase {
     }
 
     func testGivenAMirroredTileOverlappingAnotherWhenIntersectedThenAreaIsPositive() {
-        // The mirrored small tile fills the medium's left half, as Armchair once shipped (#395).
+        // The mirrored small tile fills the medium's left half, as removed Armchair did (#395).
         let medium = TangramPiece.placedCorners(.medium, position: .zero, rotation: 0, flipped: false)
         let small = TangramPiece.placedCorners(
             .small, position: CGPoint(x: 2, y: 2), rotation: 1, flipped: true)
@@ -80,10 +80,12 @@ final class TangramPuzzleTests: XCTestCase {
         }
     }
 
-    func testGivenEveryShapeWhenNamedThenKeysRunOneToThirty() {
+    func testGivenEveryShapeWhenNamedThenKeysAreTheKeptTwentyThree() {
+        // 04, 13, 17, 20, 22, 24 and 30 overlapped and were removed (#395).
+        let removed: Set = [4, 13, 17, 20, 22, 24, 30]
         XCTAssertEqual(
             TangramShapes.all.map(\.key),
-            (1...30).map { String(format: "tangram.shape.%02d", $0) })
+            (1...30).filter { !removed.contains($0) }.map { String(format: "tangram.shape.%02d", $0) })
     }
 
     // MARK: - Levels
@@ -236,16 +238,16 @@ final class TangramPuzzleTests: XCTestCase {
             TangramPuzzle.pick(from: TangramShapes.all, seen: [], using: &second).key)
     }
 
-    func testGivenPicksWhenSeenThenAllThirtyBeforeAnyRepeat() {
+    func testGivenPicksWhenSeenThenEveryShapeBeforeAnyRepeat() {
         var generator = SeededGenerator(state: 1)
         var seen: Set<String> = []
         var keys: [String] = []
-        for _ in 0..<30 {
+        for _ in TangramShapes.all.indices {
             let next = TangramPuzzle.pick(from: TangramShapes.all, seen: seen, using: &generator)
             keys.append(next.key)
             seen.insert(next.key)
         }
-        XCTAssertEqual(Set(keys).count, 30)
+        XCTAssertEqual(Set(keys).count, TangramShapes.all.count)
     }
 
     // MARK: - Table helpers (#219)

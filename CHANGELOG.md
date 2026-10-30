@@ -5,7 +5,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 ## [Unreleased]
 
 ### Fixed
-- **Tangram tiles never sit on top of each other (#395):** seven pictures (Cat, Armchair, Frog, Butterfly, Mushroom, Owl and Crab) had a tile overlapping another, so at level 1 one outline could hide inside another. Each now has its tiles side by side, keeps its look and can still be finished.
+- **Tangram tiles never sit on top of each other (#395):** seven pictures (Cat, Armchair, Frog, Butterfly, Mushroom, Owl and Crab) had a tile overlapping another, so at level 1 one outline could hide inside another. Those seven are gone; the other 23 pictures stay as they were, and the test now catches any overlap.
 - **Crisper card text on Home (#366):** card titles, "This week" and the weekday labels no longer show a faint second copy of the text; the print shadow now follows the card edge only.
 - **Today's cards fit the screen (#365):** on Home, all of today's games now sit inside the table whether 3 or 5 are dealt (five show as 3 + 2), on small phones too. From the first Bigger text step, today's games are full-width rows so no name breaks mid-word.
 - **Name the Herd never shows two tiles with the same name (#371):** a Colors board no longer mixes in the orange fruit, and a Fruits board no longer mixes in the orange colour, so a fair pick is never counted as a miss and VoiceOver never reads two tiles called "Orange".
