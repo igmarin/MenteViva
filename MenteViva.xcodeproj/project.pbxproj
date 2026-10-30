@@ -63,6 +63,7 @@
 		CF167B18375C83D400000020 /* AppLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 935C3DAA5B7FC9820000001A; };
 		B88EA6D0C0FF38D200000023 /* CaptionSpeaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4EDFB62CC1B10200000001D; };
 		74E2DCC89787792D00000028 /* CelebrationHeadline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83F77BE44B5C133300000022; };
+		232C8B200714AB2700000028 /* ConversationPrompts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C33EF89F55448D00000022; };
 		30ECA8CB22C0601E00000020 /* DailyPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABA89EC2CAC17B0C0000001A; };
 		9A0F9B11E98286F400000024 /* EverydayObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = D939A12670747AA20000001E; };
 		5BDF348CC430543800000023 /* FamilySettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D5B4260F3371760000001D; };
@@ -97,6 +98,7 @@
 		F08ED95C221EC29F00000039 /* CelebrationHeadlineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C55DCECC243D31500000033; };
 		6DF988A17F46565B00000034 /* ColorClashDealTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CA9280CB18F6B10000002E; };
 		9F9B2B4F803D01DB0000002E /* ContrastTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF326128D400FE3100000028; };
+		43AA3CBEA2E5B34100000039 /* ConversationPromptsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8C0511E5DA84A6700000033; };
 		D251CDE1271D51A600000031 /* DailyPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A13B966464CCDD440000002B; };
 		30AC8D27570BF6EA00000031 /* DayGroupingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B2C1FA22781E7680000002B; };
 		35A281A4703D4C320000002E /* DayStampTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 704A57A9A9F6E88000000028; };
@@ -198,6 +200,7 @@
 		935C3DAA5B7FC9820000001A /* AppLanguage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/AppLanguage.swift; sourceTree = "<group>"; };
 		A4EDFB62CC1B10200000001D /* CaptionSpeaker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/CaptionSpeaker.swift; sourceTree = "<group>"; };
 		83F77BE44B5C133300000022 /* CelebrationHeadline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/CelebrationHeadline.swift; sourceTree = "<group>"; };
+		63C33EF89F55448D00000022 /* ConversationPrompts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/ConversationPrompts.swift; sourceTree = "<group>"; };
 		ABA89EC2CAC17B0C0000001A /* DailyPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/DailyPolicy.swift; sourceTree = "<group>"; };
 		D939A12670747AA20000001E /* EverydayObjects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/EverydayObjects.swift; sourceTree = "<group>"; };
 		74D5B4260F3371760000001D /* FamilySettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/FamilySettings.swift; sourceTree = "<group>"; };
@@ -232,6 +235,7 @@
 		4C55DCECC243D31500000033 /* CelebrationHeadlineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/CelebrationHeadlineTests.swift; sourceTree = SOURCE_ROOT; };
 		97CA9280CB18F6B10000002E /* ColorClashDealTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/ColorClashDealTests.swift; sourceTree = SOURCE_ROOT; };
 		FF326128D400FE3100000028 /* ContrastTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/ContrastTests.swift; sourceTree = SOURCE_ROOT; };
+		C8C0511E5DA84A6700000033 /* ConversationPromptsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/ConversationPromptsTests.swift; sourceTree = SOURCE_ROOT; };
 		A13B966464CCDD440000002B /* DailyPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/DailyPolicyTests.swift; sourceTree = SOURCE_ROOT; };
 		8B2C1FA22781E7680000002B /* DayGroupingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/DayGroupingTests.swift; sourceTree = SOURCE_ROOT; };
 		704A57A9A9F6E88000000028 /* DayStampTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/DayStampTests.swift; sourceTree = SOURCE_ROOT; };
@@ -361,6 +365,7 @@
 				935C3DAA5B7FC9820000001A /* AppLanguage.swift */,
 				A4EDFB62CC1B10200000001D /* CaptionSpeaker.swift */,
 				83F77BE44B5C133300000022 /* CelebrationHeadline.swift */,
+				63C33EF89F55448D00000022 /* ConversationPrompts.swift */,
 				ABA89EC2CAC17B0C0000001A /* DailyPolicy.swift */,
 				D939A12670747AA20000001E /* EverydayObjects.swift */,
 				74D5B4260F3371760000001D /* FamilySettings.swift */,
@@ -407,6 +412,7 @@
 				4C55DCECC243D31500000033 /* CelebrationHeadlineTests.swift */,
 				97CA9280CB18F6B10000002E /* ColorClashDealTests.swift */,
 				FF326128D400FE3100000028 /* ContrastTests.swift */,
+				C8C0511E5DA84A6700000033 /* ConversationPromptsTests.swift */,
 				A13B966464CCDD440000002B /* DailyPolicyTests.swift */,
 				8B2C1FA22781E7680000002B /* DayGroupingTests.swift */,
 				704A57A9A9F6E88000000028 /* DayStampTests.swift */,
@@ -573,6 +579,7 @@
 				CF167B18375C83D400000020 /* AppLanguage.swift in Sources */,
 				B88EA6D0C0FF38D200000023 /* CaptionSpeaker.swift in Sources */,
 				74E2DCC89787792D00000028 /* CelebrationHeadline.swift in Sources */,
+				232C8B200714AB2700000028 /* ConversationPrompts.swift in Sources */,
 				30ECA8CB22C0601E00000020 /* DailyPolicy.swift in Sources */,
 				9A0F9B11E98286F400000024 /* EverydayObjects.swift in Sources */,
 				5BDF348CC430543800000023 /* FamilySettings.swift in Sources */,
@@ -615,6 +622,7 @@
 				F08ED95C221EC29F00000039 /* CelebrationHeadlineTests.swift in Sources */,
 				6DF988A17F46565B00000034 /* ColorClashDealTests.swift in Sources */,
 				9F9B2B4F803D01DB0000002E /* ContrastTests.swift in Sources */,
+				43AA3CBEA2E5B34100000039 /* ConversationPromptsTests.swift in Sources */,
 				D251CDE1271D51A600000031 /* DailyPolicyTests.swift in Sources */,
 				30AC8D27570BF6EA00000031 /* DayGroupingTests.swift in Sources */,
 				35A281A4703D4C320000002E /* DayStampTests.swift in Sources */,

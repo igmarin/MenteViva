@@ -24,10 +24,17 @@ struct ReminiscenceView: View {
                 picture(of: card)
                     .frame(maxWidth: .infinity, minHeight: 160, maxHeight: .infinity)
                 if revealed, let caption = card.caption {
-                    Text(caption)
-                        .font(.largeTitle.weight(.semibold))
-                        .multilineTextAlignment(.center)
-                        .accessibilityAddTraits(.isHeader)
+                    VStack(spacing: 8) {
+                        Text(caption)
+                            .font(.largeTitle.weight(.semibold))
+                            .accessibilityAddTraits(.isHeader)
+                        if let question = card.prompt {
+                            Text(AppLanguage.localized(question))
+                                .font(.title2)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    .multilineTextAlignment(.center)
                 } else {
                     Text(AppLanguage.localized(prompt(for: card)))
                         .font(.title)
@@ -84,7 +91,7 @@ struct ReminiscenceView: View {
     private func controls(for card: ReminiscenceCard) -> some View {
         if let caption = card.caption, !revealed {
             Button {
-                reveal(caption)
+                reveal(caption, question: card.prompt)
             } label: {
                 bigLabel("game.reminiscence.show")
             }
@@ -115,13 +122,15 @@ struct ReminiscenceView: View {
 
     // MARK: - Flow
 
-    private func reveal(_ caption: String) {
+    /// VoiceOver hears the name and the question in one announcement (#379).
+    private func reveal(_ caption: String, question: String?) {
         revealed = true
         Feedback.play(.tap)
         if CaptionSpeaker.autoSpeaks() {
             CaptionSpeaker.speak(caption)
         } else if UIAccessibility.isVoiceOverRunning {
-            AccessibilityNotification.Announcement(caption).post()
+            let spoken = question.map { "\(caption). \(AppLanguage.localized($0))" } ?? caption
+            AccessibilityNotification.Announcement(spoken).post()
         }
     }
 
