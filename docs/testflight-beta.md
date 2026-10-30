@@ -13,6 +13,11 @@ App Store Connect and may have moved: follow the intent, not the exact label.
 - Version `0.1.0`, build `1` live in `tools/generate_project.swift` (`MARKETING_VERSION`,
   `CURRENT_PROJECT_VERSION`). Export compliance is answered in the build
   (`ITSAppUsesNonExemptEncryption = NO`: no network, no custom crypto), so uploads don't stop to ask.
+- **Privacy manifest** (`MenteViva/PrivacyInfo.xcprivacy`, copied to the .app root): no tracking, no
+  collected data (matches the "Data Not Collected" label, #34). It declares the two required-reason APIs
+  the code calls: UserDefaults (`CA92.1`) and file timestamps (`C617.1`, the photos folder is in the app
+  container). Adding an API from another category (disk space, system uptime) means adding its reason here,
+  or App Store Connect refuses the upload (ITMS-91053).
 - **Signing team: the generator still pre-fills the free Personal Team `VB42T7NYX2`.** The paid team
   (#224) is not in the repo. Archive with it as a command-line override, no regenerate needed:
   `DEVELOPMENT_TEAM=<paid team id>`. If `com.igmarin.MenteViva` is registered under the Personal
