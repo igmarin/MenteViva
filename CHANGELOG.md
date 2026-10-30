@@ -19,6 +19,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 - **Every screen now sits on the cream paper background (#356):** Home, the first-run screens, Settings and its lists no longer open on plain white. In Dark Mode the same screens use the dark surround instead of black, following the phone's own appearance setting.
 
 ### Added
+- **Your picture album in My Week (#377):** every picture you have turned over shows on a calm shelf, newest first, in colour with its name, under "Your picture album". No count, no empty places, nothing to lose; with no pictures yet the shelf is not there. VoiceOver reads each name. EN + ES.
 - **A picture of the day (#376):** the first game you finish each day turns over one of our illustrations, with its name, above the celebration headline; it goes into your album. Later games that day show no card. Nothing to count and nothing to lose on a day off. With Reduce Motion the card fades in instead of turning, and VoiceOver reads "Today's picture: … It's in your album." EN + ES.
 - **Cream launch screen and jade system tint (#385):** the app now opens on cream (the dark surround in Dark Mode) instead of a white or black flash, and the share sheet, photo picker and alerts use the same jade as the app.
 - **Share today's games (#381):** once today's games are done, Home offers "Share today's games" (100pt). It opens the phone's share sheet with a short message: the date, each game with a tick and "Today's games, done." No scores, levels or counts, and nothing is sent unless you choose someone. EN + ES.

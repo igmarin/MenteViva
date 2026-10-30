@@ -17,6 +17,23 @@
         }
       }
     },
+    "album.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your picture album"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tu álbum de imágenes"
+          }
+        }
+      }
+    },
     "album.today %@" : {
       "extractionState" : "manual",
       "localizations" : {

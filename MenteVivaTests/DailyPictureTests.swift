@@ -122,4 +122,20 @@ final class DailyPictureTests: XCTestCase {
         XCTAssertNil(PictureAlbum.turnOver(on: try date(4), calendar: calendar, from: [], defaults: defaults))
         XCTAssertEqual(PictureAlbum.all(defaults: defaults), [])
     }
+
+    // MARK: - Shelf (#377)
+
+    func testGivenAnEmptyAlbumWhenBuildingTheShelfThenItHoldsNothing() {
+        XCTAssertEqual(PictureAlbum.shelf(defaults: defaults), [])
+    }
+
+    func testGivenCollectedPicturesWhenBuildingTheShelfThenNewestComesFirst() {
+        for slug in ["cat", "sunflower", "teapot"] { PictureAlbum.collect(slug, defaults: defaults) }
+        XCTAssertEqual(PictureAlbum.shelf(defaults: defaults).map(\.slug), ["teapot", "sunflower", "cat"])
+    }
+
+    func testGivenAnUnknownSlugInTheAlbumWhenBuildingTheShelfThenItIsSkippedNotACrash() {
+        for slug in ["cat", "retired_picture", "dog"] { PictureAlbum.collect(slug, defaults: defaults) }
+        XCTAssertEqual(PictureAlbum.shelf(defaults: defaults).map(\.slug), ["dog", "cat"])
+    }
 }
