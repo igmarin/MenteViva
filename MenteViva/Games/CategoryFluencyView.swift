@@ -2,7 +2,7 @@ import SwiftData
 import SwiftUI
 
 /// Name the Herd: pick the 7 items that belong to the shown category
-/// from a grid of big picture tiles (3 / 5 / 7 decoys by difficulty). 3 categories per session.
+/// from a grid of big picture tiles (2 to 11 decoys by level). 3 of 7 categories per session.
 struct CategoryFluencyView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -70,6 +70,7 @@ struct CategoryFluencyView: View {
                     Text(name(of: round))
                         .font(.largeTitle)
                         .fontWeight(.bold)
+                        .multilineTextAlignment(.center)
                         .accessibilityAddTraits(.isHeader)
 
                     ProgressCards(
