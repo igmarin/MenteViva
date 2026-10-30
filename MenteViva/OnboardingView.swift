@@ -47,12 +47,12 @@ struct OnboardingView: View {
     // MARK: Step 1 - the welcome screen, kept as it was
 
     private var welcome: some View {
-        VStack(spacing: 28) {
+        // 20pt between rows, not 28: the card fan is taller than the emoji it replaced, and
+        // at 28 the screen no longer fit an everyday phone, so Start slid under the edge.
+        VStack(spacing: 20) {
             Spacer()
 
-            Text(verbatim: "🧩")
-                .font(.system(size: 88))
-                .accessibilityHidden(true)
+            CardFan(slugs: ["dog", "teapot", "sunflower"])
 
             Text(AppLanguage.localized("app.title"))
                 .font(.largeTitle.weight(.bold))

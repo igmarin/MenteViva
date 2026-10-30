@@ -96,6 +96,56 @@ struct GameRow: View {
     }
 }
 
+/// Three paper cards fanned out, each holding one of our own pictures. It gives
+/// the welcome screen and other first-sight moments the card look instead of a
+/// system emoji. Decorative, so VoiceOver skips it. The cards deal in once with a
+/// spring; under Reduce Motion they are simply there. Designed for exactly three
+/// cards: the angles and the centre card assume it.
+struct CardFan: View {
+    let slugs: [String]
+
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    /// False until the cards have dealt out; Reduce Motion sets it true on appear.
+    @State private var dealt = false
+
+    private static let cardWidth: CGFloat = 112
+    private static let overlap: CGFloat = 24
+    private static let angles: [Double] = [-9, 0, 9]
+
+    var body: some View {
+        let spread = dealt ? 1.0 : 0.0
+        HStack(spacing: -Self.overlap) {
+            ForEach(Array(slugs.enumerated()), id: \.offset) { index, slug in
+                let angle = Self.angles[index % Self.angles.count]
+                let fromMiddle = Double(index - slugs.count / 2)
+                card(slug)
+                    .rotationEffect(.degrees(angle * spread))
+                    // Stacked on the middle card until dealt.
+                    .offset(x: -fromMiddle * (Self.cardWidth - Self.overlap) * (1 - spread))
+                    // The centre card sits on top, like a hand of cards.
+                    .zIndex(index == slugs.count / 2 ? 1 : 0)
+            }
+        }
+        .onAppear {
+            if reduceMotion {
+                dealt = true
+            } else {
+                withAnimation(.spring(duration: 0.55, bounce: 0.3).delay(0.1)) { dealt = true }
+            }
+        }
+        .accessibilityHidden(true)
+    }
+
+    private func card(_ slug: String) -> some View {
+        PictureView(picture: GamePictures.named(slug), size: 84)
+            .frame(width: Self.cardWidth, height: 156)
+            .background(Color.paper, in: .rect(cornerRadius: 18))
+            .overlay(RoundedRectangle(cornerRadius: 18).strokeBorder(Color.espresso, lineWidth: 2))
+            // The same hard print shadow as GameCard.
+            .shadow(color: .black.opacity(0.25), radius: 0, x: 3, y: 3)
+    }
+}
+
 /// "Played today": a tick on an amber disc, a shape as well as a colour.
 struct PlayedCheck: View {
     var body: some View {
