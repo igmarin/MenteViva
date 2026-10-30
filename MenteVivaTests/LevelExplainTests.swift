@@ -153,6 +153,7 @@ final class LevelExplainTests: XCTestCase {
         LevelOfferStore.applyChosen(for: .stroop, today: today, defaults: defaults)
         XCTAssertEqual(Difficulty.stored(.stroop, defaults: defaults), Difficulty(level: 5))
     }
+
     func testGivenPinnedLevelWhenStoredReadThenPinnedWinsOverPlanLevel() {
         let defaults = UserDefaults(suiteName: "LevelExplainTests.pinnedWins")!
         defaults.removePersistentDomain(forName: "LevelExplainTests.pinnedWins")
@@ -161,6 +162,7 @@ final class LevelExplainTests: XCTestCase {
             DailyPlan(dayStamp: today, games: [.stroop], difficulty: [.stroop: Difficulty(level: 4)], changes: [:]),
             defaults: defaults)
         defaults.set(3, forKey: FamilySettings.pinKey(.stroop))
+        // The UI hides the offer for a pinned game; this raise stands in for any plan change.
         PlanStore.raiseByChoice(.stroop, today: today, defaults: defaults)
         XCTAssertEqual(Difficulty.stored(.stroop, defaults: defaults), Difficulty(level: 3))
     }
