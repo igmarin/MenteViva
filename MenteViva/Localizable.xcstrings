@@ -11020,13 +11020,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The pictures in this app were made with AI image tools (Muse Image and OpenAI's image tool) and checked by a person."
+            "value" : "The pictures in this app were made with AI image tools, including Meta's Muse Image, and checked by a person."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Las imágenes de esta app se hicieron con herramientas de IA (Muse Image y la herramienta de imágenes de OpenAI) y las revisó una persona."
+            "value" : "Las imágenes de esta app se hicieron con herramientas de IA, entre ellas Muse Image de Meta, y las revisó una persona."
           }
         }
       }
@@ -11036,13 +11036,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The app was built with AI coding assistants (Muse Code, Claude and Cline)."
+            "value" : "The app was built with the help of AI coding assistants, including Meta's Muse Code."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La app se creó con asistentes de programación con IA (Muse Code, Claude y Cline)."
+            "value" : "La app se creó con ayuda de asistentes de programación con IA, entre ellos Muse Code de Meta."
           }
         }
       }
