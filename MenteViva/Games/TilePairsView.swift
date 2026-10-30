@@ -300,10 +300,13 @@ struct TilePairsView: View {
     }
 
     private func tap(_ tile: TilePairsTile) {
-        // A pair is lifting away: ignore taps so a stale pick cannot bring a removed tile back (#369).
-        guard deal != nil, removing.isEmpty else { return }
+        guard deal != nil else { return }
         var mutable = deal!
-        switch mutable.pick(tile.id, after: selected) {
+        // While a pair lifts away `pick` ignores taps, so a stale pick cannot bring a removed tile back (#369).
+        let outcome = mutable.pick(tile.id, after: selected, lifting: !removing.isEmpty)
+        // Keep the try on the deal for every outcome except a match, which is written back after the lift (#369).
+        if outcome != .matched { deal = mutable }
+        switch outcome {
         case .ignored:
             return
         case .covered:
@@ -344,7 +347,6 @@ struct TilePairsView: View {
         case .mismatch:
             // Different symbols → warm miss, clear the pick. The deal keeps the try so accuracy is real.
             guard let first = selected else { return }
-            deal = mutable
             hint = AppLanguage.localized("game.tilepairs.mismatch")
             mismatched = [first, tile.id]
             selected = nil

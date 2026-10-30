@@ -138,8 +138,8 @@ final class TilePairsDealTests: XCTestCase {
 
     func testGivenTwoDifferentFreeTilesWhenPickedThenAttemptsRiseAndCorrectStays() {
         var deal = freeRowDeal()
-        XCTAssertEqual(deal.pick(0, after: nil), .selected)
-        XCTAssertEqual(deal.pick(2, after: 0), .mismatch)
+        XCTAssertEqual(deal.pick(0, after: nil, lifting: false), .selected)
+        XCTAssertEqual(deal.pick(2, after: 0, lifting: false), .mismatch)
         XCTAssertEqual(deal.attempts, 1)
         XCTAssertEqual(deal.correct, 0)
         XCTAssertEqual(deal.tiles.count, 8)
@@ -147,8 +147,8 @@ final class TilePairsDealTests: XCTestCase {
 
     func testGivenAMismatchThenAMatchWhenClearedThenAccuracyIsBelowOne() {
         var deal = freeRowDeal()
-        _ = deal.pick(0, after: nil)
-        XCTAssertEqual(deal.pick(2, after: 0), .mismatch)
+        _ = deal.pick(0, after: nil, lifting: false)
+        XCTAssertEqual(deal.pick(2, after: 0, lifting: false), .mismatch)
         // The view clears the pick after a miss, so the next tap starts a new one.
         let steps: [(Int, Int?, TilePairsPick)] = [
             (0, nil, .selected), (1, 0, .matched),
@@ -157,7 +157,9 @@ final class TilePairsDealTests: XCTestCase {
             (4, nil, .selected), (5, 4, .matched),
             (6, nil, .selected), (7, 6, .matched),
         ]
-        for (id, after, expected) in steps { XCTAssertEqual(deal.pick(id, after: after), expected) }
+        for (id, after, expected) in steps {
+            XCTAssertEqual(deal.pick(id, after: after, lifting: false), expected)
+        }
         XCTAssertTrue(deal.isCleared)
         XCTAssertEqual(deal.correct, 4)
         XCTAssertEqual(deal.attempts, 6)
@@ -165,12 +167,21 @@ final class TilePairsDealTests: XCTestCase {
     }
 
     func testGivenAPairLiftingAwayWhenAThirdSameSymbolTileIsPickedThenItIsIgnored() {
-        // Three circles: after 0 and 1 match, a quick tap on 2 still carries the stale first tile 0.
+        // Three circles: the view still holds the old deal (tile 0 present) while the pair 0 and 1 lifts away.
         var deal = rowDeal([.circle, .circle, .circle, .square])
-        XCTAssertEqual(deal.pick(1, after: 0), .matched)
-        XCTAssertEqual(deal.pick(2, after: 0), .ignored)
+        let before = deal.tiles.map(\.id)
+        XCTAssertEqual(deal.pick(2, after: 0, lifting: true), .ignored)
+        XCTAssertEqual(deal.attempts, 0)
+        XCTAssertEqual(deal.correct, 0)
+        XCTAssertEqual(deal.tiles.map(\.id), before)
+    }
+
+    func testGivenAStaleFirstTileWhenPickedThenItIsIgnored() {
+        // Defensive: a first tile already matched away must not pair with a new one.
+        var deal = rowDeal([.circle, .circle, .circle, .square])
+        XCTAssertEqual(deal.pick(1, after: 0, lifting: false), .matched)
+        XCTAssertEqual(deal.pick(2, after: 0, lifting: false), .ignored)
         XCTAssertEqual(deal.attempts, 1)
-        XCTAssertEqual(deal.correct, 1)
         XCTAssertEqual(deal.tiles.map(\.id), [2, 3])
     }
 
@@ -178,8 +189,8 @@ final class TilePairsDealTests: XCTestCase {
         let bottom = TilePairsTile(id: 0, symbol: .circle, x: 0, y: 0, layer: 0)
         let top = TilePairsTile(id: 1, symbol: .circle, x: 0, y: 0, layer: 1)
         var deal = TilePairsDeal(tiles: [bottom, top], layers: 2, pairOrder: [])
-        XCTAssertEqual(deal.pick(1, after: 1), .deselected)
-        XCTAssertEqual(deal.pick(0, after: 1), .covered)
+        XCTAssertEqual(deal.pick(1, after: 1, lifting: false), .deselected)
+        XCTAssertEqual(deal.pick(0, after: 1, lifting: false), .covered)
         XCTAssertEqual(deal.attempts, 0)
     }
 }
