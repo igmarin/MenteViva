@@ -44,20 +44,20 @@ nonisolated enum GamePictures {
         // Quick Eyes
         ("sunflower", "🌻"), ("guitar", "🎸"), ("moon", "🌙"), ("coffee", "☕️"), ("star", "⭐"),
         ("bee", "🐝"), ("cactus", "🌵"),
-        // Remember Together (its fallback is the object's SF Symbol, kept there)
+        // Remember Together (also Name the Herd: home) (its fallback is the object's SF Symbol, kept there)
         ("clock", "🕰️"), ("key", "🔑"), ("house", "🏠"), ("chair", "🪑"), ("umbrella", "☂️"),
         ("book", "📖"), ("lamp", "💡"),
-        // Memory Lane: kitchen table
+        // Memory Lane: kitchen table (also Name the Herd: kitchen)
         ("teapot", "🫖"), ("bread", "🍞"), ("cheese", "🧀"), ("wine_glass", "🍷"), ("croissant", "🥐"),
         ("lemon", "🍋"), ("olives", "🫒"), ("honey", "🍯"), ("cake", "🍰"), ("chocolate", "🍫"),
         ("egg", "🥚"),
-        // Memory Lane: the garden
+        // Memory Lane: the garden (also Name the Herd: plants)
         ("rose", "🌹"), ("tulip", "🌷"), ("potted_plant", "🪴"), ("pear", "🍐"), ("tree", "🌳"),
         ("pine", "🌲"), ("ladybug", "🐞"),
         // Memory Lane: travels (no lighthouse emoji exists; the island stands in)
         ("map", "🗺️"), ("suitcase", "🧳"), ("mountain", "⛰️"), ("beach", "🏖️"), ("tent", "🏕️"),
         ("lighthouse", "🏝️"), ("helicopter", "🚁"),
-        // Memory Lane: music and home
+        // Memory Lane: music and home (picture_frame, telephone, sofa also Name the Herd: home)
         ("violin", "🎻"), ("trumpet", "🎺"), ("piano", "🎹"), ("radio", "📻"), ("yarn", "🧶"),
         ("accordion", "🪗"), ("picture_frame", "🖼️"), ("telephone", "📞"), ("sofa", "🛋️"),
     ]

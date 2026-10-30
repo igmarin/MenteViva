@@ -65,6 +65,95 @@ final class CategoryDealTests: XCTestCase {
         }
     }
 
+    func testGivenAnyCategoryWhenDealtThenNoDecoyComesFromItselfOrAnExcludedCategory() {
+        for level in [1, 6, 10] {
+            for seed in 1...300 {
+                for round in deal(level, seed: UInt64(seed)) {
+                    let excluded = round.category.noDecoysFrom.union([round.category])
+                    let forbidden = Set(excluded.flatMap(\.items))
+                    for tile in round.tiles where !tile.belongs {
+                        XCTAssertFalse(forbidden.contains(tile.picture), "level \(level) seed \(seed)")
+                    }
+                }
+            }
+        }
+    }
+
+    func testGivenKitchenRoundWhenDealtThenNoFruitOrHomeDecoyAppears() {
+        let banned = Set(CategoryDeal.Category.fruits.items + CategoryDeal.Category.home.items)
+        var kitchenRounds = 0
+        for level in [1, 10] {
+            for seed in 1...300 {
+                for round in deal(level, seed: UInt64(seed)) where round.category == .kitchen {
+                    kitchenRounds += 1
+                    XCTAssertTrue(
+                        round.tiles.allSatisfy { $0.belongs || !banned.contains($0.picture) },
+                        "level \(level) seed \(seed)")
+                }
+            }
+        }
+        XCTAssertGreaterThan(kitchenRounds, 0)
+    }
+
+    /// A potted plant on an "Around the house" board is a fair tap, so plants never decoy home.
+    func testGivenHomeRoundWhenDealtThenNoPlantOrKitchenDecoyAppears() {
+        let banned = Set(CategoryDeal.Category.plants.items + CategoryDeal.Category.kitchen.items)
+        var homeRounds = 0
+        for level in [1, 10] {
+            for seed in 1...300 {
+                for round in deal(level, seed: UInt64(seed)) where round.category == .home {
+                    homeRounds += 1
+                    XCTAssertTrue(
+                        round.tiles.allSatisfy { $0.belongs || !banned.contains($0.picture) },
+                        "level \(level) seed \(seed)")
+                }
+            }
+        }
+        XCTAssertGreaterThan(homeRounds, 0)
+    }
+
+    func testGivenTheExclusionsThenTheyAreSymmetricAndNeverSelf() {
+        for category in CategoryDeal.Category.allCases {
+            XCTAssertFalse(category.noDecoysFrom.contains(category))
+            for other in category.noDecoysFrom {
+                XCTAssertTrue(other.noDecoysFrom.contains(category), "\(category) / \(other)")
+            }
+        }
+    }
+
+    func testGivenSevenCategoriesWhenDealingManySeedsThenEveryCategoryAppears() {
+        XCTAssertEqual(CategoryDeal.Category.allCases.count, 7)
+        var seen = Set<CategoryDeal.Category>()
+        for seed in 1...200 {
+            seen.formUnion(deal(4, seed: UInt64(seed)).map(\.category))
+        }
+        XCTAssertEqual(seen, Set(CategoryDeal.Category.allCases))
+    }
+
+    /// The pool is the real one per category, not a fixed 21: kitchen loses
+    /// fruits and home, so its pool is smaller than animals'.
+    func testGivenEachCategoryThenItsDecoyPoolIsTheRealOne() {
+        XCTAssertEqual(CategoryDeal.decoyPool(for: .animals).count, 42)
+        XCTAssertEqual(CategoryDeal.decoyPool(for: .kitchen).count, 28)
+        XCTAssertEqual(CategoryDeal.decoyPool(for: .home).count, 28)  // minus kitchen, plants
+        XCTAssertEqual(CategoryDeal.decoyPool(for: .plants).count, 28)  // minus fruits, home
+        XCTAssertEqual(CategoryDeal.decoyPool(for: .fruits).count, 27)  // minus kitchen, plants, the orange swatch
+        XCTAssertEqual(CategoryDeal.smallestPoolSize, 27)
+        XCTAssertGreaterThanOrEqual(CategoryDeal.smallestPoolSize, CategoryDeal.decoysByLevel.max() ?? 0)
+    }
+
+    /// The 100pt floor itself comes from the view's `GridItem(.adaptive(minimum: 100))`;
+    /// this pins only the decoy cap and the tile count that follows from it.
+    func testGivenLevelTenOnTheNarrowestPhoneWhenDealtThenDecoysAreCappedAtFive() {
+        let width = 343.0
+        XCTAssertEqual(CategoryDeal.fittedDecoyCount(for: Difficulty(level: 10), width: width), 5)
+        for seed in 1...100 {
+            for round in deal(10, seed: UInt64(seed), width: width) {
+                XCTAssertEqual(round.tiles.count, 7 + 5, "seed \(seed)")
+            }
+        }
+    }
+
     func testGivenLevelsTwoFourSixWhenDecoysThenMatchesOldEasyMediumHard() {
         let counts = [2, 4, 6].map { CategoryDeal.decoyCount(for: Difficulty(level: $0)) }
         XCTAssertEqual(counts, [3, 5, 7])
@@ -147,6 +236,35 @@ final class CategoryDealTests: XCTestCase {
         for seed in 1...200 {
             for round in deal(10, seed: UInt64(seed)) {
                 XCTAssertEqual(round.tiles.count, 7 + decoys, "seed \(seed)")
+            }
+        }
+    }
+
+    /// The category name is dropped into two sentences (the completion beat and
+    /// the read-aloud line); every name must read naturally after them, in both languages.
+    func testGivenEachCategoryWhenFormattedIntoTheSentencesThenNoBrokenGrammar() throws {
+        let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
+        let data = try Data(contentsOf: root.appendingPathComponent("MenteViva/Localizable.xcstrings"))
+        let catalog = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
+        let strings = try XCTUnwrap(catalog["strings"] as? [String: Any])
+        func text(_ key: String, _ language: String) throws -> String {
+            let entry = try XCTUnwrap(strings[key] as? [String: Any], key)
+            let localizations = try XCTUnwrap(entry["localizations"] as? [String: Any], key)
+            let unit = try XCTUnwrap((localizations[language] as? [String: Any])?["stringUnit"] as? [String: Any], key)
+            return try XCTUnwrap(unit["value"] as? String, key)
+        }
+        let broken = ["the In", "the Around", "the Plants", "sean ", "todos: "]
+        for language in ["en", "es"] {
+            let complete = try text("game.category.complete %@", language)
+            let instruction = try text("game.category.instruction", language)
+            for category in CategoryDeal.Category.allCases {
+                let name = try text(category.nameKey, language)
+                let sentences = [String(format: complete, name), instruction + " " + name]
+                for sentence in sentences {
+                    for fragment in broken {
+                        XCTAssertFalse(sentence.contains(fragment), "\(sentence) [\(language)]")
+                    }
+                }
             }
         }
     }

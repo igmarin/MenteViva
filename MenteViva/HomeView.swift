@@ -139,6 +139,7 @@ struct HomeView: View {
         VStack(spacing: 16) {
             if today.isFinished {
                 pile
+                shareButton
                 weekLink { weekBoardCard }
             } else {
                 hand
@@ -249,6 +250,28 @@ struct HomeView: View {
         .padding(.vertical, 10)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(AppLanguage.localized("home.today.done"))
+    }
+
+    /// Once the day is done, the player can send a short, number-free message to family (#381).
+    /// The system share sheet is the only way out: the player picks who, nothing is sent by the app.
+    private var shareButton: some View {
+        ShareLink(
+            item: TodayShare.text(
+                games: today.games, date: .now, locale: AppLanguage.currentLocale,
+                localize: { AppLanguage.localized($0) })
+        ) {
+            Label(AppLanguage.localized("today.share"), systemImage: "square.and.arrow.up")
+                .font(.title2.weight(.heavy))
+                .fontDesign(.rounded)
+                .foregroundStyle(Color.brand)
+                .multilineTextAlignment(.leading)
+                .padding(.horizontal, 16)
+                .frame(maxWidth: .infinity, minHeight: 100)
+                .background(Color.paper, in: .rect(cornerRadius: 26))
+                .overlay(RoundedRectangle(cornerRadius: 26).strokeBorder(Color.espresso, lineWidth: 2))
+        }
+        .buttonStyle(CardPressStyle())
+        .accessibilityHint(AppLanguage.localized("today.share.hint"))
     }
 
     // MARK: - Week and all games
