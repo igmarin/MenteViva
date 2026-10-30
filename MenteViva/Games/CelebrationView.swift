@@ -90,21 +90,35 @@ struct CelebrationView: View {
         .padding(.vertical, 8)
     }
 
+    /// The "n of m today" capsule. When this game closed the table it wears the amber seal, a shape
+    /// and a colour together, so the finish never rests on colour alone. The slot above the headline
+    /// stays free for the picture of the day (#376).
+    private func progressCapsule(_ today: TodayRun, closesTheDay: Bool) -> some View {
+        HStack(spacing: 8) {
+            if closesTheDay {
+                Image(systemName: "checkmark.seal.fill").accessibilityHidden(true)
+            }
+            Text(
+                String(
+                    format: AppLanguage.localized("game.celebration.today %lld %lld"),
+                    today.done.count, today.games.count))
+        }
+        .font(.headline.weight(.heavy))
+        .foregroundStyle(closesTheDay ? Color.onAmber : Color.primary)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 10)
+        .background(closesTheDay ? Color.amber : Color.paper, in: .capsule)
+        .overlay(Capsule().strokeBorder(Color.espresso, lineWidth: 2))
+    }
+
+    private var closesTheDay: Bool { today?.closesTheDay(finishing: game) ?? false }
+
     var body: some View {
         let today = today
         VStack(spacing: 0) {
             VStack(spacing: 22) {
                 if let today, today.games.contains(game) {
-                    Text(
-                        String(
-                            format: AppLanguage.localized("game.celebration.today %lld %lld"),
-                            today.done.count, today.games.count)
-                    )
-                    .font(.headline.weight(.heavy))
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 10)
-                    .background(Color.paper, in: .capsule)
-                    .overlay(Capsule().strokeBorder(Color.espresso, lineWidth: 2))
+                    progressCapsule(today, closesTheDay: closesTheDay)
                 }
                 card
             }
@@ -154,7 +168,9 @@ struct CelebrationView: View {
         .onAppear {
             if headline == nil {
                 var generator = SystemRandomNumberGenerator()
-                headline = CelebrationHeadline.pick(using: &generator)
+                headline = CelebrationHeadline.pick(closesTheDay: closesTheDay, using: &generator)
+                // Only the day-done line is spoken on arrival; the ordinary headlines stay a header to swipe to.
+                if closesTheDay, let headline { AccessibilityNotification.Announcement(headline).post() }
             }
             Feedback.play(.complete)
             withAnimation(.spring(duration: 0.55, bounce: 0.3).delay(0.1)) { arrived = true }
