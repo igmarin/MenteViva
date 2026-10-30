@@ -57,6 +57,15 @@ final class CelebrationHeadlineTests: XCTestCase {
         XCTAssertNotEqual(first, second)
     }
 
+    func testGivenTheDayClosedWhenPickedThenTheDayDoneLineShowsAndTheRotationIsUntouched() {
+        defaults.set(2, forKey: CelebrationHeadline.lastIndexKey)
+        var generator = SeededGenerator(state: 5)
+        let line = CelebrationHeadline.pick(closesTheDay: true, defaults: defaults, using: &generator)
+        XCTAssertEqual(line, AppLanguage.localized(CelebrationHeadline.dayDoneKey, defaults: defaults))
+        XCTAssertNotEqual(line, CelebrationHeadline.dayDoneKey)
+        XCTAssertEqual(defaults.object(forKey: CelebrationHeadline.lastIndexKey) as? Int, 2)
+    }
+
     func testGivenIndexWhenKeyThenNumberedFromOne() {
         XCTAssertEqual(CelebrationHeadline.key(for: 0), "game.celebration.headline.1")
         XCTAssertEqual(CelebrationHeadline.key(for: 4), "game.celebration.headline.5")

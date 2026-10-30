@@ -87,6 +87,38 @@ final class TodayRunTests: XCTestCase {
         XCTAssertNil(run([played(.stroop, hoursAgo: 0.1)]).next(after: .stroop))
     }
 
+    // MARK: - Closing the day (#375)
+
+    func testGivenLastPickFinishedWhenClosesTheDayThenTrue() {
+        let today = run([
+            played(.memoryMatch, hoursAgo: 2), played(.categoryFluency, hoursAgo: 1), played(.quickEyes, hoursAgo: 0.1),
+        ])
+        XCTAssertTrue(today.closesTheDay(finishing: .quickEyes))
+    }
+
+    func testGivenEarlierPickFinishedWhenClosesTheDayThenFalse() {
+        let today = run([played(.memoryMatch, hoursAgo: 0.1)])
+        XCTAssertFalse(today.closesTheDay(finishing: .memoryMatch))
+    }
+
+    func testGivenOffPlanGameFinishedWhenClosesTheDayThenFalse() {
+        let today = run([
+            played(.memoryMatch, hoursAgo: 3), played(.categoryFluency, hoursAgo: 2), played(.quickEyes, hoursAgo: 1),
+            played(.stroop, hoursAgo: 0.1),
+        ])
+        XCTAssertTrue(today.isFinished)
+        XCTAssertFalse(today.closesTheDay(finishing: .stroop))
+    }
+
+    func testGivenTheTableAlreadyClearedWhenALastPickIsReplayedThenClosesTheDayIsFalse() {
+        let today = run([
+            played(.memoryMatch, hoursAgo: 3), played(.categoryFluency, hoursAgo: 2), played(.quickEyes, hoursAgo: 1),
+            played(.quickEyes, hoursAgo: 0.1),
+        ])
+        XCTAssertTrue(today.isFinished)
+        XCTAssertFalse(today.closesTheDay(finishing: .quickEyes))
+    }
+
     func testGivenTheLastOfTodaysGamesJustFinishedWhenNextAfterThenThereIsNone() {
         let today = run([
             played(.memoryMatch, hoursAgo: 2), played(.categoryFluency, hoursAgo: 1), played(.quickEyes, hoursAgo: 0.1),
