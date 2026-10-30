@@ -389,7 +389,8 @@ struct MemoryMatchView: View {
         let generation = board.generation
         flipBackTask = Task { @MainActor in
             try? await Task.sleep(for: .seconds(1.2))
-            guard !Task.isCancelled else { return }
+            // Checked again: VoiceOver may have been turned on during the wait.
+            guard !Task.isCancelled, !UIAccessibility.isVoiceOverRunning else { return }
             _ = board.resolveMiss(generation: generation)
         }
     }
