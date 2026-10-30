@@ -16,6 +16,13 @@ nonisolated struct TilePairsTile: Equatable, Hashable {
     let layer: Int
 }
 
+/// What one tap on a tile did to the deal; the view only animates and announces it (#369).
+nonisolated enum TilePairsPick: Equatable {
+    case selected, deselected, matched, mismatch, covered
+    /// The tap did not belong to this board (unknown tile, or a pick whose first tile is already gone).
+    case ignored
+}
+
 /// Mahjong-solitaire pairs logic: every deal clears, stuck reshuffles warmly (#220).
 nonisolated struct TilePairsDeal {
     static let tilesPerLevel = [8, 12, 16, 20, 24, 28, 36, 44, 56, 72]
@@ -79,6 +86,18 @@ nonisolated struct TilePairsDeal {
             layer += 1
         }
         return out
+    }
+    /// One tap, decided here so the view cannot lose an attempt: a miss is counted on the deal itself (#369).
+    /// `selected` is the first tile of a pick in progress; the view passes it back and clears it on `.matched`
+    /// and `.mismatch`.
+    mutating func pick(_ id: Int, after selected: Int?) -> TilePairsPick {
+        guard let tile = tiles.first(where: { $0.id == id }) else { return .ignored }
+        guard isFree(tile) else { return .covered }
+        guard let first = selected else { return .selected }
+        if first == id { return .deselected }
+        // A stale first tile (already matched away) must not pair with a new one.
+        guard tiles.contains(where: { $0.id == first }) else { return .ignored }
+        return tryPair(first, id) ? .matched : .mismatch
     }
     @discardableResult mutating func tryPair(_ a: Int, _ b: Int) -> Bool {
         attempts += 1
