@@ -1,36 +1,56 @@
-# Mente Viva 🧠
+# Mente Viva
 
-Warm, bilingual (ES/EN) cognitive games for older adults — built for one dad
-first, designed for every family like his.
+Warm, bilingual (EN/ES) fun mental exercise for older adults, built for one family first.
 
-Nine mini-games today, with four more on the way. Big buttons, no countdown clocks
-pressuring anyone, no fail shame — "Almost, try again", never "wrong".
+Add your family's photos in Set up, and Memory Lane and Names and Faces play with them.
+Fourteen calm games, levels 1–10, offline and private. Big buttons, no countdown clocks,
+no fail shame: "Almost, try again", never "wrong".
 
 ## Status
 
-**v0.1.0 shipped**; nine playable games now, offline-first, ES/EN complete.
-See [CHANGELOG.md](CHANGELOG.md). What's next: [docs/roadmap.md](docs/roadmap.md)
-and [GitHub issues](https://github.com/igmarin/menteviva/issues).
+**14 games playable**, offline-first, EN and ES complete. See [CHANGELOG.md](CHANGELOG.md)
+for what changed, [docs/roadmap.md](docs/roadmap.md) for what's next, and
+[GitHub issues](https://github.com/igmarin/menteviva/issues) for live work.
 
 ## The games
 
-| Game | Domain | Mechanic |
-|---|---|---|
-| 🧩 Memory Lane | Episodic memory | Emoji pair matching |
-| 🎨 Color Clash | Attention / inhibition | Stroop — tap the ink, not the word |
-| 🐾 Name the Herd | Verbal fluency | Tap everything that belongs to the category |
-| 🔢 Number Trail | Processing + numeracy | Adaptive math streaks |
-| 👀 Quick Eyes | Processing speed | Shrinking display-time discrimination |
-| 📷 Remember Together | Reminiscence | The family's own photos and names; nothing to get wrong |
-| ✏️ Sudoku | Logic | 4×4 and 6×6 boards, generated with one solution |
-| 🃏 Up or Down | Planning | Golf solitaire: one higher or one lower |
-| 💬 Finish the Saying | Language | Pick the ending of a familiar saying |
-
-Coming next (#193): Repeat the Sequence, Tangram, Tile Pairs, Sliding Blocks.
+| Game | What you do |
+|---|---|
+| Memory Lane | Find the matching pairs of illustrated cards, or of your family's photos |
+| Color Clash | Tap the colour of the ink, not the word |
+| Name the Herd | Tap everything that belongs to the category |
+| Number Trail | Quick sums in a row; the operations and numbers grow with the level |
+| Quick Eyes | Look at a picture, then find it among the choices. Paced at levels 1–5; a quick flash at levels 6–10 |
+| Remember Together | Look at your family's photos (or everyday objects until you add some), one at a time. Nothing to get wrong |
+| Sudoku | Fill the board, from 4×4 up to 9×9, each with one solution |
+| Up or Down | Golf solitaire: play a card one higher or one lower |
+| Finish the Saying | Pick the ending of a familiar saying |
+| Repeat the Sequence | Watch the lit tiles, then repeat them in order |
+| Tangram | Fill the silhouette with seven tiles |
+| Tile Pairs | Find two free tiles that match |
+| Sliding Blocks | Slide the blocks to free the big one |
+| Names and Faces | Match each family photo to its caption |
 
 Home marks today's picks and each game reads the daily difficulty. Both are
 decided by a small rule policy on the device (no network, no cost).
-Design history: [docs/jev-integration.md](docs/jev-integration.md).
+
+## How it is built
+
+- Zero third-party dependencies: SwiftUI, SwiftData and Foundation only.
+- Daily picks and levels are decided on the device by `DailyPolicy`. Each level follows a staircase:
+  at most one move per game a day, never mid-game.
+- Every game except Remember Together has levels 1–10.
+- Deals are small pure types that take the random generator as a parameter, so tests can
+  replay them. Sudoku boards are generated with exactly one solution.
+- Every string is in one catalogue, `MenteViva/Localizable.xcstrings`, in English and Spanish.
+- No network calls, no accounts and no analytics. Photos stay on the device.
+
+## Built with AI
+
+Several AI coding assistants (Claude, Muse Code and Cline) have worked on tickets, and the owner
+merges every pull request. Some game pictures were made with AI image tools, then cut out, cropped
+and resized; each prompt is logged in [docs/art-prompts.md](docs/art-prompts.md). The app itself
+uses no AI at runtime.
 
 ## Build
 
@@ -62,9 +82,9 @@ After adding a `.swift` file: regenerate and commit the updated
 MenteViva/
   MenteVivaApp.swift      # app entry
   HomeView.swift          # game picker
-  Models/                 # SwiftData: GameSession, RoundProgress
+  Models/                 # SwiftData: GameSession, RoundProgress, GameID
   Games/                  # one file per game; MemoryMatchView is the reference
-  Services/               # DailyPolicy (on-device plan), SoundPlayer
+  Services/               # DailyPolicy (on-device plan), LevelPolicy, MemoryPhotos, SoundPlayer, ...
 docs/                     # product & design docs — start at docs/README.md
 tools/generate_project.swift
 ```

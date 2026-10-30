@@ -47,8 +47,7 @@ docs/                 start at docs/README.md
 
 ## Current status
 
-- 9 games shipped (Memory Lane, Color Clash, Name the Herd, Number Trail, Remember Together,
-  Quick Eyes, Sudoku, Up or Down, Finish the Saying); ES/EN complete; local-only build is the default.
+- 14 games playable (the list is `GameID.swift` and README.md); ES/EN complete; local-only build is the default.
 - **Daily picks and difficulty are decided on the device** (`DailyPolicy`, #101): no model,
   no network, no cost. The app no longer calls Jev (#195); `docs/jev-json/` stays as the
   evidence archive and `docs/jev-integration.md` as history.
