@@ -10,8 +10,11 @@ struct HistoryView: View {
     @Query(sort: \GameSession.playedAt, order: .reverse)
     private var sessions: [GameSession]
 
-    /// Everything the screen shows, derived from `sessions` once per redraw
-    /// instead of once per read (the list used to regroup the week three times).
+    /// The album's column minimum grows with the text, so a long name ("Helicóptero") never breaks mid-word.
+    @ScaledMetric(relativeTo: .callout) private var albumCellMinimum: CGFloat = 100
+
+    /// Everything the screen shows, derived from `sessions` (and the picture album from UserDefaults)
+    /// once per redraw instead of once per read (the list used to regroup the week three times).
     private struct Snapshot {
         let weekGroups: [(day: Date, items: [GameSession])]
         let weekCount: Int
@@ -19,8 +22,11 @@ struct HistoryView: View {
         /// Only games played this week, so the list matches the board and the counts.
         let progress: [GameProgress]
         let summary: WeeklySummary
+        /// Everything collected so far, newest first (#377); empty hides the shelf.
+        let album: [GamePicture]
 
         init(sessions: [GameSession]) {
+            album = PictureAlbum.shelf()
             weekGroups = DayGrouping.thisWeek(sessions, date: \.playedAt)
             let week = weekGroups.flatMap(\.items)
             weekCount = week.count
@@ -36,7 +42,7 @@ struct HistoryView: View {
         let snapshot = Snapshot(sessions: sessions)
         Group {
             if snapshot.weekCount == 0 {
-                emptyState
+                if snapshot.album.isEmpty { emptyState } else { emptyStateWithAlbum(snapshot.album) }
             } else {
                 sessionList(snapshot)
             }
@@ -98,8 +104,38 @@ struct HistoryView: View {
                 Text(AppLanguage.localized("history.days.header"))
                     .font(.title3.weight(.semibold))
             }
+
+            if !snapshot.album.isEmpty {
+                Section {
+                    albumShelf(snapshot.album)
+                        .listRowBackground(Color.clear)
+                } header: {
+                    Text(AppLanguage.localized("album.title"))
+                        .font(.title3.weight(.semibold))
+                }
+            }
         }
         .listPageBackground()
+    }
+
+    /// The pictures the player has collected, newest first (#377): in colour, each with its name.
+    /// Only what was earned is drawn, so there is nothing to count, no empty slot and nothing to lose.
+    private func albumShelf(_ pictures: [GamePicture]) -> some View {
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: albumCellMinimum), spacing: 16, alignment: .top)], spacing: 20) {
+            ForEach(pictures, id: \.slug) { picture in
+                let name = AppLanguage.localized(picture.nameKey)
+                VStack(spacing: 6) {
+                    PictureView(picture: picture, size: 72)
+                    Text(verbatim: name)
+                        .font(.callout)
+                        .multilineTextAlignment(.center)
+                }
+                .frame(maxWidth: .infinity, minHeight: 100)
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel(Text(verbatim: name))
+            }
+        }
+        .padding(.vertical, 8)
     }
 
     /// One row per day (#140): the day, then one chip per game with its count.
@@ -163,16 +199,39 @@ struct HistoryView: View {
         .accessibilityElement(children: .combine)
     }
 
+    /// Nothing played yet this week: the invitation, centred, exactly as before the album existed.
     private var emptyState: some View {
         VStack(spacing: 24) {
-            PictureView(picture: GamePictures.named("sunflower"), size: 160)
-                .accessibilityHidden(true)
-            Text("history.empty")
-                .font(.title2)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal, 32)
+            invitation
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    /// Nothing played yet this week, but pictures from earlier weeks: the invitation, then the shelf.
+    private func emptyStateWithAlbum(_ album: [GamePicture]) -> some View {
+        ScrollView {
+            VStack(spacing: 24) {
+                invitation
+                Text(AppLanguage.localized("album.title"))
+                    .font(.title3.weight(.semibold))
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .accessibilityAddTraits(.isHeader)
+                albumShelf(album)
+            }
+            .padding(.horizontal, 20)
+            .padding(.vertical, 24)
+            .frame(maxWidth: .infinity)
+        }
+    }
+
+    @ViewBuilder private var invitation: some View {
+        PictureView(picture: GamePictures.named("sunflower"), size: 160)
+            .accessibilityHidden(true)
+        Text("history.empty")
+            .font(.title2)
+            .multilineTextAlignment(.center)
+            .padding(.horizontal, 32)
     }
 
     // MARK: - Helpers
