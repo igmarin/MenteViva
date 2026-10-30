@@ -17,6 +17,7 @@
 		1DA22A903C3C9B3500000021 /* CelebrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4174FC9AF3B1DBCB0000001B; };
 		B16AB042763F700800000020 /* ColorClashDeal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539B6DE05DDF57660000001A; };
 		B59E327BE0BD12A700000020 /* ColorClashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7571F11C435CE80D0000001A; };
+		07B372E7165BE2A500000022 /* DailyPictureCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 576C85CADF772C9B0000001C; };
 		20A285961D1E7F0B0000001D /* FitOrScroll.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81FBBB825DCFF1C100000017; };
 		D456BAA2EE44DD2900000022 /* LevelExplainLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80ED0207C93C607F0000001C; };
 		A120B5E94542D41F00000020 /* MathStreakView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B13B6166437470950000001A; };
@@ -63,6 +64,7 @@
 		CF167B18375C83D400000020 /* AppLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 935C3DAA5B7FC9820000001A; };
 		B88EA6D0C0FF38D200000023 /* CaptionSpeaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4EDFB62CC1B10200000001D; };
 		74E2DCC89787792D00000028 /* CelebrationHeadline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83F77BE44B5C133300000022; };
+		2BD8CCC3FFF7229C00000021 /* DailyPicture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14C7FC3CF253999A0000001B; };
 		30ECA8CB22C0601E00000020 /* DailyPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABA89EC2CAC17B0C0000001A; };
 		9A0F9B11E98286F400000024 /* EverydayObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = D939A12670747AA20000001E; };
 		5BDF348CC430543800000023 /* FamilySettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D5B4260F3371760000001D; };
@@ -75,6 +77,7 @@
 		0164563C802E6C1D00000020 /* LevelPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = D086556AECE330430000001A; };
 		1D8B162B0DC9013B00000021 /* MemoryPhotos.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A47663ED0263910000001B; };
 		5F30D3A44ABF08A500000024 /* OnboardingSteps.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40458DA19A3829B0000001E; };
+		6245A9B351FC18EC00000021 /* PictureAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ABB5B2CE93A18CA0000001B; };
 		275EC605D5ED04650000001E /* PlanStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3931AC8D4E8A85DB00000018; };
 		9D6ADE4D20F436F700000022 /* PlayerProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1445B0C518DED93D0000001C; };
 		45C157ABD39C164F00000027 /* PlayerStateSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9EBAADE3EF5726500000021; };
@@ -97,6 +100,7 @@
 		F08ED95C221EC29F00000039 /* CelebrationHeadlineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C55DCECC243D31500000033; };
 		6DF988A17F46565B00000034 /* ColorClashDealTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CA9280CB18F6B10000002E; };
 		9F9B2B4F803D01DB0000002E /* ContrastTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF326128D400FE3100000028; };
+		80824DD38A39043A00000032 /* DailyPictureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9EB2189FF873D80000002C; };
 		D251CDE1271D51A600000031 /* DailyPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A13B966464CCDD440000002B; };
 		30AC8D27570BF6EA00000031 /* DayGroupingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B2C1FA22781E7680000002B; };
 		35A281A4703D4C320000002E /* DayStampTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 704A57A9A9F6E88000000028; };
@@ -153,6 +157,7 @@
 		4174FC9AF3B1DBCB0000001B /* CelebrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/CelebrationView.swift; sourceTree = "<group>"; };
 		539B6DE05DDF57660000001A /* ColorClashDeal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/ColorClashDeal.swift; sourceTree = "<group>"; };
 		7571F11C435CE80D0000001A /* ColorClashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/ColorClashView.swift; sourceTree = "<group>"; };
+		576C85CADF772C9B0000001C /* DailyPictureCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/DailyPictureCard.swift; sourceTree = "<group>"; };
 		81FBBB825DCFF1C100000017 /* FitOrScroll.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/FitOrScroll.swift; sourceTree = "<group>"; };
 		80ED0207C93C607F0000001C /* LevelExplainLine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/LevelExplainLine.swift; sourceTree = "<group>"; };
 		B13B6166437470950000001A /* MathStreakView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/MathStreakView.swift; sourceTree = "<group>"; };
@@ -199,6 +204,7 @@
 		935C3DAA5B7FC9820000001A /* AppLanguage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/AppLanguage.swift; sourceTree = "<group>"; };
 		A4EDFB62CC1B10200000001D /* CaptionSpeaker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/CaptionSpeaker.swift; sourceTree = "<group>"; };
 		83F77BE44B5C133300000022 /* CelebrationHeadline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/CelebrationHeadline.swift; sourceTree = "<group>"; };
+		14C7FC3CF253999A0000001B /* DailyPicture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/DailyPicture.swift; sourceTree = "<group>"; };
 		ABA89EC2CAC17B0C0000001A /* DailyPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/DailyPolicy.swift; sourceTree = "<group>"; };
 		D939A12670747AA20000001E /* EverydayObjects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/EverydayObjects.swift; sourceTree = "<group>"; };
 		74D5B4260F3371760000001D /* FamilySettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/FamilySettings.swift; sourceTree = "<group>"; };
@@ -211,6 +217,7 @@
 		D086556AECE330430000001A /* LevelPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/LevelPolicy.swift; sourceTree = "<group>"; };
 		D5A47663ED0263910000001B /* MemoryPhotos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/MemoryPhotos.swift; sourceTree = "<group>"; };
 		A40458DA19A3829B0000001E /* OnboardingSteps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/OnboardingSteps.swift; sourceTree = "<group>"; };
+		8ABB5B2CE93A18CA0000001B /* PictureAlbum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/PictureAlbum.swift; sourceTree = "<group>"; };
 		3931AC8D4E8A85DB00000018 /* PlanStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/PlanStore.swift; sourceTree = "<group>"; };
 		1445B0C518DED93D0000001C /* PlayerProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/PlayerProfile.swift; sourceTree = "<group>"; };
 		D9EBAADE3EF5726500000021 /* PlayerStateSummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/PlayerStateSummary.swift; sourceTree = "<group>"; };
@@ -233,6 +240,7 @@
 		4C55DCECC243D31500000033 /* CelebrationHeadlineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/CelebrationHeadlineTests.swift; sourceTree = SOURCE_ROOT; };
 		97CA9280CB18F6B10000002E /* ColorClashDealTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/ColorClashDealTests.swift; sourceTree = SOURCE_ROOT; };
 		FF326128D400FE3100000028 /* ContrastTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/ContrastTests.swift; sourceTree = SOURCE_ROOT; };
+		9A9EB2189FF873D80000002C /* DailyPictureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/DailyPictureTests.swift; sourceTree = SOURCE_ROOT; };
 		A13B966464CCDD440000002B /* DailyPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/DailyPolicyTests.swift; sourceTree = SOURCE_ROOT; };
 		8B2C1FA22781E7680000002B /* DayGroupingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/DayGroupingTests.swift; sourceTree = SOURCE_ROOT; };
 		704A57A9A9F6E88000000028 /* DayStampTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/DayStampTests.swift; sourceTree = SOURCE_ROOT; };
@@ -317,6 +325,7 @@
 				4174FC9AF3B1DBCB0000001B /* CelebrationView.swift */,
 				539B6DE05DDF57660000001A /* ColorClashDeal.swift */,
 				7571F11C435CE80D0000001A /* ColorClashView.swift */,
+				576C85CADF772C9B0000001C /* DailyPictureCard.swift */,
 				81FBBB825DCFF1C100000017 /* FitOrScroll.swift */,
 				80ED0207C93C607F0000001C /* LevelExplainLine.swift */,
 				B13B6166437470950000001A /* MathStreakView.swift */,
@@ -363,6 +372,7 @@
 				935C3DAA5B7FC9820000001A /* AppLanguage.swift */,
 				A4EDFB62CC1B10200000001D /* CaptionSpeaker.swift */,
 				83F77BE44B5C133300000022 /* CelebrationHeadline.swift */,
+				14C7FC3CF253999A0000001B /* DailyPicture.swift */,
 				ABA89EC2CAC17B0C0000001A /* DailyPolicy.swift */,
 				D939A12670747AA20000001E /* EverydayObjects.swift */,
 				74D5B4260F3371760000001D /* FamilySettings.swift */,
@@ -375,6 +385,7 @@
 				D086556AECE330430000001A /* LevelPolicy.swift */,
 				D5A47663ED0263910000001B /* MemoryPhotos.swift */,
 				A40458DA19A3829B0000001E /* OnboardingSteps.swift */,
+				8ABB5B2CE93A18CA0000001B /* PictureAlbum.swift */,
 				3931AC8D4E8A85DB00000018 /* PlanStore.swift */,
 				1445B0C518DED93D0000001C /* PlayerProfile.swift */,
 				D9EBAADE3EF5726500000021 /* PlayerStateSummary.swift */,
@@ -409,6 +420,7 @@
 				4C55DCECC243D31500000033 /* CelebrationHeadlineTests.swift */,
 				97CA9280CB18F6B10000002E /* ColorClashDealTests.swift */,
 				FF326128D400FE3100000028 /* ContrastTests.swift */,
+				9A9EB2189FF873D80000002C /* DailyPictureTests.swift */,
 				A13B966464CCDD440000002B /* DailyPolicyTests.swift */,
 				8B2C1FA22781E7680000002B /* DayGroupingTests.swift */,
 				704A57A9A9F6E88000000028 /* DayStampTests.swift */,
@@ -530,6 +542,7 @@
 				1DA22A903C3C9B3500000021 /* CelebrationView.swift in Sources */,
 				B16AB042763F700800000020 /* ColorClashDeal.swift in Sources */,
 				B59E327BE0BD12A700000020 /* ColorClashView.swift in Sources */,
+				07B372E7165BE2A500000022 /* DailyPictureCard.swift in Sources */,
 				20A285961D1E7F0B0000001D /* FitOrScroll.swift in Sources */,
 				D456BAA2EE44DD2900000022 /* LevelExplainLine.swift in Sources */,
 				A120B5E94542D41F00000020 /* MathStreakView.swift in Sources */,
@@ -576,6 +589,7 @@
 				CF167B18375C83D400000020 /* AppLanguage.swift in Sources */,
 				B88EA6D0C0FF38D200000023 /* CaptionSpeaker.swift in Sources */,
 				74E2DCC89787792D00000028 /* CelebrationHeadline.swift in Sources */,
+				2BD8CCC3FFF7229C00000021 /* DailyPicture.swift in Sources */,
 				30ECA8CB22C0601E00000020 /* DailyPolicy.swift in Sources */,
 				9A0F9B11E98286F400000024 /* EverydayObjects.swift in Sources */,
 				5BDF348CC430543800000023 /* FamilySettings.swift in Sources */,
@@ -588,6 +602,7 @@
 				0164563C802E6C1D00000020 /* LevelPolicy.swift in Sources */,
 				1D8B162B0DC9013B00000021 /* MemoryPhotos.swift in Sources */,
 				5F30D3A44ABF08A500000024 /* OnboardingSteps.swift in Sources */,
+				6245A9B351FC18EC00000021 /* PictureAlbum.swift in Sources */,
 				275EC605D5ED04650000001E /* PlanStore.swift in Sources */,
 				9D6ADE4D20F436F700000022 /* PlayerProfile.swift in Sources */,
 				45C157ABD39C164F00000027 /* PlayerStateSummary.swift in Sources */,
@@ -618,6 +633,7 @@
 				F08ED95C221EC29F00000039 /* CelebrationHeadlineTests.swift in Sources */,
 				6DF988A17F46565B00000034 /* ColorClashDealTests.swift in Sources */,
 				9F9B2B4F803D01DB0000002E /* ContrastTests.swift in Sources */,
+				80824DD38A39043A00000032 /* DailyPictureTests.swift in Sources */,
 				D251CDE1271D51A600000031 /* DailyPolicyTests.swift in Sources */,
 				30AC8D27570BF6EA00000031 /* DayGroupingTests.swift in Sources */,
 				35A281A4703D4C320000002E /* DayStampTests.swift in Sources */,
