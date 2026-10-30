@@ -5,6 +5,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 ## [Unreleased]
 
 ### Fixed
+- **Name the Herd never shows two tiles with the same name (#371):** a Colors board no longer mixes in the orange fruit, and a Fruits board no longer mixes in the orange colour, so a fair pick is never counted as a miss and VoiceOver never reads two tiles called "Orange".
 - **Today's cards fit the screen (#365):** on Home, all of today's games now sit inside the table whether 3 or 5 are dealt (five show as 3 + 2), on small phones too. From the first Bigger text step, today's games are full-width rows so no name breaks mid-word.
 - **No crash when the sound can't start (#367):** after a phone call, Siri or an alarm takes the audio, a tap no longer closes the app; that tone is skipped and sound returns on the next tap.
 - **Play again starts at the level you just chose (#368):** after "Yes, let's try", tapping Play again deals the next game at the new level and saves it there, in every game with levels. "Keep it as it is" and a family's fixed level still hold.
