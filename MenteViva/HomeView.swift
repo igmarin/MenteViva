@@ -20,6 +20,8 @@ struct HomeView: View {
     @State private var plan: [GameID] = []
     /// The day `plan` was made for; a new day (seen when the app comes back) re-plans.
     @State private var planDay = PlanStore.dayStamp()
+    /// Width inside the table, measured so today's cards can shrink to fit it (#365). 0 until measured.
+    @State private var tableWidth: CGFloat = 0
     @Environment(\.scenePhase) private var scenePhase
     /// Games the family hid on this device (#108).
     @AppStorage(FamilySettings.hiddenKey) private var hiddenGames = ""
@@ -148,10 +150,13 @@ struct HomeView: View {
         .background(.table, in: .rect(cornerRadius: 30))
     }
 
+    /// Today's cards. From the first Bigger text step up they are full-width rows, since names
+    /// like "Bloques deslizantes" break mid-word in a fan card (#365); otherwise rows of three
+    /// sized to the measured table, so five games and 375pt phones stay inside it.
     @ViewBuilder
     private var hand: some View {
         let games = today.games
-        if typeSize.isAccessibilitySize {
+        if typeSize >= .xxxLarge {
             VStack(spacing: 10) {
                 ForEach(games, id: \.self) { game in
                     NavigationLink(value: game) {
@@ -161,16 +166,34 @@ struct HomeView: View {
                 }
             }
         } else {
-            HStack(spacing: -6) {
-                ForEach(Array(games.enumerated()), id: \.element) { index, game in
-                    let tilt = (Double(index) - Double(games.count - 1) / 2) * 7
-                    NavigationLink(value: game) {
-                        GameCard(game: game, size: .hand, playedToday: today.done.contains(game))
+            let rows = HandLayout.rows(games)
+            let perRow = rows.first?.count ?? 1
+            // Until the table is measured, cards keep their full size.
+            let cardWidth =
+                tableWidth > 0
+                ? HandLayout.cardWidth(available: tableWidth, perRow: perRow) : HandLayout.fullWidth
+            VStack(spacing: 10) {
+                ForEach(Array(rows.enumerated()), id: \.offset) { _, row in
+                    HStack(spacing: -6) {
+                        ForEach(Array(row.enumerated()), id: \.element) { index, game in
+                            let tilt = (Double(index) - Double(row.count - 1) / 2) * 7
+                            NavigationLink(value: game) {
+                                GameCard(
+                                    game: game, size: .hand, playedToday: today.done.contains(game),
+                                    handWidth: cardWidth)
+                            }
+                            .buttonStyle(CardPressStyle())
+                            .rotationEffect(.degrees(tilt))
+                            .offset(y: tilt == 0 ? 0 : 8)
+                        }
                     }
-                    .buttonStyle(CardPressStyle())
-                    .rotationEffect(.degrees(tilt))
-                    .offset(y: tilt == 0 ? 0 : 8)
                 }
+            }
+            .frame(maxWidth: .infinity)
+            .onGeometryChange(for: CGFloat.self) {
+                $0.size.width
+            } action: {
+                tableWidth = $0
             }
             .padding(.vertical, 8)
             .accessibilityElement(children: .contain)
