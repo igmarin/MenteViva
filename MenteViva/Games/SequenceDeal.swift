@@ -89,8 +89,9 @@ nonisolated enum SequenceDeal {
 
         var isFinished: Bool { index >= sequences.count }
 
-        /// Record a tap of the full sequence length. Returns `.almost` on first
-        /// miss (so caller can replay), second miss moves on warmly.
+        /// Call after every tap: a correct prefix returns `.keepGoing` and costs no
+        /// attempt; any wrong tap ends the attempt, giving `.almost` (replay) the
+        /// first time and moving on warmly the second.
         mutating func record(tapped: [Int]) -> Result {
             guard let expected = current else { return .correct }
             // Partial prefix still needs more taps — not a completed attempt.

@@ -73,6 +73,7 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `game.category.found %lld %lld` | %1$lld of %2$lld found | %1$lld de %2$lld encontrados | CategoryFluencyView |  |
 | `game.category.fruits` | Fruits | Frutas | CategoryFluencyView |  |
 | `game.category.instruction` | Tap every picture for: | Toca cada imagen de: | CategoryFluencyView |  |
+| `game.category.miss` | Not in this group, try another | Ese no es de este grupo, prueba otro | CategoryFluencyView |  |
 | `game.category.title` | Name the Herd | Nombra la Manada | GameID |  |
 | `game.category.vehicles` | Vehicles | Vehículos | CategoryFluencyView |  |
 | `game.celebration.added` | Added to your week | Agregado a tu semana | CelebrationView | ✅ |

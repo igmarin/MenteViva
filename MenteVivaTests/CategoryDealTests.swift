@@ -268,4 +268,23 @@ final class CategoryDealTests: XCTestCase {
             }
         }
     }
+
+    /// #392: a decoy tap is silent on screen, but VoiceOver hears this warm line, so the
+    /// key must exist in both languages and never scold.
+    func testGivenNewCategoryMissKeyWhenCatalogCheckedThenEnglishAndSpanishPresent() throws {
+        let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
+        let data = try Data(contentsOf: root.appendingPathComponent("MenteViva/Localizable.xcstrings"))
+        let catalog = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
+        let strings = try XCTUnwrap(catalog["strings"] as? [String: Any])
+        let entry = try XCTUnwrap(strings["game.category.miss"] as? [String: Any])
+        let localizations = try XCTUnwrap(entry["localizations"] as? [String: Any])
+        let expected = [
+            "en": "Not in this group, try another",
+            "es": "Ese no es de este grupo, prueba otro",
+        ]
+        for (language, line) in expected {
+            let unit = try XCTUnwrap((localizations[language] as? [String: Any])?["stringUnit"] as? [String: Any])
+            XCTAssertEqual(unit["value"] as? String, line, language)
+        }
+    }
 }
