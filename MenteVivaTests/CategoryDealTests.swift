@@ -65,6 +65,94 @@ final class CategoryDealTests: XCTestCase {
         }
     }
 
+    func testGivenEveryCategoryWhenDealtThenNoItemAppearsInTwoCategories() {
+        let items = CategoryDeal.Category.allCases.flatMap(\.items)
+        XCTAssertEqual(items.count, CategoryDeal.Category.allCases.count * 7)
+        XCTAssertEqual(Set(items).count, items.count)
+        for seed in 1...200 {
+            for round in deal(10, seed: UInt64(seed)) {
+                // A tile is right only when it is one of the asked category's seven.
+                for tile in round.tiles {
+                    XCTAssertEqual(tile.belongs, round.category.items.contains(tile.picture), "seed \(seed)")
+                }
+            }
+        }
+    }
+
+    func testGivenAnyCategoryWhenDealtThenNoDecoyComesFromItselfOrAnExcludedCategory() {
+        for level in [1, 6, 10] {
+            for seed in 1...300 {
+                for round in deal(level, seed: UInt64(seed)) {
+                    let excluded = round.category.noDecoysFrom.union([round.category])
+                    let forbidden = Set(excluded.flatMap(\.items))
+                    for tile in round.tiles where !tile.belongs {
+                        XCTAssertFalse(forbidden.contains(tile.picture), "level \(level) seed \(seed)")
+                    }
+                }
+            }
+        }
+    }
+
+    func testGivenKitchenRoundWhenDealtThenNoFruitOrHomeDecoyAppears() {
+        let banned = Set(CategoryDeal.Category.fruits.items + CategoryDeal.Category.home.items)
+        var kitchenRounds = 0
+        for level in [1, 10] {
+            for seed in 1...300 {
+                for round in deal(level, seed: UInt64(seed)) where round.category == .kitchen {
+                    kitchenRounds += 1
+                    XCTAssertTrue(
+                        round.tiles.allSatisfy { $0.belongs || !banned.contains($0.picture) },
+                        "level \(level) seed \(seed)")
+                }
+            }
+        }
+        XCTAssertGreaterThan(kitchenRounds, 0)
+    }
+
+    func testGivenTheExclusionsThenTheyAreSymmetricAndNeverSelf() {
+        for category in CategoryDeal.Category.allCases {
+            XCTAssertFalse(category.noDecoysFrom.contains(category))
+            for other in category.noDecoysFrom {
+                XCTAssertTrue(other.noDecoysFrom.contains(category), "\(category) / \(other)")
+            }
+        }
+    }
+
+    func testGivenSevenCategoriesWhenDealingManySeedsThenEveryCategoryAppears() {
+        XCTAssertEqual(CategoryDeal.Category.allCases.count, 7)
+        var seen = Set<CategoryDeal.Category>()
+        for seed in 1...200 {
+            seen.formUnion(deal(4, seed: UInt64(seed)).map(\.category))
+        }
+        XCTAssertEqual(seen, Set(CategoryDeal.Category.allCases))
+    }
+
+    /// The pool is the real one per category, not a fixed 21: kitchen loses
+    /// fruits and home, so its pool is smaller than animals'.
+    func testGivenEachCategoryThenItsDecoyPoolIsTheRealOne() {
+        XCTAssertEqual(CategoryDeal.decoyPool(for: .animals).count, 42)
+        XCTAssertEqual(CategoryDeal.decoyPool(for: .kitchen).count, 28)
+        XCTAssertEqual(CategoryDeal.decoyPool(for: .fruits).count, 27)  // minus kitchen, plants, the orange swatch
+        XCTAssertEqual(CategoryDeal.smallestPoolSize, 27)
+        XCTAssertGreaterThanOrEqual(CategoryDeal.smallestPoolSize, CategoryDeal.decoysByLevel.max() ?? 0)
+    }
+
+    func testGivenLevelTenOnTheNarrowestPhoneWhenDealtThenEveryTileFitsAtLeastTheMinimum() {
+        let width = 343.0
+        let columns = Int(
+            (width - CategoryDeal.horizontalPadding + CategoryDeal.tileGap)
+                / (CategoryDeal.tileMin + CategoryDeal.tileGap))
+        let tileWidth =
+            (width - CategoryDeal.horizontalPadding - Double(columns - 1) * CategoryDeal.tileGap)
+            / Double(columns)
+        XCTAssertGreaterThanOrEqual(tileWidth, CategoryDeal.tileMin)
+        for seed in 1...100 {
+            for round in deal(10, seed: UInt64(seed), width: width) {
+                XCTAssertLessThanOrEqual(round.tiles.count, columns * 6, "seed \(seed)")
+            }
+        }
+    }
+
     func testGivenLevelsTwoFourSixWhenDecoysThenMatchesOldEasyMediumHard() {
         let counts = [2, 4, 6].map { CategoryDeal.decoyCount(for: Difficulty(level: $0)) }
         XCTAssertEqual(counts, [3, 5, 7])

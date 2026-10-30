@@ -856,6 +856,23 @@
         }
       }
     },
+    "game.category.home" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Around the house"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cosas de la casa"
+          }
+        }
+      }
+    },
     "game.category.instruction" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -869,6 +886,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Toca todos los que sean"
+          }
+        }
+      }
+    },
+    "game.category.kitchen" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In the kitchen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En la cocina"
+          }
+        }
+      }
+    },
+    "game.category.plants" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plants and flowers"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plantas y flores"
           }
         }
       }
