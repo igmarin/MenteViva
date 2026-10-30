@@ -300,9 +300,16 @@ struct TilePairsView: View {
     }
 
     private func tap(_ tile: TilePairsTile) {
-        guard deal != nil, !removing.contains(tile.id) else { return }
-        let free = deal!.isFree(tile)
-        if !free {
+        guard deal != nil else { return }
+        var mutable = deal!
+        // While a pair lifts away `pick` ignores taps, so a stale pick cannot bring a removed tile back (#369).
+        let outcome = mutable.pick(tile.id, after: selected, lifting: !removing.isEmpty)
+        // Keep the try on the deal for every outcome except a match, which is written back after the lift (#369).
+        if outcome != .matched { deal = mutable }
+        switch outcome {
+        case .ignored:
+            return
+        case .covered:
             // Covered → shake + warm line, nothing removed.
             shakeID = tile.id
             hint = AppLanguage.localized("game.tilepairs.covered")
@@ -312,24 +319,15 @@ struct TilePairsView: View {
                 try? await Task.sleep(for: .milliseconds(420))
                 if shakeID == tile.id { shakeID = nil }
             }
-            return
-        }
-        if selected == nil {
+        case .selected:
             selected = tile.id
             highlighted = []
             hint = nil
             Feedback.play(.tap)
-            return
-        }
-        if selected == tile.id {
+        case .deselected:
             selected = nil
-            return
-        }
-        // Second tile: try the pair.
-        guard let first = selected else { return }
-        var mutable = deal!
-        let ok = mutable.tryPair(first, tile.id)
-        if ok {
+        case .matched:
+            guard let first = selected else { return }
             removing = [first, tile.id]
             highlighted = []
             hint = nil
@@ -346,8 +344,9 @@ struct TilePairsView: View {
                 selected = nil
                 if mutable.isCleared { finish(with: mutable) }
             }
-        } else {
-            // Different symbols → warm miss, clear the pick.
+        case .mismatch:
+            // Different symbols → warm miss, clear the pick. The deal keeps the try so accuracy is real.
+            guard let first = selected else { return }
             hint = AppLanguage.localized("game.tilepairs.mismatch")
             mismatched = [first, tile.id]
             selected = nil
