@@ -139,6 +139,11 @@ sailboat are the Muse-generated #323 samples copied unchanged (rights basis
 not asserted, see above). Resemblance check: original designs, no named
 characters, brands or accessories.
 
+**#373 Home and celebration cards (2026-10-30):** no new assets were added. The
+cards reuse existing `pic.<slug>` files. Five of them (teapot, dog, apple,
+sunflower, sailboat) are the #323 Muse samples still pending #226, and this
+change makes them more prominent (Home's first screen and the celebration card).
+
 **Every batch:** append a complete prompt/tool/date row per new slug to
 `art-prompts.md`, record the selected files here, and check resemblance to
 existing characters, distinctive accessories, poses, compositions and branding.
