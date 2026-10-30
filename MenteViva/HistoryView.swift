@@ -10,8 +10,11 @@ struct HistoryView: View {
     @Query(sort: \GameSession.playedAt, order: .reverse)
     private var sessions: [GameSession]
 
-    /// Everything the screen shows, derived from `sessions` once per redraw
-    /// instead of once per read (the list used to regroup the week three times).
+    /// The album's column minimum grows with the text, so a long name ("Helicóptero") never breaks mid-word.
+    @ScaledMetric(relativeTo: .callout) private var albumCellMinimum: CGFloat = 100
+
+    /// Everything the screen shows, derived from `sessions` (and the picture album from UserDefaults)
+    /// once per redraw instead of once per read (the list used to regroup the week three times).
     private struct Snapshot {
         let weekGroups: [(day: Date, items: [GameSession])]
         let weekCount: Int
@@ -118,7 +121,7 @@ struct HistoryView: View {
     /// The pictures the player has collected, newest first (#377): in colour, each with its name.
     /// Only what was earned is drawn, so there is nothing to count, no empty slot and nothing to lose.
     private func albumShelf(_ pictures: [GamePicture]) -> some View {
-        LazyVGrid(columns: [GridItem(.adaptive(minimum: 100), spacing: 16, alignment: .top)], spacing: 20) {
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: albumCellMinimum), spacing: 16, alignment: .top)], spacing: 20) {
             ForEach(pictures, id: \.slug) { picture in
                 let name = AppLanguage.localized(picture.nameKey)
                 VStack(spacing: 6) {
@@ -211,6 +214,7 @@ struct HistoryView: View {
                 invitation
                 Text(AppLanguage.localized("album.title"))
                     .font(.title3.weight(.semibold))
+                    .foregroundStyle(.secondary)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .accessibilityAddTraits(.isHeader)
                 albumShelf(album)

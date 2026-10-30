@@ -19,10 +19,8 @@ nonisolated enum PictureAlbum {
 
     /// What the album shelf shows (#377): the collected pictures, newest first. A slug the catalogue no
     /// longer knows is skipped rather than crashing, since the album outlives app versions.
-    static func shelf(defaults: UserDefaults = .standard, from pictures: [GamePicture] = GamePictures.all)
-        -> [GamePicture]
-    {
-        let bySlug = Dictionary(pictures.map { ($0.slug, $0) }, uniquingKeysWith: { first, _ in first })
+    static func shelf(defaults: UserDefaults = .standard) -> [GamePicture] {
+        let bySlug = Dictionary(GamePictures.all.map { ($0.slug, $0) }, uniquingKeysWith: { first, _ in first })
         return all(defaults: defaults).reversed().compactMap { bySlug[$0] }
     }
 
