@@ -287,9 +287,8 @@ struct QuickEyesView: View {
                 rounds: Self.totalRounds, durationSeconds: elapsed,
                 correct: correct, attempts: Self.totalRounds,
                 difficulty: difficulty))
-        finalDetail = String(
-            format: AppLanguage.localized("game.celebration.spotted %lld %lld"),
-            correct, Self.totalRounds)
+        // Completion, never a hit count: a first-try tally can be small (#394).
+        finalDetail = String(format: AppLanguage.localized("game.celebration.rounds %lld"), Self.totalRounds)
         showCelebration = true
     }
 }
