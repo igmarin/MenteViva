@@ -40,13 +40,28 @@ final class TangramPuzzleTests: XCTestCase {
                 TangramPiece.placedCorners(
                     $0.piece, position: $0.position, rotation: $0.rotation, flipped: $0.flipped)
             }
-            XCTAssertEqual(polys.map(area).reduce(0, +), 64, accuracy: 0.001, shape.key)
+            // No area sum here: rigid motion keeps every tile's area, so it is always 64 (#395).
             for i in polys.indices {
                 for j in polys.indices where j > i {
                     XCTAssertLessThan(intersection(polys[i], polys[j]), 0.000_001, shape.key)
                 }
             }
         }
+    }
+
+    func testGivenAMirroredTileWhenIntersectedWithItselfThenOverlapIsItsArea() {
+        let mirrored = TangramPiece.placedCorners(
+            .large, position: CGPoint(x: 6, y: 0), rotation: 0, flipped: true)
+        XCTAssertEqual(intersection(mirrored, mirrored), 16, accuracy: 0.001)
+    }
+
+    func testGivenAMirroredTileOverlappingAnotherWhenIntersectedThenAreaIsPositive() {
+        // The mirrored small tile fills the medium's left half, as Armchair once shipped (#395).
+        let medium = TangramPiece.placedCorners(.medium, position: .zero, rotation: 0, flipped: false)
+        let small = TangramPiece.placedCorners(
+            .small, position: CGPoint(x: 2, y: 2), rotation: 1, flipped: true)
+        XCTAssertEqual(intersection(medium, small), 4, accuracy: 0.001)
+        XCTAssertEqual(intersection(small, medium), 4, accuracy: 0.001)
     }
 
     func testGivenEveryShapeWhenCheckedThenFitsOnTheBoard() {
@@ -313,9 +328,12 @@ final class TangramPuzzleTests: XCTestCase {
         return abs(twice) / 2
     }
 
-    /// Intersection area of two convex polygons (all tiles are convex).
+    /// Intersection area of two convex polygons (all tiles are convex). The clip
+    /// keeps the left of each edge, so both run counter-clockwise first: a flipped
+    /// tile turns clockwise and would otherwise clip everything away (#395).
     private func intersection(_ subject: [CGPoint], _ clip: [CGPoint]) -> Double {
-        var out = subject
+        let clip = counterClockwise(clip)
+        var out = counterClockwise(subject)
         for i in clip.indices {
             let edge: (Double, Double) = (
                 Double(clip[(i + 1) % clip.count].x - clip[i].x),
@@ -341,6 +359,13 @@ final class TangramPuzzleTests: XCTestCase {
             if out.isEmpty { return 0 }
         }
         return area(of: out)
+    }
+
+    /// The same polygon with its corners counter-clockwise (positive signed area).
+    private func counterClockwise(_ poly: [CGPoint]) -> [CGPoint] {
+        let next = Array(poly[1...]) + [poly[0]]
+        let twice = zip(poly, next).map { a, b in Double(a.x * b.y - b.x * a.y) }.reduce(0, +)
+        return twice < 0 ? poly.reversed() : poly
     }
 
     private func cross(_ from: CGPoint, _ to: CGPoint, _ base: CGPoint, _ edge: (Double, Double))

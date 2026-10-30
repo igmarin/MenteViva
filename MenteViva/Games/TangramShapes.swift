@@ -5,7 +5,8 @@ import Foundation
 /// exactly tile it — no overlaps, areas summing to the 8×8 square.
 /// Authoring coordinates, y up (the screen flips them in #219). The
 /// placements come from the authoring tool (`/tmp/tangram`, not in the
-/// repo); every shape below passed its no-overlap and area checks there.
+/// repo). Its overlap check missed mirrored tiles, so seven shapes had a tile
+/// moved by hand (#395); `TangramPuzzleTests` now checks every pair exactly.
 /// Names live in `Localizable.xcstrings` under `key`.
 nonisolated struct TangramShape: Sendable {
     /// `Localizable.xcstrings` key `tangram.shape.NN`.
@@ -65,7 +66,7 @@ nonisolated enum TangramShapes {
                 TangramPlacement(
                     piece: .small, position: CGPoint(x: 6.656854249492381, y: 12.65685424949238), rotation: 6, flipped: true),
                 TangramPlacement(
-                    piece: .square, position: CGPoint(x: 10.485281374238571, y: 4.82842712474619), rotation: 7, flipped: true),
+                    piece: .square, position: CGPoint(x: 10.656854249492381, y: 4.65685424949238), rotation: 7, flipped: true),
                 TangramPlacement(
                     piece: .parallelogram, position: CGPoint(x: 2.6568542494923806, y: 3.0), rotation: 4, flipped: true),
                 TangramPlacement(piece: .small2, position: CGPoint(x: 14.313708498984761, y: 1.0), rotation: 7, flipped: true),
@@ -217,7 +218,7 @@ nonisolated enum TangramShapes {
                 TangramPlacement(
                     piece: .medium, position: CGPoint(x: 6.656854249492381, y: 13.485281374238571), rotation: 0, flipped: false),
                 TangramPlacement(
-                    piece: .small, position: CGPoint(x: 8.65685424949238, y: 15.485281374238571), rotation: 1, flipped: true),
+                    piece: .small, position: CGPoint(x: 8.65685424949238, y: 15.48528137423857), rotation: 5, flipped: true),
                 TangramPlacement(
                     piece: .small2, position: CGPoint(x: 6.656854249492381, y: 17.48528137423857), rotation: 0, flipped: true),
                 TangramPlacement(
@@ -286,7 +287,7 @@ nonisolated enum TangramShapes {
                 TangramPlacement(
                     piece: .large2, position: CGPoint(x: 6.656854249492381, y: 11.65685424949238), rotation: 4, flipped: false),
                 TangramPlacement(
-                    piece: .medium, position: CGPoint(x: 12.313708498984761, y: 11.65685424949238), rotation: 4, flipped: true),
+                    piece: .medium, position: CGPoint(x: 12.65685424949238, y: 11.65685424949238), rotation: 4, flipped: true),
                 TangramPlacement(
                     piece: .small, position: CGPoint(x: 12.313708498984761, y: 11.65685424949238), rotation: 0, flipped: false),
                 TangramPlacement(
@@ -294,7 +295,7 @@ nonisolated enum TangramShapes {
                 TangramPlacement(
                     piece: .parallelogram, position: CGPoint(x: 6.656854249492381, y: 11.65685424949238), rotation: 4,
                     flipped: true),
-                TangramPlacement(piece: .small2, position: CGPoint(x: 1.0, y: 11.65685424949238), rotation: 4, flipped: true),
+                TangramPlacement(piece: .small2, position: CGPoint(x: 1.0, y: 8.82842712474619), rotation: 6, flipped: true),
             ]),
         TangramShape(
             key: "tangram.shape.18",
@@ -340,14 +341,14 @@ nonisolated enum TangramShapes {
                 TangramPlacement(
                     piece: .square, position: CGPoint(x: 8.65685424949238, y: 16.65685424949238), rotation: 1, flipped: false),
                 TangramPlacement(
-                    piece: .parallelogram, position: CGPoint(x: 8.65685424949238, y: 16.65685424949238), rotation: 6,
-                    flipped: false),
+                    piece: .parallelogram, position: CGPoint(x: 10.65685424949238, y: 15.82842712474619), rotation: 2,
+                    flipped: true),
                 TangramPlacement(
                     piece: .large, position: CGPoint(x: 8.65685424949238, y: 20.65685424949238), rotation: 0, flipped: false),
                 TangramPlacement(
                     piece: .large2, position: CGPoint(x: 8.65685424949238, y: 20.65685424949238), rotation: 0, flipped: true),
                 TangramPlacement(
-                    piece: .medium, position: CGPoint(x: 8.65685424949238, y: 12.65685424949238), rotation: 4, flipped: true),
+                    piece: .medium, position: CGPoint(x: 8.65685424949238, y: 9.82842712474619), rotation: 4, flipped: true),
                 TangramPlacement(
                     piece: .small, position: CGPoint(x: 8.65685424949238, y: 14.65685424949238), rotation: 4, flipped: false),
                 TangramPlacement(
@@ -387,7 +388,7 @@ nonisolated enum TangramShapes {
                 TangramPlacement(
                     piece: .medium, position: CGPoint(x: 16.65685424949238, y: 16.65685424949238), rotation: 4, flipped: true),
                 TangramPlacement(
-                    piece: .square, position: CGPoint(x: 8.65685424949238, y: 6.65685424949238), rotation: 1, flipped: false),
+                    piece: .square, position: CGPoint(x: 8.65685424949238, y: 5.82842712474619), rotation: 1, flipped: false),
                 TangramPlacement(
                     piece: .small2, position: CGPoint(x: 8.65685424949238, y: 12.65685424949238), rotation: 4, flipped: true),
             ]),
@@ -421,7 +422,7 @@ nonisolated enum TangramShapes {
                 TangramPlacement(
                     piece: .large, position: CGPoint(x: 8.65685424949238, y: 12.65685424949238), rotation: 0, flipped: false),
                 TangramPlacement(
-                    piece: .small, position: CGPoint(x: 14.313708498984761, y: 12.65685424949238), rotation: 0, flipped: false),
+                    piece: .small, position: CGPoint(x: 15.48528137423857, y: 15.48528137423857), rotation: 5, flipped: false),
                 TangramPlacement(
                     piece: .small2, position: CGPoint(x: 8.65685424949238, y: 18.31370849898476), rotation: 0, flipped: true),
                 TangramPlacement(
@@ -538,10 +539,10 @@ nonisolated enum TangramShapes {
                 TangramPlacement(
                     piece: .small2, position: CGPoint(x: 10.65685424949238, y: 14.65685424949238), rotation: 4, flipped: true),
                 TangramPlacement(
-                    piece: .parallelogram, position: CGPoint(x: 6.656854249492381, y: 12.65685424949238), rotation: 4,
+                    piece: .parallelogram, position: CGPoint(x: 6.656854249492381, y: 11.82842712474619), rotation: 4,
                     flipped: true),
                 TangramPlacement(
-                    piece: .medium, position: CGPoint(x: 12.65685424949238, y: 10.65685424949238), rotation: 4, flipped: true),
+                    piece: .medium, position: CGPoint(x: 12.65685424949238, y: 9.82842712474619), rotation: 4, flipped: true),
             ]),
     ]
 }
