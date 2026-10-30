@@ -28,7 +28,7 @@ struct ReminiscenceView: View {
                         Text(caption)
                             .font(.largeTitle.weight(.semibold))
                             .accessibilityAddTraits(.isHeader)
-                        if let question = card.prompt {
+                        if let question = card.question {
                             Text(AppLanguage.localized(question))
                                 .font(.title2)
                                 .foregroundStyle(.secondary)
@@ -91,7 +91,7 @@ struct ReminiscenceView: View {
     private func controls(for card: ReminiscenceCard) -> some View {
         if let caption = card.caption, !revealed {
             Button {
-                reveal(caption, question: card.prompt)
+                reveal(caption, question: card.question)
             } label: {
                 bigLabel("game.reminiscence.show")
             }
@@ -123,6 +123,7 @@ struct ReminiscenceView: View {
     // MARK: - Flow
 
     /// VoiceOver hears the name and the question in one announcement (#379).
+    /// "Speak names" reads only the name, as it always has; the question stays on screen.
     private func reveal(_ caption: String, question: String?) {
         revealed = true
         Feedback.play(.tap)

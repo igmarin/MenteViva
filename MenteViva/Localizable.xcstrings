@@ -6402,13 +6402,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "What was the best part of that day?"
+            "value" : "What do you imagine was happening here?"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "¿Cuál fue lo mejor de ese día?"
+            "value" : "¿Qué te imaginas que pasaba aquí?"
           }
         }
       }
@@ -6504,13 +6504,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "What was life like around that time?"
+            "value" : "What feeling does this picture have?"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "¿Cómo era la vida por aquellos días?"
+            "value" : "¿Qué ambiente se siente en esta foto?"
           }
         }
       }
@@ -6589,13 +6589,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Where in a home would you usually find this?"
+            "value" : "What do you picture when you see this?"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "¿Dónde se suele encontrar esto en una casa?"
+            "value" : "¿Qué te imaginas al ver esto?"
           }
         }
       }
@@ -6646,7 +6646,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "¿Qué es lo que más te gusta de esto?"
+            "value" : "¿Qué te gusta de esto?"
           }
         }
       }

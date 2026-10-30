@@ -13,7 +13,7 @@ nonisolated struct ReminiscenceCard: Equatable, Identifiable {
     let caption: String?
     /// Localization key of the question shown under the name once revealed;
     /// `dealSession` sets it, so a hand-built card has none.
-    var prompt: String?
+    var question: String?
 }
 
 /// Which cards a session shows: the family's photos first, in the order given
@@ -30,9 +30,9 @@ enum ReminiscenceDeck {
         let cards = deal(
             photos: photos.shuffled(using: &generator), captions: captions,
             objects: EverydayObjects.all.shuffled(using: &generator))
-        let prompts = ConversationPrompts.deal(count: cards.count, photos: !photos.isEmpty, using: &generator)
-        return zip(cards, prompts).map { card, prompt in
-            ReminiscenceCard(id: card.id, picture: card.picture, caption: card.caption, prompt: prompt)
+        let questions = ConversationPrompts.deal(count: cards.count, photos: !photos.isEmpty, using: &generator)
+        return zip(cards, questions).map { card, question in
+            ReminiscenceCard(id: card.id, picture: card.picture, caption: card.caption, question: question)
         }
     }
 
