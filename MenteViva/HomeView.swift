@@ -189,7 +189,9 @@ struct HomeView: View {
                     }
                 }
             }
-            .frame(maxWidth: .infinity)
+            // minWidth 0 makes the frame take the width it is offered, not the cards' own width,
+            // so the measurement below shrinks the cards instead of echoing their overflow.
+            .frame(minWidth: 0, maxWidth: .infinity)
             .onGeometryChange(for: CGFloat.self) {
                 $0.size.width
             } action: {

@@ -35,6 +35,21 @@ final class HandLayoutTests: XCTestCase {
         XCTAssertGreaterThanOrEqual(width, 100, "a card stays a comfortable target on the smallest phone")
     }
 
+    func testGivenAvailable322AndThreeCardsWhenCardWidthThenRowFits() {
+        // A 390pt iPhone 17e with five games: the first row of three has 322pt.
+        let width = HandLayout.cardWidth(available: 322, perRow: 3)
+
+        XCTAssertLessThanOrEqual(width * 3 - 6 * 2, 322)
+        XCTAssertGreaterThanOrEqual(width, 100)
+    }
+
+    func testGivenTwoGamesWhenCardWidthThenFullWidth() {
+        let perRow = HandLayout.rows(Array(games.prefix(2))).first?.count ?? 0
+
+        XCTAssertEqual(perRow, 2)
+        XCTAssertEqual(HandLayout.cardWidth(available: 307, perRow: perRow), 112)
+    }
+
     func testGivenAvailable800WhenCardWidthThen112() {
         XCTAssertEqual(HandLayout.cardWidth(available: 800, perRow: 3), 112)
     }
