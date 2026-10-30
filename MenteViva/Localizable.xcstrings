@@ -477,19 +477,18 @@
         }
       }
     },
-    "family.photos.footer" : {
-      "extractionState" : "stale",
+    "family.photos.footer %lld" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Up to 8 photos from this device become Memory Lane cards. They stay on this device and are never uploaded."
+            "value" : "Up to %lld photos. Memory Lane, Remember Together and Names and Faces use them. They stay on this device and are never uploaded."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hasta 8 fotos de este dispositivo se convierten en cartas de Camino de Memoria. Se quedan en este dispositivo y nunca se suben a internet."
+            "value" : "Hasta %lld fotos. Camino de Memoria, Recordar juntos y Nombres y Caras las usan. Se quedan en este dispositivo y nunca se suben a internet."
           }
         }
       }
@@ -517,13 +516,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Memory Lane photos"
+            "value" : "Family photos"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Fotos para Camino de Memoria"
+            "value" : "Fotos de la familia"
           }
         }
       }
@@ -4412,6 +4411,86 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "¿Cómo quieres empezar?"
+          }
+        }
+      }
+    },
+    "onboarding.photos.add.hint" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opens your photos. Pick a few of people you love."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abre tus fotos. Elige unas de personas queridas."
+          }
+        }
+      }
+    },
+    "onboarding.photos.body" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Three games use them: Memory Lane, Remember Together and Names and Faces. They stay on this device."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tres juegos las usan: Camino de Memoria, Recordar juntos y Nombres y Caras. Se quedan en este dispositivo."
+          }
+        }
+      }
+    },
+    "onboarding.photos.later" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Later, in Settings"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Más tarde, en Ajustes"
+          }
+        }
+      }
+    },
+    "onboarding.photos.later.hint" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Goes on without photos. You can add them any time in Settings."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sigue sin fotos. Puedes añadirlas cuando quieras en Ajustes."
+          }
+        }
+      }
+    },
+    "onboarding.photos.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add a few photos of people you love?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Añadimos unas fotos de personas queridas?"
           }
         }
       }

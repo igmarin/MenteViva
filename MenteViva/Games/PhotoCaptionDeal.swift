@@ -7,7 +7,8 @@ nonisolated enum PhotoCaptionDeal {
     /// The fewest pairs a board has; fewer captioned photos and the game is not offered.
     static let minPairs = 4
 
-    /// Pairs per level 1...10: four at the start, up to the album's eight (`MemoryPhotos.maxCount`).
+    /// Pairs per level 1...10: four at the start, up to eight, the largest board; the album holds
+    /// more (`MemoryPhotos.maxCount`), and `make` picks among them.
     static let pairsPerLevel = [4, 4, 5, 5, 6, 6, 7, 7, 8, 8]
 
     static func pairCount(for difficulty: Difficulty) -> Int {

@@ -1,3 +1,4 @@
+import PhotosUI
 import SwiftUI
 
 /// First run, for someone who has never heard of this app and has nobody to ask (#212).
@@ -7,6 +8,10 @@ import SwiftUI
 /// big answer tiles, a visible Skip, Back, and a "2 of 5" dot row. Answers save as they are
 /// given, so a flow left half-way keeps what was answered, and every one of them can be
 /// changed later in Settings -> My plan. No age, no health question, no text field.
+///
+/// After the questions come up to two offers outside the count, in the order
+/// `OnboardingSteps.afterQuestions` gives: family photos while the album is empty (#374), then
+/// the warm-up (#213). Each can be passed with one tap.
 ///
 /// Claim ceiling is deliberate (research §1, App Store 1.4.1): "keep your mind
 /// active", never treatment, prevention or diagnosis.
@@ -22,16 +27,36 @@ struct OnboardingView: View {
     @State private var step = 1
     /// The answers so far. Saved after every tap, so leaving mid-way loses nothing.
     @State private var profile = ProfileStore.load()
+    /// The offers after the last question, fixed when the player leaves it, so adding photos on
+    /// the photo screen doesn't renumber the screens behind it.
+    @State private var offers: [OnboardingOffer] = []
+    /// What the photo picker handed over; cleared once the photos are in the album.
+    @State private var picked: [PhotosPickerItem] = []
+    /// What the last pick did when no photo could be used, in plain words (#120).
+    @State private var photoNote: String?
+    /// New photos still waiting for their name, in the order they were picked.
+    @State private var toName: [URL] = []
+    /// The photo being named now.
+    @State private var naming: CaptionTarget?
 
-    /// This step's question, or nil on the welcome screen.
+    /// This step's question, or nil on the welcome screen and the offers after the questions.
     private var question: OnboardingQuestion? {
-        step >= 2 ? OnboardingSteps.questions[step - 2] : nil
+        (2...OnboardingSteps.stepCount).contains(step) ? OnboardingSteps.questions[step - 2] : nil
+    }
+
+    /// This step's offer, or nil while the questions are still being asked.
+    private var offer: OnboardingOffer? {
+        let index = step - OnboardingSteps.stepCount - 1
+        return offers.indices.contains(index) ? offers[index] : nil
     }
 
     var body: some View {
         VStack(spacing: 24) {
-            if step > OnboardingSteps.stepCount {
-                warmUpOffer
+            if let offer {
+                switch offer {
+                case .photos: photosOffer
+                case .warmUp: warmUpOffer
+                }
             } else if let question {
                 questionStep(question)
             } else {
@@ -236,6 +261,100 @@ struct OnboardingView: View {
         }
     }
 
+    // MARK: After the questions - family photos (#374)
+
+    /// Offered once, while the album is empty: three games use the family's own photos. Add and
+    /// Later are the same size, so passing is as easy as adding, and nothing here is a step.
+    private var photosOffer: some View {
+        VStack(spacing: 16) {
+            Spacer(minLength: 0)
+
+            Text(AppLanguage.localized("onboarding.photos.title"))
+                .font(.title2.weight(.semibold))
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
+                .accessibilityAddTraits(.isHeader)
+
+            Text(AppLanguage.localized("onboarding.photos.body"))
+                .font(.title3)
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
+
+            if let photoNote {
+                Text(photoNote)
+                    .font(.body)
+                    .multilineTextAlignment(.center)
+            }
+
+            if picked.isEmpty {
+                PhotosPicker(selection: $picked, maxSelectionCount: MemoryPhotos.maxCount, matching: .images) {
+                    Label(AppLanguage.localized("family.photos.add"), systemImage: "photo.on.rectangle.angled")
+                        .font(.title2.weight(.semibold))
+                        .frame(maxWidth: .infinity, minHeight: 100)
+                        .foregroundStyle(Color.paper)
+                        .background(Color.brand, in: .rect(cornerRadius: 20))
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(AppLanguage.localized("family.photos.add"))
+                .accessibilityHint(AppLanguage.localized("onboarding.photos.add.hint"))
+            } else {
+                // The photos are being shrunk and stored; the spinner holds the button's place.
+                ProgressView()
+                    .controlSize(.large)
+                    .frame(maxWidth: .infinity, minHeight: 100)
+            }
+
+            Button {
+                next()
+            } label: {
+                Text(AppLanguage.localized("onboarding.photos.later"))
+                    .font(.title2)
+            }
+            .buttonStyle(AnswerTileStyle(strength: 0.10))
+            .accessibilityLabel(AppLanguage.localized("onboarding.photos.later"))
+            .accessibilityHint(AppLanguage.localized("onboarding.photos.later.hint"))
+
+            Spacer(minLength: 0)
+
+            Button {
+                back()
+            } label: {
+                Text(AppLanguage.localized("onboarding.back"))
+                    .font(.title2)
+            }
+            .buttonStyle(AnswerTileStyle(strength: 0.10))
+            .accessibilityHint(AppLanguage.localized("onboarding.back.hint"))
+        }
+        .disabled(!picked.isEmpty)
+        // Same import as Set up (#120); a task, so leaving mid-pick cancels it.
+        .task(id: picked) {
+            let items = picked
+            guard !items.isEmpty, let imported = await FamilyPhotoImport.run(items) else { return }
+            picked = []
+            if imported.added.isEmpty {
+                photoNote = imported.result.note
+                if let photoNote { AccessibilityNotification.Announcement(photoNote).post() }
+            } else {
+                photoNote = nil
+                toName = imported.added
+                nameNextPhoto()
+            }
+        }
+        .sheet(item: $naming, onDismiss: nameNextPhoto) { target in
+            FamilyPhotoCaptionSheet(photo: target.url, promptKey: "game.reminiscence.prompt.photo") {}
+        }
+    }
+
+    /// One name sheet per new photo, in order. Done without a name is fine: the photo stays and
+    /// can be named later in Set up. After the last one the first run goes on.
+    private func nameNextPhoto() {
+        guard !toName.isEmpty else {
+            if offer == .photos { next() }
+            return
+        }
+        naming = CaptionTarget(url: toName.removeFirst())
+    }
+
     // MARK: After the questions - the warm-up offer (#213)
 
     /// Offered once, after the last question, and only to someone playing for themselves. Two
@@ -294,10 +413,13 @@ struct OnboardingView: View {
         if !question.allowsMultiple { next() }
     }
 
-    /// Forward: the next question, then the warm-up offer when it applies (#213), then Home.
-    /// Skip calls this too, leaving the profile exactly as it is.
+    /// Forward: the next question, then the offers that apply (#374, #213), then Home. Skip
+    /// calls this too, leaving the profile exactly as it is.
     private func next() {
-        if step < OnboardingSteps.stepCount || (step == OnboardingSteps.stepCount && WarmUp.isOffered(to: profile)) {
+        if step == OnboardingSteps.stepCount {
+            offers = OnboardingSteps.afterQuestions(albumCount: MemoryPhotos.all().count, profile: profile)
+        }
+        if step < OnboardingSteps.stepCount + offers.count {
             step += 1
         } else {
             hasSeenOnboarding = true
