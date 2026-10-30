@@ -5,6 +5,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 ## [Unreleased]
 
 ### Fixed
+- **Celebrations never show a hit count (#394):** Quick Eyes now says "You finished all 12 rounds!" instead of "You spotted 2 of 12!", and Number Trail always says "You answered all 10 questions!" instead of a best streak. Scores and levels work as before. EN + ES.
 - **Tangram tiles never sit on top of each other (#395):** seven pictures (Cat, Armchair, Frog, Butterfly, Mushroom, Owl and Crab) had a tile overlapping another, so at level 1 one outline could hide inside another. Those seven are gone; the other 23 pictures stay as they were, and the test now catches any overlap.
 - **Memory Lane and Names and Faces can be played by ear (#393):** with VoiceOver on, each card you turn is spoken, a match says its name and "Pair found", and a pair that differs says both names ("Almost — Cat and Dog are different") and stays face up until your next tap. Without VoiceOver the pair still turns back after 1.2 s. EN + ES.
 - **Repeat the Sequence catches a wrong tap at once (#397):** a first tap that is not the first tile now shows "Almost — watch again" and replays the same sequence straight away, instead of after the whole sequence is tapped. A correct run stays quiet until it is complete.

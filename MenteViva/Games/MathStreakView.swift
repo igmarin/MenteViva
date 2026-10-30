@@ -134,11 +134,8 @@ struct MathStreakView: View {
                 rounds: totalQuestions, durationSeconds: elapsed,
                 correct: correct, attempts: totalQuestions,
                 difficulty: difficulty))
-        // A streak of 2+ is worth naming; below that, celebrate finishing (#45).
-        finalDetail =
-            bestStreak >= 2
-            ? String(format: AppLanguage.localized("game.celebration.streak %lld"), bestStreak)
-            : String(format: AppLanguage.localized("game.celebration.questions %lld"), totalQuestions)
+        // Completion, never a streak or a hit count (#45, #394).
+        finalDetail = String(format: AppLanguage.localized("game.celebration.questions %lld"), totalQuestions)
         showCelebration = true
     }
 }
