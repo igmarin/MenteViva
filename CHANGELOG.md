@@ -5,6 +5,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 ## [Unreleased]
 
 ### Fixed
+- **Crisper card text on Home (#366):** card titles, "This week" and the weekday labels no longer show a faint second copy of the text; the print shadow now follows the card edge only.
 - **Today's cards fit the screen (#365):** on Home, all of today's games now sit inside the table whether 3 or 5 are dealt (five show as 3 + 2), on small phones too. From the first Bigger text step, today's games are full-width rows so no name breaks mid-word.
 - **Tile Pairs now remembers its misses (#369):** a pair that did not match is counted, so the level follows how the game really went and the next-level offer no longer appears after every game. Taps are also ignored while a matched pair lifts away, so a quick extra tap cannot bring a tile back.
 - **Clearer backup information (#34):** Settings and the photo-name screen explain that photos added in this version and their names are excluded from new device backups; older photos and game progress may still be backed up.
@@ -44,6 +45,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 - **Warmer tones an iPhone speaker can play (#240):** the sounds now fade in over 10 ms and die away gently instead of stopping after a fraction of the note, with a soft second harmonic for warmth. The "not quite" tone moves up from 180 Hz to 280 Hz, still the lowest and softest, so a phone speaker actually plays it. The tone maker is now a pure `ToneSynth`, tested for headroom and pitch.
 
 ### Fixed
+- **Crisper card text on Home (#366):** card titles, "This week" and the weekday labels no longer show a faint second copy of the text; the print shadow now follows the card edge only.
 - **Tile Pairs opens from Home again (#221 follow-up):** since its screen shipped, the card (and a daily plan that deals it) led to a blank screen; it now opens the game.
 - **One migration at launch, reads stay pure (#264):** pre-level pins and plan levels used to migrate inside every `pinned()` / `storedDifficulty()` read (Home renders, the plan, Set up). Now `LevelMigration.runOnce` batches both at launch behind one `level.migration.done` flag and reads do not write.
 
@@ -265,6 +267,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
   replay).
 
 ### Fixed
+- **Crisper card text on Home (#366):** card titles, "This week" and the weekday labels no longer show a faint second copy of the text; the print shadow now follows the card edge only.
 - **Pinning a game at Level 2 keeps it at Level 2:** Set up saved the pin correctly, but reading it treated
   1 and 2 as old easy/medium values, so "Level 2" became Level 6, the hardest. Old pins from before levels
   1–10 still move over once as 2/4/6.
@@ -357,6 +360,7 @@ First playable. Built in one session with agent teammates.
 - VoiceOver labels on all game elements; ≥100pt touch targets.
 
 ### Fixed
+- **Crisper card text on Home (#366):** card titles, "This week" and the weekday labels no longer show a faint second copy of the text; the print shadow now follows the card edge only.
 - JevService brace nesting (caught by first real build; parse ≠ compile).
 - Missing ES translations for math format strings auto-extracted by Xcode.
 

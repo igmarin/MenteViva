@@ -256,6 +256,7 @@ struct HomeView: View {
     private var weekCard: some View {
         weekLink {
             weekBoardCard
+                .compositingGroup()
                 .shadow(color: .black.opacity(0.25), radius: 0, x: 3, y: 3)
         }
     }

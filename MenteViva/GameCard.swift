@@ -52,6 +52,7 @@ struct GameCard: View {
             if playedToday { PlayedCheck().offset(x: 10, y: -10) }
         }
         // A hard print shadow, not a soft blur: the retro card edge.
+        .compositingGroup()
         .shadow(color: .black.opacity(0.25), radius: 0, x: 3, y: 3)
         .accessibilityElement(children: .combine)
         .accessibilityLabel(Text(title))
