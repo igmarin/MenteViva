@@ -78,7 +78,7 @@ struct UpOrDownView: View {
             Text(
                 stuck
                     ? AppLanguage.localized("game.upordown.stuck")
-                    : String(format: AppLanguage.localized("game.upordown.miss %@"), rankName(deal.open))
+                    : missNote(for: deal)
             )
             .font(.title2.weight(.semibold))
             .foregroundStyle(Color.todaysPick)
@@ -87,6 +87,11 @@ struct UpOrDownView: View {
             .padding(.vertical, 10)
             .background(Color.amber.opacity(0.24), in: .rect(cornerRadius: 14))
         }
+    }
+
+    /// The near-miss line, shown in the note and posted to VoiceOver so both say the same words.
+    private func missNote(for deal: UpOrDownDeal) -> String {
+        String(format: AppLanguage.localized("game.upordown.miss %@"), rankName(deal.open))
     }
 
     private func piles(_ deal: UpOrDownDeal) -> some View {
@@ -221,11 +226,14 @@ struct UpOrDownView: View {
             played += 1
             showAlmost = false
             Feedback.play(.success)
+            // The card leaves the table and focus with it, so say so.
+            AccessibilityNotification.Announcement(AppLanguage.localized("game.answer.right")).post()
         } else {
             missedPile = pile
             missed = true
             showAlmost = true
             Feedback.play(.miss)
+            AccessibilityNotification.Announcement(missNote(for: current)).post()
         }
         deal = current
         finishIfDone()

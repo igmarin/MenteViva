@@ -145,6 +145,7 @@ struct SayingsView: View {
             missed = true
             showAlmost = true
             Feedback.play(.miss)
+            AccessibilityNotification.Announcement(AppLanguage.localized("game.sayings.miss")).post()
         }
     }
 
