@@ -13,6 +13,7 @@ struct GameCard: View {
     var playedToday = false
     /// The hand card's width, narrowed by Home so a row fits the table (#365); nil keeps the full size.
     var handWidth: CGFloat?
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     private static let art = UnevenRoundedRectangle(
         topLeadingRadius: 13, bottomLeadingRadius: 4, bottomTrailingRadius: 4, topTrailingRadius: 13)
@@ -50,7 +51,12 @@ struct GameCard: View {
         .background(Color.paper, in: .rect(cornerRadius: 18))
         .overlay(RoundedRectangle(cornerRadius: 18).strokeBorder(Color.espresso, lineWidth: 2))
         .overlay(alignment: .topTrailing) {
-            if playedToday { PlayedCheck().offset(x: 10, y: -10) }
+            Group {
+                if playedToday {
+                    PlayedCheck().offset(x: 10, y: -10).transition(PlayedCheck.transition(reduceMotion: reduceMotion))
+                }
+            }
+            .animation(PlayedCheck.animation(reduceMotion: reduceMotion), value: playedToday)
         }
         // A hard print shadow, not a soft blur: the retro card edge.
         // compositingGroup first, so the shadow follows the card outline, not each glyph (#366).
@@ -81,6 +87,7 @@ struct GameCard: View {
 struct GameRow: View {
     let game: GameID
     var playedToday = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         let title = AppLanguage.localized(game.title)
@@ -92,7 +99,10 @@ struct GameRow: View {
                     .background(game.ink.opacity(0.12), in: .rect(cornerRadius: 14))
                     .overlay(RoundedRectangle(cornerRadius: 14).strokeBorder(game.ink, lineWidth: 3))
                 Spacer(minLength: 0)
-                if playedToday { PlayedCheck() }
+                Group {
+                    if playedToday { PlayedCheck().transition(PlayedCheck.transition(reduceMotion: reduceMotion)) }
+                }
+                .animation(PlayedCheck.animation(reduceMotion: reduceMotion), value: playedToday)
             }
             Text(title)
                 .font(.title2.weight(.heavy))
@@ -162,6 +172,14 @@ struct CardFan: View {
 
 /// "Played today": a tick on an amber disc, a shape as well as a colour.
 struct PlayedCheck: View {
+    /// The tick pops in when a card becomes played while Home is on screen (#383); under Reduce
+    /// Motion it fades instead of growing.
+    static func transition(reduceMotion: Bool) -> AnyTransition { reduceMotion ? .opacity : .scale }
+
+    static func animation(reduceMotion: Bool) -> Animation {
+        reduceMotion ? .easeOut(duration: 0.2) : .spring(duration: 0.4, bounce: 0.4)
+    }
+
     var body: some View {
         Image(systemName: "checkmark")
             .font(.system(size: 16, weight: .heavy))
