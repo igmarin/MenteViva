@@ -55,7 +55,8 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `family.photos.full %lld` | The album holds %lld photos. Remove one to add another. | El álbum guarda %lld fotos. Quita una para agregar otra. | SetUpView |  |
 | `family.photos.header` | Memory Lane photos | Fotos para Camino de Memoria | SetUpView |  |
 | `family.photos.remove` | Remove | Quitar | FamilyPhotoCaptionSheet |  |
-| `family.photos.remove.a11y %lld` | Remove photo %lld | Quitar foto %lld | — |  |
+| `family.photos.remove.cancel` | Keep it | Dejarla | FamilyPhotoCaptionSheet |  |
+| `family.photos.remove.confirm` | Remove this photo and its name? | ¿Quitar esta foto y su nombre? | FamilyPhotoCaptionSheet |  |
 | `family.photos.unreadable %lld` | one: %lld photo couldn't be used. Try another one. / other: %lld photos couldn't be used. Try other ones. | one: %lld foto no se pudo usar. Prueba con otra. / other: %lld fotos no se pudieron usar. Prueba con otras. | SetUpView |  |
 | `family.pinned` | set by you | elegido por ti | SetUpView |  |
 | `family.share` | Share with family | Compartir con la familia | MyProgressView |  |
@@ -92,9 +93,7 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `game.celebration.reminiscence %lld` | one: You looked at %lld picture today / other: You looked at %lld pictures today | one: Miraste %lld imagen hoy / other: Miraste %lld imágenes hoy | ReminiscenceView |  |
 | `game.celebration.rounds %lld` | You finished all %lld rounds! | ¡Terminaste las %lld rondas! | ColorClashView, RepeatSequenceView |  |
 | `game.celebration.sayings %lld` | You finished %lld sayings | Terminaste %lld refranes | SayingsView |  |
-| `game.celebration.spotted %lld %lld` | You spotted %1$lld of %2$lld! | ¡Viste %1$lld de %2$lld! | QuickEyesView |  |
 | `game.celebration.squares %lld` | You filled %lld squares | Llenaste %lld cuadros | SudokuView |  |
-| `game.celebration.streak %lld` | Best streak: %lld in a row! | ¡Mejor racha: %lld seguidas! | MathStreakView |  |
 | `game.celebration.table` | You cleared the table! | ¡Limpiaste la mesa! | UpOrDownView |  |
 | `game.celebration.today %lld %lld` | %1$lld of %2$lld today | Hoy: %1$lld de %2$lld | CelebrationView | ✅ |
 | `game.colorclash.a11y.stimulus %@ %@` | Ink colour: %1$@, shape: %2$@ | Color de la tinta: %1$@, forma: %2$@ | ColorClashView |  |

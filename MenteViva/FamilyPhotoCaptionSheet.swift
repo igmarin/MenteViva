@@ -15,6 +15,8 @@ struct FamilyPhotoCaptionSheet: View {
     @State private var image: UIImage?
     /// Set when the name couldn't be written, so the sheet stays open and says so.
     @State private var saveProblem = false
+    /// A stray tap must not delete a photo and its name for good (#403): Remove asks first.
+    @State private var confirmRemove = false
 
     init(photo: URL, promptKey: String = "family.caption.field", onChange: @escaping () -> Void) {
         self.photo = photo
@@ -59,7 +61,9 @@ struct FamilyPhotoCaptionSheet: View {
                             .font(.title3.weight(.semibold))
                     }
                     .buttonStyle(AnswerTileStyle(minHeight: 100))
-                    Button(role: .destructive, action: remove) {
+                    Button(role: .destructive) {
+                        confirmRemove = true
+                    } label: {
                         Text(AppLanguage.localized("family.photos.remove"))
                             .font(.title3)
                             .frame(maxWidth: .infinity, minHeight: 100)
@@ -78,6 +82,18 @@ struct FamilyPhotoCaptionSheet: View {
                 }
             }
             .task { image = await MemoryPhotos.image(at: photo) }
+            // An alert, not a confirmationDialog: on iPhone inside a sheet that one floats as a popover and
+            // drops its Cancel button, so "Keep it" would not show.
+            .alert(
+                AppLanguage.localized("family.photos.remove.confirm"),
+                isPresented: $confirmRemove
+            ) {
+                Button(AppLanguage.localized("family.photos.remove"), role: .destructive, action: remove)
+                Button(AppLanguage.localized("family.photos.remove.cancel"), role: .cancel) {}
+            } message: {
+                // The saved name, so VoiceOver says which photo is going; a photo without one has none.
+                if let name = MemoryPhotos.caption(for: photo) { Text(name) }
+            }
         }
     }
 
