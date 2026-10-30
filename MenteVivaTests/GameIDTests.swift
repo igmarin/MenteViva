@@ -32,15 +32,15 @@ final class GameIDTests: XCTestCase {
     private var gamesWithHero: [GameID] { GameID.allCases.filter { $0.heroPicture != nil } }
 
     func testGivenEveryGameWhenHeroPictureThenSlugExistsInCatalogue() {
-        // GamePictures.named traps on a missing slug, so a bad slug crashes here
-        // before the assert runs. The emblem-only set below is the real pin.
+        // Reads heroSlug, not heroPicture: GamePictures.named traps on a typo, which
+        // would crash the run instead of failing this assert.
         let slugs = Set(GamePictures.all.map(\.slug))
         for game in GameID.allCases {
-            guard let hero = game.heroPicture else { continue }
-            XCTAssertTrue(slugs.contains(hero.slug), "\(game) hero slug \(hero.slug)")
+            guard let slug = game.heroSlug else { continue }
+            XCTAssertTrue(slugs.contains(slug), "\(game) hero slug \(slug)")
         }
         // Colour Clash, Sudoku, Up or Down and Tile Pairs keep their emblem.
-        let emblemOnly = GameID.allCases.filter { $0.heroPicture == nil }
+        let emblemOnly = GameID.allCases.filter { $0.heroSlug == nil }
         XCTAssertEqual(Set(emblemOnly), [.stroop, .sudoku, .upOrDown, .tilePairs])
     }
 

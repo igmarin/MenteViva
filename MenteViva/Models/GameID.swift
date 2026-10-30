@@ -46,18 +46,22 @@ nonisolated enum GameID: String, CaseIterable, Codable {
     /// The retro illustration Home and the celebration card show for this game
     /// instead of the emblem (#373). Nil keeps the emblem: those four games have
     /// no picture that says what they are yet, and an owner task will commission them.
-    var heroPicture: GamePicture? {
+    var heroPicture: GamePicture? { heroSlug.map { GamePictures.named($0) } }
+
+    /// The slug behind `heroPicture`, kept apart so a test can check it is in the catalogue
+    /// without calling `GamePictures.named`, which traps on a typo.
+    var heroSlug: String? {
         switch self {
-        case .memoryMatch: GamePictures.named("teapot")
-        case .photoCaptions: GamePictures.named("picture_frame")
-        case .reminiscence: GamePictures.named("sofa")
-        case .categoryFluency: GamePictures.named("dog")
-        case .mathStreaks: GamePictures.named("apple")
-        case .quickEyes: GamePictures.named("sunflower")
-        case .sayings: GamePictures.named("book")
-        case .repeatSequence: GamePictures.named("piano")
-        case .tangram: GamePictures.named("sailboat")
-        case .slidingBlocks: GamePictures.named("train")
+        case .memoryMatch: "teapot"
+        case .photoCaptions: "picture_frame"
+        case .reminiscence: "sofa"
+        case .categoryFluency: "dog"
+        case .mathStreaks: "apple"
+        case .quickEyes: "sunflower"
+        case .sayings: "book"
+        case .repeatSequence: "piano"
+        case .tangram: "sailboat"
+        case .slidingBlocks: "train"
         case .stroop, .sudoku, .upOrDown, .tilePairs: nil
         }
     }
