@@ -78,6 +78,7 @@ struct MathStreakView: View {
     }
 
     private func restart() {
+        difficulty = Difficulty.stored(.mathStreaks)
         beatTask?.cancel()
         beat = nil
         progress.reset()

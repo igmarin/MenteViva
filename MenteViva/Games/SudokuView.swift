@@ -181,6 +181,7 @@ struct SudokuView: View {
     }
 
     private func restart() {
+        difficulty = Difficulty.stored(.sudoku)
         washTask?.cancel()
         washTask = nil
         washed = []
