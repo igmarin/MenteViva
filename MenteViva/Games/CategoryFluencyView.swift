@@ -173,8 +173,10 @@ struct CategoryFluencyView: View {
         guard tiles[i].belongs else {
             Feedback.play(.miss)
             missedTile = tileID
+            // Nothing new on screen (decoy: kind, quiet), but VoiceOver hears the tap registered.
+            AccessibilityNotification.Announcement(AppLanguage.localized("game.category.miss")).post()
             return
-        }  // decoy: kind, quiet
+        }
         tiles[i].isPicked = true
         found += 1
         totalCorrect += 1

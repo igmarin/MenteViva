@@ -923,6 +923,22 @@
         }
       }
     },
+    "game.category.miss" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not in this group, try another"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ese no es de este grupo, prueba otro"
+          }
+        }
+      }
+    },
     "game.category.plants" : {
       "extractionState" : "stale",
       "localizations" : {
