@@ -165,8 +165,7 @@ struct HistoryView: View {
 
     private var emptyState: some View {
         VStack(spacing: 24) {
-            Text(verbatim: "🌻")
-                .font(.system(size: 80))
+            PictureView(picture: GamePictures.named("sunflower"), size: 160)
                 .accessibilityHidden(true)
             Text("history.empty")
                 .font(.title2)
