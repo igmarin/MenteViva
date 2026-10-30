@@ -27,4 +27,32 @@ final class GameIDTests: XCTestCase {
         XCTAssertTrue(GameID.released.contains(.tangram))
         XCTAssertTrue(GameID.released.contains(.repeatSequence))
     }
+
+    /// Home and the celebration card show a retro illustration per game (#373).
+    private var gamesWithHero: [GameID] { GameID.allCases.filter { $0.heroPicture != nil } }
+
+    func testGivenEveryGameWhenHeroPictureThenSlugExistsInCatalogue() {
+        let slugs = Set(GamePictures.all.map(\.slug))
+        for game in GameID.allCases {
+            guard let hero = game.heroPicture else { continue }
+            XCTAssertTrue(slugs.contains(hero.slug), "\(game) hero slug \(hero.slug)")
+        }
+        // Colour Clash, Sudoku, Up or Down and Tile Pairs keep their emblem.
+        let emblemOnly = GameID.allCases.filter { $0.heroPicture == nil }
+        XCTAssertEqual(Set(emblemOnly), [.stroop, .sudoku, .upOrDown, .tilePairs])
+    }
+
+    func testGivenGamesWithHeroThenPicturesAreDistinct() {
+        let slugs = gamesWithHero.compactMap { $0.heroPicture?.slug }
+        XCTAssertEqual(slugs.count, 10)
+        XCTAssertEqual(Set(slugs).count, slugs.count)
+    }
+
+    func testGivenHeroPictureThenAssetExistsInBundle() {
+        for game in gamesWithHero {
+            let hero = game.heroPicture
+            let look = hero.map { $0.look(hasAsset: PictureView.bundleHasAsset) }
+            XCTAssertEqual(look, hero.map { .asset($0.assetName) }, "\(game)")
+        }
+    }
 }

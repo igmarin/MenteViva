@@ -16,6 +16,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 - **Every screen now sits on the cream paper background (#356):** Home, the first-run screens, Settings and its lists no longer open on plain white. In Dark Mode the same screens use the dark surround instead of black, following the phone's own appearance setting.
 
 ### Added
+- **Home and the celebration card show our illustrations (#373):** Memory Lane shows the teapot, Name the Herd the dog, Quick Eyes the sunflower and so on, instead of plain shapes. Color Clash, Sudoku, Up or Down and Tile Pairs keep their emblem for now.
 - **Our own illustrations on the welcome screen and an empty My Week (#372):** the first screen shows three illustrated cards (dog, teapot, sunflower) instead of a puzzle-piece emoji, and My Week with no games yet shows our sunflower. The cards deal in once, or stay still with Reduce Motion on.
 - **An About screen (#378):** Settings has a new About row that says how Mente Viva was made: the pictures with AI image tools and checked by a person, the app with AI coding assistants, and that nothing uses AI while you play. EN + ES, readable offline.
 - **Privacy and support links (#34):** Settings opens the published policy and help page in the app’s language.
