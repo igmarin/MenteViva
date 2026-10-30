@@ -5,6 +5,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 ## [Unreleased]
 
 ### Fixed
+- **Tile Pairs now remembers its misses (#369):** a pair that did not match is counted, so the level follows how the game really went and the next-level offer no longer appears after every game. Taps are also ignored while a matched pair lifts away, so a quick extra tap cannot bring a tile back.
 - **Clearer backup information (#34):** Settings and the photo-name screen explain that photos added in this version and their names are excluded from new device backups; older photos and game progress may still be backed up.
 - **Every screen now sits on the cream paper background (#356):** Home, the first-run screens, Settings and its lists no longer open on plain white. In Dark Mode the same screens use the dark surround instead of black, following the phone's own appearance setting.
 
