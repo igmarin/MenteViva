@@ -8465,13 +8465,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Which games show, their difficulty, and Memory Lane photos"
+            "value" : "Which games show, their difficulty, and family photos"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Qué juegos se muestran, su dificultad y las fotos de Camino de Memoria"
+            "value" : "Qué juegos se muestran, su dificultad y las fotos de la familia"
           }
         }
       }

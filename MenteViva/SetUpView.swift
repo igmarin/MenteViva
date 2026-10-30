@@ -1,7 +1,7 @@
 import PhotosUI
 import SwiftUI
 
-/// Set up (#141): the per-game choices and the Memory Lane photos, split from
+/// Set up (#141): the per-game choices and the family photos, split from
 /// My progress. Open on purpose (owner decision 2026-10-01): no lock, nothing
 /// here can break play. Everything covers this device only.
 struct SetUpView: View {
