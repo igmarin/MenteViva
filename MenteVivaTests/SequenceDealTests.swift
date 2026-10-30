@@ -22,12 +22,16 @@ final class SequenceDealTests: XCTestCase {
     // MARK: Deal
 
     func testGivenAThousandSeedsAtEveryLevelWhenDealtThenEveryDealIsValid() {
-        for level in Difficulty.range {
-            let rules = SequenceDeal.rules(for: Difficulty(level: level), width: 400)
-            for seed in 0..<1000 {
-                let seq = deal(level: level, seed: UInt64(seed))
-                XCTAssertEqual(seq.count, rules.length, "level \(level) seed \(seed)")
-                XCTAssertTrue(seq.allSatisfy { (0..<(rules.columns * rules.rows)).contains($0) })
+        for width in [320.0, 400.0] {
+            for level in Difficulty.range {
+                let rules = SequenceDeal.rules(for: Difficulty(level: level), width: width)
+                for seed in 0..<1000 {
+                    let seq = deal(level: level, width: width, seed: UInt64(seed))
+                    let note = "width \(width) level \(level) seed \(seed)"
+                    XCTAssertEqual(seq.count, rules.length, note)
+                    XCTAssertTrue(
+                        seq.allSatisfy { (0..<(rules.columns * rules.rows)).contains($0) }, note)
+                }
             }
         }
     }
