@@ -21,7 +21,7 @@ for what changed, [docs/roadmap.md](docs/roadmap.md) for what's next, and
 | Name the Herd | Tap everything that belongs to the category |
 | Number Trail | Quick sums in a row; the operations and numbers grow with the level |
 | Quick Eyes | Look at a picture, then find it among the choices. Paced at levels 1–5; a quick flash at levels 6–10 |
-| Remember Together | Look at your family's photos and familiar objects together. Nothing to get wrong |
+| Remember Together | Look at your family's photos (or everyday objects until you add some), one at a time. Nothing to get wrong |
 | Sudoku | Fill the board, from 4×4 up to 9×9, each with one solution |
 | Up or Down | Golf solitaire: play a card one higher or one lower |
 | Finish the Saying | Pick the ending of a familiar saying |
@@ -37,8 +37,9 @@ decided by a small rule policy on the device (no network, no cost).
 ## How it is built
 
 - Zero third-party dependencies: SwiftUI, SwiftData and Foundation only.
-- Most games have levels 1–10. The level moves between sessions, never in the middle of a game.
-  Remember Together has no levels.
+- Daily picks and levels are decided on the device by `DailyPolicy`. Each level follows a staircase:
+  at most one move per game a day, never mid-game.
+- Every game except Remember Together has levels 1–10.
 - Deals are small pure types that take the random generator as a parameter, so tests can
   replay them. Sudoku boards are generated with exactly one solution.
 - Every string is in one catalogue, `MenteViva/Localizable.xcstrings`, in English and Spanish.
@@ -95,9 +96,10 @@ research (audience evidence, licensing, pricing), roadmap.
 
 ## Honest scope
 
-This is **not** a medical app. The games exercise memory and attention. They do not diagnose,
-treat or cure any condition, and nothing in the app promises a change in daily life. The research
-behind the games is in [docs/research-2026-09.md](docs/research-2026-09.md).
+This is **not** a medical app. The science (see docs/research-2026-09.md):
+brain games alone show weak transfer to daily life; they work best as one
+ingredient of an engaged, active life. Our copy says "fun mental exercise" and
+never promises cognitive outcomes. That's the honest position and the legally safe one.
 
 ## License
 

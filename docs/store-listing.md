@@ -88,8 +88,8 @@ treat any condition. If you have a concern about memory, yours or a loved one's,
 Ejercicio mental divertido, a tu ritmo.
 
 MenteViva son catorce juegos tranquilos, cada uno para un tipo distinto de pensamiento. Botones grandes,
-colores claros y sin cuenta regresiva. Cuando una jugada no encaja, dice «casi», nunca «mal». Los
-juegos con más reglas muestran una jugada de ejemplo la primera vez, para que cualquiera empiece por
+colores claros y sin cuenta regresiva. Cuando una jugada no encaja, dice «casi», nunca «mal».
+Algunos juegos muestran una jugada de ejemplo la primera vez, para que cualquiera empiece por
 su cuenta.
 
 CATORCE JUEGOS
