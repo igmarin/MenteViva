@@ -126,6 +126,16 @@ struct SettingsView: View {
                             .frame(maxWidth: .infinity, minHeight: 100, alignment: .leading)
                     }
                     .accessibilityHint(AppLanguage.localized("why.open.hint"))
+
+                    // How the pictures and the code were made, and that nothing uses AI in play (#378).
+                    NavigationLink {
+                        AboutView()
+                    } label: {
+                        Label(AppLanguage.localized("about.row"), systemImage: "info.circle")
+                            .font(.title3)
+                            .frame(maxWidth: .infinity, minHeight: 100, alignment: .leading)
+                    }
+                    .accessibilityHint(AppLanguage.localized("about.row.hint"))
                 }
 
                 // Short promises he can read at a glance.

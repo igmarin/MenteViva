@@ -55,6 +55,9 @@ nonisolated enum CategoryDeal {
     /// mid-game. Levels 2/4/6 are 3/5/7 to match the old easy/medium/hard so
     /// migrated players see no change; the fit cap keeps 100pt targets on SE.
     static let decoysByLevel: [Int] = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+    /// Pictures that share a name with an item of another category; never dealt as that category's decoy.
+    /// Keyed by `GamePicture.slug`. Without it a fair tap on "Orange" would count as a miss (#371).
+    static let sameName: [Category: Set<String>] = [.colors: ["orange"], .fruits: ["color.orange"]]
     /// Smallest tile that stays tappable (conventions §4).
     static let tileMin: Double = 100
     static let tileGap: Double = 16
@@ -99,9 +102,12 @@ nonisolated enum CategoryDeal {
         let decoys = fittedDecoyCount(for: difficulty, width: width)
         return Category.allCases.shuffled(using: &generator).prefix(roundsPerSession).map { category in
             // Decoys come from the other categories only, so the board never
-            // asks for something that does not belong.
+            // asks for something that does not belong, nor shows two tiles
+            // with the same name.
             let from = Category.allCases.filter { $0 != category }
-                .flatMap(\.items).shuffled(using: &generator).prefix(decoys)
+                .flatMap(\.items)
+                .filter { !(sameName[category] ?? []).contains($0.slug) }
+                .shuffled(using: &generator).prefix(decoys)
             let tiles =
                 category.items.map { Tile(picture: $0, belongs: true) }
                 + from.map { Tile(picture: $0, belongs: false) }

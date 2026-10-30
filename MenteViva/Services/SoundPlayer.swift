@@ -81,9 +81,17 @@ enum SoundPlayer {
             }
             guard let playerNode else { return }
 
+            // After a call, Siri or an alarm the engine can refuse to start.
+            // `playerNode.play()` on a stopped engine raises an Objective-C
+            // exception Swift cannot catch, so skip this tone and try again on
+            // the next tap.
             if !engine.isRunning {
                 engine.prepare()
-                try? engine.start()
+                do {
+                    try engine.start()
+                } catch {
+                    return
+                }
             }
 
             // Reuse the node. The .interrupts option stops the previous short tone

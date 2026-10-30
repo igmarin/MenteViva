@@ -205,6 +205,7 @@ struct UpOrDownView: View {
     // MARK: - Play
 
     private func restart() {
+        difficulty = Difficulty.stored(.upOrDown)
         var generator = SystemRandomNumberGenerator()
         deal = UpOrDownDeal.make(difficulty: difficulty, width: rowWidth, using: &generator)
         played = 0
