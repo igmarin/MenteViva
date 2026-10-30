@@ -8,7 +8,10 @@ import UIKit
 /// `nonisolated` on purpose: importing and decoding photos is file I/O and
 /// image work, so callers run it off the main actor.
 nonisolated enum MemoryPhotos {
-    static let maxCount = 8  // the largest board has 8 pairs
+    /// Room for 24 (#374): boards and decks shuffle the album and take what they need (the
+    /// largest board has 8 pairs), so a bigger album keeps the same faces from repeating within
+    /// a week. At about 100 KB per 600 px JPEG the whole album stays near 2.5 MB.
+    static let maxCount = 24
     static let maxSide: CGFloat = 600
 
     enum AddError: Error { case notAnImage, albumFull }

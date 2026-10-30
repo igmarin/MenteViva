@@ -23,10 +23,11 @@ struct GameCard: View {
         let title = AppLanguage.localized(game.title)
         let hand = size == .hand
         let width = handWidth ?? HandLayout.fullWidth
-        let emblem = hand ? 52 * width / HandLayout.fullWidth : 64
+        // The hero picture is bigger than the emblem; both shrink with a narrowed hand card.
+        let scale = hand ? width / HandLayout.fullWidth : 1
+        let emblem = hand ? 52 * scale : 64
         VStack(spacing: 5) {
-            Emblem(game: game)
-                .frame(width: emblem, height: emblem)
+            illustration(emblem: emblem, picture: (hand ? 72 : 96) * scale)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .padding(hand ? 6 : 10)
                 .background(game.ink.opacity(0.12), in: Self.art)
@@ -58,6 +59,19 @@ struct GameCard: View {
         .accessibilityElement(children: .combine)
         .accessibilityLabel(Text(title))
         .accessibilityValue(Text(playedToday ? AppLanguage.localized("home.today.played") : ""))
+    }
+
+    /// The game's retro illustration (#373), or its emblem for the games that have
+    /// no picture yet. Decorative: the card's combined label already names the game.
+    @ViewBuilder
+    private func illustration(emblem: CGFloat, picture: CGFloat) -> some View {
+        if let hero = game.heroPicture {
+            PictureView(picture: hero, size: picture)
+                .accessibilityHidden(true)
+        } else {
+            Emblem(game: game)
+                .frame(width: emblem, height: emblem)
+        }
     }
 }
 

@@ -52,6 +52,22 @@ final class OnboardingStepsTests: XCTestCase {
         }
     }
 
+    // MARK: After the questions (#374: the photo offer, then the warm-up)
+
+    func testGivenEmptyAlbumWhenOnboardingEndsThenPhotosStepIsOffered() {
+        XCTAssertTrue(OnboardingSteps.offersPhotos(albumCount: 0))
+        XCTAssertEqual(OnboardingSteps.afterQuestions(albumCount: 0, profile: PlayerProfile()), [.photos, .warmUp])
+        XCTAssertEqual(
+            OnboardingSteps.afterQuestions(albumCount: 0, profile: PlayerProfile(forWhom: .familyMember)), [.photos])
+    }
+
+    func testGivenAlbumWithPhotosWhenOnboardingEndsThenPhotosStepIsSkipped() {
+        XCTAssertFalse(OnboardingSteps.offersPhotos(albumCount: 3))
+        XCTAssertEqual(OnboardingSteps.afterQuestions(albumCount: 3, profile: PlayerProfile()), [.warmUp])
+        XCTAssertEqual(
+            OnboardingSteps.afterQuestions(albumCount: 3, profile: PlayerProfile(forWhom: .familyMember)), [])
+    }
+
     // MARK: Which pace comes first (#212: Calm first for a family member)
 
     func testGivenAFamilyMemberWhenPaceAnswersThenCalmComesFirst() {
