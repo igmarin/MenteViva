@@ -40,7 +40,8 @@ final class DailyPictureTests: XCTestCase {
         XCTAssertEqual(DailyPicture.fnv1a("a"), 0xaf63_dc4c_8601_ec8c)
     }
 
-    func testGivenConsecutiveDaysWhenPickingThenPicturesDifferWithinCatalogueLength() throws {
+    func testGivenConsecutiveDaysWhenTurningOverEachDayThenEveryPictureArrivesBeforeAnyRepeats() throws {
+        // The spread comes from turnOver's fresh-first pool, not from pick: collected pictures leave it.
         var turned: [String] = []
         for offset in 0..<pictures.count {
             let day = try XCTUnwrap(calendar.date(byAdding: .day, value: offset, to: try date(1)))

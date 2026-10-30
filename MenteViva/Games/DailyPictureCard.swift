@@ -7,29 +7,38 @@ struct DailyPictureCard: View {
     let picture: GamePicture
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.dynamicTypeSize) private var typeSize
     @State private var turned = false
 
     private static let shape = RoundedRectangle(cornerRadius: 18)
+    /// Small enough that the celebration's main action still fits on a 6.1" iPhone (#376 review).
+    private static let side: CGFloat = 140
+    /// At accessibility text sizes the celebration scrolls anyway, so the card widens to keep a long
+    /// name such as "Tienda de campaña" whole instead of truncating it.
+    private var width: CGFloat { typeSize.isAccessibilitySize ? 260 : Self.side }
 
     var body: some View {
         // Both faces swap at the halfway point, when the card is edge-on; Reduce Motion fades instead.
         let swap: Animation = reduceMotion ? .easeInOut(duration: 0.4).delay(0.5) : .easeInOut(duration: 0.1).delay(0.65)
-        ZStack {
-            back
-                .opacity(turned ? 0 : 1)
-                .animation(swap, value: turned)
-            front
-                .opacity(turned ? 1 : 0)
-                .animation(swap, value: turned)
-        }
-        .frame(width: 200, height: 200)
-        .compositingGroup()
-        .shadow(color: .black.opacity(0.25), radius: 0, x: 3, y: 3)
-        .rotation3DEffect(.degrees(turned && !reduceMotion ? 180 : 0), axis: (x: 0, y: 1, z: 0))
-        .animation(reduceMotion ? nil : .easeInOut(duration: 0.4).delay(0.5), value: turned)
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel(Text(Self.line(for: picture)))
-        .onAppear { turned = true }
+        // The face sets the size, so a long name at large text sizes grows the card instead of truncating.
+        front
+            .opacity(turned ? 1 : 0)
+            .animation(swap, value: turned)
+            .overlay {
+                back
+                    .opacity(turned ? 0 : 1)
+                    .animation(swap, value: turned)
+            }
+            .frame(width: width)
+            .rotation3DEffect(.degrees(turned && !reduceMotion ? 180 : 0), axis: (x: 0, y: 1, z: 0))
+            .animation(reduceMotion ? nil : .easeInOut(duration: 0.4).delay(0.5), value: turned)
+            // After the turn, so the print shadow lands bottom-right like every card's, not mirrored.
+            .compositingGroup()
+            .shadow(color: .black.opacity(0.25), radius: 0, x: 3, y: 3)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(Text(Self.line(for: picture)))
+            .accessibilityAddTraits(.isImage)
+            .onAppear { turned = true }
     }
 
     /// "Today's picture: Dog. It's in your album." Spoken on arrival and used as the card's label.
@@ -51,16 +60,18 @@ struct DailyPictureCard: View {
     /// The paper face; pre-turned so it reads upright once the card has turned over.
     private var front: some View {
         VStack(spacing: 6) {
-            PictureView(picture: picture, size: 140)
+            PictureView(picture: picture, size: 96)
             Text(AppLanguage.localized(picture.nameKey))
-                .font(.title2.weight(.heavy))
+                .font(.title3.weight(.heavy))
                 .fontDesign(.rounded)
                 .foregroundStyle(Color.espresso)
-                .lineLimit(1)
+                .multilineTextAlignment(.center)
+                .lineLimit(2)
                 .minimumScaleFactor(0.6)
         }
         .padding(.horizontal, 8)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding(.vertical, 6)
+        .frame(maxWidth: .infinity, minHeight: Self.side)
         .background(Color.paper, in: Self.shape)
         .overlay(Self.shape.strokeBorder(Color.espresso, lineWidth: 2))
         .rotation3DEffect(.degrees(reduceMotion ? 0 : 180), axis: (x: 0, y: 1, z: 0))

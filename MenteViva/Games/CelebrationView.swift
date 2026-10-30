@@ -125,7 +125,9 @@ struct CelebrationView: View {
                 card
             }
             .padding(.top, 24)
-            .padding(.bottom, 60)
+            // Room for the stamp, which hangs about 42pt below the card; a little less on the day's
+            // first game, so its picture still leaves the main action on a 6.1" iPhone screen.
+            .padding(.bottom, dailyPicture == nil ? 60 : 44)
 
             Spacer(minLength: 0)
 
@@ -178,7 +180,8 @@ struct CelebrationView: View {
                     from: DailyPicture.candidates(from: GamePictures.all, hasAsset: PictureView.bundleHasAsset))
                 // Only the day-done line and today's picture are spoken on arrival, as one announcement so
                 // neither cuts the other off; the ordinary headlines stay a header to swipe to.
-                let spoken = [closesTheDay ? headline : nil, dailyPicture.map(DailyPictureCard.line)].compactMap { $0 }
+                let pictureLine = dailyPicture.map { DailyPictureCard.line(for: $0) }
+                let spoken = [closesTheDay ? headline : nil, pictureLine].compactMap { $0 }
                 if !spoken.isEmpty { AccessibilityNotification.Announcement(spoken.joined(separator: " ")).post() }
             }
             Feedback.play(.complete)
