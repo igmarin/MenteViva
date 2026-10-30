@@ -67,6 +67,10 @@ struct OnboardingView: View {
         .fitOrScroll()
         .padding(24)
         .background(Color.paper.ignoresSafeArea())
+        // The screen is one view whose content swaps in place, so VoiceOver would stay on an
+        // element that vanished. Next, Back, Skip and every offer all change `step`, so one
+        // screen-change notice covers them: focus moves to the new screen and its question (#406).
+        .onChange(of: step) { _, _ in AccessibilityNotification.ScreenChanged(nil).post() }
     }
 
     // MARK: Step 1 - the welcome screen, kept as it was
