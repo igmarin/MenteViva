@@ -282,6 +282,7 @@ struct TilePairsView: View {
     }
 
     private func dealNew(size: CGSize) {
+        difficulty = Difficulty.stored(.tilePairs)
         let w = size.width > 0 ? Double(size.width) : Double(UIScreen.main.bounds.width - 32)
         let h = size.height > 0 ? Double(size.height) : 520
         var gen = SystemRandomNumberGenerator()
