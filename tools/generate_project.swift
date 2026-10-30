@@ -296,6 +296,8 @@ let common: [(String, String)] = [
 let appSettings =
     common + [
         ("ASSETCATALOG_COMPILER_APPICON_NAME", "AppIcon"),
+        // Jade tint for system UI (share sheet, PhotosPicker, alerts), not just the SwiftUI root.
+        ("ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME", "AccentColor"),
         ("CODE_SIGN_ENTITLEMENTS", "MenteViva/MenteViva.entitlements"),
         // Compile-time switch for CloudKit. An INFOPLIST_KEY_* flag looked cleaner
         // but Xcode only injects a known allowlist of keys, so the value silently
@@ -310,6 +312,10 @@ let appSettings =
         ("INFOPLIST_KEY_ITSAppUsesNonExemptEncryption", "NO"),
         ("INFOPLIST_KEY_UIApplicationSceneManifest_Generation", "YES"),
         ("INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents", "YES"),
+        // The launch colour cannot be a generated INFOPLIST_KEY_* (Xcode drops
+        // UILaunchScreen_BackgroundColor silently), so a partial Info.plist carries
+        // UILaunchScreen > UIColorName and Xcode merges it with the generated keys.
+        ("INFOPLIST_FILE", "MenteViva/Info.plist"),
         ("INFOPLIST_KEY_UILaunchScreen_Generation", "YES"),
         ("INFOPLIST_KEY_UIStatusBarStyle", "UIStatusBarStyleDefault"),
         (

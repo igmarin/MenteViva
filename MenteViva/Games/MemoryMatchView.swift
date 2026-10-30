@@ -352,7 +352,14 @@ struct MemoryMatchView: View {
         // Face-up and found cards ignore taps here rather than via .disabled,
         // so the system never greys out the pictures he needs to read.
         guard let index = cards.firstIndex(where: { $0.id == cardID }) else { return }
-        switch board.tap(index) {
+        let tap = board.tap(index)
+        // VoiceOver can't see the cards turn, so say what each tap did (#393).
+        if let spoken = board.announcement(
+            for: tap, label: { label(cards[$0].face) }, text: { AppLanguage.localized($0) })
+        {
+            AccessibilityNotification.Announcement(spoken).post()
+        }
+        switch tap {
         case .ignored, .turnedUp:
             break
         case .matched:
@@ -373,12 +380,17 @@ struct MemoryMatchView: View {
 
     /// One pending turn-back at a time: scheduling a new one cancels the old,
     /// and a stale timer can never touch a newer board (#237).
+    ///
+    /// With VoiceOver on there is no timer (#393): the pair stays face up so
+    /// both cards can be reached, and the next different tap turns it back.
     private func scheduleTurnBack() {
         flipBackTask?.cancel()
+        guard !UIAccessibility.isVoiceOverRunning else { return }
         let generation = board.generation
         flipBackTask = Task { @MainActor in
             try? await Task.sleep(for: .seconds(1.2))
-            guard !Task.isCancelled else { return }
+            // Checked again: VoiceOver may have been turned on during the wait.
+            guard !Task.isCancelled, !UIAccessibility.isVoiceOverRunning else { return }
             _ = board.resolveMiss(generation: generation)
         }
     }

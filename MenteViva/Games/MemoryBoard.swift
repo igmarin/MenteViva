@@ -78,6 +78,34 @@ struct MemoryBoard {
         return pendingMiss
     }
 
+    /// What VoiceOver hears for the tap that just happened, or nil when nothing
+    /// changed (#393). Pure so EN and ES can be tested: the view only posts it.
+    ///
+    /// Only cards that are face up are ever named, so a face-down card (or a
+    /// Names and Faces caption the player has not turned over) is never read.
+    /// Call it right after `tap`, because "all found" reads the board's state.
+    /// - Parameters:
+    ///   - label: the spoken name of the card at an index; the view knows the faces.
+    ///   - text: a catalog string by key, in the app's language.
+    func announcement(for tap: Tap, label: (Int) -> String, text: (String) -> String) -> String? {
+        switch tap {
+        case .ignored:
+            return nil
+        case .turnedUp(let index), .missedBackThenUp(_, let index):
+            return label(index)
+        case .matched(let pair, _):
+            // A twin pair reads once ("Cat"); a photo and its caption read as both.
+            let names = pair.map(label).reduce(into: [String]()) { if !$0.contains($1) { $0.append($1) } }
+            var spoken = names.joined(separator: ", ") + " - " + text("game.memory.a11y.matched")
+            if isComplete {
+                spoken += ". " + String(format: text("game.celebration.pairs %lld"), pairs.count / 2)
+            }
+            return spoken
+        case .missed(let pair):
+            return String(format: text("game.memory.miss"), label(pair[0]), label(pair[1]))
+        }
+    }
+
     mutating func deal(pairs: [Int]) {
         self.pairs = pairs
         faceUp = []

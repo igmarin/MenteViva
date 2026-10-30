@@ -145,6 +145,8 @@ struct SayingsView: View {
             missed = true
             showAlmost = true
             Feedback.play(.miss)
+            // Posted here, not from a `.task(id:)`: two misses in a row keep the same text.
+            AccessibilityNotification.Announcement(AppLanguage.localized("game.sayings.miss")).post()
         }
     }
 

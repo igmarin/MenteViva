@@ -17,6 +17,23 @@
         }
       }
     },
+    "album.today %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today's picture: %@. It's in your album."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La imagen de hoy: %@. Ya está en tu álbum."
+          }
+        }
+      }
+    },
     "app.title" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -906,6 +923,22 @@
         }
       }
     },
+    "game.category.miss" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not in this group, try another"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ese no es de este grupo, prueba otro"
+          }
+        }
+      }
+    },
     "game.category.plants" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -1785,6 +1818,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Encuentra las parejas"
+          }
+        }
+      }
+    },
+    "game.memory.miss" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Almost — %1$@ and %2$@ are different"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casi — %1$@ y %2$@ no son pareja"
           }
         }
       }
