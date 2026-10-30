@@ -16,6 +16,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 - **Every screen now sits on the cream paper background (#356):** Home, the first-run screens, Settings and its lists no longer open on plain white. In Dark Mode the same screens use the dark surround instead of black, following the phone's own appearance setting.
 
 ### Added
+- **Share today's games (#381):** once today's games are done, Home offers "Share today's games" (100pt). It opens the phone's share sheet with a short message: the date, each game with a tick and "Today's games, done." No scores, levels or counts, and nothing is sent unless you choose someone. EN + ES.
 - **Name the Herd has seven categories (#380):** Plants and flowers, Around the house and In the kitchen join animals, fruits, colors and vehicles, so a session no longer repeats after two plays. Every picture belongs to one category only, and a kitchen board never mixes in fruit or home pictures. EN + ES, same pictures as before.
 - **Memory Lane cards match the app icon (#384):** card backs now show the icon's cream frame and amber disc on jade, face-up cards have a clear edge in Dark Mode too, and both cast a crisp print shadow. Names and Faces looks the same.
 - **Finishing today's last game gets its own celebration (#375):** the end screen says "That's today's table. Lovely!" and the "3 of 3 today" capsule wears a golden seal. VoiceOver reads the line aloud. Earlier games and games outside today's table keep the usual headlines.

@@ -10043,6 +10043,70 @@
         }
       }
     },
+    "today.share" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Share today's games"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compartir los juegos de hoy"
+          }
+        }
+      }
+    },
+    "today.share.footer" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today's games, done."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los juegos de hoy, listos."
+          }
+        }
+      }
+    },
+    "today.share.hint" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sends a short message; nothing else leaves the device"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Envía un mensaje corto; nada más sale del dispositivo"
+          }
+        }
+      }
+    },
+    "today.share.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "MenteViva · %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "MenteViva · %@"
+          }
+        }
+      }
+    },
     "why.footer" : {
       "localizations" : {
         "en" : {
