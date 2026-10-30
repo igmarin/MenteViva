@@ -11,6 +11,10 @@ enum CelebrationHeadline {
     /// UserDefaults key of the zero-based index shown last.
     static let lastIndexKey = "celebration.lastHeadlineIndex"
 
+    /// Catalog key of the line that closes today's table (#375). It sits outside the rotation, so it
+    /// never counts as "the headline shown last".
+    static let dayDoneKey = "game.celebration.daydone"
+
     /// The catalog key of a zero-based headline index. Catalog keys are numbered from 1 to read naturally.
     static func key(for index: Int) -> String {
         "game.celebration.headline.\(index + 1)"
@@ -26,11 +30,15 @@ enum CelebrationHeadline {
     }
 
     /// Picks the next headline, remembers its index in `defaults`, and returns its text in the app's
-    /// language. Only `lastIndexKey` is read and written.
+    /// language. Only `lastIndexKey` is read and written. When the game just closed today's table
+    /// the day-done line shows instead and the stored index is left alone, so the rotation resumes
+    /// where it was.
     static func pick(
+        closesTheDay: Bool = false,
         defaults: UserDefaults = .standard,
         using generator: inout some RandomNumberGenerator
     ) -> String {
+        if closesTheDay { return AppLanguage.localized(dayDoneKey, defaults: defaults) }
         let last = defaults.object(forKey: lastIndexKey) as? Int
         let index = next(after: last, using: &generator)
         defaults.set(index, forKey: lastIndexKey)

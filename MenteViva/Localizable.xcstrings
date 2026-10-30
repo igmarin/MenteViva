@@ -906,6 +906,23 @@
         }
       }
     },
+    "game.celebration.daydone" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "That's today's table. Lovely!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esa fue la mesa de hoy. ¡Qué bien!"
+          }
+        }
+      }
+    },
     "game.celebration.headline.1" : {
       "extractionState" : "stale",
       "localizations" : {

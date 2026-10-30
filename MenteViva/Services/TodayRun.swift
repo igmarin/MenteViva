@@ -25,6 +25,13 @@ nonisolated struct TodayRun: Equatable {
     /// False before the plan exists, so an empty table never says "done".
     var isFinished: Bool { !games.isEmpty && next == nil }
 
+    /// Whether `finished` was the game that completed today's table: the day is done and the game
+    /// was one of the picks. An off-plan game played after the table is cleared closes nothing, so
+    /// it gets the ordinary celebration (#375).
+    func closesTheDay(finishing finished: GameID) -> Bool {
+        isFinished && games.contains(finished)
+    }
+
     /// What the end of `finished` offers (step 5): the next pick while it was
     /// one of today's games and some are left; nil means "Play again".
     func next(after finished: GameID) -> GameID? {
