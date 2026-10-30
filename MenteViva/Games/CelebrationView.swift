@@ -111,9 +111,10 @@ struct CelebrationView: View {
         .overlay(Capsule().strokeBorder(Color.espresso, lineWidth: 2))
     }
 
+    private var closesTheDay: Bool { today?.closesTheDay(finishing: game) ?? false }
+
     var body: some View {
         let today = today
-        let closesTheDay = today?.closesTheDay(finishing: game) ?? false
         VStack(spacing: 0) {
             VStack(spacing: 22) {
                 if let today, today.games.contains(game) {
@@ -167,7 +168,6 @@ struct CelebrationView: View {
         .onAppear {
             if headline == nil {
                 var generator = SystemRandomNumberGenerator()
-                let closesTheDay = today?.closesTheDay(finishing: game) ?? false
                 headline = CelebrationHeadline.pick(closesTheDay: closesTheDay, using: &generator)
                 // Only the day-done line is spoken on arrival; the ordinary headlines stay a header to swipe to.
                 if closesTheDay, let headline { AccessibilityNotification.Announcement(headline).post() }

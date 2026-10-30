@@ -9,6 +9,8 @@ nonisolated struct TodayRun: Equatable {
     let games: [GameID]
     /// Picks with a session today.
     let done: Set<GameID>
+    /// How many times each game was played today, picks or not.
+    private let playsToday: [GameID: Int]
 
     init(
         plan: [GameID], hidden: Set<GameID> = [], sessions: [GameSession],
@@ -17,6 +19,7 @@ nonisolated struct TodayRun: Equatable {
         games = plan.filter { !hidden.contains($0) }
         let playedToday = sessions.filter { calendar.isDate($0.playedAt, inSameDayAs: now) }.compactMap(\.game)
         done = Set(playedToday).intersection(games)
+        playsToday = playedToday.reduce(into: [:]) { $0[$1, default: 0] += 1 }
     }
 
     /// The first pick not played yet, in plan order; nil once all are done.
@@ -25,11 +28,13 @@ nonisolated struct TodayRun: Equatable {
     /// False before the plan exists, so an empty table never says "done".
     var isFinished: Bool { !games.isEmpty && next == nil }
 
-    /// Whether `finished` was the game that completed today's table: the day is done and the game
-    /// was one of the picks. An off-plan game played after the table is cleared closes nothing, so
-    /// it gets the ordinary celebration (#375).
+    /// Whether `finished` was the game that completed today's table: the day is done, the game is
+    /// one of the picks, and it was played once today. Every game saves its session before the
+    /// celebration, so a pick played once with the rest done is the one that just cleared the
+    /// table. An off-plan game or a replay after that closes nothing, so it gets the ordinary
+    /// celebration (#375).
     func closesTheDay(finishing finished: GameID) -> Bool {
-        isFinished && games.contains(finished)
+        isFinished && games.contains(finished) && playsToday[finished] == 1
     }
 
     /// What the end of `finished` offers (step 5): the next pick while it was
