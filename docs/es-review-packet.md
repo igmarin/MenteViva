@@ -128,7 +128,7 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `game.memory.a11y.position %lld %lld` | Card %lld of %lld | Carta %lld de %lld | MemoryMatchView |  |
 | `game.memory.card.hidden` | Hidden card | Carta oculta | MemoryMatchView |  |
 | `game.memory.instruction` | Find the matching pairs | Encuentra las parejas | MemoryMatchView |  |
-| `game.memory.miss` | Almost - %1$@ and %2$@ are different | Casi - %1$@ y %2$@ son distintas | MemoryBoard |  |
+| `game.memory.miss` | Almost — %1$@ and %2$@ are different | Casi — %1$@ y %2$@ no son pareja | MemoryBoard |  |
 | `game.memory.photo %lld` | Family photo %lld | Foto familiar %lld | MemoryMatchView |  |
 | `game.memory.title` | Memory Lane | Camino de Memoria | GameID |  |
 | `game.quickeyes.a11y.flash %@` | Picture shown: %@ | Imagen mostrada: %@ | QuickEyesView |  |

@@ -88,13 +88,13 @@ final class MemoryBoardTests: XCTestCase {
         let english = try catalogText("en")("game.memory.miss")
         let spanish = try catalogText("es")("game.memory.miss")
 
-        XCTAssertEqual(english, "Almost - %1$@ and %2$@ are different")
-        XCTAssertEqual(spanish, "Casi - %1$@ y %2$@ son distintas")
+        XCTAssertEqual(english, "Almost — %1$@ and %2$@ are different")
+        XCTAssertEqual(spanish, "Casi — %1$@ y %2$@ no son pareja")
     }
 
     func testGivenCardTurnedUpWhenAnnouncedThenItsNameIsSpoken() throws {
         XCTAssertEqual(try announce(board.tap(0)), "Cat")
-        XCTAssertEqual(try announce(board.tap(1), language: "es"), "Casi - Cat y Dog son distintas")
+        XCTAssertEqual(try announce(board.tap(1), language: "es"), "Casi — Cat y Dog no son pareja")
     }
 
     func testGivenMatchWhenAnnouncedThenNameAndPairFoundAreSpoken() throws {
@@ -112,7 +112,7 @@ final class MemoryBoardTests: XCTestCase {
     func testGivenMissWhenAnnouncedThenBothNamesAreSpoken() throws {
         _ = board.tap(0)
 
-        XCTAssertEqual(try announce(board.tap(1)), "Almost - Cat and Dog are different")
+        XCTAssertEqual(try announce(board.tap(1)), "Almost — Cat and Dog are different")
     }
 
     func testGivenMissedPairWhenDifferentCardTappedThenNewCardIsSpokenAndPairStaysUntilThen() throws {
