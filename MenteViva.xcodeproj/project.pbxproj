@@ -5,6 +5,7 @@
 	};
 	objectVersion = 90;
 	objects = {
+		BFBDBDF859E6803800000015 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C5D34A8EFAFD760000000F; };
 		8AC071529447874E00000016 /* BigTargets.swift in Sources */ = {isa = PBXBuildFile; fileRef = B91ABDA086A9E6DC00000010; };
 		C4A4C2DC56D1AD0100000023 /* FamilyPhotoCaptionSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB8113FC44C63A70000001D; };
 		27FC9D3E2B699DE60000001A /* FirstPlayGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2709843BA5CB20400000014; };
@@ -135,6 +136,7 @@
 		0EEED9F3112B457400000033 /* WeeklySummaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2CB27B32AF72D220000002D; };
 		D45AEF3BDEB8E3E30000003A /* WhyTheseGamesStringsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F6AD437F92C1C900000034; };
 
+		38C5D34A8EFAFD760000000F /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		B91ABDA086A9E6DC00000010 /* BigTargets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BigTargets.swift; sourceTree = "<group>"; };
 		4BB8113FC44C63A70000001D /* FamilyPhotoCaptionSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FamilyPhotoCaptionSheet.swift; sourceTree = "<group>"; };
 		A2709843BA5CB20400000014 /* FirstPlayGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstPlayGuide.swift; sourceTree = "<group>"; };
@@ -293,6 +295,7 @@
 		DC57E42946F6E08C00000005 /* MenteViva */ = {
 			isa = PBXGroup;
 			children = (
+				38C5D34A8EFAFD760000000F /* AboutView.swift */,
 				B91ABDA086A9E6DC00000010 /* BigTargets.swift */,
 				4BB8113FC44C63A70000001D /* FamilyPhotoCaptionSheet.swift */,
 				A2709843BA5CB20400000014 /* FirstPlayGuide.swift */,
@@ -500,6 +503,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BFBDBDF859E6803800000015 /* AboutView.swift in Sources */,
 				8AC071529447874E00000016 /* BigTargets.swift in Sources */,
 				C4A4C2DC56D1AD0100000023 /* FamilyPhotoCaptionSheet.swift in Sources */,
 				27FC9D3E2B699DE60000001A /* FirstPlayGuide.swift in Sources */,
