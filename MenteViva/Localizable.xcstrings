@@ -17,6 +17,23 @@
         }
       }
     },
+    "album.today %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today's picture: %@. It's in your album."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La imagen de hoy: %@. Ya está en tu álbum."
+          }
+        }
+      }
+    },
     "app.title" : {
       "extractionState" : "stale",
       "localizations" : {

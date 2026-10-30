@@ -2,7 +2,8 @@ import SwiftData
 import SwiftUI
 
 /// Shared end-of-game screen (Card Table, step 5): the game's card arrives on
-/// the table stamped "Added to your week", then a warm headline, the progress
+/// the table stamped "Added to your week", then today's picture for the album
+/// after the day's first game (#376), a warm headline, the progress
 /// line (never points, #45), the week board with today's new card, and two big
 /// actions. During today's games the main one names the next game; otherwise
 /// it is "Play again". Presented as a fullScreenCover by every game on finish.
@@ -21,6 +22,8 @@ struct CelebrationView: View {
     @State private var arrived = false
     /// This celebration's warm headline, picked once when it appears (#242).
     @State private var headline: String?
+    /// Today's picture for the album, turned over only by the day's first finished game (#376).
+    @State private var dailyPicture: GamePicture?
     /// Whether the offer has been answered in this presentation (#207): flipping
     /// this triggers a re-render so the offer disappears even though
     /// `LevelOfferStore` (UserDefaults) is not observed by SwiftUI.
@@ -91,8 +94,7 @@ struct CelebrationView: View {
     }
 
     /// The "n of m today" capsule. When this game closed the table it wears the amber seal, a shape
-    /// and a colour together, so the finish never rests on colour alone. The slot above the headline
-    /// stays free for the picture of the day (#376).
+    /// and a colour together, so the finish never rests on colour alone.
     private func progressCapsule(_ today: TodayRun, closesTheDay: Bool) -> some View {
         HStack(spacing: 8) {
             if closesTheDay {
@@ -128,6 +130,9 @@ struct CelebrationView: View {
             Spacer(minLength: 0)
 
             VStack(spacing: 14) {
+                if let dailyPicture {
+                    DailyPictureCard(picture: dailyPicture)
+                }
                 // Picked in onAppear; until then nothing, so VoiceOver never lands on an empty header.
                 if let headline {
                     Text(headline)
@@ -169,8 +174,12 @@ struct CelebrationView: View {
             if headline == nil {
                 var generator = SystemRandomNumberGenerator()
                 headline = CelebrationHeadline.pick(closesTheDay: closesTheDay, using: &generator)
-                // Only the day-done line is spoken on arrival; the ordinary headlines stay a header to swipe to.
-                if closesTheDay, let headline { AccessibilityNotification.Announcement(headline).post() }
+                dailyPicture = PictureAlbum.turnOver(
+                    from: DailyPicture.candidates(from: GamePictures.all, hasAsset: PictureView.bundleHasAsset))
+                // Only the day-done line and today's picture are spoken on arrival, as one announcement so
+                // neither cuts the other off; the ordinary headlines stay a header to swipe to.
+                let spoken = [closesTheDay ? headline : nil, dailyPicture.map(DailyPictureCard.line)].compactMap { $0 }
+                if !spoken.isEmpty { AccessibilityNotification.Announcement(spoken.joined(separator: " ")).post() }
             }
             Feedback.play(.complete)
             withAnimation(.spring(duration: 0.55, bounce: 0.3).delay(0.1)) { arrived = true }

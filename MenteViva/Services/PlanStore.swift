@@ -161,9 +161,10 @@ nonisolated enum PlanStore {
         return Dictionary(uniqueKeysWithValues: raw.compactMap { key, stamp in GameID(rawValue: key).map { ($0, stamp) } })
     }
 
-    /// Local calendar day as "yyyy-MM-dd": a plan is valid only for its day.
-    static func dayStamp(_ date: Date = .now) -> String {
-        stampFormat().string(from: date)
+    /// Local calendar day as "yyyy-MM-dd": a plan is valid only for its day. The calendar (and its
+    /// time zone) is a parameter so a test can pin where midnight falls (#376).
+    static func dayStamp(_ date: Date = .now, calendar: Calendar = .current) -> String {
+        stampFormat(calendar: calendar).string(from: date)
     }
 
     /// The day a stamp names, or nil when it isn't one.
@@ -173,11 +174,11 @@ nonisolated enum PlanStore {
 
     /// The one definition of the stamp format (#122). Made per call:
     /// DateFormatter isn't Sendable, and this runs a few times a day.
-    private static func stampFormat() -> DateFormatter {
+    private static func stampFormat(calendar: Calendar = .current) -> DateFormatter {
         let f = DateFormatter()
-        f.calendar = Calendar.current
+        f.calendar = calendar
         f.locale = Locale(identifier: "en_US_POSIX")
-        f.timeZone = .current
+        f.timeZone = calendar.timeZone
         f.dateFormat = "yyyy-MM-dd"
         return f
     }
