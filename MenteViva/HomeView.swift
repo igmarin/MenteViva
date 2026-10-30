@@ -49,6 +49,7 @@ struct HomeView: View {
         DayGrouping.thisWeek(sessions, date: \.playedAt).map { (day: $0.day, games: $0.items.compactMap(\.game)) }
     }
 
+    /// The saved plan is a small local read; only the first result is kept by `State`.
     init() {
         _plan = State(
             initialValue: HomeDeal.preloadedPlan(cached: PlanStore.cachedPlan(), today: PlanStore.dayStamp()))
@@ -129,7 +130,11 @@ struct HomeView: View {
             playedWhileAway = atHome ? nil : today.done
         }
         .onChange(of: scenePhase) { _, phase in
-            if phase == .active { planDay = PlanStore.dayStamp() }
+            guard phase == .active else { return }
+            let day = PlanStore.dayStamp()
+            // A new day must not deal yesterday's cards: clear them until today's plan is made.
+            if day != planDay { plan = HomeDeal.preloadedPlan(cached: PlanStore.cachedPlan(), today: day) }
+            planDay = day
         }
         .environment(path)
     }

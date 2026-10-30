@@ -54,6 +54,13 @@ final class HomeDealTests: XCTestCase {
         XCTAssertTrue(HomeDeal.needsDeal(plan: games, dealtDay: "2026-10-29", planDay: "2026-10-30"))
     }
 
+    func testGivenAppKeptOpenPastMidnightWhenDayRollsOverThenYesterdaysCardsAreNotDealt() {
+        let stale = HomeDeal.preloadedPlan(cached: plan(day: "2026-10-29"), today: "2026-10-30")
+
+        XCTAssertFalse(HomeDeal.needsDeal(plan: stale, dealtDay: "2026-10-29", planDay: "2026-10-30"))
+        XCTAssertTrue(HomeDeal.needsDeal(plan: games, dealtDay: "2026-10-29", planDay: "2026-10-30"))
+    }
+
     func testGivenEmptyPlanWhenCheckingThenNothingToDeal() {
         XCTAssertFalse(HomeDeal.needsDeal(plan: [], dealtDay: nil, planDay: "2026-10-30"))
     }
