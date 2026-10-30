@@ -77,4 +77,30 @@ final class ReminiscenceDeckTests: XCTestCase {
         }
         XCTAssertEqual(EverydayObjects.all.count, 8)
     }
+
+    // MARK: - Conversation prompts (#379)
+
+    func testGivenPhotoSessionWhenDealtThenEveryCardHasADistinctPhotoPrompt() {
+        var generator = SeededGenerator(state: 11)
+        let cards = ReminiscenceDeck.dealSession(photos: photos(8), captions: [:], using: &generator)
+        let prompts = cards.compactMap(\.question)
+        XCTAssertEqual(prompts.count, 5)
+        XCTAssertEqual(Set(prompts).count, 5)
+        XCTAssertTrue(prompts.allSatisfy(ConversationPrompts.photoKeys.contains))
+    }
+
+    func testGivenObjectSessionWhenDealtThenEveryCardHasAnObjectPrompt() {
+        var generator = SeededGenerator(state: 5)
+        let cards = ReminiscenceDeck.dealSession(photos: [], captions: [:], using: &generator)
+        let prompts = cards.compactMap(\.question)
+        XCTAssertEqual(prompts.count, 5)
+        XCTAssertEqual(Set(prompts).count, 5)
+        XCTAssertTrue(prompts.allSatisfy(ConversationPrompts.objectKeys.contains))
+    }
+
+    func testGivenTwoPhotosWhenSessionDealtThenOnlyTwoPrompts() {
+        var generator = SeededGenerator(state: 2)
+        let cards = ReminiscenceDeck.dealSession(photos: photos(2), captions: [:], using: &generator)
+        XCTAssertEqual(cards.compactMap(\.question).count, 2)
+    }
 }
