@@ -55,7 +55,8 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `family.photos.full %lld` | The album holds %lld photos. Remove one to add another. | El álbum guarda %lld fotos. Quita una para agregar otra. | SetUpView |  |
 | `family.photos.header` | Memory Lane photos | Fotos para Camino de Memoria | SetUpView |  |
 | `family.photos.remove` | Remove | Quitar | FamilyPhotoCaptionSheet |  |
-| `family.photos.remove.a11y %lld` | Remove photo %lld | Quitar foto %lld | — |  |
+| `family.photos.remove.cancel` | Keep it | Dejarla | FamilyPhotoCaptionSheet |  |
+| `family.photos.remove.confirm` | Remove this photo and its name? | ¿Quitar esta foto y su nombre? | FamilyPhotoCaptionSheet |  |
 | `family.photos.unreadable %lld` | one: %lld photo couldn't be used. Try another one. / other: %lld photos couldn't be used. Try other ones. | one: %lld foto no se pudo usar. Prueba con otra. / other: %lld fotos no se pudieron usar. Prueba con otras. | SetUpView |  |
 | `family.pinned` | set by you | elegido por ti | SetUpView |  |
 | `family.share` | Share with family | Compartir con la familia | MyProgressView |  |
