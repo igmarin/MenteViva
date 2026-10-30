@@ -299,6 +299,7 @@ struct TangramView: View {
     }
 
     private func deal() {
+        difficulty = Difficulty.stored(.tangram)
         var generator = SystemRandomNumberGenerator()
         let next = TangramPuzzle.pick(from: TangramShapes.all, seen: seen, using: &generator)
         seen.insert(next.key)

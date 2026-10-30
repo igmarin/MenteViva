@@ -110,6 +110,7 @@ struct SayingsView: View {
     }
 
     private func restart() {
+        difficulty = Difficulty.stored(.sayings)
         progress.reset()
         correct = 0
         taps = 0

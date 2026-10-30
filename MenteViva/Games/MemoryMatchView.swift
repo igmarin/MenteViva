@@ -291,6 +291,7 @@ struct MemoryMatchView: View {
     }
 
     private func dealCards(size: CGSize) {
+        difficulty = Difficulty.stored(variant.game)
         flipBackTask?.cancel()
         flipBackTask = nil
         var generator = SystemRandomNumberGenerator()

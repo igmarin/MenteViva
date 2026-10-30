@@ -11,6 +11,8 @@ struct GameCard: View {
     let game: GameID
     var size = Size.grid
     var playedToday = false
+    /// The hand card's width, narrowed by Home so a row fits the table (#365); nil keeps the full size.
+    var handWidth: CGFloat?
 
     private static let art = UnevenRoundedRectangle(
         topLeadingRadius: 13, bottomLeadingRadius: 4, bottomTrailingRadius: 4, topTrailingRadius: 13)
@@ -20,9 +22,11 @@ struct GameCard: View {
     var body: some View {
         let title = AppLanguage.localized(game.title)
         let hand = size == .hand
+        let width = handWidth ?? HandLayout.fullWidth
+        let emblem = hand ? 52 * width / HandLayout.fullWidth : 64
         VStack(spacing: 5) {
             Emblem(game: game)
-                .frame(width: hand ? 52 : 64, height: hand ? 52 : 64)
+                .frame(width: emblem, height: emblem)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .padding(hand ? 6 : 10)
                 .background(game.ink.opacity(0.12), in: Self.art)
@@ -40,7 +44,7 @@ struct GameCard: View {
                 .background(game.ink, in: Self.plate)
         }
         .padding(6)
-        .frame(width: hand ? 112 : nil, height: hand ? 164 : nil)
+        .frame(width: hand ? width : nil, height: hand ? 164 : nil)
         .frame(minHeight: hand ? nil : 180)
         .background(Color.paper, in: .rect(cornerRadius: 18))
         .overlay(RoundedRectangle(cornerRadius: 18).strokeBorder(Color.espresso, lineWidth: 2))

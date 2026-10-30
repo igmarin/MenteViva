@@ -182,6 +182,7 @@ struct QuickEyesView: View {
         progress.reset()
         correct = 0
         speedBonus = 0
+        difficulty = Difficulty.stored(.quickEyes)
         displayTime = startDisplayTime
         missedLastRound = false
         wantsFaster = false
