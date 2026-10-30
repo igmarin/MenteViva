@@ -5,6 +5,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 ## [Unreleased]
 
 ### Fixed
+- **Today's cards fit the screen (#365):** on Home, all of today's games now sit inside the table whether 3 or 5 are dealt (five show as 3 + 2), on small phones too. From the first Bigger text step, today's games are full-width rows so no name breaks mid-word.
 - **No crash when the sound can't start (#367):** after a phone call, Siri or an alarm takes the audio, a tap no longer closes the app; that tone is skipped and sound returns on the next tap.
 - **Play again starts at the level you just chose (#368):** after "Yes, let's try", tapping Play again deals the next game at the new level and saves it there, in every game with levels. "Keep it as it is" and a family's fixed level still hold.
 - **Tile Pairs now remembers its misses (#369):** a pair that did not match is counted, so the level follows how the game really went and the next-level offer no longer appears after every game. Taps are also ignored while a matched pair lifts away, so a quick extra tap cannot bring a tile back.
