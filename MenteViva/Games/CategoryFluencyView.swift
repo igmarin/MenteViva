@@ -139,6 +139,7 @@ struct CategoryFluencyView: View {
         progress.reset()
         totalCorrect = 0
         totalPicks = 0
+        difficulty = Difficulty.stored(.categoryFluency)
         setup()
     }
 

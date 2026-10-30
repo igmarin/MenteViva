@@ -148,6 +148,7 @@ struct RepeatSequenceView: View {
     }
 
     private func setup() {
+        difficulty = Difficulty.stored(.repeatSequence)
         task?.cancel()
         progress.reset()
         tapped = []
