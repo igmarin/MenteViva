@@ -578,19 +578,36 @@
         }
       }
     },
-    "family.photos.remove.a11y %lld" : {
-      "extractionState" : "stale",
+    "family.photos.remove.cancel" : {
+      "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Remove photo %lld"
+            "value" : "Keep it"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Quitar foto %lld"
+            "value" : "Dejarla"
+          }
+        }
+      }
+    },
+    "family.photos.remove.confirm" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove this photo and its name?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Quitar esta foto y su nombre?"
           }
         }
       }

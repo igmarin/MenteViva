@@ -61,7 +61,7 @@ enum FamilyPhotoImport {
 }
 
 /// Family photos (#110, #374): picked with the system photo picker (no library
-/// permission), kept on this device only. Each has its own Remove button.
+/// permission), kept on this device only. Tapping one opens its name sheet, where Remove asks first (#403).
 private struct FamilyPhotosSection: View {
     @State private var photos: [URL]
     /// Captions by photo, read when the album changes, never inside `body`.
