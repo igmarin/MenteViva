@@ -225,11 +225,14 @@ struct MemoryMatchView: View {
                 .animation(swap, value: shown)
         }
         .frame(width: size.width, height: size.height)
-        .shadow(color: .black.opacity(0.25), radius: 0, x: 3, y: 3)
         .rotation3DEffect(
             .degrees(shown && !reduceMotion ? 180 : 0), axis: (x: 0, y: 1, z: 0)
         )
         .animation(reduceMotion ? nil : .easeInOut(duration: 0.25), value: shown)
+        // One print shadow for the whole card, cast in screen space so it
+        // stays bottom-right while the card turns.
+        .compositingGroup()
+        .shadow(color: .black.opacity(0.25), radius: 0, x: 3, y: 3)
         // Non-color cue: matched pairs keep a checkmark (WCAG 1.4.1).
         .overlay(alignment: .topTrailing) {
             if found { CheckBadge() }
