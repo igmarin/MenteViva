@@ -206,8 +206,9 @@ struct RepeatSequenceView: View {
             try? await Task.sleep(for: .seconds(0.15))
             lit = nil
         }
-        guard let expected = session?.current, tapped.count == expected.count else { return }
-        let result = session?.record(tapped: tapped)
+        // Ask the rules after every tap: a wrong tap is caught at once, a correct
+        // prefix stays quiet until the sequence is complete.
+        guard let result = session?.record(tapped: tapped), result != .keepGoing else { return }
         tapped = []
         switch result {
         case .correct:
@@ -257,7 +258,7 @@ struct RepeatSequenceView: View {
                     }
                 }
             }
-        case .keepGoing, .none:
+        case .keepGoing:
             break
         }
     }

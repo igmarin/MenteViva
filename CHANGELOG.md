@@ -6,6 +6,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 
 ### Fixed
 - **Memory Lane and Names and Faces can be played by ear (#393):** with VoiceOver on, each card you turn is spoken, a match says its name and "Pair found", and a pair that differs says both names ("Almost — Cat and Dog are different") and stays face up until your next tap. Without VoiceOver the pair still turns back after 1.2 s. EN + ES.
+- **Repeat the Sequence catches a wrong tap at once (#397):** a first tap that is not the first tile now shows "Almost — watch again" and replays the same sequence straight away, instead of after the whole sequence is tapped. A correct run stays quiet until it is complete.
+- **VoiceOver hears the gentle miss (#392):** in Sudoku, Up or Down, Finish the Saying and Name the Herd, a wrong tap is now spoken as the same warm note sighted players see (Name the Herd has a new quiet line, EN + ES), and Up or Down says "That's it!" on a right card. Each wrong tap in a row is announced.
 - **Crisper card text on Home (#366):** card titles, "This week" and the weekday labels no longer show a faint second copy of the text; the print shadow now follows the card edge only.
 - **Today's cards fit the screen (#365):** on Home, all of today's games now sit inside the table whether 3 or 5 are dealt (five show as 3 + 2), on small phones too. From the first Bigger text step, today's games are full-width rows so no name breaks mid-word.
 - **Name the Herd never shows two tiles with the same name (#371):** a Colors board no longer mixes in the orange fruit, and a Fruits board no longer mixes in the orange colour, so a fair pick is never counted as a miss and VoiceOver never reads two tiles called "Orange".
@@ -17,6 +19,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 - **Every screen now sits on the cream paper background (#356):** Home, the first-run screens, Settings and its lists no longer open on plain white. In Dark Mode the same screens use the dark surround instead of black, following the phone's own appearance setting.
 
 ### Added
+- **Cream launch screen and jade system tint (#385):** the app now opens on cream (the dark surround in Dark Mode) instead of a white or black flash, and the share sheet, photo picker and alerts use the same jade as the app.
 - **Share today's games (#381):** once today's games are done, Home offers "Share today's games" (100pt). It opens the phone's share sheet with a short message: the date, each game with a tick and "Today's games, done." No scores, levels or counts, and nothing is sent unless you choose someone. EN + ES.
 - **Name the Herd has seven categories (#380):** Plants and flowers, Around the house and In the kitchen join animals, fruits, colors and vehicles, so a session no longer repeats after two plays. Every picture belongs to one category only, and a kitchen board never mixes in fruit or home pictures. EN + ES, same pictures as before.
 - **Memory Lane cards match the app icon (#384):** card backs now show the icon's cream frame and amber disc on jade, face-up cards have a clear edge in Dark Mode too, and both cast a crisp print shadow. Names and Faces looks the same.
