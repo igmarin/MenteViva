@@ -110,6 +110,7 @@ struct ColorClashView: View {
     }
 
     private func restart() {
+        difficulty = Difficulty.stored(.stroop)
         beatTask?.cancel()
         beat = nil
         progress.reset()

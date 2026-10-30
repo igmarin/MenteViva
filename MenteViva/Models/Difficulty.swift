@@ -33,8 +33,9 @@ nonisolated struct Difficulty: Codable, Hashable, Comparable {
     }
 
     /// Today's difficulty for a game: the family's pin if set (#108), else the
-    /// rules' level, level 4 for a new player. Games read it once when they open,
-    /// so it never shifts under the player mid-game.
+    /// rules' level, level 4 for a new player. Games read it when they deal a new
+    /// game (on open and on Play again, so an accepted level offer counts, #368),
+    /// never mid-game, so it never shifts under the player.
     static func stored(_ game: GameID, defaults: UserDefaults = .standard) -> Difficulty {
         FamilySettings.pinned(defaults: defaults)[game]
             ?? PlanStore.storedDifficulty(defaults: defaults)[game] ?? Difficulty(level: 4)
