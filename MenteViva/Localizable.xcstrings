@@ -1789,6 +1789,23 @@
         }
       }
     },
+    "game.memory.miss" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Almost - %1$@ and %2$@ are different"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casi - %1$@ y %2$@ son distintas"
+          }
+        }
+      }
+    },
     "game.memory.photo %lld" : {
       "extractionState" : "stale",
       "localizations" : {
