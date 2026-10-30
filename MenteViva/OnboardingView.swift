@@ -69,7 +69,8 @@ struct OnboardingView: View {
         .background(Color.paper.ignoresSafeArea())
         // The screen is one view whose content swaps in place, so VoiceOver would stay on an
         // element that vanished. Next, Back, Skip and every offer all change `step`, so one
-        // screen-change notice covers them: focus moves to the new screen and its question (#406).
+        // screen-change notice covers them: focus moves to the new screen's first element, which is
+        // its question or offer heading (#406).
         .onChange(of: step) { _, _ in AccessibilityNotification.ScreenChanged(nil).post() }
     }
 
@@ -119,8 +120,8 @@ struct OnboardingView: View {
 
     // MARK: Steps 2-5 - one question each
 
-    /// One question per screen. The question comes before its answers in the layout, so
-    /// VoiceOver reads what is being asked and then each answer with its state.
+    /// One question per screen. VoiceOver reads what is being asked first, then where the player
+    /// is, then each answer with its state.
     private func questionStep(_ question: OnboardingQuestion) -> some View {
         VStack(spacing: 16) {
             stepDots
@@ -132,6 +133,9 @@ struct OnboardingView: View {
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
                 .accessibilityAddTraits(.isHeader)
+                // Read first, ahead of "2 of 5" above it, so the screen-change notice lands on
+                // the question itself (#406).
+                .accessibilitySortPriority(1)
 
             // Five answers one per row would push Next and Skip off an everyday screen, so the
             // multi-select question lays its tiles out two by two; every other question shows one
@@ -166,6 +170,8 @@ struct OnboardingView: View {
 
             footer
         }
+        // The sort priority above only reorders within a container.
+        .accessibilityElement(children: .contain)
     }
 
     /// One tile per answer, in the order the flow offers them. The chosen ones carry a tick and a
