@@ -178,12 +178,15 @@ struct QuickEyesView: View {
             RoundCounter(progress: progress)
         }
         .padding(edgePadding)
-        .frame(maxWidth: .infinity)
+        // `gameColumn()` in two halves: the width is measured inside the column, so the
+        // pictures are fitted to the column and not to a wide iPad screen (#400).
+        .frame(maxWidth: GameColumn.maxWidth)
         .onGeometryChange(for: CGFloat.self) {
             $0.size.width
         } action: { width in
             if width > 0 { viewWidth = width }
         }
+        .frame(maxWidth: .infinity)
         .fitOrScroll()
         .gameHeader(
             .quickEyes,

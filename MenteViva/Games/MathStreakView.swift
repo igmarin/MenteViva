@@ -12,6 +12,7 @@ struct MathStreakView: View {
 
     // Numbers follow the device text size (#117); emoji elsewhere stay fixed.
     @ScaledMetric(relativeTo: .largeTitle) private var sumSize: CGFloat = 72
+    @Environment(\.horizontalSizeClass) private var sizeClass
     @ScaledMetric(relativeTo: .title) private var answerSize: CGFloat = 44
 
     @State private var difficulty = Difficulty.stored(.mathStreaks)
@@ -42,7 +43,7 @@ struct MathStreakView: View {
                 .multilineTextAlignment(.center)
 
             Text(verbatim: question.text)
-                .font(.system(size: sumSize, weight: .bold))
+                .font(.system(size: sumSize * GameColumn.textScale(isRegularWidth: sizeClass == .regular), weight: .bold))
                 .lineLimit(1)
                 .minimumScaleFactor(0.5)
                 .accessibilityLabel(question.spoken())
@@ -65,6 +66,7 @@ struct MathStreakView: View {
 
             RoundCounter(progress: progress)
         }
+        .gameColumn()
         .padding()
         .fitOrScroll()
         .gameHeader(.mathStreaks, instruction: AppLanguage.localized("game.math.instruction") + " " + question.spoken())

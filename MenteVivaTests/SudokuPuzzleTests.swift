@@ -210,4 +210,64 @@ final class SudokuPuzzleTests: XCTestCase {
             XCTAssertNotNil(localizations?["es"], "\(key) has no Spanish")
         }
     }
+
+    // MARK: - iPad layout (#400)
+
+    func testGivenLevelNineOnAnIPadPortraitBudgetWhenLaidOutThenNineByNineKeepsSixtyPointSquares() {
+        // 10th-generation iPad, portrait: 820pt wide less 32pt of padding, about 1,018pt of play area.
+        let layout = SudokuPuzzle.layout(for: Difficulty(level: 9), width: 788, height: 1018)
+        XCTAssertEqual(layout.size, 9)
+        XCTAssertEqual(layout.blanks, 40)
+        XCTAssertEqual(layout.pad, .row)
+        XCTAssertGreaterThanOrEqual(layout.side, SudokuPuzzle.minTarget)
+        XCTAssertLessThanOrEqual(layout.side, 100)
+        // Board, pad row, Show me one and the header all fit the height.
+        let board = layout.side * 9 + SudokuPuzzle.gap * 8
+        let pad = SudokuPuzzle.padKeyHeight(width: 788) + SudokuPuzzle.showMeHeight
+        XCTAssertLessThan(board + pad, 1018)
+    }
+
+    func testGivenLevelNineWithAHeightBudgetUnderSixtyPerSquareWhenLaidOutThenFallsBackToSixBySix() {
+        // Portrait with plenty of width, but a height that leaves about 57pt a square.
+        let layout = SudokuPuzzle.layout(for: Difficulty(level: 9), width: 788, height: 900)
+        XCTAssertEqual(layout.size, 6)
+        XCTAssertEqual(layout.blanks, 26)
+        XCTAssertEqual(layout.pad, .stacked)
+    }
+
+    func testGivenAWideShortScreenWhenLaidOutThenBoardSideComesFromHeight() {
+        // Landscape: 1,100pt wide would allow 100pt squares; 640pt of height allows (640 - 80 - 16) / 9.
+        let layout = SudokuPuzzle.layout(for: Difficulty(level: 10), width: 1100, height: 640)
+        XCTAssertEqual(layout.size, 9)
+        XCTAssertEqual(layout.pad, .beside)
+        XCTAssertEqual(layout.side, (640.0 - 80 - 16) / 9, accuracy: 0.001)
+    }
+
+    func testGivenAShortLandscapeWhenLevelTenIsLaidOutThenSixBySixFitsTheHeightWithItsPadBeside() {
+        // iPad mini landscape: about 1,101 × 608pt of play area. Nine squares cannot keep 60pt
+        // there, but six can, and they are sized by the height so they never scroll.
+        let layout = SudokuPuzzle.layout(for: Difficulty(level: 10), width: 1101, height: 608)
+        XCTAssertEqual(layout.size, 6)
+        XCTAssertEqual(layout.pad, .beside)
+        XCTAssertGreaterThanOrEqual(layout.side, SudokuPuzzle.minTarget)
+        XCTAssertLessThanOrEqual(layout.side * 6 + SudokuPuzzle.gap * 5 + 80, 608)
+    }
+
+    func testGivenNoKnownHeightWhenLaidOutThenItIsTheWidthOnlyLayoutWithAStackedPad() {
+        for level in [2, 6, 9, 10] {
+            let old = SudokuPuzzle.layout(for: Difficulty(level: level), width: 700)
+            let new = SudokuPuzzle.layout(for: Difficulty(level: level), width: 700, height: nil)
+            XCTAssertEqual(new.size, old.size, "level \(level)")
+            XCTAssertEqual(new.blanks, old.blanks, "level \(level)")
+            XCTAssertEqual(new.pad, .stacked, "level \(level)")
+        }
+    }
+
+    func testGivenANineByNineBoardDealtInPortraitWhenTheScreenTurnsToAShortLandscapeThenItNoLongerFits() {
+        var generator = SeededGenerator(state: 7)
+        let layout = SudokuPuzzle.layout(for: Difficulty(level: 9), width: 788, height: 1018)
+        let board = SudokuPuzzle.make(layout: layout, using: &generator)
+        XCTAssertTrue(board.fits(width: 788, height: 1018))
+        XCTAssertFalse(board.fits(width: 1100, height: 560))
+    }
 }

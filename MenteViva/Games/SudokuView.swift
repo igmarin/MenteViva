@@ -9,12 +9,16 @@ import UIKit
 struct SudokuView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
 
     @ScaledMetric(relativeTo: .largeTitle) private var digitSize: CGFloat = 36
 
     @State private var difficulty = Difficulty.stored(.sudoku)
     @State private var puzzle: SudokuPuzzle?
-    @State private var boardWidth = 0.0
+    /// The play area inside the screen's padding, measured so the board and pad share what the
+    /// screen can carry (#400). Zero until measured.
+    @State private var playArea = CGSize.zero
     @State private var entries: [Int: Int] = [:]  // square -> number he placed
     @State private var shown: Set<Int> = []  // squares filled by "Show me one"
     @State private var selected: Int?
@@ -39,40 +43,45 @@ struct SudokuView: View {
                 .font(.title2)
                 .multilineTextAlignment(.center)
 
-            if showAlmost {
-                // The same soft amber note as Quick Eyes: kind and easy to read.
-                Text(AppLanguage.localized("game.sudoku.miss"))
-                    .font(.title2.weight(.semibold))
-                    .foregroundStyle(Color.todaysPick)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 14)
-                    .padding(.vertical, 10)
-                    .background(Color.amber.opacity(0.24), in: .rect(cornerRadius: 14))
-            }
-
             if let puzzle {
-                board(puzzle)
-                numberPad(puzzle)
-                Button(action: showMe) {
-                    Text(AppLanguage.localized("game.sudoku.showme"))
-                        .font(.title2.weight(.semibold))
+                let arrangement = arrangement(for: puzzle)
+                if arrangement.pad == .beside {
+                    // Wide iPad: the board on the left, its keys and the note on the right (#400).
+                    HStack(spacing: 20) {
+                        board(puzzle, side: arrangement.side)
+                        VStack(spacing: 20) {
+                            almostNote
+                            numberPad(puzzle, pad: arrangement.pad)
+                            showMeButton
+                        }
+                    }
+                } else {
+                    almostNote
+                    board(puzzle, side: arrangement.side)
+                    numberPad(puzzle, pad: arrangement.pad)
+                    showMeButton
                 }
-                .buttonStyle(AnswerTileStyle(strength: 0.08, minHeight: 100))
+            } else {
+                almostNote
             }
         }
         .frame(maxWidth: .infinity)
-        .onGeometryChange(for: Double.self) {
-            $0.size.width
-        } action: { width in
-            guard width > 0 else { return }
-            boardWidth = width
-            // A 6×6 board that no longer fits (turned to portrait on a small iPhone)
-            // is dealt again at a size that does: the squares never drop under 60pt.
-            if let puzzle, puzzle.fits(width: width) { return }
-            restart()
-        }
         .padding()
         .fitOrScroll()
+        // Measured outside the padding and the fit-or-scroll, so it is the space the screen offers
+        // and not the height of what is in it.
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .onGeometryChange(for: CGSize.self) {
+            CGSize(width: $0.size.width - 32, height: $0.size.height - 32)
+        } action: { area in
+            guard area.width > 0, area.height > 0 else { return }
+            playArea = area
+            // A board that no longer fits (a 6×6 turned to portrait on a small iPhone, a 9×9
+            // turned to a short landscape on an iPad) is dealt again at a size that does: the
+            // squares never drop under 60pt.
+            if let puzzle, puzzle.fits(width: area.width, height: budgetHeight) { return }
+            restart()
+        }
         .gameHeader(.sudoku, instruction: AppLanguage.localized("game.sudoku.instruction"))
         .firstPlayGuide(.sudoku, line: AppLanguage.localized("game.sudoku.guide"), example: guideExample)
         .celebration(isPresented: $showCelebration, game: .sudoku, detail: finalDetail, onPlayAgain: restart)
@@ -80,9 +89,46 @@ struct SudokuView: View {
 
     // MARK: - Board
 
-    private func board(_ puzzle: SudokuPuzzle) -> some View {
+    /// The height to budget a board by: only an iPad (regular in both directions) counts it; a
+    /// phone, or an iPad in Split View, is laid out by width as before (#400).
+    private var budgetHeight: Double? {
+        horizontalSizeClass == .regular && verticalSizeClass == .regular ? playArea.height : nil
+    }
+
+    /// Square side and pad placement for the dealt board. A board that is about to be dealt
+    /// again (it no longer fits) is drawn by width alone for that one frame.
+    private func arrangement(for puzzle: SudokuPuzzle) -> (side: Double, pad: SudokuPuzzle.PadPlacement) {
+        if let fits = SudokuPuzzle.arrangement(size: puzzle.size, width: playArea.width, height: budgetHeight) {
+            return fits
+        }
+        let n = Double(puzzle.size)
+        return (max(0, min(100, (playArea.width - SudokuPuzzle.gap * (n - 1)) / n)), .stacked)
+    }
+
+    /// The same soft amber note as Quick Eyes: kind and easy to read.
+    @ViewBuilder
+    private var almostNote: some View {
+        if showAlmost {
+            Text(AppLanguage.localized("game.sudoku.miss"))
+                .font(.title2.weight(.semibold))
+                .foregroundStyle(Color.todaysPick)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 14)
+                .padding(.vertical, 10)
+                .background(Color.amber.opacity(0.24), in: .rect(cornerRadius: 14))
+        }
+    }
+
+    private var showMeButton: some View {
+        Button(action: showMe) {
+            Text(AppLanguage.localized("game.sudoku.showme"))
+                .font(.title2.weight(.semibold))
+        }
+        .buttonStyle(AnswerTileStyle(strength: 0.08, minHeight: SudokuPuzzle.showMeHeight))
+    }
+
+    private func board(_ puzzle: SudokuPuzzle, side: Double) -> some View {
         let n = puzzle.size
-        let side = min(100, (boardWidth - SudokuPuzzle.gap * Double(n - 1)) / Double(n))
         return Grid(horizontalSpacing: SudokuPuzzle.gap, verticalSpacing: SudokuPuzzle.gap) {
             ForEach(0..<n, id: \.self) { row in
                 GridRow {
@@ -138,17 +184,23 @@ struct SudokuView: View {
         }
     }
 
-    private func numberPad(_ puzzle: SudokuPuzzle) -> some View {
-        let columns = Array(repeating: GridItem(.flexible(), spacing: 12), count: puzzle.size == 6 ? 3 : 4)
-        return LazyVGrid(columns: columns, spacing: 12) {
+    /// Four columns on a phone (three for 6×6), one row of nine under a portrait iPad's 9×9 board,
+    /// three columns beside a landscape iPad's (#400).
+    private func numberPad(_ puzzle: SudokuPuzzle, pad: SudokuPuzzle.PadPlacement) -> some View {
+        let count = pad == .row ? 9 : (pad == .beside || puzzle.size == 6 ? 3 : 4)
+        let spacing = pad == .row ? SudokuPuzzle.padSpacing : 12
+        let keyHeight = pad == .row ? SudokuPuzzle.padKeyHeight(width: playArea.width) : 100
+        let columns = Array(repeating: GridItem(.flexible(), spacing: spacing), count: count)
+        return LazyVGrid(columns: columns, spacing: spacing) {
             ForEach(1...puzzle.size, id: \.self) { digit in
                 Button {
                     place(digit)
                 } label: {
                     Text(verbatim: "\(digit)")
                         .font(.system(size: digitSize, weight: .semibold))
+                        .minimumScaleFactor(0.5)
                 }
-                .buttonStyle(AnswerTileStyle(minHeight: 100))
+                .buttonStyle(AnswerTileStyle(minHeight: keyHeight))
                 .accessibilityLabel(String(format: AppLanguage.localized("game.sudoku.a11y.put %lld"), digit))
                 .guideTarget(digit == guideDigit)
             }
@@ -176,7 +228,8 @@ struct SudokuView: View {
 
     private func deal() {
         var generator = SystemRandomNumberGenerator()
-        puzzle = SudokuPuzzle.make(difficulty: difficulty, width: boardWidth, using: &generator)
+        let layout = SudokuPuzzle.layout(for: difficulty, width: playArea.width, height: budgetHeight)
+        puzzle = SudokuPuzzle.make(layout: layout, using: &generator)
         selected = openSquares.first
     }
 

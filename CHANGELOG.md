@@ -5,6 +5,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 ## [Unreleased]
 
 ### Changed
+- **iPad layout (#400):** Home shows the week board right under today's games instead of below the whole grid. Color Clash, Number Trail, Finish the Saying, Name the Herd, Remember Together, Repeat the Sequence and Quick Eyes keep their controls in a centred column (at most 640pt wide), and the big word or sum in Color Clash and Number Trail is 30% larger on iPad. Sudoku's 9x9 board now fits the iPad screen without scrolling: the numbers sit in one row under the board when the iPad is upright and in a block beside it when it is on its side, and a screen too short for 9x9 squares of at least 60pt deals the 6x6 board as before. iPhone is unchanged.
 - **Bigger pictures in Name the Herd and Quick Eyes (#413):** Name the Herd pictures grow from 52 to 72, Quick Eyes choices from 56 to 84, the Quick Eyes picture from 120 to up to 240 (a little over half the screen width on a phone) and the look-again picture from 72 to 96. They grow with the text size too, and the tick in Name the Herd now sits on the tile's corner so it never covers a picture.
 
 ### Fixed

@@ -137,6 +137,7 @@ struct CategoryFluencyView: View {
                 .onAppear { AccessibilityNotification.Announcement(name(of: round)).post() }
             }
         }
+        .gameColumn(maxWidth: 720)
         .padding()
         .fitOrScroll()
         .gameHeader(

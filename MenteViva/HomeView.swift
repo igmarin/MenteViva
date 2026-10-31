@@ -65,13 +65,15 @@ struct HomeView: View {
         NavigationStack(path: $path.games) {
             ScrollView {
                 if sizeClass == .regular {
-                    // iPad: today on the left, everything else on the right.
+                    // iPad: today and the week board on the left, every game on the right, so the
+                    // week board sits near the top instead of below the 14-card grid (#400).
                     HStack(alignment: .top, spacing: 32) {
-                        todayColumn.frame(maxWidth: 560)
                         VStack(alignment: .leading, spacing: 20) {
-                            allGames
+                            todayColumn
                             if !today.isFinished { weekCard }
                         }
+                        .frame(maxWidth: 560)
+                        allGames
                     }
                     .padding()
                 } else {
