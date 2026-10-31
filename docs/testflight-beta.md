@@ -10,7 +10,7 @@ App Store Connect and may have moved: follow the intent, not the exact label.
   no entitlements file, so no iCloud/push capability and nothing for App Store Connect to reject.
   **Never archive a `--cloudkit` build for TestFlight**: it traps at launch (AGENTS.md Workflow 3)
   and TestFlight is a real device, which is the case the simulator never reproduces.
-- Version `0.1.0`, build `1` live in `tools/generate_project.swift` (`MARKETING_VERSION`,
+- Version `0.1.0`, build `2` (build 1 is already uploaded) live in `tools/generate_project.swift` (`MARKETING_VERSION`,
   `CURRENT_PROJECT_VERSION`). Export compliance is answered in the build
   (`ITSAppUsesNonExemptEncryption = NO`: no network, no custom crypto), so uploads don't stop to ask.
 - **Privacy manifest** (`MenteViva/PrivacyInfo.xcprivacy`, copied to the .app root): no tracking, no
@@ -59,7 +59,7 @@ and 2FA): the signed archive, `-exportArchive`, and the upload.
 ## Internal first, then external
 
 1. **Internal**: TestFlight tab → Internal Testing → new group `Owner` → add your own App Store Connect user and devices.
-   Install via the TestFlight app, play the three games on Home, check Settings and My progress. No review is needed.
+   Install via the TestFlight app, play two games from Home, check Settings and My Week. No review is needed.
 2. **External**: TestFlight tab → External Testing → **+** → group `Family and seniors` → add the build → fill
    **Test Information** with the notes below (both languages, if it offers a language picker) → Submit for Beta App Review.
    - Feedback email: `hello@nebulaideas.com` (Spanish: `hola@nebulaideas.com`).
@@ -73,8 +73,8 @@ and 2FA): the signed archive, `-exportArchive`, and the upload.
 Mente Viva is a set of short, friendly puzzle and memory games for older adults. It is a fun mental
 exercise, nothing more. No account or sign-in is needed, and the app makes no network calls.
 
-What to test: open the app, answer the short welcome questions, then play any of the three games on
-the Home screen. Try Settings (language English/Spanish, text size) and "My progress" after one game.
+What to test: open the app, answer the short welcome questions, then play any of the games on the
+Home screen. Try Settings (language English/Spanish, text size) and "My Week" after one game.
 Games reward every try; there is no "wrong" screen by design.
 
 Feedback and questions: hello@nebulaideas.com
@@ -86,8 +86,8 @@ Feedback and questions: hello@nebulaideas.com
 Mente Viva es un conjunto de juegos cortos y amables de memoria y rompecabezas para personas mayores.
 Es un ejercicio mental divertido, nada más. No necesita cuenta ni inicio de sesión, y la app no usa la red.
 
-Qué probar: abre la app, responde las preguntas de bienvenida y juega cualquiera de los tres juegos de la
-pantalla de inicio. Prueba Ajustes (idioma español/inglés, tamaño del texto) y "Mi progreso" después de un juego.
+Qué probar: abre la app, responde las preguntas de bienvenida y juega cualquiera de los juegos de la
+pantalla de inicio. Prueba Ajustes (idioma español/inglés, tamaño del texto) y "Mi Semana" después de un juego.
 Cada intento se celebra; por diseño no hay pantallas de "error".
 
 Comentarios y preguntas: hola@nebulaideas.com
@@ -96,8 +96,8 @@ Comentarios y preguntas: hola@nebulaideas.com
 ### "What to Test" (per build, short, both languages)
 
 ```
-EN: Play two games, then open My progress. Tell us anything that was hard to see, tap or understand.
-ES: Juega dos juegos y abre Mi progreso. Cuéntanos qué costó ver, tocar o entender.
+EN: Play two games, then open My Week. Tell us anything that was hard to see, tap or understand.
+ES: Juega dos juegos y abre Mi Semana. Cuéntanos qué costó ver, tocar o entender.
 ```
 
 ## Inviting testers
@@ -106,7 +106,9 @@ ES: Juega dos juegos y abre Mi progreso. Cuéntanos qué costó ver, tocar o ent
 2. The non-family seniors of #33: add them by email too, and **sit with each one for the install**
    (10 minutes): they need an Apple ID, the free **TestFlight** app from the App Store, then tap Install on Mente Viva.
    A public link is the fallback for someone whose email is awkward: group → Public Link → send it by message.
-   Anyone with the link can join, so remove it after the session.
+   Anyone with the link can join, so remove it after the session. **Exception, contest period (#386):** the
+   public link of the external group stays open from upload until Nov 9, 2026, so judges can install without
+   an invite; remove it then.
 3. Tell every tester: "It stays installed; a new version arrives through TestFlight. Don't delete the app."
 4. A build expires after 90 days: upload a new one before then, or the testers are back to a dead icon.
 5. Unverified: whether a game history from an older free-signed install carries into the TestFlight one
