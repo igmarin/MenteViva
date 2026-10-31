@@ -40,24 +40,65 @@ final class SayingsDeckTests: XCTestCase {
 
     // MARK: - Fit the screen (#415)
 
-    /// Five endings dealt in this order, his own (id 3) in the middle.
-    private let fiveEndings = SayingRound(
-        saying: Saying(id: 3, theme: .time),
-        choices: [1, 2, 3, 4, 5].map { Saying(id: $0, theme: .time) })
+    /// Five endings dealt in this order, his own (`saying`, id 3 unless named) at shown place `slot`.
+    private func fiveEndings(saying: Int = 3, slot: Int = 0) -> SayingRound {
+        SayingRound(
+            saying: Saying(id: saying, theme: .time),
+            choices: [1, 2, 3, 4, 5].map { Saying(id: $0, theme: .time) }, slot: slot)
+    }
+
+    private var fiveEndings: SayingRound { fiveEndings() }
 
     func testGivenRoomForThreeWhenShownThenHisEndingStaysAndTheFirstOthersKeepTheirOrder() {
-        XCTAssertEqual(SayingsDeck.shown(fiveEndings, count: 3).map(\.id), [1, 2, 3])
-        XCTAssertEqual(SayingsDeck.shown(fiveEndings, count: 2).map(\.id), [1, 3])
+        XCTAssertEqual(SayingsDeck.shown(fiveEndings, count: 3).map(\.id), [3, 1, 2])
+        XCTAssertEqual(SayingsDeck.shown(fiveEndings, count: 2).map(\.id), [3, 1])
     }
 
     func testGivenRoomForNoneWhenShownThenStillTwoEndings() {
-        XCTAssertEqual(SayingsDeck.shown(fiveEndings, count: 1).map(\.id), [1, 3])
-        XCTAssertEqual(SayingsDeck.shown(fiveEndings, count: 0).map(\.id), [1, 3])
+        XCTAssertEqual(SayingsDeck.shown(fiveEndings, count: 1).map(\.id), [3, 1])
+        XCTAssertEqual(SayingsDeck.shown(fiveEndings, count: 0).map(\.id), [3, 1])
     }
 
-    func testGivenRoomForMoreThanDealtWhenShownThenEveryEndingInOrder() {
-        XCTAssertEqual(SayingsDeck.shown(fiveEndings, count: 5).map(\.id), [1, 2, 3, 4, 5])
-        XCTAssertEqual(SayingsDeck.shown(fiveEndings, count: 9).map(\.id), [1, 2, 3, 4, 5])
+    func testGivenRoomForMoreThanDealtWhenShownThenEveryEndingShows() {
+        XCTAssertEqual(SayingsDeck.shown(fiveEndings, count: 5).map(\.id), [3, 1, 2, 4, 5])
+        XCTAssertEqual(SayingsDeck.shown(fiveEndings, count: 9).map(\.id), [3, 1, 2, 4, 5])
+    }
+
+    // MARK: - A fair place for the right ending (#494)
+
+    func testGivenSlotZeroWhenShowingTwoThenTheRightEndingIsFirst() {
+        XCTAssertEqual(SayingsDeck.shown(fiveEndings(slot: 0), count: 2).first?.id, 3)
+    }
+
+    /// 59 is one less than a multiple of every count from 2 to 5, so it is the last place at each.
+    func testGivenTheLastSlotWhenShowingTwoThenTheRightEndingIsLast() {
+        let round = fiveEndings(slot: SayingsDeck.slotSpan - 1)
+        XCTAssertEqual(SayingsDeck.shown(round, count: 2).map(\.id), [1, 3])
+        XCTAssertEqual(SayingsDeck.shown(round, count: 3).map(\.id), [1, 2, 3])
+        XCTAssertEqual(SayingsDeck.shown(round, count: 5).map(\.id), [1, 2, 4, 5, 3])
+    }
+
+    /// The review case: dealt last and shown two, it was always the bottom button.
+    func testGivenTheRightEndingDealtLastWhenShowingTwoThenItsPlaceFollowsTheSlot() {
+        XCTAssertEqual(SayingsDeck.shown(fiveEndings(saying: 5, slot: 0), count: 2).map(\.id), [5, 1])
+        XCTAssertEqual(SayingsDeck.shown(fiveEndings(saying: 5, slot: 1), count: 2).map(\.id), [1, 5])
+        XCTAssertEqual(SayingsDeck.shown(fiveEndings(saying: 5, slot: 4), count: 3).map(\.id), [1, 5, 2])
+    }
+
+    /// Accuracy feeds the level staircase, so a guessable place would inflate it.
+    func testGivenFiveDealtWhenShowingTwoOrThreeOverManyDealsThenEachPlaceIsEquallyLikely() {
+        let rounds = (1...150).flatMap { deal(Difficulty(level: 10), seed: UInt64($0)) }
+        for count in [2, 3] {
+            var places = [Int](repeating: 0, count: count)
+            for round in rounds {
+                if let place = SayingsDeck.shown(round, count: count).firstIndex(of: round.saying) {
+                    places[place] += 1
+                }
+            }
+            for share in places.map({ Double($0) / Double(rounds.count) }) {
+                XCTAssertEqual(share, 1 / Double(count), accuracy: 0.04, "\(count) shown: \(places)")
+            }
+        }
     }
 
     /// Five 100pt endings and the four 12pt gaps between them need 548pt.
@@ -89,10 +130,14 @@ final class SayingsDeckTests: XCTestCase {
         XCTAssertEqual(SayingsDeck.fittingCount(fiveEndings, heights: heights, gap: 12, room: -50), 2)
     }
 
-    /// Before the buttons are measured nothing is trimmed, so a first layout never hides an ending it
-    /// has room for.
-    func testGivenUnmeasuredEndingsWhenFittingThenAllDealtShow() {
-        XCTAssertEqual(SayingsDeck.fittingCount(fiveEndings, heights: [:], gap: 12, room: 100), 5)
+    /// Before the buttons are measured each counts at the 100pt minimum (#494), so a new round never lays
+    /// out all five first and trims a pass later.
+    func testGivenUnmeasuredEndingsWhenFittingThenEachCountsAsAHundredPoints() {
+        let fit = { SayingsDeck.fittingCount(self.fiveEndings, heights: [:], gap: 12, room: $0) }
+        XCTAssertEqual(fit(100), 2)
+        XCTAssertEqual(fit(324), 3)
+        XCTAssertEqual(fit(323), 2)
+        XCTAssertEqual(fit(548), 5)
     }
 
     func testGivenADealThenEightRoundsWithEightDifferentSayings() {

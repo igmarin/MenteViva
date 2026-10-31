@@ -32,30 +32,36 @@ struct SayingsView: View {
     @State private var showCelebration = false
     @State private var finalDetail = ""
     /// Measured heights (#415): the play area outside the padding, then everything in it but the endings
-    /// (the banner with the instruction, the saying, the amber note, the round counter) and each ending
-    /// button. None of them depends on how many endings show, so trimming never feeds back into them.
+    /// (the banner with the instruction row, the saying, the round counter) and each ending button. None
+    /// of them depends on how many endings show, so trimming never feeds back into them.
     @State private var areaHeight: CGFloat = 0
     @State private var topHeight: CGFloat = 0
     @State private var sayingHeight: CGFloat = 0
-    @State private var noteHeight: CGFloat = 0
     @State private var counterHeight: CGFloat = 0
     @State private var endingHeights: [Saying: Double] = [:]
     /// How many endings this round showed when he first tapped: kept until the next round, so a dimmed
     /// near miss never disappears and no button moves under his finger.
     @State private var frozenCount: Int?
+    /// How many the last round showed (#494): a new round starts there until its endings are measured,
+    /// so Next never lays out every ending, flips the page to scrolling and back a pass later.
+    @State private var previousCount: Int?
 
     private var round: SayingRound? {
         rounds.indices.contains(progress.completedRounds) ? rounds[progress.completedRounds] : nil
     }
 
     /// How many of the round's endings fit (#415): every one dealt on an iPad, where there is room, and
-    /// on a phone as many as fit under the saying, with room kept for the amber note, so the last one is
-    /// never below the fold. Re-fitted until his first tap in the round, then frozen.
+    /// on a phone as many as fit under the saying, so the last one is never below the fold. The amber
+    /// note takes the instruction's place (#494), so it costs no ending. Re-fitted until his first tap in
+    /// the round, then frozen.
     private func fittedCount(_ round: SayingRound) -> Int {
         if let frozenCount { return frozenCount }
-        guard !GameColumn.usesPadLayout(sizeClass), areaHeight > 0 else { return round.choices.count }
-        // The column's five blocks have four gaps between them, the note's counted even before it shows.
-        let room = areaHeight - topHeight - sayingHeight - noteHeight - counterHeight - 4 * Self.blockGap
+        guard !GameColumn.usesPadLayout(sizeClass) else { return round.choices.count }
+        let measured = areaHeight > 0 && round.choices.allSatisfy { endingHeights[$0] != nil }
+        if !measured, let previousCount { return min(previousCount, round.choices.count) }
+        guard areaHeight > 0 else { return round.choices.count }
+        // The column's four blocks have three gaps between them.
+        let room = areaHeight - topHeight - sayingHeight - counterHeight - 3 * Self.blockGap
         return SayingsDeck.fittingCount(round, heights: endingHeights, gap: Self.endingGap, room: room)
     }
 
@@ -65,9 +71,7 @@ struct SayingsView: View {
                 LevelExplainBanner(
                     change: PlanStore.todaysChange(GameID.sayings), game: GameID.sayings,
                     hasStarted: taps > 0 || progress.completedRounds > 0)
-                Text(AppLanguage.localized("game.sayings.instruction"))
-                    .font(.title2)
-                    .multilineTextAlignment(.center)
+                instructionRow
             }
             .onGeometryChange(for: CGFloat.self) {
                 $0.size.height
@@ -85,8 +89,6 @@ struct SayingsView: View {
                     } action: {
                         sayingHeight = $0
                     }
-
-                if showAlmost { almostNote }
 
                 if solved {
                     HStack(spacing: 12) {
@@ -152,11 +154,28 @@ struct SayingsView: View {
         AppLanguage.localized(saying.startKey) + " " + AppLanguage.localized(saying.endKey)
     }
 
+    /// The instruction and the amber note share one row as tall as the taller of the two, as in Tile
+    /// Pairs (#482, #494): after a near miss the note stands where the instruction was, so it never
+    /// pushes an ending down or costs one, and the instruction comes back with the next round. No
+    /// animation, so the swap is still with Reduce Motion.
+    private var instructionRow: some View {
+        ZStack {
+            Text(AppLanguage.localized("game.sayings.instruction"))
+                .font(.title2)
+                .multilineTextAlignment(.center)
+                .opacity(showAlmost ? 0 : 1)
+                .accessibilityHidden(showAlmost)
+            almostNote.hidden()
+            if showAlmost { almostNote }
+        }
+    }
+
     /// The soft amber note after a near miss, the same as Quick Eyes: kind and easy to read.
     private var almostNote: some View {
         Text(AppLanguage.localized("game.sayings.miss"))
             .font(.title2.weight(.semibold))
             .foregroundStyle(Color.todaysPick)
+            .multilineTextAlignment(.center)
             .padding(.horizontal, 14)
             .padding(.vertical, 10)
             .background(Color.amber.opacity(0.24), in: .rect(cornerRadius: 14))
@@ -169,17 +188,11 @@ struct SayingsView: View {
             .padding(.horizontal, 12)
     }
 
-    /// Every ending dealt and the amber note, laid out unseen at the column's width (#415), so their real
-    /// heights are known before choosing how many endings show: a long Spanish ending or big text wraps
-    /// a button past 100pt. A copy, because a trimmed ending is not on screen to be measured.
+    /// Every ending dealt, laid out unseen at the column's width (#415), so their real heights are known
+    /// before choosing how many show: a long Spanish ending or big text wraps a button past 100pt. A
+    /// copy, because a trimmed ending is not on screen to be measured.
     private func measuringCopy(of round: SayingRound) -> some View {
         VStack(spacing: Self.endingGap) {
-            almostNote
-                .onGeometryChange(for: CGFloat.self) {
-                    $0.size.height
-                } action: {
-                    noteHeight = $0
-                }
             ForEach(round.choices, id: \.self) { choice in
                 Button {
                 } label: {
@@ -223,7 +236,7 @@ struct SayingsView: View {
     }
 
     private func choose(_ choice: Saying, in round: SayingRound) {
-        frozenCount = fittedCount(round)
+        if frozenCount == nil { frozenCount = fittedCount(round) }
         taps += 1
         if choice == round.saying {
             if dimmed.isEmpty { correct += 1 }  // right on the first tap
@@ -249,6 +262,7 @@ struct SayingsView: View {
     private func next() {
         CaptionSpeaker.stop()
         if let round { SayingsDeck.markSeen(round.saying, defaults: .standard) }
+        previousCount = frozenCount
         resetRound()
         if progress.completeRound() {
             finish()
