@@ -141,13 +141,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Saved on this device. The app never shares or sends it. Photos added in this version and their names are excluded from new device backups. Older photos may still be included."
+            "value" : "Saved on this device. The app never shares or sends it. Your photos and their names are excluded from new device backups."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Se guarda en este dispositivo. La app nunca lo comparte ni lo envía. Las fotos añadidas en esta versión y sus nombres se excluyen de las nuevas copias de seguridad. Las fotos anteriores todavía podrían incluirse."
+            "value" : "Se guarda en este dispositivo. La app nunca lo comparte ni lo envía. Tus fotos y sus nombres se excluyen de las nuevas copias de seguridad."
           }
         }
       }
@@ -10802,13 +10802,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "A backup of this %@ may include your games. Photos added in this version and their names are excluded; older photos may still be included."
+            "value" : "A backup of this %@ may include your games. Your photos and their names are never included."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Una copia de seguridad de este %@ puede incluir tus partidas. Las fotos añadidas en esta versión y sus nombres se excluyen; las fotos anteriores todavía podrían incluirse."
+            "value" : "Una copia de seguridad de este %@ puede incluir tus partidas. Tus fotos y sus nombres nunca se incluyen."
           }
         }
       }

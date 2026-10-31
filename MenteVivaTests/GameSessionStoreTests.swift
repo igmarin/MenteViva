@@ -43,6 +43,18 @@ final class GameSessionStoreTests: XCTestCase {
         XCTAssertEqual(week.compactMap(\.game), [.memoryMatch, .quickEyes], "last week's Saturday is left out")
     }
 
+    /// #419: a new start pace leaves every game with a saved session alone, so the played set must be exact.
+    func testGivenSessionsForTwoGamesWhenAskingPlayedGamesThenExactlyThoseTwo() throws {
+        let context = ModelContext(
+            try ModelContainer(
+                for: GameSession.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true)))
+        for game in [GameID.stroop, .sudoku, .stroop] {
+            context.insert(GameSession(gameID: game, score: 0, rounds: 1, durationSeconds: 1))
+        }
+
+        XCTAssertEqual(context.playedGames(), [.stroop, .sudoku])
+    }
+
     /// #124: a store that can't open (failed migration, damaged file) used to
     /// crash every launch. Play must go on with an in-memory store instead.
     func testGivenAStoreThatCannotOpenWhenMakingTheContainerThenPlayStillSaves() throws {
@@ -58,5 +70,29 @@ final class GameSessionStoreTests: XCTestCase {
         context.record(GameSession(gameID: .stroop, score: 10, rounds: 10, durationSeconds: 30))
 
         XCTAssertEqual(try context.fetchCount(FetchDescriptor<GameSession>()), 1)
+    }
+
+    /// #419: the model is frozen as `SchemaV1` with a migration plan, so a later model change has a
+    /// stage to run instead of a store that won't open. Stores saved before the plan existed must
+    /// open with it and keep every game, not fall back to memory.
+    func testGivenAStoreSavedBeforeSchemaV1WhenMakingTheContainerThenItsGamesAreKept() throws {
+        let folder = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: folder) }
+        let url = folder.appendingPathComponent("default.store")
+        do {
+            let unversioned = Schema([GameSession.self])
+            let old = try ModelContainer(
+                for: unversioned, configurations: ModelConfiguration(schema: unversioned, url: url))
+            ModelContext(old).record(GameSession(gameID: .stroop, score: 10, rounds: 10, durationSeconds: 30))
+        }
+
+        let schema = Schema(versionedSchema: SchemaV1.self)
+        let container = MenteVivaApp.makeContainer(
+            trying: [ModelConfiguration(schema: schema, url: url)], schema: schema)
+
+        XCTAssertEqual(try ModelContext(container).fetchCount(FetchDescriptor<GameSession>()), 1)
+        // The model is nested in `SchemaV1`; stores saved by the top-level class match only by this name.
+        XCTAssertEqual(schema.entities.map(\.name), ["GameSession"])
     }
 }

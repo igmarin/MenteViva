@@ -6,6 +6,7 @@ import SwiftUI
 struct MenteVivaApp: App {
     init() {
         LevelMigration.runOnce()
+        MemoryPhotos.excludeFromBackup()
     }
 
     /// CloudKit sync is a **compile-time** choice. The generator passes
@@ -14,7 +15,7 @@ struct MenteVivaApp: App {
     /// entitlement traps inside CloudKit's mirroring setup — an uncatchable
     /// EXC_BREAKPOINT, not a Swift error we could fall back from.
     private let modelContainer: ModelContainer = {
-        let schema = Schema([GameSession.self])
+        let schema = Schema(versionedSchema: SchemaV1.self)
         #if LOCAL_ONLY
             let stores = [ModelConfiguration(schema: schema)]
         #else
@@ -28,12 +29,13 @@ struct MenteVivaApp: App {
 
     /// The first store that opens, in order. If none does (a failed migration,
     /// a damaged file), an in-memory store (#124): this launch's games aren't
-    /// kept, but the app opens and play goes on. Logged, never shown.
+    /// kept, but the app opens and play goes on. Logged, never shown. Each store
+    /// opens through `SessionMigrationPlan`, so a later model version migrates it (#419).
     static func makeContainer(trying stores: [ModelConfiguration], schema: Schema) -> ModelContainer {
         let log = Logger(subsystem: "com.igmarin.MenteViva", category: "store")
         for store in stores {
             do {
-                return try ModelContainer(for: schema, configurations: [store])
+                return try ModelContainer(for: schema, migrationPlan: SessionMigrationPlan.self, configurations: [store])
             } catch {
                 log.error("Store did not open: \(String(describing: error), privacy: .public)")
             }
