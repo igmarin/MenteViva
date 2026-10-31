@@ -76,9 +76,14 @@ struct LevelExplainBanner: View {
     /// render only (not on every drag frame of the parent), and the dismissal
     /// is latched while the body reads `hasStarted`, with no `onChange` that a
     /// removed line could take with it.
-    @State private var memo = Memo()
+    @State private var ownMemo = Memo()
+    /// A memo kept by a parent whose layout can rebuild this view (a `ViewThatFits` that swaps
+    /// between fitting and scrolling when the phone turns): a rebuilt banner would start with a
+    /// fresh memo, read `hasSeenExplain` (already set) and show nothing (#481).
+    var sharedMemo: Memo?
 
     var body: some View {
+        let memo = sharedMemo ?? ownMemo
         let slot = memo.slot(change: change, game: game, hasStarted: hasStarted)
         if let key = memo.note?.key, slot == .showing || (keepsSpace && slot.takesSpace) {
             LevelExplainLine(key: key)
@@ -88,7 +93,7 @@ struct LevelExplainBanner: View {
         }
     }
 
-    private final class Memo {
+    final class Memo {
         var note: LevelExplainNote?
 
         func slot(change: LevelChange?, game: GameID, hasStarted: Bool) -> LevelExplainSlot {
