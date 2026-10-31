@@ -872,7 +872,7 @@
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) LOCAL_ONLY";
 				CURRENT_PROJECT_VERSION = 2;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "Mente Viva";
+				INFOPLIST_KEY_CFBundleDisplayName = "MenteViva";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -909,7 +909,7 @@
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) LOCAL_ONLY";
 				CURRENT_PROJECT_VERSION = 2;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "Mente Viva";
+				INFOPLIST_KEY_CFBundleDisplayName = "MenteViva";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

@@ -47,7 +47,7 @@ and 2FA): the signed archive, `-exportArchive`, and the upload.
 ## First upload (owner, once)
 
 1. developer.apple.com → Identifiers: `com.igmarin.MenteViva` exists under the paid team (Xcode creates it on first signed build).
-2. App Store Connect → **Apps → +** → New App: iOS, name Mente Viva, languages English + Spanish, that bundle ID.
+2. App Store Connect → **Apps → +** → New App: iOS, name MenteViva, languages English + Spanish, that bundle ID.
 3. Xcode → Product → Archive (scheme MenteViva, destination Any iOS Device, team = paid) → Organizer →
    **Distribute App → App Store Connect → Upload**.
 4. Command-line equivalent: archive with `DEVELOPMENT_TEAM=<id>` (drop `CODE_SIGNING_ALLOWED=NO`) and
@@ -70,7 +70,7 @@ and 2FA): the signed archive, `-exportArchive`, and the upload.
 ### Beta review notes: English
 
 ```
-Mente Viva is a set of short, friendly puzzle and memory games for older adults. It is a fun mental
+MenteViva is a set of short, friendly puzzle and memory games for older adults. It is a fun mental
 exercise, nothing more. No account or sign-in is needed, and the app makes no network calls.
 
 What to test: open the app, answer the short welcome questions, then play any of the games on the
@@ -83,7 +83,7 @@ Feedback and questions: hello@nebulaideas.com
 ### Beta review notes: Español
 
 ```
-Mente Viva es un conjunto de juegos cortos y amables de memoria y rompecabezas para personas mayores.
+MenteViva es un conjunto de juegos cortos y amables de memoria y rompecabezas para personas mayores.
 Es un ejercicio mental divertido, nada más. No necesita cuenta ni inicio de sesión, y la app no usa la red.
 
 Qué probar: abre la app, responde las preguntas de bienvenida y juega cualquiera de los juegos de la
@@ -104,7 +104,7 @@ ES: Juega dos juegos y abre Mi Semana. Cuéntanos qué costó ver, tocar o enten
 
 1. TestFlight → the external group → **Add Testers** → by email, one line per person. Family first.
 2. The non-family seniors of #33: add them by email too, and **sit with each one for the install**
-   (10 minutes): they need an Apple ID, the free **TestFlight** app from the App Store, then tap Install on Mente Viva.
+   (10 minutes): they need an Apple ID, the free **TestFlight** app from the App Store, then tap Install on MenteViva.
    A public link is the fallback for someone whose email is awkward: group → Public Link → send it by message.
    Anyone with the link can join, so remove it after the session. **Exception, contest period (#386):** the
    public link of the external group stays open from upload until Nov 9, 2026, so judges can install without

@@ -37,7 +37,7 @@ then there is nothing to install, so this sheet stays on the shelf.
 
 ## Part A — for him (print on its own page, large type)
 
-> **A week with Mente Viva**
+> **A week with MenteViva**
 >
 > Play whenever you feel like it. Even five minutes is lovely.
 >

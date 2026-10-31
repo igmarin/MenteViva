@@ -1,4 +1,4 @@
-# Docs — Mente Viva
+# Docs — MenteViva
 
 Read in this order. Each doc is short on purpose. If a doc grows past one
 screen of real content, split it — long docs don't get read.
