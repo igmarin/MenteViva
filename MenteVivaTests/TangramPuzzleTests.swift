@@ -255,14 +255,23 @@ final class TangramPuzzleTests: XCTestCase {
         XCTAssertEqual(puzzle.correct, 1)
     }
 
-    func testGivenShowMeOneWhenAskedThenTheFirstFreeSlotFillsWithoutCountingAnAttempt() {
+    func testGivenShowMeOneWhenAskedThenTheFirstFreeSlotFillsAndCountsAnAttempt() {
         var puzzle = TangramPuzzle(shape: TangramShapes.all[0], rules: rules(level: 5))
         XCTAssertEqual(puzzle.showOne(), 0)
         XCTAssertEqual(puzzle.filled, [0])
-        XCTAssertEqual(puzzle.attempts, 0)
+        XCTAssertEqual(puzzle.attempts, 1)
         while puzzle.showOne() != nil {}
         XCTAssertTrue(puzzle.isComplete)
         XCTAssertNil(puzzle.showOne())
+    }
+
+    func testGivenOnePlacementAndSixShownWhenCompleteThenAccuracyIsOneSeventh() {
+        let shape = TangramShapes.all[0]
+        var puzzle = TangramPuzzle(shape: shape, rules: rules(level: 5))
+        XCTAssertEqual(puzzle.place(shape.placements[0].piece, inSlot: 0), .snapped(slot: 0))
+        while puzzle.showOne() != nil {}
+        XCTAssertEqual(puzzle.correct, 1)
+        XCTAssertEqual(puzzle.attempts, 7)
     }
 
     func testGivenLevelsWhenOutlinesThenTheFirstSlotsShowTheirs() {

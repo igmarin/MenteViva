@@ -149,6 +149,10 @@ final class WarmUpTests: XCTestCase {
         XCTAssertEqual(WarmUpStore.remaining(game, defaults: defaults), WarmUp.sessions - 1)
     }
 
+    func testGivenSlidingBlocksWarmUpAtTwiceTheFewestMovesWhenLevellingThenLevelHolds() {
+        XCTAssertEqual(WarmUp.level(after: 0.5, game: .slidingBlocks, current: Difficulty(level: 4)).0.level, 4)
+    }
+
     func testGivenTheLevelIsAtTheEdgeWhenCalibratingThenItStaysInOneToTen() {
         XCTAssertEqual(WarmUp.level(after: 1.0, game: .memoryMatch, current: Difficulty(level: 9)).0.level, 10)
         XCTAssertNil(WarmUp.level(after: 1.0, game: .memoryMatch, current: Difficulty(level: 10)).1)

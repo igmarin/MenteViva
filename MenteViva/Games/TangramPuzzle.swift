@@ -64,7 +64,7 @@ nonisolated struct TangramPuzzle: Sendable {
     /// Slots already home, as indices into `shape.placements`.
     private(set) var filled: Set<Int>
     /// Placements tried and placements that went home: the session's
-    /// `attempts` and `correct`. "Show me one" counts as neither.
+    /// `attempts` and `correct`. A shown piece counts as an attempt only.
     private(set) var attempts = 0
     private(set) var correct = 0
 
@@ -133,9 +133,10 @@ nonisolated struct TangramPuzzle: Sendable {
         return .snapped(slot: slot)
     }
 
-    /// "Show me one": the first free slot fills itself. Returns it, or nil when done.
+    /// A shown piece adds one attempt and no correct placement; nil means the board is full.
     mutating func showOne() -> Int? {
         guard let slot = freeSlots.first else { return nil }
+        attempts += 1
         filled.insert(slot)
         return slot
     }
