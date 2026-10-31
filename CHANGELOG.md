@@ -5,6 +5,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 ## [Unreleased]
 
 ### Changed
+- **One spelling of the name (#389):** the app is "MenteViva", one word, on the home screen, the Home title, About, the website and the store text.
 - **Tangram remembers the figures you have seen (#416):** a new Tangram figure is one you have not seen yet, even across days, until every figure has been shown; then it starts over.
 - **Leaving a half-played game asks first (#404):** Sudoku, Tangram, Sliding Blocks, Tile Pairs, Up or Down and Memory Lane (and Names and Faces) now have their own back arrow in the top left, as big as the speaker. After your first move it asks "Leave this game?" with two big buttons, Keep playing and Leave, so one stray tap no longer throws away the board; before any move, or once the game is finished, it closes at once. The edge swipe is off in these games. EN + ES.
 - **Lighter Home, My Week, My progress and photo picking (#417):** Home no longer re-reads two weeks of play to rebuild a plan it already saved, My Week and My progress read only the days they show, and adding several photos shrinks each as it arrives. They look the same; they use less memory and open a little quicker.

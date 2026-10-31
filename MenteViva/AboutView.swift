@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// "About Mente Viva" (#378): says plainly how the pictures and the code were made and that
+/// "About MenteViva" (#378): says plainly how the pictures and the code were made and that
 /// nothing uses AI while someone plays, so players and App Store reviewers can read it in the app.
 ///
 /// Three short paragraphs in reading order under a title that carries the header trait. The

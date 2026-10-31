@@ -1,4 +1,4 @@
-# Mente Viva
+# MenteViva
 
 Warm, bilingual (EN/ES) fun mental exercise for older adults, built for one family first.
 

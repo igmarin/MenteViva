@@ -57,13 +57,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mente Viva"
+            "value" : "MenteViva"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mente Viva"
+            "value" : "MenteViva"
           }
         }
       }
@@ -13489,13 +13489,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "About Mente Viva"
+            "value" : "About MenteViva"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Acerca de Mente Viva"
+            "value" : "Acerca de MenteViva"
           }
         }
       }

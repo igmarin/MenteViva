@@ -6,10 +6,10 @@ policy changes. The App Store "App Privacy" label must match it.
 
 ---
 
-**Mente Viva — Privacy Policy**
+**MenteViva — Privacy Policy**
 Last updated: 2026-10-28
 
-**The short version:** Mente Viva does not receive your personal data. No account,
+**The short version:** MenteViva does not receive your personal data. No account,
 no ads, no tracking. Your games, your photos and any names you add stay on your device.
 
 **What is stored, and where.** Your game sessions (which games you played,
@@ -42,7 +42,7 @@ it, to people you choose.
 **No third-party SDKs.** The app contains no advertising, analytics, or
 tracking libraries of any kind.
 
-**Children.** Mente Viva is designed for older adults and is not directed at
+**Children.** MenteViva is designed for older adults and is not directed at
 children. We collect no age information from anyone.
 
 **Changes.** If this policy changes, the new version replaces this one at the
