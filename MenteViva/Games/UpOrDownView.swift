@@ -16,6 +16,8 @@ struct UpOrDownView: View {
     @State private var rowWidth = 0.0
     @State private var played = 0
     @State private var taps = 0
+    /// Turning the deck is a move too: the leave prompt asks after it (#404).
+    @State private var turnedDeck = false
     @State private var startedAt = Date.now
     @State private var missed = false
     @State private var missedPile: Int?
@@ -58,6 +60,7 @@ struct UpOrDownView: View {
         }
         .padding()
         .fitOrScroll()
+        .leaveGuard(inProgress: taps > 0 || turnedDeck, celebrating: showCelebration)
         .gameHeader(.upOrDown, instruction: AppLanguage.localized("game.upordown.instruction"))
         .firstPlayGuide(.upOrDown, line: AppLanguage.localized("game.upordown.guide"), example: guideExample)
         .celebration(isPresented: $showCelebration, game: .upOrDown, detail: finalDetail, onPlayAgain: restart)
@@ -220,6 +223,7 @@ struct UpOrDownView: View {
         deal = UpOrDownDeal.make(difficulty: difficulty, width: rowWidth, using: &generator)
         played = 0
         taps = 0
+        turnedDeck = false
         showAlmost = false
         startedAt = .now
     }
@@ -248,6 +252,7 @@ struct UpOrDownView: View {
     private func turnDeck() {
         guard var current = deal, current.turn() else { return }
         showAlmost = false
+        turnedDeck = true
         deal = current
         finishIfDone()
     }
