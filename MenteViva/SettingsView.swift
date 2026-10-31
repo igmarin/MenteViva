@@ -1,7 +1,8 @@
 import SwiftUI
 
-/// Settings a stranger can reach alone: language, sound & haptics, bigger text,
-/// My progress and Set up (#141), privacy, version.
+/// Settings a stranger can reach alone, in three sections (#421): "For you" (language, sound,
+/// bigger text, guides), "For the family" (My progress, My plan, Set up; #141) and "About"
+/// (why these games, privacy, version).
 struct SettingsView: View {
     /// UserDefaults key of the Bigger text toggle.
     static let biggerTextKey = "biggerText"
@@ -16,7 +17,11 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack {
             List {
+                // Everything about how the app looks and sounds to the player: one section (#421).
                 Section {
+                    Text(AppLanguage.localized("settings.language"))
+                        .font(.title3.weight(.semibold))
+                        .accessibilityAddTraits(.isHeader)
                     VStack(spacing: 0) {
                         ForEach(AppLanguage.allCases) { language in
                             Button {
@@ -39,35 +44,24 @@ struct SettingsView: View {
                             .accessibilityHint(AppLanguage.localized("settings.language.restart"))
                         }
                     }
-                } header: {
-                    Text(AppLanguage.localized("settings.language"))
-                        .font(.title3)
-                } footer: {
                     Text(AppLanguage.localized("settings.language.restart"))
                         .font(.footnote)
-                }
+                        .foregroundStyle(.secondary)
 
-                Section {
                     Toggle(AppLanguage.localized("settings.sound"), isOn: $soundEnabled)
                         .font(.title3)
                         .frame(minHeight: 100)
                         .accessibilityHint(AppLanguage.localized("settings.sound.hint"))
-                }
 
-                Section {
                     Toggle(AppLanguage.localized("settings.speak"), isOn: $speakNames)
                         .font(.title3)
                         .frame(minHeight: 100)
                         .accessibilityHint(AppLanguage.localized("settings.speak.hint"))
-                }
 
-                Section {
                     Toggle(AppLanguage.localized("settings.textsize"), isOn: $biggerText)
                         .font(.title3)
                         .frame(minHeight: 100)
-                }
 
-                Section {
                     // Brings back each game's "Let me show you" guide (#243).
                     Button {
                         FirstPlayGuideStore.resetAll()
@@ -87,8 +81,11 @@ struct SettingsView: View {
                     }
                     .buttonStyle(.plain)
                     .accessibilityValue(guidesReset ? AppLanguage.localized("settings.guides.done") : "")
+                } header: {
+                    sectionHeader("settings.section.you")
                 }
 
+                // The tools a family member uses to set the app up for someone else.
                 Section {
                     NavigationLink {
                         MyProgressView()
@@ -117,7 +114,12 @@ struct SettingsView: View {
                             .frame(maxWidth: .infinity, minHeight: 100, alignment: .leading)
                     }
                     .accessibilityHint(AppLanguage.localized("setup.open.hint"))
+                } header: {
+                    sectionHeader("settings.section.family")
+                }
 
+                // What the app is, why it has these games, what it keeps, and which version.
+                Section {
                     // The balanced, sourced words behind the games (#214), readable offline.
                     NavigationLink {
                         WhyTheseGamesView()
@@ -137,10 +139,11 @@ struct SettingsView: View {
                             .frame(maxWidth: .infinity, minHeight: 100, alignment: .leading)
                     }
                     .accessibilityHint(AppLanguage.localized("about.row.hint"))
-                }
 
-                // Short promises he can read at a glance.
-                Section {
+                    // Short promises he can read at a glance.
+                    Text(AppLanguage.localized("settings.privacy.title"))
+                        .font(.title3.weight(.semibold))
+                        .accessibilityAddTraits(.isHeader)
                     privacyLine(
                         String(format: AppLanguage.localized("settings.privacy.device %@"), device),
                         systemImage: device == "iPad" ? "ipad" : "iphone")
@@ -163,17 +166,14 @@ struct SettingsView: View {
                                 .frame(maxWidth: .infinity, minHeight: 100, alignment: .leading)
                         }
                     }
-                } header: {
-                    Text(AppLanguage.localized("settings.privacy.title"))
-                        .font(.title3)
-                }
 
-                Section {
                     LabeledContent(
                         AppLanguage.localized("settings.version"),
                         value: Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "—"
                     )
                     .font(.body)
+                } header: {
+                    sectionHeader("settings.section.about")
                 }
             }
             .listPageBackground()
@@ -187,6 +187,14 @@ struct SettingsView: View {
             }
         }
         .id(appLanguage)
+    }
+
+    /// A section's name, big and bold so the three groups are told apart at a glance (#421).
+    private func sectionHeader(_ key: String) -> some View {
+        Text(AppLanguage.localized(key))
+            .font(.title3.weight(.heavy))
+            .textCase(nil)
+            .accessibilityAddTraits(.isHeader)
     }
 
     /// "iPad" or "iPhone", so each promise names the device in his hands.
