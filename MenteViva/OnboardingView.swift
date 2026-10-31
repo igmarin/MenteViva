@@ -108,12 +108,8 @@ struct OnboardingView: View {
                 next()
             } label: {
                 Text(AppLanguage.localized("onboarding.start"))
-                    .font(.title2.weight(.semibold))
-                    .frame(maxWidth: .infinity, minHeight: 100)
-                    .foregroundStyle(Color.paper)
-                    .background(Color.brand, in: .rect(cornerRadius: 20))
             }
-            .buttonStyle(.plain)
+            .buttonStyle(RetroButtonStyle())
             .accessibilityHint(AppLanguage.localized("onboarding.start.hint"))
         }
     }
@@ -158,12 +154,8 @@ struct OnboardingView: View {
                     next()
                 } label: {
                     Text(AppLanguage.localized("onboarding.next"))
-                        .font(.title2.weight(.semibold))
-                        .frame(maxWidth: .infinity, minHeight: 100)
-                        .foregroundStyle(Color.paper)
-                        .background(Color.brand, in: .rect(cornerRadius: 20))
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(RetroButtonStyle())
             }
 
             Spacer(minLength: 0)
