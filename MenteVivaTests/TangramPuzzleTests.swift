@@ -244,6 +244,34 @@ final class TangramPuzzleTests: XCTestCase {
         XCTAssertEqual(result, .snapped(slot: slot))
     }
 
+    func testGivenALargeTileAndAFloorPastItsShareWhenDroppedBetweenThemThenTheFloorDecides() {
+        // A floor of 3 units is past the large tile's share reach (2.8): the max() takes the floor.
+        let shareReach = TangramPuzzle.snapShare * TangramPiece.large.diagonal
+        XCTAssertLessThan(shareReach, 2.9)
+        let (shape, slot, point) = drop(.large, twin: .large2, units: 2.95)
+        let target = shape.placements[slot]
+        var withFloor = TangramPuzzle(shape: shape, rules: rules(level: 7))
+        XCTAssertEqual(
+            withFloor.place(.large, at: point, rotation: target.rotation, flipped: target.flipped, minimumReach: 3),
+            .snapped(slot: slot))
+        var withoutFloor = TangramPuzzle(shape: shape, rules: rules(level: 7))
+        XCTAssertEqual(
+            withoutFloor.place(.large, at: point, rotation: target.rotation, flipped: target.flipped),
+            .tryAnotherSpot)
+    }
+
+    func testGivenAPhoneBoardWhenTheReachFloorIsWorkedOutThenItIsThirtyPointsInUnits() {
+        XCTAssertEqual(TangramPuzzle.reachFloor(points: 30, scale: 15), 2, accuracy: 0.000_001)
+    }
+
+    func testGivenTheZeroSizeFallbackScaleWhenTheReachFloorIsWorkedOutThenItStopsAtALargeTilesShare() {
+        // Before the board has a size, fitTransform answers scale 1: 30 units would reach past the figure.
+        let fit = TangramPuzzle.fitTransform(box: TangramPuzzle.boundingBox(of: TangramShapes.all[0]), in: .zero)
+        let floor = TangramPuzzle.reachFloor(points: 30, scale: fit.scale)
+        XCTAssertLessThanOrEqual(floor, TangramPuzzle.snapShare * TangramPiece.large.diagonal + 0.000_001)
+        XCTAssertEqual(TangramPuzzle.reachFloor(points: 30, scale: 0), 0)
+    }
+
     func testGivenVoiceOverWhenATileIsPlacedInANamedSlotThenItGoesHomeAtAnyLevel() {
         let shape = TangramShapes.all[0]
         var puzzle = TangramPuzzle(shape: shape, rules: rules(level: 10))
@@ -340,11 +368,13 @@ final class TangramPuzzleTests: XCTestCase {
     // MARK: - Tray (#396)
 
     func testGivenTheThreeTrianglesAtOneTurnWhenDrawnInTheTrayThenTheirLegsKeepTheirRatio() {
+        let scale = TangramPuzzle.trayScale(for: TangramPiece.allCases)
         for rotation in 0..<8 {
             for flipped in [false, true] {
                 let legs = [TangramPiece.large, .medium, .small].map { piece in
                     let points = TangramPuzzle.trayPoints(
-                        of: TangramPlacement(piece: piece, position: .zero, rotation: rotation, flipped: flipped))
+                        of: TangramPlacement(piece: piece, position: .zero, rotation: rotation, flipped: flipped),
+                        scale: scale)
                     // Corner 0 is the right angle, corner 1 the end of a leg.
                     return Double(hypot(points[1].x - points[0].x, points[1].y - points[0].y))
                 }
@@ -355,24 +385,79 @@ final class TangramPuzzleTests: XCTestCase {
         }
     }
 
-    func testGivenAnyTileAtAnyOfEightTurnsWhenDrawnInTheTrayThenItFitsCentredInItsCell() {
+    func testGivenAnyTileAloneInTheTrayWhenDrawnAtAnyOfEightTurnsThenItFitsCentredInItsCell() {
+        // A tile alone is drawn at the largest scale the tray ever uses for it.
         for piece in TangramPiece.allCases {
+            let scale = TangramPuzzle.trayScale(for: [piece])
             for rotation in 0..<8 {
                 for flipped in [false, true] {
                     let points = TangramPuzzle.trayPoints(
-                        of: TangramPlacement(piece: piece, position: .zero, rotation: rotation, flipped: flipped))
+                        of: TangramPlacement(piece: piece, position: .zero, rotation: rotation, flipped: flipped),
+                        scale: scale)
                     let xs = points.map(\.x)
                     let ys = points.map(\.y)
                     let label = "\(piece) turn \(rotation) flipped \(flipped)"
-                    XCTAssertGreaterThanOrEqual(xs.min() ?? -1, 0, label)
-                    XCTAssertLessThanOrEqual(xs.max() ?? 101, 100, label)
-                    XCTAssertGreaterThanOrEqual(ys.min() ?? -1, 0, label)
-                    XCTAssertLessThanOrEqual(ys.max() ?? 101, 100, label)
+                    XCTAssertGreaterThanOrEqual(xs.min() ?? -1, 12 - 0.000_001, label)
+                    XCTAssertLessThanOrEqual(xs.max() ?? 101, 88 + 0.000_001, label)
+                    XCTAssertGreaterThanOrEqual(ys.min() ?? -1, 12 - 0.000_001, label)
+                    XCTAssertLessThanOrEqual(ys.max() ?? 101, 88 + 0.000_001, label)
                     XCTAssertEqual(((xs.min() ?? 0) + (xs.max() ?? 0)) / 2, 50, accuracy: 0.000_001, label)
                     XCTAssertEqual(((ys.min() ?? 0) + (ys.max() ?? 0)) / 2, 50, accuracy: 0.000_001, label)
                 }
             }
         }
+    }
+
+    func testGivenOnlySmallTilesLeftWhenTheTrayIsScaledThenTheyDrawTwiceAsBigAsBesideALargeOne() {
+        let small: [TangramPiece] = [.small, .small2, .square]
+        XCTAssertEqual(
+            TangramPuzzle.trayScale(for: small), 2 * TangramPuzzle.trayScale(for: small + [.large]),
+            accuracy: 0.000_001)
+        // The small triangle's leg, 2√2 units, is over 50pt: easy to see for a low-vision player.
+        XCTAssertGreaterThan(2 * sqrt(2) * TangramPuzzle.trayScale(for: small), 50)
+    }
+
+    func testGivenAnEmptyTrayWhenScaledThenItUsesTheLargeTilesScale() {
+        XCTAssertEqual(TangramPuzzle.trayScale(for: []), TangramPuzzle.trayScale(for: [.large]))
+    }
+
+    // MARK: - Layout (#396)
+
+    func testGivenAnIPhoneHeldUprightWhenTheLayoutIsChosenThenTheTraySlidesSideways() {
+        // SE, 16, 16 Pro Max: the area under the bar, inside the safe area.
+        for area in [CGSize(width: 375, height: 603), CGSize(width: 393, height: 715), CGSize(width: 440, height: 816)] {
+            XCTAssertEqual(TangramLayout.choose(for: area), .row, "\(area)")
+        }
+    }
+
+    func testGivenAnIPhoneOnItsSideWhenTheLayoutIsChosenThenTheBoardSitsBesideTheTray() {
+        // SE, 16 Pro, 16 Pro Max in landscape; the Pro Max reports a regular width there.
+        for area in [CGSize(width: 667, height: 343), CGSize(width: 750, height: 349), CGSize(width: 832, height: 387)] {
+            XCTAssertEqual(TangramLayout.choose(for: area), .sideBySide, "\(area)")
+        }
+    }
+
+    func testGivenAFullScreenIPadWhenTheLayoutIsChosenThenTheTrayKeepsItsGrid() {
+        // mini upright and on its side, 11-inch on its side, 13-inch upright.
+        for area in [
+            CGSize(width: 744, height: 1039), CGSize(width: 1133, height: 650),
+            CGSize(width: 1194, height: 740), CGSize(width: 1032, height: 1290),
+        ] {
+            XCTAssertEqual(TangramLayout.choose(for: area), .grid, "\(area)")
+        }
+    }
+
+    func testGivenANarrowIPadWindowWhenTheLayoutIsChosenThenTheTraySlidesInsteadOfWrapping() {
+        // Slide Over: the grid would wrap into four rows and squeeze the board, so the tray slides.
+        for area in [CGSize(width: 320, height: 1000), CGSize(width: 320, height: 640)] {
+            XCTAssertEqual(TangramLayout.choose(for: area), .row, "\(area)")
+        }
+    }
+
+    func testGivenTheLayoutsWhenTheTrayIsAskedThenOnlyTheGridWraps() {
+        XCTAssertFalse(TangramLayout.grid.traySlides)
+        XCTAssertTrue(TangramLayout.row.traySlides)
+        XCTAssertTrue(TangramLayout.sideBySide.traySlides)
     }
 
     func testGivenEveryRegionWhenSlotInitThenAllNine() {

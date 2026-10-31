@@ -257,14 +257,40 @@ nonisolated struct TangramPuzzle: Sendable {
         CGPoint(x: (point.x - origin.x) / scale, y: (origin.y - point.y) / scale)
     }
 
-    /// Points per authoring unit in the tray, one for all seven tiles (#396). Fitting each tile
-    /// to its cell drew the large, medium and small triangles the same size. 8 units, the large
-    /// tile's long side, is the widest any tile gets at any turn, so each fits a 76pt square.
-    static let trayScale = 76.0 / 8.0
+    /// The view's 60pt target as a reach in authoring units (#396): `points` from a slot's middle
+    /// on a board drawn at `scale` points per unit. Never past a large tile's own share: before the
+    /// board has a size, `fitTransform` falls back to scale 1, and 30 units would pull a tile into
+    /// a slot from anywhere on the figure.
+    static func reachFloor(points: Double, scale: CGFloat) -> Double {
+        guard scale > 0 else { return 0 }
+        return min(points / Double(scale), snapShare * TangramPiece.large.diagonal)
+    }
+
+    /// Each tray tile fits a 76pt square in its 100pt cell, leaving room for the cell's edge.
+    static let trayFit = 76.0
+
+    /// Points per authoring unit in the tray, one for every tile in it (#396), so the tiles keep
+    /// their true sizes beside each other: fitting each tile to its cell drew the three triangles
+    /// the same size. The largest tile still in the tray, at its widest turn, fills the 76pt square;
+    /// once the large triangles are home the small tiles grow, from 27pt to 54pt across.
+    static func trayScale(for pieces: [TangramPiece]) -> Double {
+        trayFit / (pieces.map(trayExtent).max() ?? trayExtent(.large))
+    }
+
+    /// The most room a tile takes across or down at any of its eight turns (a mirror is a turned
+    /// tile's outline mirrored, so it needs no more): turning a tray tile never overflows its cell.
+    static func trayExtent(_ piece: TangramPiece) -> Double {
+        (0..<8).map { rotation in
+            let corners = TangramPiece.placedCorners(piece, position: .zero, rotation: rotation, flipped: false)
+            let xs = corners.map(\.x)
+            let ys = corners.map(\.y)
+            return Double(max((xs.max() ?? 0) - (xs.min() ?? 0), (ys.max() ?? 0) - (ys.min() ?? 0)))
+        }.max() ?? 0
+    }
 
     /// A tray tile's corners in its 100pt cell, in points with y down: turned and mirrored as the
-    /// player left it, drawn at `trayScale` and centred on the cell's middle.
-    static func trayPoints(of tile: TangramPlacement) -> [CGPoint] {
+    /// player left it, drawn at the tray's `scale` and centred on the cell's middle.
+    static func trayPoints(of tile: TangramPlacement, scale: Double) -> [CGPoint] {
         let corners = TangramPiece.placedCorners(
             tile.piece, position: .zero, rotation: tile.rotation, flipped: tile.flipped)
         let xs = corners.map(\.x)
@@ -272,7 +298,7 @@ nonisolated struct TangramPuzzle: Sendable {
         let midX = ((xs.min() ?? 0) + (xs.max() ?? 0)) / 2
         let midY = ((ys.min() ?? 0) + (ys.max() ?? 0)) / 2
         return corners.map {
-            CGPoint(x: 50 + ($0.x - midX) * trayScale, y: 50 - ($0.y - midY) * trayScale)
+            CGPoint(x: 50 + ($0.x - midX) * scale, y: 50 - ($0.y - midY) * scale)
         }
     }
 
@@ -325,4 +351,47 @@ nonisolated enum TangramSlot: Sendable {
         case .bottomRight: "bottom.right"
         }
     }
+}
+
+/// How the Tangram table is arranged in the space the game gets (#396). Chosen from the measured
+/// area, not the size class: an iPhone Pro Max on its side reports a regular width, and an iPad in
+/// Slide Over a compact one. The heights are at the default text size; at larger text the page
+/// still scrolls when it must (`fitOrScroll`).
+nonisolated enum TangramLayout: Equatable, Sendable {
+    /// Board on top, the tray's cells wrapping in a grid under the buttons: a full-screen iPad.
+    case grid
+    /// Board on top, the tray in one row that slides sideways: an iPhone held upright.
+    case row
+    /// Board on the left; the hint, buttons and a sliding tray on the right: an iPhone on its side.
+    case sideBySide
+
+    /// The board's smallest height: the page fits an iPhone SE without scrolling.
+    static let boardMinimum: CGFloat = 200
+    /// The board's height before the grid may wrap into a second row and squeeze it.
+    static let boardComfortable: CGFloat = 320
+    /// A tray cell, and the gap between cells and between the table's parts.
+    static let cell: CGFloat = 100
+    static let cellGap: CGFloat = 12
+    static let partGap: CGFloat = 16
+    static let padding: CGFloat = 16
+    /// The stacked table's height without board and tray: padding, the instruction's line, the
+    /// hint's two reserved lines, the 100pt buttons and the gaps between the five parts.
+    static let stackedText: CGFloat = 2 * padding + 30 + 60 + cell + 4 * partGap
+
+    /// The layout for an area of this size holding up to `tiles` tray tiles. A grid of one row is
+    /// no taller than the sliding row, so it is used whenever the stack fits; more rows only while
+    /// the board keeps a comfortable size. Held upright, the table stacks even when it is short
+    /// (and scrolls); on its side it goes side by side once the stack doesn't fit.
+    static func choose(for area: CGSize, tiles: Int = TangramPiece.allCases.count) -> TangramLayout {
+        let columns = max(1, Int((area.width - 2 * padding + cellGap) / (cell + cellGap)))
+        let rows = max(1, (tiles + columns - 1) / columns)
+        let grid = CGFloat(rows) * cell + CGFloat(rows - 1) * cellGap
+        let board = rows == 1 ? boardMinimum : boardComfortable
+        if stackedText + board + grid <= area.height { return .grid }
+        if stackedText + boardMinimum + cell <= area.height || area.height >= area.width { return .row }
+        return .sideBySide
+    }
+
+    /// Whether the tray is one sliding row, whose tiles travel by system drag.
+    var traySlides: Bool { self != .grid }
 }
