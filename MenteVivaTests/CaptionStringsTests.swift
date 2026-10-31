@@ -21,7 +21,7 @@ final class CaptionStringsTests: XCTestCase {
     }
 
     /// The notice shown while typing a name must match where it is stored: in the
-    /// app's folder; adding a photo excludes it from new device backups.
+    /// app's folder, kept out of new device backups at every launch (#419).
     func testGivenCaptionPrivacyNoticeWhenReadThenItMentionsDeviceBackups() throws {
         let entry = try XCTUnwrap(catalog()["family.caption.privacy"] as? [String: Any])
         let localizations = try XCTUnwrap(entry["localizations"] as? [String: [String: [String: String]]])

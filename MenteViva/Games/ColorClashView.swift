@@ -41,7 +41,7 @@ struct ColorClashView: View {
     var body: some View {
         VStack(spacing: 32) {
             LevelExplainBanner(
-                change: PlanStore.cachedPlan()?.changes[GameID.stroop], game: GameID.stroop,
+                change: PlanStore.todaysChange(GameID.stroop), game: GameID.stroop,
                 hasStarted: progress.completedRounds > 0)
             Text(AppLanguage.localized("game.colorclash.instruction"))
                 .font(.title2)

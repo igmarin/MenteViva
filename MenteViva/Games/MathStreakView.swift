@@ -36,7 +36,7 @@ struct MathStreakView: View {
     var body: some View {
         VStack(spacing: 32) {
             LevelExplainBanner(
-                change: PlanStore.cachedPlan()?.changes[GameID.mathStreaks], game: GameID.mathStreaks,
+                change: PlanStore.todaysChange(GameID.mathStreaks), game: GameID.mathStreaks,
                 hasStarted: progress.completedRounds > 0)
             Text(AppLanguage.localized("game.math.instruction"))
                 .font(.title2)

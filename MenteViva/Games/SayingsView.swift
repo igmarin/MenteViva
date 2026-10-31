@@ -63,7 +63,7 @@ struct SayingsView: View {
         VStack(spacing: Self.blockGap) {
             VStack(spacing: Self.blockGap) {
                 LevelExplainBanner(
-                    change: PlanStore.cachedPlan()?.changes[GameID.sayings], game: GameID.sayings,
+                    change: PlanStore.todaysChange(GameID.sayings), game: GameID.sayings,
                     hasStarted: taps > 0 || progress.completedRounds > 0)
                 Text(AppLanguage.localized("game.sayings.instruction"))
                     .font(.title2)

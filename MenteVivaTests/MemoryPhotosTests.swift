@@ -159,6 +159,28 @@ final class MemoryPhotosTests: XCTestCase {
         XCTAssertEqual(MemoryPhotos.all(in: folder).count, 1)
     }
 
+    // MARK: Backups (#419)
+
+    /// A fresh URL, so the flag is read from disk and not from this URL's cache.
+    private func isExcludedFromBackup(_ url: URL) throws -> Bool? {
+        try URL(fileURLWithPath: url.path).resourceValues(forKeys: [.isExcludedFromBackupKey]).isExcludedFromBackup
+    }
+
+    func testGivenAnExistingPhotoFolderWhenExcludingAtLaunchThenItIsExcludedFromBackup() throws {
+        try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+        XCTAssertNotEqual(try isExcludedFromBackup(folder), true, "a folder made by an older version")
+
+        MemoryPhotos.excludeFromBackup(folder: folder)
+
+        XCTAssertEqual(try isExcludedFromBackup(folder), true)
+    }
+
+    func testGivenNoPhotoFolderWhenExcludingAtLaunchThenNoneIsCreated() {
+        MemoryPhotos.excludeFromBackup(folder: folder)
+
+        XCTAssertFalse(FileManager.default.fileExists(atPath: folder.path))
+    }
+
     // MARK: Board faces
 
     private let theme = GamePictures.named([
