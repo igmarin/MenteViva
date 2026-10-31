@@ -51,6 +51,31 @@ enum SayingsDeck {
         difficulty.values(choicesByLevel)
     }
 
+    /// The endings a round shows on a phone with room for only `count` (#415): his own ending and the
+    /// first `count - 1` others, in the order dealt, so trimming never moves a button. Never fewer than
+    /// two (one is no choice), never more than were dealt.
+    static func shown(_ round: SayingRound, count: Int) -> [Saying] {
+        var others = max(count, 2) - 1
+        return round.choices.filter { choice in
+            if choice == round.saying { return true }
+            others -= 1
+            return others >= 0
+        }
+    }
+
+    /// How many of a round's endings fit in `room` points (#415), from each ending button's measured
+    /// height (a long or localized ending, or big text, wraps to more than 100pt) and the `gap` between
+    /// buttons: the most whose buttons, as `shown` picks them, stack within the room, never under 2. An
+    /// ending not measured yet counts as 0, so the first layout shows them all until it is.
+    static func fittingCount(_ round: SayingRound, heights: [Saying: Double], gap: Double, room: Double) -> Int {
+        for count in stride(from: round.choices.count, to: 2, by: -1) {
+            let endings = shown(round, count: count)
+            let needed = endings.reduce(0) { $0 + (heights[$1] ?? 0) } + gap * Double(endings.count - 1)
+            if needed <= room { return count }
+        }
+        return 2
+    }
+
     /// Whether this level prefers same-theme distractors first.
     static func prefersSameTheme(for difficulty: Difficulty) -> Bool {
         difficulty.values(sameThemeByLevel)

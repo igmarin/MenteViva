@@ -38,6 +38,63 @@ final class SayingsDeckTests: XCTestCase {
         XCTAssertEqual(SayingsDeck.choiceCount(for: Difficulty(level: 6)), 4)
     }
 
+    // MARK: - Fit the screen (#415)
+
+    /// Five endings dealt in this order, his own (id 3) in the middle.
+    private let fiveEndings = SayingRound(
+        saying: Saying(id: 3, theme: .time),
+        choices: [1, 2, 3, 4, 5].map { Saying(id: $0, theme: .time) })
+
+    func testGivenRoomForThreeWhenShownThenHisEndingStaysAndTheFirstOthersKeepTheirOrder() {
+        XCTAssertEqual(SayingsDeck.shown(fiveEndings, count: 3).map(\.id), [1, 2, 3])
+        XCTAssertEqual(SayingsDeck.shown(fiveEndings, count: 2).map(\.id), [1, 3])
+    }
+
+    func testGivenRoomForNoneWhenShownThenStillTwoEndings() {
+        XCTAssertEqual(SayingsDeck.shown(fiveEndings, count: 1).map(\.id), [1, 3])
+        XCTAssertEqual(SayingsDeck.shown(fiveEndings, count: 0).map(\.id), [1, 3])
+    }
+
+    func testGivenRoomForMoreThanDealtWhenShownThenEveryEndingInOrder() {
+        XCTAssertEqual(SayingsDeck.shown(fiveEndings, count: 5).map(\.id), [1, 2, 3, 4, 5])
+        XCTAssertEqual(SayingsDeck.shown(fiveEndings, count: 9).map(\.id), [1, 2, 3, 4, 5])
+    }
+
+    /// Five 100pt endings and the four 12pt gaps between them need 548pt.
+    func testGivenOneLineEndingsWhenFittingThenEachHundredAndTwelvePointsBuysOne() {
+        let heights = Dictionary(uniqueKeysWithValues: fiveEndings.choices.map { ($0, 100.0) })
+        let fit = { SayingsDeck.fittingCount(self.fiveEndings, heights: heights, gap: 12, room: $0) }
+        XCTAssertEqual(fit(548), 5)
+        XCTAssertEqual(fit(547), 4)
+        XCTAssertEqual(fit(436), 4)
+        XCTAssertEqual(fit(435), 3)
+        XCTAssertEqual(fit(324), 3)
+        XCTAssertEqual(fit(323), 2)
+    }
+
+    /// The review case: an ending that wraps to two lines takes its real height, so a room that holds
+    /// five one-line buttons holds only four of these.
+    func testGivenAnEndingThatWrapsWhenFittingThenItsMeasuredHeightCounts() {
+        var heights = Dictionary(uniqueKeysWithValues: fiveEndings.choices.map { ($0, 100.0) })
+        heights[Saying(id: 2, theme: .time)] = 140
+        XCTAssertEqual(SayingsDeck.fittingCount(fiveEndings, heights: heights, gap: 12, room: 548), 4)
+        // Shown at three, the wrapped ending (second dealt) is still on screen and still counted.
+        XCTAssertEqual(SayingsDeck.fittingCount(fiveEndings, heights: heights, gap: 12, room: 363), 2)
+        XCTAssertEqual(SayingsDeck.fittingCount(fiveEndings, heights: heights, gap: 12, room: 364), 3)
+    }
+
+    func testGivenNoRoomWhenFittingThenNeverFewerThanTwoEndings() {
+        let heights = Dictionary(uniqueKeysWithValues: fiveEndings.choices.map { ($0, 100.0) })
+        XCTAssertEqual(SayingsDeck.fittingCount(fiveEndings, heights: heights, gap: 12, room: 40), 2)
+        XCTAssertEqual(SayingsDeck.fittingCount(fiveEndings, heights: heights, gap: 12, room: -50), 2)
+    }
+
+    /// Before the buttons are measured nothing is trimmed, so a first layout never hides an ending it
+    /// has room for.
+    func testGivenUnmeasuredEndingsWhenFittingThenAllDealtShow() {
+        XCTAssertEqual(SayingsDeck.fittingCount(fiveEndings, heights: [:], gap: 12, room: 100), 5)
+    }
+
     func testGivenADealThenEightRoundsWithEightDifferentSayings() {
         let rounds = deal()
         XCTAssertEqual(rounds.count, 8)
