@@ -36,7 +36,7 @@ struct TangramView: View {
         VStack(spacing: 16) {
             LevelExplainBanner(
                 change: PlanStore.cachedPlan()?.changes[GameID.tangram], game: GameID.tangram,
-                hasStarted: puzzle.attempts > 0)
+                hasStarted: puzzle.attempts > 0, keepsSpace: true)
             Text(AppLanguage.localized("game.tangram.instruction"))
                 .font(.title2)
                 .multilineTextAlignment(.center)

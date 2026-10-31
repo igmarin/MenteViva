@@ -7,25 +7,35 @@ import XCTest
 final class SlidingBlocksBoardRulesTests: XCTestCase {
     // MARK: - Board size
 
-    func testGivenSameDealAndScreenWhenNoteShowsOrIsDismissedThenItStillTakesItsSpace() {
-        let showing = SlidingBoardLayout.NoteSlot.slot(hasNote: true, hasStarted: false)
-        let afterFirstMove = SlidingBoardLayout.NoteSlot.slot(hasNote: true, hasStarted: true)
+    func testGivenNoteShowingWhenFirstMoveThenItKeepsItsSpace() {
+        let showing = LevelExplainSlot.slot(hasNote: true, hasStarted: false, dismissed: false)
+        let afterFirstMove = LevelExplainSlot.slot(hasNote: true, hasStarted: true, dismissed: true)
         XCTAssertEqual(showing, .showing)
         XCTAssertEqual(afterFirstMove, .reserved)
         XCTAssertEqual(showing.takesSpace, afterFirstMove.takesSpace)
     }
 
-    func testGivenNoNoteThisDealWhenFirstMoveThenNothingIsHeldBack() {
-        XCTAssertEqual(SlidingBoardLayout.NoteSlot.slot(hasNote: false, hasStarted: false), .none)
-        XCTAssertEqual(SlidingBoardLayout.NoteSlot.slot(hasNote: false, hasStarted: true), .none)
-        XCTAssertFalse(SlidingBoardLayout.NoteSlot.none.takesSpace)
+    func testGivenNoNoteThisOpenWhenFirstMoveThenNothingIsHeldBack() {
+        XCTAssertEqual(LevelExplainSlot.slot(hasNote: false, hasStarted: false, dismissed: false), .none)
+        XCTAssertEqual(LevelExplainSlot.slot(hasNote: false, hasStarted: true, dismissed: true), .none)
+        XCTAssertFalse(LevelExplainSlot.none.takesSpace)
     }
 
-    func testGivenSameAreaWhenCellSizeAskedTwiceThenItIsTheSame() {
-        let area = CGSize(width: 361, height: 380)
-        XCTAssertEqual(
-            SlidingBoardLayout.cellSize(in: area, columns: 4, rows: 5),
-            SlidingBoardLayout.cellSize(in: area, columns: 4, rows: 5))
+    func testGivenStartedOnceWhenBackToZeroMovesThenNoteStaysReserved() {
+        // First move, undo (or "Start over", or "Play again") back to 0 moves.
+        XCTAssertEqual(LevelExplainSlot.slot(hasNote: true, hasStarted: false, dismissed: true), .reserved)
+    }
+
+    func testGivenNoteShowingOrReservedWhenCellSizeThenItIsTheSame() {
+        // The board gets the page's height minus whatever the note takes.
+        let page = CGSize(width: 361, height: 400)
+        let noteHeight: CGFloat = 40
+        func cell(_ slot: LevelExplainSlot) -> CGFloat {
+            let area = CGSize(width: page.width, height: page.height - (slot.takesSpace ? noteHeight : 0))
+            return SlidingBoardLayout.cellSize(in: area, columns: 4, rows: 5)
+        }
+        XCTAssertEqual(cell(.showing), cell(.reserved))
+        XCTAssertNotEqual(cell(.showing), cell(.none))
     }
 
     func testGivenWideAreaWhenCellSizeThenHeightLimits() {

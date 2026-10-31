@@ -39,16 +39,14 @@ struct SlidingBlocksView: View {
     @State private var startedAt = Date.now
     @State private var showCelebration = false
     @State private var finalDetail = ""
-    /// Today's level-change note, decided once when the screen opens and dropped
-    /// on a replay. Held here, not re-read from the store, so the note keeps its
-    /// place in the layout for the whole deal (`SlidingBoardLayout.NoteSlot`).
-    @State private var explainKey = Self.pendingExplainKey()
 
     private var instruction: String { AppLanguage.localized("game.sliding.instruction") }
 
     var body: some View {
         VStack(spacing: 16) {
-            explainNote
+            LevelExplainBanner(
+                change: PlanStore.cachedPlan()?.changes[GameID.slidingBlocks], game: GameID.slidingBlocks,
+                hasStarted: (puzzle?.movesMade ?? 0) > 0, keepsSpace: true)
             Text(instruction)
                 .font(.title2)
                 .multilineTextAlignment(.center)
@@ -68,33 +66,6 @@ struct SlidingBlocksView: View {
         .onAppear(perform: dealIfNeeded)
         .onDisappear { hintBuild?.cancel() }
         .celebration(isPresented: $showCelebration, game: .slidingBlocks, detail: finalDetail, onPlayAgain: deal)
-    }
-
-    // MARK: - Level note
-
-    /// The key of today's level-change note if it should show on this open, else nil.
-    /// Same rule as `LevelExplainBanner`, read once instead of on every redraw.
-    private static func pendingExplainKey() -> String? {
-        let change = PlanStore.cachedPlan()?.changes[GameID.slidingBlocks]
-        let seen = LevelOfferStore.hasSeenExplain(for: GameID.slidingBlocks, today: PlanStore.dayStamp())
-        guard LevelExplainPolicy.shouldShow(change: change, alreadySeenToday: seen) else { return nil }
-        return LevelExplainPolicy.key(for: change)
-    }
-
-    /// The note, which fades out on the first move but keeps its height, so the
-    /// board does not grow under the player's finger (#470).
-    @ViewBuilder
-    private var explainNote: some View {
-        let slot = SlidingBoardLayout.NoteSlot.slot(
-            hasNote: explainKey != nil, hasStarted: (puzzle?.movesMade ?? 0) > 0)
-        if let explainKey, slot.takesSpace {
-            LevelExplainLine(key: explainKey)
-                .opacity(slot == .showing ? 1 : 0)
-                .accessibilityHidden(slot != .showing)
-                .onAppear {
-                    LevelOfferStore.markExplainSeen(for: GameID.slidingBlocks, today: PlanStore.dayStamp())
-                }
-        }
     }
 
     // MARK: - Board

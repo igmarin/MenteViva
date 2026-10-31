@@ -9,28 +9,6 @@ nonisolated enum SlidingBoardLayout {
     static func cellSize(in area: CGSize, columns: Int, rows: Int) -> CGFloat {
         min(area.width / CGFloat(columns), area.height / CGFloat(rows))
     }
-
-    /// What the level-change note takes up above the board. The board's size
-    /// follows the height left over, so the note must keep its place once the
-    /// first block moves: gone from sight, never gone from the layout. Otherwise
-    /// every cell grows at the first move, and `ViewThatFits` may switch from its
-    /// scrolling layout to its fixed one, which jumps even further.
-    enum NoteSlot: Equatable {
-        /// The note is on screen, before the first move.
-        case showing
-        /// The note has been dismissed but still takes its height.
-        case reserved
-        /// There was no note this deal, so nothing is held back.
-        case none
-
-        static func slot(hasNote: Bool, hasStarted: Bool) -> NoteSlot {
-            guard hasNote else { return .none }
-            return hasStarted ? .reserved : .showing
-        }
-
-        /// Whether the note's height is part of the page.
-        var takesSpace: Bool { self != .none }
-    }
 }
 
 /// When a finger on a block becomes a drag (#470). An unsteady hand wobbles, so
