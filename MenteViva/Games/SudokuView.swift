@@ -35,8 +35,7 @@ struct SudokuView: View {
     var body: some View {
         VStack(spacing: 20) {
             LevelExplainBanner(
-                change: PlanStore.cachedPlan()?.changes[GameID.sudoku], game: GameID.sudoku,
-                hasStarted: attempts > 0 || !entries.isEmpty)
+                game: GameID.sudoku, hasStarted: attempts > 0 || !entries.isEmpty)
             Text(AppLanguage.localized("game.sudoku.instruction"))
                 .font(.title2)
                 .multilineTextAlignment(.center)
@@ -80,6 +79,7 @@ struct SudokuView: View {
             if let puzzle, puzzle.fits(width: area.width) { return }
             restart()
         }
+        .leaveGuard(inProgress: attempts > 0, celebrating: showCelebration)
         .gameHeader(.sudoku, instruction: AppLanguage.localized("game.sudoku.instruction"))
         .firstPlayGuide(.sudoku, line: AppLanguage.localized("game.sudoku.guide"), example: guideExample)
         .celebration(isPresented: $showCelebration, game: .sudoku, detail: finalDetail, onPlayAgain: restart)
@@ -102,13 +102,7 @@ struct SudokuView: View {
     @ViewBuilder
     private var almostNote: some View {
         if showAlmost {
-            Text(AppLanguage.localized("game.sudoku.miss"))
-                .font(.title2.weight(.semibold))
-                .foregroundStyle(Color.todaysPick)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal, 14)
-                .padding(.vertical, 10)
-                .background(Color.amber.opacity(0.24), in: .rect(cornerRadius: 14))
+            AlmostNote(text: AppLanguage.localized("game.sudoku.miss"))
         }
     }
 

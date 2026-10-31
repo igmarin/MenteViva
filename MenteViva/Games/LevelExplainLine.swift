@@ -66,9 +66,10 @@ nonisolated struct LevelExplainNote: Equatable {
 /// day for this game. The game view owns the dismiss by passing its progress.
 /// With `keepsSpace`, the line then fades out but keeps its height, for games
 /// whose board is sized by the space left over. The note is decided once per
-/// open, and once dismissed it stays dismissed (replay, undo, start over).
+/// open, and once dismissed it stays dismissed (replay, undo, start over). The
+/// banner reads today's change itself, from the memo's first render only: a
+/// caller that passed the change in would decode the cached plan on every body run.
 struct LevelExplainBanner: View {
-    let change: LevelChange?
     let game: GameID
     let hasStarted: Bool
     var keepsSpace = false
@@ -76,10 +77,15 @@ struct LevelExplainBanner: View {
     /// render only (not on every drag frame of the parent), and the dismissal
     /// is latched while the body reads `hasStarted`, with no `onChange` that a
     /// removed line could take with it.
-    @State private var memo = Memo()
+    @State private var ownMemo = Memo()
+    /// A memo kept by a parent whose layout can rebuild this view (a `ViewThatFits` that swaps
+    /// between fitting and scrolling when the phone turns): a rebuilt banner would start with a
+    /// fresh memo, read `hasSeenExplain` (already set) and show nothing (#481).
+    var sharedMemo: Memo?
 
     var body: some View {
-        let slot = memo.slot(change: change, game: game, hasStarted: hasStarted)
+        let memo = sharedMemo ?? ownMemo
+        let slot = memo.slot(game: game, hasStarted: hasStarted, readChange: { PlanStore.todaysChange(game) })
         if let key = memo.note?.key, slot == .showing || (keepsSpace && slot.takesSpace) {
             LevelExplainLine(key: key)
                 .opacity(slot == .showing ? 1 : 0)
@@ -88,14 +94,15 @@ struct LevelExplainBanner: View {
         }
     }
 
-    private final class Memo {
+    final class Memo {
         var note: LevelExplainNote?
 
-        func slot(change: LevelChange?, game: GameID, hasStarted: Bool) -> LevelExplainSlot {
+        /// `readChange` runs only while this open has no note yet, so the plan is decoded once per open.
+        func slot(game: GameID, hasStarted: Bool, readChange: () -> LevelChange?) -> LevelExplainSlot {
             var current =
                 note
                 ?? LevelExplainNote(
-                    change: change,
+                    change: readChange(),
                     seenToday: LevelOfferStore.hasSeenExplain(for: game, today: PlanStore.dayStamp()))
             let slot = current.slot(hasStarted: hasStarted)
             note = current

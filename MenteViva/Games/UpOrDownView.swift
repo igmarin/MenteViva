@@ -16,6 +16,8 @@ struct UpOrDownView: View {
     @State private var rowWidth = 0.0
     @State private var played = 0
     @State private var taps = 0
+    /// Turning the deck is a move too: the leave prompt asks after it (#404).
+    @State private var turnedDeck = false
     @State private var startedAt = Date.now
     @State private var missed = false
     @State private var missedPile: Int?
@@ -27,8 +29,7 @@ struct UpOrDownView: View {
     var body: some View {
         VStack(spacing: 24) {
             LevelExplainBanner(
-                change: PlanStore.cachedPlan()?.changes[GameID.upOrDown], game: GameID.upOrDown,
-                hasStarted: played > 0 || taps > 0)
+                game: GameID.upOrDown, hasStarted: played > 0 || taps > 0)
             Text(AppLanguage.localized("game.upordown.instruction"))
                 .font(.title2)
                 .multilineTextAlignment(.center)
@@ -58,6 +59,7 @@ struct UpOrDownView: View {
         }
         .padding()
         .fitOrScroll()
+        .leaveGuard(inProgress: taps > 0 || turnedDeck, celebrating: showCelebration)
         .gameHeader(.upOrDown, instruction: AppLanguage.localized("game.upordown.instruction"))
         .firstPlayGuide(.upOrDown, line: AppLanguage.localized("game.upordown.guide"), example: guideExample)
         .celebration(isPresented: $showCelebration, game: .upOrDown, detail: finalDetail, onPlayAgain: restart)
@@ -74,13 +76,7 @@ struct UpOrDownView: View {
     @ViewBuilder
     private func note(for deal: UpOrDownDeal) -> some View {
         if showAlmost || isStuck(deal) {
-            Text(noteText(for: deal))
-                .font(.title2.weight(.semibold))
-                .foregroundStyle(Color.todaysPick)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal, 14)
-                .padding(.vertical, 10)
-                .background(Color.amber.opacity(0.24), in: .rect(cornerRadius: 14))
+            AlmostNote(text: noteText(for: deal))
         }
     }
 
@@ -111,7 +107,7 @@ struct UpOrDownView: View {
                         RoundedRectangle(cornerRadius: 10)
                             .fill(GameID.upOrDown.ink.opacity(0.25))
                             .frame(width: width, height: width * 1.4)
-                            .offset(y: Double(depth) * 12)
+                            .offset(y: Double(depth) * UpOrDownDeal.cardEdge)
                     }
                     if let top = pile.last {
                         Button {
@@ -120,7 +116,7 @@ struct UpOrDownView: View {
                             face(top, width: width)
                         }
                         .buttonStyle(.plain)
-                        .offset(y: Double(pile.count - 1) * 12 - (lift && fits ? 14 : 0))
+                        .offset(y: Double(pile.count - 1) * UpOrDownDeal.cardEdge - (lift && fits ? 14 : 0))
                         .shadow(color: .black.opacity(lift && fits ? 0.25 : 0), radius: 6, y: 4)
                         .modifier(MissCue(active: missedPile == index ? $missed : .constant(false)))
                         .guideTarget(fits && index == deal.playablePiles.first)
@@ -133,7 +129,8 @@ struct UpOrDownView: View {
                             .accessibilityLabel(AppLanguage.localized("game.upordown.a11y.empty"))
                     }
                 }
-                .frame(height: width * 1.4 + 24, alignment: .top)
+                .frame(
+                    height: UpOrDownDeal.pileHeight(cardWidth: width, cardsPerPile: deal.cardsPerPile), alignment: .top)
             }
         }
         .animation(reduceMotion ? nil : .easeOut(duration: 0.2), value: deal)
@@ -219,6 +216,7 @@ struct UpOrDownView: View {
         deal = UpOrDownDeal.make(difficulty: difficulty, width: rowWidth, using: &generator)
         played = 0
         taps = 0
+        turnedDeck = false
         showAlmost = false
         startedAt = .now
     }
@@ -247,6 +245,7 @@ struct UpOrDownView: View {
     private func turnDeck() {
         guard var current = deal, current.turn() else { return }
         showAlmost = false
+        turnedDeck = true
         deal = current
         finishIfDone()
     }

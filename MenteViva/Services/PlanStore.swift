@@ -32,10 +32,56 @@ nonisolated enum PlanStore {
         return plan
     }
 
+    /// The games of the plan saved today, or nil when none was (a new day, or a first launch). A
+    /// pure read: it never makes a plan, so Home can skip the session fetch the summary needs when
+    /// `todaysPlan` would return the saved plan anyway (#417).
+    static func plannedToday(now: Date = .now, defaults: UserDefaults = .standard) -> [GameID]? {
+        guard let cached = cachedPlan(defaults: defaults), cached.dayStamp == dayStamp(now) else { return nil }
+        return cached.games
+    }
+
     /// The last plan saved, whatever its day; callers check `dayStamp`.
     static func cachedPlan(defaults: UserDefaults = .standard) -> DailyPlan? {
         defaults.data(forKey: planKey)
             .flatMap { try? JSONDecoder().decode(DailyPlan.self, from: $0) }
+    }
+
+    /// Why `game`'s level moved today, or nil. Only a plan saved today counts: a game opened after
+    /// midnight, before today's plan is made, must not explain yesterday's move (#419).
+    static func todaysChange(_ game: GameID, now: Date = .now, defaults: UserDefaults = .standard) -> LevelChange? {
+        guard let plan = cachedPlan(defaults: defaults), plan.dayStamp == dayStamp(now) else { return nil }
+        return plan.changes[game]
+    }
+
+    /// A new start pace in My plan (#212) reaches the games it can still matter for (#419). The first
+    /// plan saves a level for every game, so without this the answer would never be read again.
+    /// Played games keep the level they earned and pinned games keep the family's choice. A game whose
+    /// level ever moved is kept too: if the session store could not open this launch (#124), `played`
+    /// is empty, and the level must not be lost with it. That also keeps the first-run warm-up's
+    /// games (`beginWarmUp` marks them all), played or not: they keep the first day's start pace, an
+    /// accepted gap. `played` is read only when the starting level changes, and nil (a store
+    /// that can't be read) changes nothing.
+    static func startPaceChanged(
+        from old: PlayerProfile, to new: PlayerProfile, played: () -> Set<GameID>?,
+        defaults: UserDefaults = .standard
+    ) {
+        let start = DailyPolicy.startingLevel(for: new)
+        guard DailyPolicy.startingLevel(for: old) != start, let played = played() else { return }
+        let kept = played.union(FamilySettings.pinned(defaults: defaults).keys)
+            .union(lastDifficultyChange(defaults: defaults).keys)
+        restart(Set(GameID.allCases).subtracting(kept), at: start, defaults: defaults)
+    }
+
+    /// Sets the stored level of `games` only. Works on the saved entries, not `storedDifficulty`, so a
+    /// game without one keeps following the profile instead of being frozen at today's start.
+    static func restart(_ games: Set<GameID>, at level: Difficulty, defaults: UserDefaults = .standard) {
+        var raw =
+            defaults.data(forKey: levelKey)
+            .flatMap { try? JSONDecoder().decode([String: Int].self, from: $0) } ?? [:]
+        for game in games { raw[game.rawValue] = level.level }
+        if let data = try? JSONEncoder().encode(raw) {
+            defaults.set(data, forKey: levelKey)
+        }
     }
 
     /// Saves the plan, its levels as the stored ones, and the day each level

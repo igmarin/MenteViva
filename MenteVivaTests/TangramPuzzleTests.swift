@@ -244,15 +244,18 @@ final class TangramPuzzleTests: XCTestCase {
         XCTAssertEqual(result, .snapped(slot: slot))
     }
 
-    func testGivenALargeTileAndAFloorPastItsShareWhenDroppedBetweenThemThenTheFloorDecides() {
-        // A floor of 3 units is past the large tile's share reach (2.8): the max() takes the floor.
+    func testGivenALargeTileOnASmallBoardWhenDroppedBetweenShareAndFloorThenTheFloorDecides() {
+        // On the SE board the 60pt target is wider than a large tile's own share, so the floor decides.
+        let shape = shape("tangram.shape.15")
+        let floor = TangramPuzzle.reachFloor(points: 30, shape: shape, in: CGSize(width: 343, height: 200))
         let shareReach = TangramPuzzle.snapShare * TangramPiece.large.diagonal
-        XCTAssertLessThan(shareReach, 2.9)
-        let (shape, slot, point) = drop(.large, twin: .large2, units: 2.95)
+        XCTAssertGreaterThan(floor, shareReach + 0.2)
+        let (_, slot, point) = drop(.large, twin: .large2, units: floor * 0.95, in: shape)
         let target = shape.placements[slot]
         var withFloor = TangramPuzzle(shape: shape, rules: rules(level: 7))
         XCTAssertEqual(
-            withFloor.place(.large, at: point, rotation: target.rotation, flipped: target.flipped, minimumReach: 3),
+            withFloor.place(
+                .large, at: point, rotation: target.rotation, flipped: target.flipped, minimumReach: floor),
             .snapped(slot: slot))
         var withoutFloor = TangramPuzzle(shape: shape, rules: rules(level: 7))
         XCTAssertEqual(
@@ -260,16 +263,40 @@ final class TangramPuzzleTests: XCTestCase {
             .tryAnotherSpot)
     }
 
-    func testGivenAPhoneBoardWhenTheReachFloorIsWorkedOutThenItIsThirtyPointsInUnits() {
-        XCTAssertEqual(TangramPuzzle.reachFloor(points: 30, scale: 15), 2, accuracy: 0.000_001)
+    func testGivenAnIPhoneSEBoardWhenATallShapeIsDealtThenTheReachFloorIsThirtyPoints() {
+        // 343x223 is the SE's board; 343x200 is the same screen on a level-note day (#481).
+        for size in [CGSize(width: 343, height: 223), CGSize(width: 343, height: 200)] {
+            for key in ["tangram.shape.15", "tangram.shape.19"] {
+                let shape = shape(key)
+                let scale = TangramPuzzle.fitTransform(box: TangramPuzzle.boundingBox(of: shape), in: size).scale
+                let reach = TangramPuzzle.reachFloor(points: 30, shape: shape, in: size)
+                XCTAssertGreaterThanOrEqual(reach * Double(scale), 30 - 0.000_001, "\(key) \(size)")
+            }
+        }
     }
 
-    func testGivenTheZeroSizeFallbackScaleWhenTheReachFloorIsWorkedOutThenItStopsAtALargeTilesShare() {
-        // Before the board has a size, fitTransform answers scale 1: 30 units would reach past the figure.
-        let fit = TangramPuzzle.fitTransform(box: TangramPuzzle.boundingBox(of: TangramShapes.all[0]), in: .zero)
-        let floor = TangramPuzzle.reachFloor(points: 30, scale: fit.scale)
-        XCTAssertLessThanOrEqual(floor, TangramPuzzle.snapShare * TangramPiece.large.diagonal + 0.000_001)
-        XCTAssertEqual(TangramPuzzle.reachFloor(points: 30, scale: 0), 0)
+    func testGivenAnIPhoneSEBoardWhenATileIsDroppedTwentyNinePointsFromItsSlotThenItSnaps() {
+        // Every tile of the tall shapes, through the floor the view asks for, not just its arithmetic.
+        let size = CGSize(width: 343, height: 200)
+        for key in ["tangram.shape.15", "tangram.shape.19"] {
+            let shape = shape(key)
+            let scale = Double(TangramPuzzle.fitTransform(box: TangramPuzzle.boundingBox(of: shape), in: size).scale)
+            let floor = TangramPuzzle.reachFloor(points: 30, shape: shape, in: size)
+            for (index, target) in shape.placements.enumerated() {
+                var puzzle = TangramPuzzle(shape: shape, rules: rules(level: 7))
+                let middle = TangramPuzzle.middle(of: target)
+                let result = puzzle.place(
+                    target.piece, at: CGPoint(x: middle.x + 29 / scale, y: middle.y),
+                    rotation: target.rotation, flipped: target.flipped, minimumReach: floor)
+                XCTAssertEqual(result, .snapped(slot: index), "\(key) \(target.piece)")
+            }
+        }
+    }
+
+    func testGivenABoardWithNoSizeWhenTheReachFloorIsWorkedOutThenItIsZero() {
+        for size in [CGSize.zero, CGSize(width: 343, height: 0), CGSize(width: 0, height: 223)] {
+            XCTAssertEqual(TangramPuzzle.reachFloor(points: 30, shape: TangramShapes.all[0], in: size), 0, "\(size)")
+        }
     }
 
     func testGivenVoiceOverWhenATileIsPlacedInANamedSlotThenItGoesHomeAtAnyLevel() {
@@ -329,6 +356,57 @@ final class TangramPuzzleTests: XCTestCase {
         XCTAssertEqual(Set(keys).count, TangramShapes.all.count)
     }
 
+    // MARK: - Seen shapes persist (#416)
+
+    private func freshDefaults(_ name: String = #function) -> UserDefaults {
+        let suite = "TangramSeenTests.\(name)"
+        let defaults = UserDefaults(suiteName: suite)!
+        defaults.removePersistentDomain(forName: suite)
+        addTeardownBlock { defaults.removePersistentDomain(forName: suite) }
+        return defaults
+    }
+
+    func testGivenSeenShapesStoredWhenNextShapeThenAnUnseenOneIsPicked() {
+        let defaults = freshDefaults()
+        let keys = TangramShapes.all.map(\.key)
+        defaults.set(Array(keys.dropLast()), forKey: TangramPuzzle.seenKey)
+        var generator = SeededGenerator(state: 3)
+        XCTAssertEqual(
+            TangramPuzzle.nextShape(defaults: defaults, using: &generator).key, keys.last)
+    }
+
+    func testGivenNextShapeWhenPickedThenItsIdIsStoredForTheNextOpen() {
+        let defaults = freshDefaults()
+        var generator = SeededGenerator(state: 5)
+        let first = TangramPuzzle.nextShape(defaults: defaults, using: &generator)
+        XCTAssertEqual(defaults.stringArray(forKey: TangramPuzzle.seenKey), [first.key])
+        let second = TangramPuzzle.nextShape(defaults: defaults, using: &generator)
+        XCTAssertNotEqual(first.key, second.key)
+    }
+
+    func testGivenEveryShapeSeenWhenTheLastIsPickedThenTheStoreIsCleared() {
+        let defaults = freshDefaults()
+        var generator = SeededGenerator(state: 9)
+        var keys: [String] = []
+        for _ in TangramShapes.all.indices {
+            keys.append(TangramPuzzle.nextShape(defaults: defaults, using: &generator).key)
+        }
+        XCTAssertEqual(Set(keys).count, TangramShapes.all.count)
+        XCTAssertNil(defaults.object(forKey: TangramPuzzle.seenKey))
+    }
+
+    func testGivenStoredIdsThatNoLongerExistWhenNextShapeThenTheyAreIgnoredAndDropped() {
+        let defaults = freshDefaults()
+        let keys = TangramShapes.all.map(\.key)
+        defaults.set(["gone-1", "gone-2"] + keys.dropLast(2), forKey: TangramPuzzle.seenKey)
+        var generator = SeededGenerator(state: 2)
+        let next = TangramPuzzle.nextShape(defaults: defaults, using: &generator)
+        XCTAssertTrue(keys.suffix(2).contains(next.key))
+        XCTAssertEqual(
+            defaults.stringArray(forKey: TangramPuzzle.seenKey),
+            (keys.dropLast(2) + [next.key]).sorted())
+    }
+
     // MARK: - Table helpers (#219)
 
     func testGivenTurnWhenAppliedEightTimesThenBackToStart() {
@@ -372,6 +450,13 @@ final class TangramPuzzleTests: XCTestCase {
                 XCTAssertEqual(back.y, point.y, accuracy: 0.000_001)
             }
         }
+    }
+
+    /// #415: a grid tile dragged by its corner lands where the tile's middle is, not the finger.
+    func testGivenATrayCellDraggedByItsCornerWhenDroppedThenTheDropPointIsTheTilesMiddle() {
+        let cell = CGRect(x: 20, y: 500, width: 100, height: 100)
+        let point = TangramPuzzle.dropPoint(cell: cell, translation: CGSize(width: 30, height: -400))
+        XCTAssertEqual(point, CGPoint(x: 100, y: 150))
     }
 
     // MARK: - Tray (#396)
@@ -456,22 +541,18 @@ final class TangramPuzzleTests: XCTestCase {
         }
     }
 
-    func testGivenANarrowIPadWindowWhenTheLayoutIsChosenThenTheTraySlidesInsteadOfWrapping() {
-        // Slide Over: the grid would wrap into four rows and squeeze the board, so the tray slides.
-        for area in [CGSize(width: 320, height: 1000), CGSize(width: 320, height: 640)] {
-            XCTAssertEqual(TangramLayout.choose(for: area), .row, "\(area)")
-        }
+    func testGivenASlideOverWindowWhenTheLayoutIsChosenThenItGetsTheRowUntilFourRowsFit() {
+        // 320 wide holds two cells a row: seven tiles wrap into four rows. The grid needs 1118pt
+        // (286 of text, a 320 board, 436 of rows, 76 for the level note); a 13" iPad window has 1210.
+        XCTAssertEqual(TangramLayout.choose(for: CGSize(width: 320, height: 640)), .row)
+        XCTAssertEqual(TangramLayout.choose(for: CGSize(width: 320, height: 1117)), .row)
+        XCTAssertEqual(TangramLayout.choose(for: CGSize(width: 320, height: 1118)), .grid)
+        XCTAssertEqual(TangramLayout.choose(for: CGSize(width: 320, height: 1210)), .grid)
     }
 
     func testGivenRoomForAGridWithoutTheLevelBannerWhenChoosingLayoutThenTheTraySlides() {
         // Two tray rows fit at 820pt only if the level explanation is omitted.
         XCTAssertEqual(TangramLayout.choose(for: CGSize(width: 600, height: 820)), .row)
-    }
-
-    func testGivenTheLayoutsWhenTheTrayIsAskedThenOnlyTheGridWraps() {
-        XCTAssertFalse(TangramLayout.grid.traySlides)
-        XCTAssertTrue(TangramLayout.row.traySlides)
-        XCTAssertTrue(TangramLayout.sideBySide.traySlides)
     }
 
     func testGivenEveryRegionWhenSlotInitThenAllNine() {
@@ -499,6 +580,10 @@ final class TangramPuzzleTests: XCTestCase {
 
     // MARK: - Helpers
 
+    private func shape(_ key: String) -> TangramShape {
+        TangramShapes.all.first { $0.key == key }!
+    }
+
     private func rules(level: Int) -> TangramRules {
         TangramPuzzle.rules(for: Difficulty(level: level))
     }
@@ -506,9 +591,8 @@ final class TangramPuzzleTests: XCTestCase {
     /// The first shape's slot for `piece` and a point `units` from its middle, heading away from its
     /// twin's slot, so no other slot the tile fits is nearer than its own.
     private func drop(
-        _ piece: TangramPiece, twin: TangramPiece, units: Double
+        _ piece: TangramPiece, twin: TangramPiece, units: Double, in shape: TangramShape = TangramShapes.all[0]
     ) -> (shape: TangramShape, slot: Int, point: CGPoint) {
-        let shape = TangramShapes.all[0]
         let slot = shape.placements.firstIndex { $0.piece == piece }!
         let middle = TangramPuzzle.middle(of: shape.placements[slot])
         let other = TangramPuzzle.middle(of: shape.placements[shape.placements.firstIndex { $0.piece == twin }!])

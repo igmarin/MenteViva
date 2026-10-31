@@ -21,6 +21,8 @@ struct CategoryFluencyView: View {
         let picture: GamePicture
         let belongs: Bool
         var isPicked = false
+        /// A decoy already tapped: it fades and stays quiet, so it is never counted twice (#415).
+        var isTried = false
     }
 
     @State private var session: [CategoryDeal.Round] = []
@@ -36,6 +38,12 @@ struct CategoryFluencyView: View {
     @State private var missedTile: Int?
     @State private var isShowingCompletionBeat = false
     @State private var completionTask: Task<Void, Never>?
+    /// What the board has to work with (#415): the play area's height, measured outside the padding,
+    /// and the width and height of the header block above the grid. The grid's own room is what is left.
+    @State private var areaHeight: CGFloat = 0
+    @State private var headerSize: CGSize = .zero
+    /// Decoys the session was dealt with, nil until the board has been measured.
+    @State private var dealtDecoys: Int?
 
     static func score(totalCorrect: Int) -> Int {
         totalCorrect * 10
@@ -46,6 +54,9 @@ struct CategoryFluencyView: View {
         guard found == total else { return .keepPlaying }
         return hasNextRound ? .showBeatThenNextCategory : .showBeatThenFinish
     }
+
+    /// The screen's edge padding, named so the height measured outside it can take it off (#415).
+    private static let edgePadding: CGFloat = 16
 
     /// Picture and its margin inside the tile (#413). Both grow with the text; the tick below stops
     /// growing at xxxLarge, so the margin outpaces it and the tick keeps off the picture.
@@ -61,6 +72,19 @@ struct CategoryFluencyView: View {
         ]
     }
 
+    /// The column minimum the grid uses, as a plain number for the fit.
+    private var tileSide: Double {
+        Double(PictureView.columnMinimum(picture: pictureSize, margin: pictureMargin))
+    }
+
+    /// The space the grid has (#415): the measured column's width, and the height left under the
+    /// banner and the header. The header's height never depends on the deal (see `header`), so the
+    /// first measure is the final one. Zero until both are measured.
+    private var boardSize: CGSize {
+        guard areaHeight > 0, headerSize.width > 0 else { return .zero }
+        return CGSize(width: headerSize.width, height: max(0, areaHeight - headerSize.height - 24))
+    }
+
     /// The round being played, or nil once the session ends. Body reads this
     /// instead of indexing the deal: a counter that runs one past the end used
     /// to crash here with "Index out of range" (#30).
@@ -70,83 +94,134 @@ struct CategoryFluencyView: View {
 
     var body: some View {
         VStack(spacing: 24) {
-            LevelExplainBanner(
-                change: PlanStore.cachedPlan()?.changes[GameID.categoryFluency], game: GameID.categoryFluency,
-                hasStarted: totalPicks > 0 || progress.completedRounds > 0)
+            // Everything above the grid, measured as one block so the grid knows how much room is left.
+            VStack(spacing: 24) {
+                LevelExplainBanner(
+                    game: GameID.categoryFluency, hasStarted: totalPicks > 0 || progress.completedRounds > 0)
+                header(currentRound)
+            }
+            .frame(maxWidth: .infinity)
+            .onGeometryChange(for: CGSize.self) {
+                $0.size
+            } action: { size in
+                headerSize = size
+                dealForBoard()
+            }
+
             if let round = currentRound {
-                Group {
-                    Text(AppLanguage.localized("game.category.instruction"))
-                        .font(.title2)
-                        .multilineTextAlignment(.center)
-
-                    Text(name(of: round))
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
-                        .multilineTextAlignment(.center)
-                        .accessibilityAddTraits(.isHeader)
-
-                    ProgressCards(
-                        done: found, total: round.category.items.count,
-                        words: String(
-                            format: AppLanguage.localized("game.category.found %lld %lld"), found, round.category.items.count))
-
-                    if isShowingCompletionBeat {
-                        Text(String(format: AppLanguage.localized("game.category.complete %@"), name(of: round)))
-                            .font(.title2)
-                            .multilineTextAlignment(.center)
-                    }
-
-                    LazyVGrid(columns: columns, spacing: 16) {
-                        ForEach(tiles) { tile in
-                            Button {
-                                tap(tile.id)
-                            } label: {
-                                PictureView(picture: tile.picture, size: pictureSize)
-                                    .padding(pictureMargin)
-                            }
-                            .buttonStyle(
-                                AnswerTileStyle(strength: tile.isPicked ? 0.32 : 0.12, minHeight: 100)
-                            )
-                            // Non-color cue: picked tiles get a visible checkmark,
-                            // not just a stronger tint (WCAG 1.4.1, conventions.md §4).
-                            .overlay(alignment: .topTrailing) {
-                                // Hangs 12pt over the tile's corner so the tick never covers the picture, and
-                                // stops growing at xxxLarge so it stays inside the screen's 16pt edge (#413).
-                                if tile.isPicked {
-                                    CheckBadge().dynamicTypeSize(...DynamicTypeSize.xxxLarge).offset(x: 12, y: -12)
-                                }
-                            }
-                            .modifier(
-                                MissCue(
-                                    active: Binding(
-                                        get: { missedTile == tile.id },
-                                        set: { if !$0 { missedTile = nil } }))
-                            )
-                            .accessibilityLabel(AppLanguage.localized(tile.picture.nameKey))
-                            .accessibilityHint(
-                                tile.isPicked
-                                    ? AppLanguage.localized("game.category.a11y.picked")
-                                    : String(
-                                        format: AppLanguage.localized("game.category.a11y.position %lld %lld"),
-                                        tilePositions[tile.id] ?? 0, tiles.count))
-                        }
-                    }
-                }
-                .id(round.category)
-                .transition(reduceMotion ? .identity : .opacity)
-                .onAppear { AccessibilityNotification.Announcement(name(of: round)).post() }
+                board(round)
+                    .id(round.category)
+                    .transition(reduceMotion ? .identity : .opacity)
             }
         }
         .gameColumn(maxWidth: 720)
-        .padding()
+        .padding(Self.edgePadding)
         .fitOrScroll()
+        // Measured outside the padding and the fit-or-scroll, so it is the room the screen offers
+        // and not the height of what is in it (as Sudoku does).
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .onGeometryChange(for: CGFloat.self) {
+            $0.size.height - 2 * Self.edgePadding
+        } action: { height in
+            areaHeight = height
+            dealForBoard()
+        }
         .gameHeader(
             .categoryFluency,
             instruction: AppLanguage.localized("game.category.instruction") + " " + (currentRound.map(name(of:)) ?? "")
         )
-        .onAppear(perform: setup)
+        .onAppear(perform: dealForBoard)
         .onDisappear { completionTask?.cancel() }
         .celebration(isPresented: $showCelebration, game: .categoryFluency, detail: finalDetail, onPlayAgain: restart)
+    }
+
+    /// The instruction, the category and the progress. It is drawn before a round exists, hidden, and
+    /// its height never depends on which category is asked or on the completion beat, because the
+    /// board is fitted to what is left under it: a header that grew after the deal would push the last
+    /// row below the fold or deal the board a second time (#415).
+    private func header(_ round: CategoryDeal.Round?) -> some View {
+        let total = CategoryDeal.itemsPerCategory
+        return VStack(spacing: 24) {
+            Text(AppLanguage.localized("game.category.instruction"))
+                .font(.title2)
+                .multilineTextAlignment(.center)
+
+            // Every name sits in the same slot, so the slot is as tall as the longest one wraps
+            // in this language and at this text size; only the asked one is seen or heard.
+            ZStack {
+                ForEach(CategoryDeal.Category.allCases, id: \.self) { category in
+                    let asked = category == round?.category
+                    Text(AppLanguage.localized(category.nameKey))
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
+                        .multilineTextAlignment(.center)
+                        .opacity(asked ? 1 : 0)
+                        .accessibilityHidden(!asked)
+                        .accessibilityAddTraits(.isHeader)
+                }
+            }
+
+            // The completion beat takes the place of the count for a second, so nothing moves.
+            ProgressCards(
+                done: round == nil ? 0 : found, total: total,
+                words: round.flatMap { isShowingCompletionBeat ? complete(name(of: $0)) : nil }
+                    ?? String(format: AppLanguage.localized("game.category.found %lld %lld"), found, total))
+        }
+        .opacity(round == nil ? 0 : 1)
+        .accessibilityHidden(round == nil)
+        .id(round?.category)
+        .transition(reduceMotion ? .identity : .opacity)
+        .onAppear { if let round { AccessibilityNotification.Announcement(name(of: round)).post() } }
+    }
+
+    private func complete(_ name: String) -> String {
+        String(format: AppLanguage.localized("game.category.complete %@"), name)
+    }
+
+    /// The picture tiles of the round in play.
+    private func board(_ round: CategoryDeal.Round) -> some View {
+        LazyVGrid(columns: columns, spacing: 16) {
+            ForEach(tiles) { tile in
+                Button {
+                    tap(tile.id)
+                } label: {
+                    PictureView(picture: tile.picture, size: pictureSize)
+                        .padding(pictureMargin)
+                }
+                .buttonStyle(
+                    AnswerTileStyle(strength: tile.isPicked ? 0.32 : 0.12, minHeight: 100)
+                )
+                // A decoy he has tried fades and cannot be tapped again, as in Quick Eyes (#415).
+                .disabled(tile.isTried)
+                .opacity(tile.isTried ? 0.35 : 1)
+                // Non-color cue: picked tiles get a visible checkmark,
+                // not just a stronger tint (WCAG 1.4.1, conventions.md §4).
+                .overlay(alignment: .topTrailing) {
+                    // Hangs 12pt over the tile's corner so the tick never covers the picture, and
+                    // stops growing at xxxLarge so it stays inside the screen's 16pt edge (#413).
+                    if tile.isPicked {
+                        CheckBadge().dynamicTypeSize(...DynamicTypeSize.xxxLarge).offset(x: 12, y: -12)
+                    }
+                }
+                .modifier(
+                    MissCue(
+                        active: Binding(
+                            get: { missedTile == tile.id },
+                            set: { if !$0 { missedTile = nil } }))
+                )
+                .accessibilityLabel(AppLanguage.localized(tile.picture.nameKey))
+                .accessibilityHint(hint(for: tile))
+            }
+        }
+    }
+
+    /// What VoiceOver adds after a tile's name: found, tried, or where it sits.
+    private func hint(for tile: Tile) -> String {
+        if tile.isPicked { return AppLanguage.localized("game.category.a11y.picked") }
+        if tile.isTried { return AppLanguage.localized("game.category.a11y.tried") }
+        return String(
+            format: AppLanguage.localized("game.category.a11y.position %lld %lld"),
+            tilePositions[tile.id] ?? 0, tiles.count)
     }
 
     /// The category in play, as shown and announced.
@@ -162,13 +237,29 @@ struct CategoryFluencyView: View {
         setup()
     }
 
-    private func setup() {
+    /// Deals for the measured board (#415): on the first non-zero size, and again while nothing has been
+    /// picked if the size changes how many decoys fit (the level note goes away, the phone turns). After
+    /// a pick the board stays as dealt, so a game in progress is never thrown away.
+    private func dealForBoard() {
+        guard boardSize != .zero else { return }
+        let decoys = CategoryDeal.fittedDecoyCount(for: difficulty, size: boardSize, tile: tileSide)
+        guard
+            CategoryDeal.shouldDeal(
+                hasSession: !session.isEmpty, picks: totalPicks, dealt: dealtDecoys, fitted: decoys)
+        else { return }
+        // A new fit keeps the categories: the name stays and nothing is announced twice.
+        setup(keeping: session.isEmpty ? nil : session.map(\.category))
+    }
+
+    private func setup(keeping categories: [CategoryDeal.Category]? = nil) {
+        guard boardSize != .zero else { return }
         completionTask?.cancel()
         completionTask = nil
         isShowingCompletionBeat = false
+        dealtDecoys = CategoryDeal.fittedDecoyCount(for: difficulty, size: boardSize, tile: tileSide)
         var generator = SystemRandomNumberGenerator()
         session = CategoryDeal.deal(
-            difficulty: difficulty, width: Double(UIScreen.main.bounds.width), using: &generator)
+            difficulty: difficulty, size: boardSize, tile: tileSide, categories: categories, using: &generator)
         progress = RoundProgress(totalRounds: session.count)
         startedAt = .now
         dealRound()
@@ -183,15 +274,16 @@ struct CategoryFluencyView: View {
     }
 
     private func tap(_ tileID: Int) {
-        guard !isShowingCompletionBeat,
-            let i = tiles.firstIndex(where: { $0.id == tileID }),
-            !tiles[i].isPicked
-        else { return }
+        guard !isShowingCompletionBeat, let i = tiles.firstIndex(where: { $0.id == tileID }) else { return }
+        let outcome = CategoryDeal.tapOutcome(
+            belongs: tiles[i].belongs, isPicked: tiles[i].isPicked, isTried: tiles[i].isTried)
+        guard outcome != .ignored else { return }
         totalPicks += 1
-        guard tiles[i].belongs else {
+        guard outcome == .found else {
+            tiles[i].isTried = true
             Feedback.play(.miss)
             missedTile = tileID
-            // Nothing new on screen (decoy: kind, quiet), but VoiceOver hears the tap registered.
+            // The tile fades (decoy: kind, quiet), and VoiceOver hears the tap registered.
             AccessibilityNotification.Announcement(AppLanguage.localized("game.category.miss")).post()
             return
         }

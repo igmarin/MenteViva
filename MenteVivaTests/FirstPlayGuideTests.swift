@@ -30,8 +30,14 @@ final class FirstPlayGuideTests: XCTestCase {
     func testGivenResetWhenOpenedThenGuideShownAgain() {
         FirstPlayGuideStore.markSeen(.sudoku, defaults: defaults)
         FirstPlayGuideStore.markSeen(.upOrDown, defaults: defaults)
+        for game in [GameID.tangram, .slidingBlocks, .tilePairs] {
+            FirstPlayGuideStore.markSeen(game, defaults: defaults)
+        }
         FirstPlayGuideStore.resetAll(defaults: defaults)
         XCTAssertTrue(FirstPlayGuideStore.shouldShow(.sudoku, defaults: defaults))
         XCTAssertTrue(FirstPlayGuideStore.shouldShow(.upOrDown, defaults: defaults))
+        for game in [GameID.tangram, .slidingBlocks, .tilePairs] {
+            XCTAssertTrue(FirstPlayGuideStore.shouldShow(game, defaults: defaults))
+        }
     }
 }

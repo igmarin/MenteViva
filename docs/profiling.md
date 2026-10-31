@@ -7,14 +7,16 @@ No third-party tools: `os_signpost` (via `HotPath.measure`) plus Instruments.
 | Signpost | Where | Why it can be slow |
 |---|---|---|
 | `plan.today` | `HomeView.refreshPlan` | 14-day fetch, then the plan |
-| `photo.import` | `MemoryPhotos.add([Data?])` | the whole batch the family waits on after the picker |
+| `photo.import` | `MemoryPhotos.add([Data?])` | one photo per call (`FamilyPhotoImport` shrinks each as it arrives), so one interval per photo the family waits on |
 | `photo.downscale` | `MemoryPhotos.add` | ImageIO downsample + JPEG encode of a full photo (off the main actor) |
 | `photo.caption` | `MemoryPhotos.caption` | Set up reads it per photo inside a `ForEach` body |
 | `memory.deal` | `MemoryMatchView.deal` | reads the album and decodes up to 8 photos |
 | `reminiscence.deal` | `ReminiscenceView.deal` | reads the album and one caption file per photo |
 | `reminiscence.photo` | `ReminiscenceView` `PhotoCard` | loads one photo per card, off the main actor, on every card |
 | `session.save` | `ModelContext.record` | synchronous SwiftData save after every game |
+| `history.fetch` | `ModelContext.sessions(since:)` | one-shot fetch of 14 days (My Week) or 5 weeks (My progress), when the screen opens |
 | `progress.weekly` | `HistoryView` | recomputed on every redraw of My Week |
+| `sliding.hints` | `SlidingBlocksMap.init` | breadth-first walk of up to ~175k positions, run off the main thread when a puzzle starts |
 | `progress.rates` | `MyProgressView` | recomputed on every redraw of My progress (#141) |
 
 `HotPath.measure("name") { ... }` costs next to nothing with no profiler attached.
@@ -112,3 +114,41 @@ git config core.hooksPath .githooks
 Nothing automatic records a trace: profiling needs a booted simulator, the app installed,
 and someone playing. `tools/profile.sh` is the whole ritual; run it by hand after a change
 that touches photos, dealing, or the weekly screens.
+
+## Measured once, no signpost (#417, 2026-10-31)
+
+Both on an iPhone simulator on an Apple Silicon Mac, with a temporary app-hosted XCTest
+(removed after). Body counts do not depend on the hardware; times are an upper bound on
+speed, so scale them by about 10x for an old device.
+
+**`fitOrScroll()` — dropped, no change.** A counting view in a `UIHostingController`, read
+after layout, at the default size and at accessibility xxxLarge:
+
+| Content | Bodies on first layout | Bodies per state change | ScrollView built |
+|---|---|---|---|
+| plain, no `fitOrScroll` | 1 | 1 | — |
+| fits (everyday sizes) | 1 | 1 | no |
+| does not fit (any size) | 2 | 2 | yes |
+
+A re-layout without a state change evaluates no body either way. So the body doubles only
+when the screen is already scrolling. The proposed fix (`ViewThatFits` only at `.xLarge`
+and up) would save nothing where the screen fits and, below `.xLarge`, would cut off a
+screen that does not fit a small phone, which #117 exists to prevent. Recorded and dropped.
+
+**`AppLanguage.localized` — dropped, no change.** A `ContinuousClock` loop of 10k calls,
+best of 5, with and without a trial cache of the bundle and locale (removed after):
+
+| Per call | As shipped | With a trial cache |
+|---|---|---|
+| plain key (`game.sliding.block.small`) | 7.3 µs | 2.7 µs |
+| interpolated key (`game.sliding.place.cell`) | 22.5 µs | 17.5 µs |
+
+English and Spanish within 10% of each other. Finding the `.lproj` and building its
+`Bundle` is 3.4 µs a call; `String(localized:)` itself is 1.8 µs plain, 15.4 µs
+interpolated. A Sliding Blocks body redraws on every drag update (the touch is read in it)
+and makes 38 to 44 lookups with 12 to 14 blocks (3 per block for its VoiceOver name, the
+rest for the instruction, the guide and the buttons): about 0.5 ms a frame. A cache would
+save about 0.2 ms of that (0.5 to 0.3 ms), some 1.2% of a 16 ms frame, roughly 12% at 10x.
+Most of the cost is the interpolated cell names inside `String(localized:)`, which a cache
+does not touch, and no drag was traced, so the cost does not "show" yet. Recorded and
+dropped; revisit only if a device trace of a drag shows dropped frames.

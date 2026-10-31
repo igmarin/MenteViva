@@ -20,6 +20,18 @@ nonisolated struct PlayerProfile: Codable, Equatable {
     var startPace: StartPace?
 }
 
+nonisolated extension PlayerProfile {
+    /// One missing or unreadable answer falls back alone; the player's other answers stay.
+    init(from decoder: Decoder) throws {
+        let fields = try decoder.container(keyedBy: CodingKeys.self)
+        self.init(
+            forWhom: (try? fields.decodeIfPresent(ForWhom.self, forKey: .forWhom)) ?? nil,
+            focus: (try? fields.decodeIfPresent(Set<Focus>.self, forKey: .focus)) ?? [],
+            minutesPerDay: (try? fields.decodeIfPresent(Int.self, forKey: .minutesPerDay)) ?? nil,
+            startPace: (try? fields.decodeIfPresent(StartPace.self, forKey: .startPace)) ?? nil)
+    }
+}
+
 /// Keeps the `PlayerProfile` in UserDefaults, injected so tests use their own suite. A missing or
 /// unreadable profile is the empty one, and an empty profile leaves the plan exactly as it was.
 nonisolated enum ProfileStore {

@@ -24,6 +24,9 @@ nonisolated struct Saying: Hashable {
 nonisolated struct SayingRound: Equatable {
     let saying: Saying
     let choices: [Saying]  // each choice's `endKey` is a button
+    /// Where his ending stands among those shown (#494): `slot % count`. Drawn at the deal from
+    /// `0..<SayingsDeck.slotSpan`, so it is fair however many endings the screen keeps.
+    let slot: Int
 }
 
 /// Which sayings a game shows: 8 he hasn't seen yet, so none repeats until all have
@@ -47,8 +50,42 @@ enum SayingsDeck {
     /// so level 6 is exactly the old hard.
     static let sameThemeByLevel: [Bool] = [false, false, false, false, false, true, true, true, true, true]
 
+    /// The range a round's `slot` is drawn from (#494): every count of endings from 1 to 6 divides 60,
+    /// so `slot % count` puts his ending at each shown place equally often.
+    static let slotSpan = 60
+
     static func choiceCount(for difficulty: Difficulty) -> Int {
         difficulty.values(choicesByLevel)
+    }
+
+    /// The endings a round shows on a phone with room for only `count` (#415): the first `count - 1`
+    /// others in the order dealt, and his own at place `slot % count` among them (#494), so its place
+    /// can't be guessed however many are kept. Never fewer than two (one is no choice), never more
+    /// than were dealt.
+    static func shown(_ round: SayingRound, count: Int) -> [Saying] {
+        let kept = min(max(count, 2), round.choices.count)
+        var endings = Array(round.choices.filter { $0 != round.saying }.prefix(kept - 1))
+        endings.insert(round.saying, at: round.slot % kept)
+        return endings
+    }
+
+    /// The least an ending button is tall (`AnswerTileStyle(minHeight: 100)`), what an ending not
+    /// measured yet counts as (#494).
+    static let minimumEndingHeight = 100.0
+
+    /// How many of a round's endings fit in `room` points (#415), from each ending button's measured
+    /// height (a long or localized ending, or big text, wraps to more than 100pt) and the `gap` between
+    /// buttons: the most whose buttons, as `shown` picks them, stack within the room, never under 2. An
+    /// ending not measured yet counts at the 100pt minimum (#494), so a new round never lays them all
+    /// out to trim them a pass later.
+    static func fittingCount(_ round: SayingRound, heights: [Saying: Double], gap: Double, room: Double) -> Int {
+        for count in stride(from: round.choices.count, to: 2, by: -1) {
+            let endings = shown(round, count: count)
+            let needed =
+                endings.reduce(0) { $0 + (heights[$1] ?? minimumEndingHeight) } + gap * Double(endings.count - 1)
+            if needed <= room { return count }
+        }
+        return 2
     }
 
     /// Whether this level prefers same-theme distractors first.
@@ -76,7 +113,8 @@ enum SayingsDeck {
                 : rest
             return SayingRound(
                 saying: saying,
-                choices: ([saying] + distractors.prefix(others)).shuffled(using: &generator))
+                choices: ([saying] + distractors.prefix(others)).shuffled(using: &generator),
+                slot: Int.random(in: 0..<slotSpan, using: &generator))
         }
     }
 }

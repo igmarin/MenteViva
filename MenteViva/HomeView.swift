@@ -51,8 +51,7 @@ struct HomeView: View {
 
     /// The saved plan is a small local read; only the first result is kept by `State`.
     init() {
-        _plan = State(
-            initialValue: HomeDeal.preloadedPlan(cached: PlanStore.cachedPlan(), today: PlanStore.dayStamp()))
+        _plan = State(initialValue: PlanStore.plannedToday() ?? [])
     }
 
     /// Wider cards at accessibility text sizes (#117) so names never break
@@ -132,13 +131,20 @@ struct HomeView: View {
             playedWhileAway = atHome ? nil : today.done
         }
         .onChange(of: scenePhase) { _, phase in
-            guard phase == .active else { return }
-            let day = PlanStore.dayStamp()
-            // A new day must not deal yesterday's cards: clear them until today's plan is made.
-            if day != planDay { plan = HomeDeal.preloadedPlan(cached: PlanStore.cachedPlan(), today: day) }
-            planDay = day
+            if phase == .active { catchUpDay() }
+        }
+        // Midnight with the app left open (an iPad on its stand) never changes scenePhase (#419).
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.significantTimeChangeNotification)) { _ in
+            catchUpDay()
         }
         .environment(path)
+    }
+
+    /// A new day must not deal yesterday's cards: clear them until today's plan is made.
+    private func catchUpDay() {
+        let day = PlanStore.dayStamp()
+        if day != planDay { plan = PlanStore.plannedToday() ?? [] }
+        planDay = day
     }
 
     // MARK: - Today
@@ -356,14 +362,21 @@ struct HomeView: View {
     private var allGames: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text(AppLanguage.localized("home.allgames"))
-                .font(.title3.weight(.heavy))
+                .font(.title2.weight(.heavy))
                 .accessibilityAddTraits(.isHeader)
-            LazyVGrid(columns: columns, spacing: 16) {
-                ForEach(GameID.released.filter { !hidden.contains($0) }, id: \.self) { game in
-                    NavigationLink(value: game) {
-                        GameCard(game: game)
+            // One shelf per area (#421); an area whose games are all hidden has no shelf.
+            ForEach(HomeShelves.group(GameID.released.filter { !hidden.contains($0) }), id: \.focus) { shelf in
+                Text(AppLanguage.localized(ProfileAnswer.focus(shelf.focus).labelKey))
+                    .font(.title3.weight(.heavy))
+                    .accessibilityAddTraits(.isHeader)
+                    .padding(.top, 8)
+                LazyVGrid(columns: columns, spacing: 16) {
+                    ForEach(shelf.games, id: \.self) { game in
+                        NavigationLink(value: game) {
+                            GameCard(game: game)
+                        }
+                        .buttonStyle(CardPressStyle())
                     }
-                    .buttonStyle(CardPressStyle())
                 }
             }
         }
@@ -383,6 +396,12 @@ struct HomeView: View {
     /// SwiftData fetch, the summary, and the plan.
     private func refreshPlan() {
         HotPath.measure("plan.today") {
+            // Today's plan is already saved (the usual launch, or Settings closed with no change): the
+            // fetch and summary below would only be thrown away by `todaysPlan` (#417).
+            if let planned = PlanStore.plannedToday() {
+                self.plan = planned
+                return
+            }
             let since = Calendar.current.date(byAdding: .day, value: -14, to: .now) ?? .distantPast
             let recent =
                 (try? modelContext.fetch(

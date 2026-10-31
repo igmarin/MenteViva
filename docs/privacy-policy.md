@@ -27,10 +27,10 @@ copy when you tap Remove (or delete the app).
 words (a person, a nickname, a place, an event). It is stored next to the photo,
 in the app's private storage on this device, and nowhere else: it is never
 uploaded, never part of a share, and never sent to any service. Removing the
-photo removes its name. Photos added in this version and their names are excluded
-from new device backups, so they will not be restored from those backups. Photos
-added in an older version may still be included. An older backup may also contain a copy. Optionally the app can read a name aloud using your
-device's built-in voice; that happens on the device.
+photo removes its name. Your photos and their names are excluded from new device
+backups, so they will not be restored from those backups. A backup made before
+this version may still contain a copy. Optionally the app can read a name aloud
+using your device's built-in voice; that happens on the device.
 
 **What leaves the device: normally, nothing.** The app works fully offline, and its daily game
 suggestion is worked out on your device. The app makes no network requests at all. The research links in "Why these games" open in your browser only when you tap them.

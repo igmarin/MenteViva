@@ -29,22 +29,8 @@ struct TilePairsView: View {
     var body: some View {
         VStack(spacing: 20) {
             LevelExplainBanner(
-                change: PlanStore.cachedPlan()?.changes[GameID.tilePairs], game: GameID.tilePairs,
-                hasStarted: (deal?.attempts ?? 0) > 0, keepsSpace: true)
-            Text(AppLanguage.localized("game.tilepairs.instruction"))
-                .font(.title2)
-                .multilineTextAlignment(.center)
-
-            if let hint {
-                Text(hint)
-                    .font(.title2.weight(.semibold))
-                    .foregroundStyle(Color.todaysPick)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 14)
-                    .padding(.vertical, 10)
-                    .background(Color.amber.opacity(0.24), in: .rect(cornerRadius: 14))
-                    .accessibilityAddTraits(.isHeader)
-            }
+                game: GameID.tilePairs, hasStarted: (deal?.attempts ?? 0) > 0, keepsSpace: true)
+            instructionRow
 
             board
                 .frame(minHeight: 320)
@@ -60,9 +46,52 @@ struct TilePairsView: View {
         }
         .padding()
         .fitOrScroll()
+        .leaveGuard(
+            inProgress: (deal?.attempts ?? 0) > 0 || selected != nil || !removing.isEmpty,
+            celebrating: showCelebration
+        )
         .gameHeader(.tilePairs, instruction: AppLanguage.localized("game.tilepairs.instruction"))
+        .firstPlayGuide(
+            .tilePairs, line: AppLanguage.localized("game.tilepairs.guide"),
+            example: AppLanguage.localized("guide.tilepairs.example")
+        )
         .onAppear { dealIfNeeded() }
         .celebration(isPresented: $showCelebration, game: .tilePairs, detail: finalDetail, onPlayAgain: restart)
+    }
+
+    // MARK: - Instruction and hint
+
+    /// Every line the hint can show. The row is as tall as the tallest one (or
+    /// the same line at a bigger text size), hidden, with the live line on top,
+    /// so a hint appearing never takes height from the board: `tileSize` would
+    /// step down and every tile shrink mid-deal (#482).
+    private var hintLines: [String] {
+        ["game.tilepairs.covered", "game.tilepairs.mismatch", "game.tilepairs.stuck"].map { AppLanguage.localized($0) }
+    }
+
+    /// The instruction and the hint share one row, so the reserved height costs
+    /// the short iPhone screens as little as possible: while a hint shows, it
+    /// stands where the instruction was, and the instruction returns with the
+    /// next pick.
+    private var instructionRow: some View {
+        ZStack {
+            Text(AppLanguage.localized("game.tilepairs.instruction"))
+                .font(.title2)
+                .multilineTextAlignment(.center)
+                .opacity(hint == nil ? 1 : 0)
+                .accessibilityHidden(hint != nil)
+            ForEach(hintLines, id: \.self) { line in
+                hintBubble(line).hidden()
+            }
+            if let hint {
+                hintBubble(hint)
+                    .accessibilityAddTraits(.isHeader)
+            }
+        }
+    }
+
+    private func hintBubble(_ line: String) -> some View {
+        AlmostNote(text: line)
     }
 
     // MARK: - Board
@@ -85,6 +114,7 @@ struct TilePairsView: View {
                 .overlay {
                     if let deal {
                         let tileSize = tileSize(for: deal, in: size)
+                        let guideTargetID = FirstPlayGuideStore.shouldShow(.tilePairs) ? deal.guidePair()?.first?.id : nil
                         let boardDims = boardDimensions(for: deal, tileSize: tileSize)
                         // A board that still doesn't fit at the smallest tile (a wide fallback
                         // line, a short screen after the first move) scrolls inside its space
@@ -94,7 +124,7 @@ struct TilePairsView: View {
                         ScrollView([.horizontal, .vertical]) {
                             ZStack(alignment: .topLeading) {
                                 ForEach(deal.tiles.sorted(by: { $0.layer < $1.layer }), id: \.id) { tile in
-                                    tileButton(tile, tileSize: tileSize)
+                                    tileButton(tile, tileSize: tileSize, guideTargetID: guideTargetID)
                                 }
                             }
                             // Top-leading: the tiles are placed by `.offset`, which does not size the ZStack,
@@ -110,7 +140,7 @@ struct TilePairsView: View {
         }
     }
 
-    private func tileButton(_ tile: TilePairsTile, tileSize: CGFloat) -> some View {
+    private func tileButton(_ tile: TilePairsTile, tileSize: CGFloat, guideTargetID: Int?) -> some View {
         let free = deal?.isFree(tile) ?? false
         let isSelected = selected == tile.id
         let isHighlighted = highlighted.contains(tile.id)
@@ -141,6 +171,7 @@ struct TilePairsView: View {
         }
         .buttonStyle(.plain)
         .offset(x: offset.x, y: offset.y)
+        .guideTarget(tile.id == guideTargetID)
         // VoiceOver: only free tiles are focusable; covered tiles keep the pattern + dim so it isn't colour-only.
         .accessibilityHidden(!free)
         .accessibilityLabel(symbolLabel(tile.symbol))
@@ -277,15 +308,21 @@ struct TilePairsView: View {
             hint = nil
             Feedback.play(.success)
             let label = symbolLabel(tile.symbol)
-            AccessibilityNotification.Announcement(
-                String(format: AppLanguage.localized("game.tilepairs.matched %@"), label)
-            ).post()
+            // One announcement when the pair leaves the board stuck, so the mix line cannot cut the match line off.
+            var spoken = String(format: AppLanguage.localized("game.tilepairs.matched %@"), label)
+            if mutable.isStuck { spoken += " " + AppLanguage.localized("game.tilepairs.stuck") }
+            AccessibilityNotification.Announcement(spoken).post()
             let delay = reduceMotion ? 0.22 : 0.38
             Task { @MainActor in
                 try? await Task.sleep(for: .seconds(delay))
-                deal = mutable
-                removing = []
-                selected = nil
+                // A pair taken in an unlucky order can leave no free match: mix now, not only on Show me.
+                var settled = mutable
+                let mixed = mixIfStuck(&settled, afterMatch: true)
+                withAnimation(mixed && !reduceMotion ? .easeInOut(duration: 0.3) : nil) {
+                    deal = settled
+                    removing = []
+                    selected = nil
+                }
                 if mutable.isCleared { finish(with: mutable) }
             }
         case .mismatch:
@@ -304,27 +341,33 @@ struct TilePairsView: View {
         }
     }
 
+    /// Mixes a board with no free matching pair, with the warm "stuck" line; false when it was already playable.
+    /// Called after every removed pair and by Show me, so a stuck board never waits for a button press.
+    /// `afterMatch`: the match already played its sound and spoke the stuck line, so the mix stays quiet.
+    private func mixIfStuck(_ board: inout TilePairsDeal, afterMatch: Bool = false) -> Bool {
+        guard board.isStuck else { return false }
+        hint = AppLanguage.localized("game.tilepairs.stuck")
+        if !afterMatch {
+            AccessibilityNotification.Announcement(hint!).post()
+            Feedback.play(.success)
+        }
+        var gen = SystemRandomNumberGenerator()
+        return board.reshuffle(using: &gen)
+    }
+
     /// Highlighting adds one attempt and no correct pair; wait for a lift to avoid the stale board.
     private func showPair() {
         guard removing.isEmpty, var current = deal else { return }
-        if current.isStuck {
-            hint = AppLanguage.localized("game.tilepairs.stuck")
-            AccessibilityNotification.Announcement(hint!).post()
-            Feedback.play(.success)
-            var gen = SystemRandomNumberGenerator()
-            if current.reshuffle(using: &gen) {
-                withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.3)) {
-                    deal = current
-                    selected = nil
-                    highlighted = []
-                    removing = []
-                }
+        if mixIfStuck(&current) {
+            withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.3)) {
+                deal = current
+                selected = nil
+                highlighted = []
+                removing = []
             }
             return
         }
-        let free = current.freeTiles()
-        let groups = Dictionary(grouping: free, by: \.symbol)
-        if let pair = groups.first(where: { $0.value.count >= 2 })?.value.prefix(2) {
+        if let pair = current.guidePair() {
             hintsUsed += 1
             highlighted = Set(pair.map(\.id))
             Feedback.play(.success)

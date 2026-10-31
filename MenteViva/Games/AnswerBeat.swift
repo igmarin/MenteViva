@@ -26,6 +26,27 @@ nonisolated struct AnswerBeat<Choice: Hashable>: Equatable {
     func duration(voiceOver: Bool) -> Double {
         voiceOver ? 1.2 : 0.7
     }
+
+    /// Gives the same warm sound and announcement in each game.
+    @MainActor
+    func play(rightName: String) {
+        Feedback.play(isRight ? .success : .miss)
+        let line =
+            isRight
+            ? AppLanguage.localized("game.answer.right")
+            : String(format: AppLanguage.localized("game.answer.was %@"), rightName)
+        AccessibilityNotification.Announcement(line).post()
+    }
+
+    /// Runs the next round only after the visible beat, unless the game has gone away.
+    @MainActor
+    func after(_ action: @escaping @MainActor () -> Void) -> Task<Void, Never> {
+        Task { @MainActor in
+            try? await Task.sleep(for: .seconds(duration(voiceOver: UIAccessibility.isVoiceOverRunning)))
+            guard !Task.isCancelled else { return }
+            action()
+        }
+    }
 }
 
 extension View {

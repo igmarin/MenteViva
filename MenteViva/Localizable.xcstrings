@@ -141,13 +141,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Saved on this device. The app never shares or sends it. Photos added in this version and their names are excluded from new device backups. Older photos may still be included."
+            "value" : "Saved on this device. The app never shares or sends it. Your photos and their names are excluded from new device backups."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Se guarda en este dispositivo. La app nunca lo comparte ni lo envía. Las fotos añadidas en esta versión y sus nombres se excluyen de las nuevas copias de seguridad. Las fotos anteriores todavía podrían incluirse."
+            "value" : "Se guarda en este dispositivo. La app nunca lo comparte ni lo envía. Tus fotos y sus nombres se excluyen de las nuevas copias de seguridad."
           }
         }
       }
@@ -817,6 +817,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ficha %lld de %lld"
+          }
+        }
+      }
+    },
+    "game.category.a11y.tried" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not in this group"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No es de este grupo"
           }
         }
       }
@@ -1649,6 +1666,74 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ROJO"
+          }
+        }
+      }
+    },
+    "game.leave.go" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leave"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Salir"
+          }
+        }
+      }
+    },
+    "game.leave.note" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "It won't be saved, but you can start a new one any time."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se guardará, pero puedes empezar otro cuando quieras."
+          }
+        }
+      }
+    },
+    "game.leave.stay" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keep playing"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seguir jugando"
+          }
+        }
+      }
+    },
+    "game.leave.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leave this game?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Salir de este juego?"
           }
         }
       }
@@ -2791,6 +2876,40 @@
         }
       }
     },
+    "game.slidingblocks.guide" : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap a block, then an arrow to slide it."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toca un bloque y luego una flecha para deslizarlo."
+          }
+        }
+      }
+    },
+    "game.tangram.guide" : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap a piece, then tap where it fits."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toca una pieza y luego toca dónde encaja."
+          }
+        }
+      }
+    },
     "game.tangram.title" : {
       "localizations" : {
         "en" : {
@@ -2803,6 +2922,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tangram"
+          }
+        }
+      }
+    },
+    "game.tilepairs.guide" : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap two matching tiles that are not covered."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toca dos fichas iguales que no estén tapadas."
           }
         }
       }
@@ -3427,6 +3563,57 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sube o baja"
+          }
+        }
+      }
+    },
+    "guide.slidingblocks.example" : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Try this block."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prueba este bloque."
+          }
+        }
+      }
+    },
+    "guide.tangram.example" : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start with this piece."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Empieza con esta pieza."
+          }
+        }
+      }
+    },
+    "guide.tilepairs.example" : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This one has a twin that is not covered."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Esta tiene una gemela que no está tapada."
           }
         }
       }
@@ -10683,13 +10870,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "A backup of this %@ may include your games. Photos added in this version and their names are excluded; older photos may still be included."
+            "value" : "A backup of this %@ may include your games. Your photos and their names are never included."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Una copia de seguridad de este %@ puede incluir tus partidas. Las fotos añadidas en esta versión y sus nombres se excluyen; las fotos anteriores todavía podrían incluirse."
+            "value" : "Una copia de seguridad de este %@ puede incluir tus partidas. Tus fotos y sus nombres nunca se incluyen."
           }
         }
       }
@@ -10782,6 +10969,57 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tu privacidad"
+          }
+        }
+      }
+    },
+    "settings.section.about" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "About"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Acerca de"
+          }
+        }
+      }
+    },
+    "settings.section.family" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "For the family"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Para la familia"
+          }
+        }
+      }
+    },
+    "settings.section.you" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "For you"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Para ti"
           }
         }
       }

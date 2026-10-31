@@ -36,8 +36,7 @@ struct MathStreakView: View {
     var body: some View {
         VStack(spacing: 32) {
             LevelExplainBanner(
-                change: PlanStore.cachedPlan()?.changes[GameID.mathStreaks], game: GameID.mathStreaks,
-                hasStarted: progress.completedRounds > 0)
+                game: GameID.mathStreaks, hasStarted: progress.completedRounds > 0)
             Text(AppLanguage.localized("game.math.instruction"))
                 .font(.title2)
                 .multilineTextAlignment(.center)
@@ -73,7 +72,8 @@ struct MathStreakView: View {
         .padding()
         .fitOrScroll()
         .gameHeader(.mathStreaks, instruction: AppLanguage.localized("game.math.instruction") + " " + question.spoken())
-        .onAppear(perform: deal)
+        // Not when the celebration closes: Play again has dealt already (#415).
+        .onAppear { if options.isEmpty { deal() } }
         .onDisappear {
             // A beat cut short must not leave taps locked if this state comes back.
             beatTask?.cancel()
@@ -113,18 +113,11 @@ struct MathStreakView: View {
             streak += 1
             bestStreak = max(bestStreak, streak)
             correct += 1
-            Feedback.play(.success)
-            AccessibilityNotification.Announcement(AppLanguage.localized("game.answer.right")).post()
         } else {
             streak = 0
-            Feedback.play(.miss)
-            AccessibilityNotification.Announcement(
-                String(format: AppLanguage.localized("game.answer.was %@"), "\(question.answer)")
-            ).post()
         }
-        beatTask = Task { @MainActor in
-            try? await Task.sleep(for: .seconds(answer.duration(voiceOver: UIAccessibility.isVoiceOverRunning)))
-            guard !Task.isCancelled else { return }
+        answer.play(rightName: "\(question.answer)")
+        beatTask = answer.after {
             beat = nil
             if progress.completeRound() {
                 finish()

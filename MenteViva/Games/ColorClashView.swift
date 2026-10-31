@@ -18,6 +18,8 @@ struct ColorClashView: View {
     @State private var ink: Ink = .blue
     @State private var progress = RoundProgress(totalRounds: Self.totalRounds)
     @State private var correct = 0
+    /// True once a word is dealt: `.onAppear` runs again when the celebration closes (#415).
+    @State private var hasDealt = false
     @State private var startedAt = Date.now
     @State private var showCelebration = false
     @State private var finalDetail = ""
@@ -41,8 +43,7 @@ struct ColorClashView: View {
     var body: some View {
         VStack(spacing: 32) {
             LevelExplainBanner(
-                change: PlanStore.cachedPlan()?.changes[GameID.stroop], game: GameID.stroop,
-                hasStarted: progress.completedRounds > 0)
+                game: GameID.stroop, hasStarted: progress.completedRounds > 0)
             Text(AppLanguage.localized("game.colorclash.instruction"))
                 .font(.title2)
                 .multilineTextAlignment(.center)
@@ -104,6 +105,8 @@ struct ColorClashView: View {
         .gameHeader(.stroop, instruction: AppLanguage.localized("game.colorclash.instruction"))
         .firstPlayGuide(.stroop, line: AppLanguage.localized("game.colorclash.instruction"), example: guideExample)
         .onAppear {
+            // Fires again when the celebration closes; Play again has already dealt, so deal only once.
+            guard !hasDealt else { return }
             startedAt = .now
             deal()
         }
@@ -130,6 +133,7 @@ struct ColorClashView: View {
         let stimulus = ColorClashDeal.make(difficulty: difficulty, using: &generator)
         ink = stimulus.ink
         word = stimulus.word
+        hasDealt = true
         AccessibilityNotification.Announcement(stimulusLabel).post()
     }
 
@@ -140,17 +144,9 @@ struct ColorClashView: View {
         beat = answer
         if answer.isRight {
             correct += 1
-            Feedback.play(.success)
-            AccessibilityNotification.Announcement(AppLanguage.localized("game.answer.right")).post()
-        } else {
-            Feedback.play(.miss)
-            AccessibilityNotification.Announcement(
-                String(format: AppLanguage.localized("game.answer.was %@"), ink.label)
-            ).post()
         }
-        beatTask = Task { @MainActor in
-            try? await Task.sleep(for: .seconds(answer.duration(voiceOver: UIAccessibility.isVoiceOverRunning)))
-            guard !Task.isCancelled else { return }
+        answer.play(rightName: ink.label)
+        beatTask = answer.after {
             beat = nil
             if progress.completeRound() {
                 finish()

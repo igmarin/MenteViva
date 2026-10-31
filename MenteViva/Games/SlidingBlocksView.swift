@@ -50,8 +50,7 @@ struct SlidingBlocksView: View {
     var body: some View {
         VStack(spacing: 16) {
             LevelExplainBanner(
-                change: PlanStore.cachedPlan()?.changes[GameID.slidingBlocks], game: GameID.slidingBlocks,
-                hasStarted: (puzzle?.movesMade ?? 0) > 0, keepsSpace: true)
+                game: GameID.slidingBlocks, hasStarted: (puzzle?.movesMade ?? 0) > 0, keepsSpace: true)
             Text(instruction)
                 .font(.title2)
                 .multilineTextAlignment(.center)
@@ -67,7 +66,12 @@ struct SlidingBlocksView: View {
         .fitOrScroll()
         // A block drag never scrolls the page, even in the scrolling layout (#470).
         .scrollDisabled(touch != nil)
+        .leaveGuard(inProgress: (puzzle?.movesMade ?? 0) > 0, celebrating: showCelebration)
         .gameHeader(.slidingBlocks, instruction: instruction)
+        .firstPlayGuide(
+            .slidingBlocks, line: AppLanguage.localized("game.slidingblocks.guide"),
+            example: AppLanguage.localized("guide.slidingblocks.example")
+        )
         .onAppear(perform: dealIfNeeded)
         .onDisappear { hintBuild?.cancel() }
         .celebration(isPresented: $showCelebration, game: .slidingBlocks, detail: finalDetail, onPlayAgain: deal)
@@ -82,11 +86,14 @@ struct SlidingBlocksView: View {
                 let boardWidth = cell * CGFloat(puzzle.width)
                 let boardHeight = cell * CGFloat(puzzle.height)
                 let legal = Self.directions(in: puzzle)
+                let guideIndex = FirstPlayGuideStore.shouldShow(.slidingBlocks) ? puzzle.guideBlock() : nil
                 ZStack(alignment: .topLeading) {
                     boardFrame(puzzle: puzzle, cell: cell)
                         .frame(width: boardWidth, height: boardHeight)
                     ForEach(puzzle.blocks.indices, id: \.self) { index in
-                        blockView(index, puzzle: puzzle, cell: cell, directions: legal[index] ?? [])
+                        blockView(
+                            index, puzzle: puzzle, cell: cell, directions: legal[index] ?? [],
+                            isGuideTarget: index == guideIndex)
                     }
                 }
                 .frame(width: boardWidth, height: boardHeight)
@@ -126,7 +133,8 @@ struct SlidingBlocksView: View {
     // MARK: - Blocks
 
     private func blockView(
-        _ index: Int, puzzle: SlidingBlocksPuzzle, cell: CGFloat, directions: [SlidingDirection]
+        _ index: Int, puzzle: SlidingBlocksPuzzle, cell: CGFloat, directions: [SlidingDirection],
+        isGuideTarget: Bool
     ) -> some View {
         let block = puzzle.blocks[index]
         let isBig = index == puzzle.bigIndex
@@ -157,6 +165,7 @@ struct SlidingBlocksView: View {
                 y: CGFloat(block.y) * cell + (dragOffset?.height ?? 0)
             )
             .zIndex(dragOffset != nil ? 2 : (isSelected ? 1 : 0))
+            .guideTarget(isGuideTarget)
             // The one place moves animate. Reduce Motion: moves land at once, with no slide (issue spec).
             .animation(reduceMotion ? nil : .easeInOut(duration: 0.25), value: puzzle)
             // High priority, so the block's drag wins over the page's ScrollView; the
@@ -242,7 +251,8 @@ struct SlidingBlocksView: View {
     /// (`SlidingDragRule`); then the block follows the finger along that axis,
     /// clamped to the cells that are actually clear, and letting go snaps it to
     /// the nearest cell. A touch that never locked is settled on lift
-    /// (`SlidingDragRule.onLift`), so it always taps or moves. The minimum
+    /// (`SlidingDragRule.onLift`), and a lift that moves no cell picks the
+    /// block (`SlidingDragRule.lift`), so a touch always taps or moves (#482). The minimum
     /// distance is 0 so this gesture owns the touch from the start and the
     /// page's ScrollView never sees it.
     private func drag(for index: Int, cell: CGFloat, puzzle: SlidingBlocksPuzzle) -> some Gesture {
@@ -255,31 +265,22 @@ struct SlidingBlocksView: View {
                 dragLock = SlidingDragRule.axis(for: value.translation).map { finger in
                     DragLock(
                         block: index, start: value.startLocation,
-                        limits: DragLimits(block: index, in: puzzle, finger: finger))
+                        limits: SlidingDragLimits(block: index, in: puzzle, finger: finger))
                 }
             }
             .onEnded { value in
                 let lock = dragLock?.isFor(index, start: value.startLocation) == true ? dragLock : nil
                 dragLock = nil
-                let limits: DragLimits
-                if let lock {
-                    limits = lock.limits
-                } else {
-                    switch SlidingDragRule.onLift(value.translation) {
-                    case .tap:
-                        tap(index)
-                        return
-                    case .drag(let finger):
-                        limits = DragLimits(block: index, in: puzzle, finger: finger)
-                    }
+                var limits = lock?.limits
+                if limits == nil, case .drag(let finger) = SlidingDragRule.onLift(value.translation) {
+                    limits = SlidingDragLimits(block: index, in: puzzle, finger: finger)
                 }
-                let offset = limits.clamped(value.translation, cell: cell)
-                let distance = limits.horizontal ? offset.width : offset.height
-                let steps = Int((abs(distance) / cell).rounded())
-                guard steps > 0 else { return }
-                let direction: SlidingDirection =
-                    limits.horizontal ? (distance > 0 ? .right : .left) : (distance > 0 ? .down : .up)
-                apply(SlidingMove(block: index, direction: direction, steps: steps))
+                switch SlidingDragRule.lift(value.translation, limits: limits, cell: cell) {
+                case .select:
+                    tap(index)
+                case .slide(let direction, let steps):
+                    apply(SlidingMove(block: index, direction: direction, steps: steps))
+                }
             }
     }
 
@@ -475,41 +476,21 @@ private struct BlockTouch {
 private struct DragLock {
     let block: Int
     let start: CGPoint
-    let limits: DragLimits
+    let limits: SlidingDragLimits
 
     func isFor(_ index: Int, start point: CGPoint) -> Bool {
         block == index && start == point
     }
 }
 
-/// A drag's axis and how far the block can go each way along it, in cells.
-/// The axis is the finger's when the block can move that way, otherwise the
-/// one it can move on (`SlidingDragRule.blockAxis`), fixed for the whole drag.
-private struct DragLimits {
-    let horizontal: Bool
-    let back: Int
-    let forward: Int
-
-    init(block index: Int, in puzzle: SlidingBlocksPuzzle, finger: SlidingDragRule.Axis) {
+extension SlidingDragLimits {
+    /// The reach of block `index` in `puzzle` along the axis the finger led.
+    fileprivate init(block index: Int, in puzzle: SlidingBlocksPuzzle, finger: SlidingDragRule.Axis) {
         var reach: [SlidingDirection: Int] = [:]
         for move in puzzle.moves() where move.block == index {
             reach[move.direction] = max(reach[move.direction] ?? 0, move.steps)
         }
-        let axis = SlidingDragRule.blockAxis(
-            finger: finger,
-            canSide: reach[.left] != nil || reach[.right] != nil,
-            canUpDown: reach[.up] != nil || reach[.down] != nil)
-        horizontal = axis == .horizontal
-        back = reach[horizontal ? .left : .up] ?? 0
-        forward = reach[horizontal ? .right : .down] ?? 0
-    }
-
-    /// The translation on this axis, limited to the cells the block can
-    /// legally reach, so a drag never crosses a neighbour.
-    func clamped(_ translation: CGSize, cell: CGFloat) -> CGSize {
-        let distance = horizontal ? translation.width : translation.height
-        let limited = min(max(distance, -CGFloat(back) * cell), CGFloat(forward) * cell)
-        return horizontal ? CGSize(width: limited, height: 0) : CGSize(width: 0, height: limited)
+        self.init(reach: reach, finger: finger)
     }
 }
 

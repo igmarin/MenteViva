@@ -54,6 +54,14 @@ struct GameProgress: Equatable {
         return change > Self.accuracyNoise ? .up : change < -Self.accuracyNoise ? .down : .steady
     }
 
+    /// Start of the oldest day `weekly` looks at: the week before the calendar week `now` is in.
+    /// My Week fetches sessions from here, so the window and the rule cannot drift apart (#417).
+    static func since(now: Date = .now, calendar: Calendar = .current, weekStart: Date? = nil) -> Date {
+        let start =
+            weekStart ?? calendar.dateInterval(of: .weekOfYear, for: now)?.start ?? calendar.startOfDay(for: now)
+        return calendar.date(byAdding: .day, value: -7, to: start) ?? start
+    }
+
     /// Games played this week or the week before, in `GameID.allCases` order.
     /// "This week" starts at `weekStart`, by default the calendar week's first
     /// day, so My Week's lines cover the same days as its board (#170).
@@ -63,7 +71,7 @@ struct GameProgress: Equatable {
     ) -> [GameProgress] {
         let start =
             weekStart ?? calendar.dateInterval(of: .weekOfYear, for: now)?.start ?? calendar.startOfDay(for: now)
-        let previousStart = calendar.date(byAdding: .day, value: -7, to: start) ?? start
+        let previousStart = since(now: now, calendar: calendar, weekStart: start)
         let thisWeek = sessions.filter { $0.playedAt >= start }
         let lastWeek = sessions.filter { $0.playedAt >= previousStart && $0.playedAt < start }
         return GameID.released.compactMap { game in
