@@ -69,6 +69,11 @@ Ask the agent, in the repo:
 
 If an agent answers from memory and names nothing from AGENTS.md, it did not load the rules.
 
+## Local setup notes
+
+- `.mcp.json` needs `GITHUB_TOKEN` in your environment. Set it, or ignore `.mcp.json`.
+- Run graphify from the repo root only, so `graphify-out/` does not appear inside `MenteViva/`.
+
 ## Open decisions for the owner
 
 - Whether Devin and Muse Code get a project config file, or stay user-level. Blocked until their

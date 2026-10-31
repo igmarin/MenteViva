@@ -54,6 +54,9 @@ run "claims" ./tools/check_claims.sh
 run "signposts vs docs" ./tools/check_signposts.sh
 run "project file" ./tools/check_project_files.sh
 run "site placeholders" ./tools/check_site.sh
+run "sliding blocks drift" sh -c 'swift -O tools/generate_sliding_blocks.swift \
+    && git diff --exit-code -- MenteViva/Games/SlidingBlocksLevels.swift \
+    || { echo "SlidingBlocksLevels.swift was regenerated; commit it."; exit 1; }'
 
 udid="$(simulator)"
 if [ -n "$udid" ]; then

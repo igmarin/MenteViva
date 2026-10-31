@@ -15,6 +15,9 @@ on:
 
 jobs:
   claude-review:
+    # Forks get no secrets and drafts are not ready for review: skip both so
+    # outside contributors see a calm, green PR (#420).
+    if: github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.draft == false
     # Optional: Filter by PR author
     # if: |
     #   github.event.pull_request.user.login == 'external-contributor' ||
