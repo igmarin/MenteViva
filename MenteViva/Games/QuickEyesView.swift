@@ -177,7 +177,8 @@ struct QuickEyesView: View {
                     ? (isPaced ? "game.quickeyes.instruction.paced" : "game.quickeyes.instruction")
                     : phase == .invite ? "game.quickeyes.invite.title" : "game.quickeyes.prompt")
         )
-        .onAppear(perform: startRound)
+        // Not when the celebration closes: Play again has started the round already (#415).
+        .onAppear { if options.isEmpty { startRound() } }
         .onChange(of: scenePhase) { _, newPhase in pauseOrResume(for: newPhase) }
         .onDisappear {
             // A beat cut short must not leave taps locked if this state comes back.

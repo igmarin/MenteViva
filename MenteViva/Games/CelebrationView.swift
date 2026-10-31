@@ -337,21 +337,19 @@ private struct CelebrationCover: ViewModifier {
     let game: GameID
     let detail: String
     let onPlayAgain: () -> Void
-    /// The game chosen with "Next", opened only once the cover is gone: changing
-    /// the path mid-dismissal would remove this view while it still presents.
-    @State private var pendingNext: GameID?
+    @State private var exit = CelebrationExit()
 
     func body(content: Content) -> some View {
-        content.fullScreenCover(isPresented: $isPresented, onDismiss: openPendingNext) {
+        content.fullScreenCover(isPresented: $isPresented, onDismiss: runPending) {
             CelebrationView(
                 game: game,
                 detail: detail,
                 onPlayAgain: {
+                    exit.choose(.playAgain)
                     isPresented = false
-                    onPlayAgain()
                 },
                 onNext: { next in
-                    pendingNext = next
+                    exit.choose(.next(next))
                     isPresented = false
                 },
                 onHome: {
@@ -361,10 +359,35 @@ private struct CelebrationCover: ViewModifier {
         }
     }
 
-    private func openPendingNext() {
-        guard let next = pendingNext else { return }
-        pendingNext = nil
-        path?.games = [next]
+    private func runPending() {
+        switch exit.coverClosed() {
+        case .playAgain: onPlayAgain()
+        case .next(let next): path?.games = [next]
+        case nil: break
+        }
+    }
+}
+
+/// What the celebration's buttons asked for, carried out only once the cover is gone (#415).
+/// "Play again" dealing under the closing cover started a timed or announced round there, and
+/// the game's `.onAppear`, which fires again as the cover leaves, then dealt a second one.
+/// "Next" changing the path mid-dismissal would remove the game while it still presents.
+nonisolated struct CelebrationExit: Equatable {
+    enum Action: Equatable {
+        case playAgain
+        case next(GameID)
+    }
+
+    private(set) var pending: Action?
+
+    mutating func choose(_ action: Action) {
+        pending = action
+    }
+
+    /// The chosen action, once: a later dismissal (Home, a swipe) finds nothing to run.
+    mutating func coverClosed() -> Action? {
+        defer { pending = nil }
+        return pending
     }
 }
 

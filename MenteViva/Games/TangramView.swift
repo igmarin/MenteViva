@@ -56,7 +56,8 @@ struct TangramView: View {
                 .tangram, line: AppLanguage.localized("game.tangram.guide"),
                 example: AppLanguage.localized("guide.tangram.example")
             )
-            .onAppear(perform: deal)
+            // Not when the celebration closes: Play again has dealt already (#415).
+            .onAppear { if seen.isEmpty { deal() } }
             .onDisappear { CaptionSpeaker.stop() }
             .celebration(isPresented: $showCelebration, game: .tangram, detail: finalDetail, onPlayAgain: deal)
     }
