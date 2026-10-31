@@ -67,8 +67,7 @@ struct SayingsView: View {
         VStack(spacing: Self.blockGap) {
             VStack(spacing: Self.blockGap) {
                 LevelExplainBanner(
-                    change: PlanStore.todaysChange(GameID.sayings), game: GameID.sayings,
-                    hasStarted: taps > 0 || progress.completedRounds > 0)
+                    game: GameID.sayings, hasStarted: taps > 0 || progress.completedRounds > 0)
                 instructionRow
             }
             .onGeometryChange(for: CGFloat.self) {

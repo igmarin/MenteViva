@@ -29,8 +29,7 @@ struct TilePairsView: View {
     var body: some View {
         VStack(spacing: 20) {
             LevelExplainBanner(
-                change: PlanStore.todaysChange(GameID.tilePairs), game: GameID.tilePairs,
-                hasStarted: (deal?.attempts ?? 0) > 0, keepsSpace: true)
+                game: GameID.tilePairs, hasStarted: (deal?.attempts ?? 0) > 0, keepsSpace: true)
             instructionRow
 
             board
