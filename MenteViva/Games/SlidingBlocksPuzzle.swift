@@ -320,45 +320,49 @@ nonisolated struct SlidingBlocksMap: Sendable {
     /// partial and must be discarded. The default never stops (tests, tools).
     init(from puzzle: SlidingBlocksPuzzle, isCancelled: () -> Bool = { false }) {
         // Every reachable position, then breadth-first back from all solved ones.
-        var index: [UInt64: Int] = [puzzle.layoutKey: 0]
-        var keys = [puzzle.layoutKey]
-        var neighbours: [[Int]] = []
-        var solved: [Int] = []
-        var queue = [puzzle]
-        var head = 0
-        while head < queue.count, !isCancelled() {
-            let current = queue[head]
-            if current.isSolved { solved.append(head) }
-            var next: [Int] = []
-            for move in current.moves() {
-                let board = current.moved(move)
-                let key = board.layoutKey
-                if let known = index[key] {
-                    next.append(known)
-                } else {
-                    index[key] = keys.count
-                    next.append(keys.count)
-                    keys.append(key)
-                    queue.append(board)
+        // Signposted: up to ~175k positions, so a trace shows the real cost (#417).
+        let table: [UInt64: Int] = HotPath.measure("sliding.hints") {
+            var index: [UInt64: Int] = [puzzle.layoutKey: 0]
+            var keys = [puzzle.layoutKey]
+            var neighbours: [[Int]] = []
+            var solved: [Int] = []
+            var queue = [puzzle]
+            var head = 0
+            while head < queue.count, !isCancelled() {
+                let current = queue[head]
+                if current.isSolved { solved.append(head) }
+                var next: [Int] = []
+                for move in current.moves() {
+                    let board = current.moved(move)
+                    let key = board.layoutKey
+                    if let known = index[key] {
+                        next.append(known)
+                    } else {
+                        index[key] = keys.count
+                        next.append(keys.count)
+                        keys.append(key)
+                        queue.append(board)
+                    }
+                }
+                neighbours.append(next)
+                head += 1
+            }
+            var moves = [Int](repeating: -1, count: keys.count)
+            for i in solved { moves[i] = 0 }
+            var frontier = solved
+            head = 0
+            while head < frontier.count, !isCancelled() {
+                let current = frontier[head]
+                head += 1
+                for n in neighbours[current] where moves[n] == -1 {
+                    moves[n] = moves[current] + 1
+                    frontier.append(n)
                 }
             }
-            neighbours.append(next)
-            head += 1
+            var table: [UInt64: Int] = [:]
+            for (i, key) in keys.enumerated() where moves[i] >= 0 { table[key] = moves[i] }
+            return table
         }
-        var moves = [Int](repeating: -1, count: keys.count)
-        for i in solved { moves[i] = 0 }
-        var frontier = solved
-        head = 0
-        while head < frontier.count, !isCancelled() {
-            let current = frontier[head]
-            head += 1
-            for n in neighbours[current] where moves[n] == -1 {
-                moves[n] = moves[current] + 1
-                frontier.append(n)
-            }
-        }
-        var table: [UInt64: Int] = [:]
-        for (i, key) in keys.enumerated() where moves[i] >= 0 { table[key] = moves[i] }
         movesToSolve = table
     }
 

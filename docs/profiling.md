@@ -15,6 +15,7 @@ No third-party tools: `os_signpost` (via `HotPath.measure`) plus Instruments.
 | `reminiscence.photo` | `ReminiscenceView` `PhotoCard` | loads one photo per card, off the main actor, on every card |
 | `session.save` | `ModelContext.record` | synchronous SwiftData save after every game |
 | `progress.weekly` | `HistoryView` | recomputed on every redraw of My Week |
+| `sliding.hints` | `SlidingBlocksMap.init` | breadth-first walk of up to ~175k positions, run off the main thread when a puzzle starts |
 | `progress.rates` | `MyProgressView` | recomputed on every redraw of My progress (#141) |
 
 `HotPath.measure("name") { ... }` costs next to nothing with no profiler attached.

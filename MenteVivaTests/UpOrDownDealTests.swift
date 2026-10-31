@@ -181,6 +181,50 @@ final class UpOrDownDealTests: XCTestCase {
         }
     }
 
+    // MARK: Cards per pile (#415)
+
+    /// On an iPhone every level from 6 up is five piles wide, so the depth is what tells them apart.
+    func testGivenLevelsEightToTenWhenRulesThenFourCardsPerPile() {
+        for level in 8...10 {
+            XCTAssertEqual(UpOrDownDeal.rules(for: Difficulty(level: level)).cardsPerPile, 4, "level \(level)")
+        }
+        for level in 1...7 {
+            XCTAssertEqual(UpOrDownDeal.rules(for: Difficulty(level: level)).cardsPerPile, 3, "level \(level)")
+        }
+    }
+
+    func testGivenAnIPhoneAtLevelNineWhenDealtThenFivePilesOfFourAndTheTableCountFollows() {
+        let made = deal(Difficulty(level: 9), width: Self.iPhoneSE)
+        XCTAssertEqual(made.piles.count, 5)
+        XCTAssertTrue(made.piles.allSatisfy { $0.count == 4 })
+        XCTAssertEqual(made.tableCards, 20)
+        XCTAssertEqual(made.deck.count, 52 - 20 - 1)
+    }
+
+    func testGivenAnIPhoneAtLevelSevenWhenDealtThenFivePilesOfThree() {
+        let made = deal(Difficulty(level: 7), width: Self.iPhoneSE)
+        XCTAssertEqual(made.piles.count, 5)
+        XCTAssertTrue(made.piles.allSatisfy { $0.count == 3 })
+        XCTAssertEqual(made.tableCards, 15)
+    }
+
+    /// Each card under the top shows 12pt of edge, so a deeper pile needs a taller frame or its top
+    /// card spills into the gap above the open card (#415).
+    func testGivenDeeperPilesWhenFramedThenEachExtraCardAddsItsEdge() {
+        let three = UpOrDownDeal.pileHeight(cardWidth: 60, cardsPerPile: 3)
+        let four = UpOrDownDeal.pileHeight(cardWidth: 60, cardsPerPile: 4)
+        XCTAssertEqual(three, 60 * 1.4 + 24)
+        XCTAssertEqual(four - three, UpOrDownDeal.cardEdge)
+        XCTAssertEqual(UpOrDownDeal.pileHeight(cardWidth: 60, cardsPerPile: 1), 60 * 1.4)
+    }
+
+    func testGivenRisingLevelsWhenRulesThenPilesNeverGetShallower() {
+        let depths = (1...10).map { UpOrDownDeal.rules(for: Difficulty(level: $0)).cardsPerPile }
+        for pair in zip(depths, depths.dropFirst()) {
+            XCTAssertLessThanOrEqual(pair.0, pair.1)
+        }
+    }
+
     // MARK: Stuck cue (#265)
 
     func testGivenNotStuckWhenBecomingStuckThenPulseAndAnnounce() {

@@ -202,4 +202,25 @@ final class LevelExplainTests: XCTestCase {
         XCTAssertNil(note.key)
         XCTAssertEqual(note.slot(hasStarted: false), .none)
     }
+
+    // MARK: - Slot (#470)
+
+    func testGivenNoteShowingWhenFirstMoveThenItKeepsItsSpace() {
+        let showing = LevelExplainSlot.slot(hasNote: true, hasStarted: false, dismissed: false)
+        let afterFirstMove = LevelExplainSlot.slot(hasNote: true, hasStarted: true, dismissed: true)
+        XCTAssertEqual(showing, .showing)
+        XCTAssertEqual(afterFirstMove, .reserved)
+        XCTAssertEqual(showing.takesSpace, afterFirstMove.takesSpace)
+    }
+
+    func testGivenNoNoteThisOpenWhenFirstMoveThenNothingIsHeldBack() {
+        XCTAssertEqual(LevelExplainSlot.slot(hasNote: false, hasStarted: false, dismissed: false), .none)
+        XCTAssertEqual(LevelExplainSlot.slot(hasNote: false, hasStarted: true, dismissed: true), .none)
+        XCTAssertFalse(LevelExplainSlot.none.takesSpace)
+    }
+
+    func testGivenStartedOnceWhenBackToZeroMovesThenNoteStaysReserved() {
+        // First move, undo (or "Start over", or "Play again") back to 0 moves.
+        XCTAssertEqual(LevelExplainSlot.slot(hasNote: true, hasStarted: false, dismissed: true), .reserved)
+    }
 }

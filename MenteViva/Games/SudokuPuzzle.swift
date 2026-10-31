@@ -20,7 +20,8 @@ nonisolated struct SudokuPuzzle: Equatable {
     /// fits everywhere the app runs). Levels 2/4/6 keep the old easy/medium/hard
     /// boards (4×4 with 4/8 blanks, 6×6 with 18) so migrated players notice
     /// nothing; boards grow 4×4 → 6×6 → 9×9 and blanks never shrink, so a higher
-    /// level is never easier.
+    /// level is never easier. A 6×6 board with 28 blanks never comes out
+    /// (the best is 27), so level 10's fallback asks for 27 (#415), a count the board reaches.
     typealias BoardSpec = (size: Int, blanks: Int)
     static let layoutsPerLevel: [(wanted: BoardSpec, fallback: BoardSpec?)] = [
         ((4, 3), nil),
@@ -32,7 +33,7 @@ nonisolated struct SudokuPuzzle: Equatable {
         ((6, 21), (4, 11)),
         ((6, 24), (4, 12)),
         ((9, 40), (6, 26)),
-        ((9, 46), (6, 28)),
+        ((9, 46), (6, 27)),
     ]
 
     /// Where the number pad sits next to the board (#400).
