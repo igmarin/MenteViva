@@ -32,6 +32,14 @@ nonisolated enum PlanStore {
         return plan
     }
 
+    /// The games of the plan saved today, or nil when none was (a new day, or a first launch). A
+    /// pure read: it never makes a plan, so Home can skip the session fetch the summary needs when
+    /// `todaysPlan` would return the saved plan anyway (#417).
+    static func plannedToday(now: Date = .now, defaults: UserDefaults = .standard) -> [GameID]? {
+        guard let cached = cachedPlan(defaults: defaults), cached.dayStamp == dayStamp(now) else { return nil }
+        return cached.games
+    }
+
     /// The last plan saved, whatever its day; callers check `dayStamp`.
     static func cachedPlan(defaults: UserDefaults = .standard) -> DailyPlan? {
         defaults.data(forKey: planKey)

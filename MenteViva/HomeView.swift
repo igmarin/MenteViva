@@ -51,8 +51,7 @@ struct HomeView: View {
 
     /// The saved plan is a small local read; only the first result is kept by `State`.
     init() {
-        _plan = State(
-            initialValue: HomeDeal.preloadedPlan(cached: PlanStore.cachedPlan(), today: PlanStore.dayStamp()))
+        _plan = State(initialValue: PlanStore.plannedToday() ?? [])
     }
 
     /// Wider cards at accessibility text sizes (#117) so names never break
@@ -144,7 +143,7 @@ struct HomeView: View {
     /// A new day must not deal yesterday's cards: clear them until today's plan is made.
     private func catchUpDay() {
         let day = PlanStore.dayStamp()
-        if day != planDay { plan = HomeDeal.preloadedPlan(cached: PlanStore.cachedPlan(), today: day) }
+        if day != planDay { plan = PlanStore.plannedToday() ?? [] }
         planDay = day
     }
 
@@ -397,6 +396,12 @@ struct HomeView: View {
     /// SwiftData fetch, the summary, and the plan.
     private func refreshPlan() {
         HotPath.measure("plan.today") {
+            // Today's plan is already saved (the usual launch, or Settings closed with no change): the
+            // fetch and summary below would only be thrown away by `todaysPlan` (#417).
+            if let planned = PlanStore.plannedToday() {
+                self.plan = planned
+                return
+            }
             let since = Calendar.current.date(byAdding: .day, value: -14, to: .now) ?? .distantPast
             let recent =
                 (try? modelContext.fetch(

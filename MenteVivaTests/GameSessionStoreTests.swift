@@ -43,6 +43,23 @@ final class GameSessionStoreTests: XCTestCase {
         XCTAssertEqual(week.compactMap(\.game), [.memoryMatch, .quickEyes], "last week's Saturday is left out")
     }
 
+    /// #417: My Week and My progress read a window of sessions in one fetch instead of all of them.
+    func testGivenSessionsAcrossWeeksWhenFetchingSinceADayThenOnlyLaterOnesComeBackNewestFirst() throws {
+        let now = Date(timeIntervalSince1970: 1_791_712_800)
+        let context = ModelContext(
+            try ModelContainer(
+                for: GameSession.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true)))
+        for (game, daysAgo) in [(GameID.stroop, 30.0), (.quickEyes, 15), (.memoryMatch, 13), (.sudoku, 1)] {
+            let session = GameSession(gameID: game, score: 0, rounds: 1, durationSeconds: 1)
+            session.playedAt = now.addingTimeInterval(-daysAgo * 86_400)
+            context.insert(session)
+        }
+
+        let recent = context.sessions(since: now.addingTimeInterval(-14 * 86_400))
+
+        XCTAssertEqual(recent.compactMap(\.game), [.sudoku, .memoryMatch])
+    }
+
     /// #419: a new start pace leaves every game with a saved session alone, so the played set must be exact.
     func testGivenSessionsForTwoGamesWhenAskingPlayedGamesThenExactlyThoseTwo() throws {
         let context = ModelContext(

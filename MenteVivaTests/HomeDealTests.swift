@@ -7,41 +7,6 @@ final class HomeDealTests: XCTestCase {
 
     private let games: [GameID] = [.memoryMatch, .stroop, .sudoku]
 
-    private func plan(day: String) -> DailyPlan {
-        DailyPlan(dayStamp: day, games: games, difficulty: [:])
-    }
-
-    private func isolatedDefaults() throws -> UserDefaults {
-        let name = "HomeDealTests.\(UUID().uuidString)"
-        let defaults = try XCTUnwrap(UserDefaults(suiteName: name))
-        addTeardownBlock { defaults.removePersistentDomain(forName: name) }
-        return defaults
-    }
-
-    func testGivenSavedPlanForTodayWhenHomeInitThenPlanIsPreloaded() throws {
-        let defaults = try isolatedDefaults()
-        PlanStore.cache(plan(day: "2026-10-30"), defaults: defaults)
-
-        let preloaded = HomeDeal.preloadedPlan(
-            cached: PlanStore.cachedPlan(defaults: defaults), today: "2026-10-30")
-
-        XCTAssertEqual(preloaded, games)
-    }
-
-    func testGivenSavedPlanFromYesterdayWhenHomeInitThenPlanIsEmpty() throws {
-        let defaults = try isolatedDefaults()
-        PlanStore.cache(plan(day: "2026-10-29"), defaults: defaults)
-
-        let preloaded = HomeDeal.preloadedPlan(
-            cached: PlanStore.cachedPlan(defaults: defaults), today: "2026-10-30")
-
-        XCTAssertTrue(preloaded.isEmpty)
-    }
-
-    func testGivenNoSavedPlanWhenHomeInitThenPlanIsEmpty() {
-        XCTAssertTrue(HomeDeal.preloadedPlan(cached: nil, today: "2026-10-30").isEmpty)
-    }
-
     func testGivenDealtDayEqualsPlanDayWhenPlanRefreshesThenNoSecondDeal() {
         XCTAssertFalse(HomeDeal.needsDeal(plan: games, dealtDay: "2026-10-30", planDay: "2026-10-30"))
     }
@@ -55,7 +20,7 @@ final class HomeDealTests: XCTestCase {
     }
 
     func testGivenAppKeptOpenPastMidnightWhenDayRollsOverThenYesterdaysCardsAreNotDealt() {
-        let stale = HomeDeal.preloadedPlan(cached: plan(day: "2026-10-29"), today: "2026-10-30")
+        let stale: [GameID] = []  // `PlanStore.plannedToday()` is nil for yesterday's plan
 
         XCTAssertFalse(HomeDeal.needsDeal(plan: stale, dealtDay: "2026-10-29", planDay: "2026-10-30"))
         XCTAssertTrue(HomeDeal.needsDeal(plan: games, dealtDay: "2026-10-29", planDay: "2026-10-30"))

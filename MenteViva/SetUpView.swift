@@ -41,22 +41,33 @@ struct CaptionTarget: Identifiable {
 /// (#374), so both import, shrink and count photos the same way and `MemoryPhotos.add` has a
 /// single caller.
 enum FamilyPhotoImport {
-    /// Loads what the picker handed over and adds it off the main actor. Returns what happened
+    /// Loads each photo the picker handed over and shrinks it before asking for the next, so only
+    /// one original is in memory at a time (#417), all off the main actor. Returns what happened
     /// and the new photos, oldest first, so the first run can ask for each one's name in the
-    /// order they were picked; nil when the task was cancelled mid-pick.
-    static func run(_ items: [PhotosPickerItem]) async -> (result: MemoryPhotos.AddResult, added: [URL])? {
-        var loaded: [Data?] = []
+    /// order they were picked; nil when the task was cancelled mid-pick (photos stored before the cancel are kept and go
+    /// unnamed until Set up). `load` is a parameter so
+    /// a test can stand in for the picker.
+    static func run<Item>(
+        _ items: [Item], folder: URL = MemoryPhotos.folder, load: (Item) async -> Data?
+    ) async -> (result: MemoryPhotos.AddResult, added: [URL])? {
+        // Reading the folder stays off the main actor too: it can hold hundreds of photos.
+        let before = await Task.detached { Set(MemoryPhotos.all(in: folder)) }.value
+        var result = MemoryPhotos.AddResult()
         for item in items {
-            loaded.append(try? await item.loadTransferable(type: Data.self))
+            // Checked before each load as well, so a cancel never starts another transfer.
+            guard !Task.isCancelled else { return nil }
+            let data = await load(item)
+            guard !Task.isCancelled else { return nil }
+            // Decoding, shrinking and writing one photo stays off the main actor.
+            result += await Task.detached { MemoryPhotos.add([data], to: folder) }.value
         }
-        guard !Task.isCancelled else { return nil }
-        // Decoding, shrinking and writing up to 24 photos stays off the main actor.
-        let batch = loaded
-        return await Task.detached {
-            let before = Set(MemoryPhotos.all())
-            let result = MemoryPhotos.add(batch)
-            return (result, MemoryPhotos.all().filter { !before.contains($0) })
-        }.value
+        let added = await Task.detached { MemoryPhotos.all(in: folder).filter { !before.contains($0) } }.value
+        return (result, added)
+    }
+
+    /// The picker's own items, loaded as raw data.
+    static func run(_ items: [PhotosPickerItem]) async -> (result: MemoryPhotos.AddResult, added: [URL])? {
+        await run(items) { try? await $0.loadTransferable(type: Data.self) }
     }
 }
 

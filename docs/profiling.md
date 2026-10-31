@@ -7,13 +7,14 @@ No third-party tools: `os_signpost` (via `HotPath.measure`) plus Instruments.
 | Signpost | Where | Why it can be slow |
 |---|---|---|
 | `plan.today` | `HomeView.refreshPlan` | 14-day fetch, then the plan |
-| `photo.import` | `MemoryPhotos.add([Data?])` | the whole batch the family waits on after the picker |
+| `photo.import` | `MemoryPhotos.add([Data?])` | one photo per call (`FamilyPhotoImport` shrinks each as it arrives), so one interval per photo the family waits on |
 | `photo.downscale` | `MemoryPhotos.add` | ImageIO downsample + JPEG encode of a full photo (off the main actor) |
 | `photo.caption` | `MemoryPhotos.caption` | Set up reads it per photo inside a `ForEach` body |
 | `memory.deal` | `MemoryMatchView.deal` | reads the album and decodes up to 8 photos |
 | `reminiscence.deal` | `ReminiscenceView.deal` | reads the album and one caption file per photo |
 | `reminiscence.photo` | `ReminiscenceView` `PhotoCard` | loads one photo per card, off the main actor, on every card |
 | `session.save` | `ModelContext.record` | synchronous SwiftData save after every game |
+| `history.fetch` | `ModelContext.sessions(since:)` | one-shot fetch of 14 days (My Week) or 5 weeks (My progress), when the screen opens |
 | `progress.weekly` | `HistoryView` | recomputed on every redraw of My Week |
 | `sliding.hints` | `SlidingBlocksMap.init` | breadth-first walk of up to ~175k positions, run off the main thread when a puzzle starts |
 | `progress.rates` | `MyProgressView` | recomputed on every redraw of My progress (#141) |
