@@ -61,4 +61,63 @@ nonisolated enum SlidingDragRule {
         case .vertical: canUpDown || !canSide ? .vertical : .horizontal
         }
     }
+
+    /// What a lifted finger does to a block (#482). Never nothing: a touch that
+    /// moves no cell picks the block, so its arrows show.
+    enum Lift: Equatable {
+        /// Picks the block (or lets it go), as a tap does.
+        case select
+        /// Slides the block `steps` cells (at least 1) toward `direction`.
+        case slide(SlidingDirection, steps: Int)
+    }
+
+    /// Decides a lift. `limits` is the drag's axis and reach, or nil for a touch
+    /// that never locked and has no clear lead (a tap). A drag that rounds to 0
+    /// cells, a wobble on a block that can go further or a block that cannot
+    /// move at all (back = forward = 0), selects instead of doing nothing.
+    static func lift(_ translation: CGSize, limits: SlidingDragLimits?, cell: CGFloat) -> Lift {
+        guard let limits else { return .select }
+        let offset = limits.clamped(translation, cell: cell)
+        let distance = limits.horizontal ? offset.width : offset.height
+        let steps = Int((abs(distance) / cell).rounded())
+        guard steps > 0 else { return .select }
+        let direction: SlidingDirection =
+            limits.horizontal ? (distance > 0 ? .right : .left) : (distance > 0 ? .down : .up)
+        return .slide(direction, steps: steps)
+    }
+}
+
+/// A drag's axis and how far the block can go each way along it, in cells.
+/// The axis is the finger's when the block can move that way, otherwise the
+/// one it can move on (`SlidingDragRule.blockAxis`), fixed for the whole drag.
+nonisolated struct SlidingDragLimits: Equatable {
+    let horizontal: Bool
+    let back: Int
+    let forward: Int
+    /// True when the block went to its own axis because the finger's was
+    /// blocked. Then the finger must still travel `startDistance` on that axis,
+    /// so a sideways-only block does not slide on a mostly vertical finger.
+    let isFallback: Bool
+
+    /// `reach` is the most cells the block can slide toward each direction.
+    init(reach: [SlidingDirection: Int], finger: SlidingDragRule.Axis) {
+        let axis = SlidingDragRule.blockAxis(
+            finger: finger,
+            canSide: reach[.left] != nil || reach[.right] != nil,
+            canUpDown: reach[.up] != nil || reach[.down] != nil)
+        horizontal = axis == .horizontal
+        isFallback = axis != finger
+        back = reach[horizontal ? .left : .up] ?? 0
+        forward = reach[horizontal ? .right : .down] ?? 0
+    }
+
+    /// The translation on this axis, limited to the cells the block can
+    /// legally reach, so a drag never crosses a neighbour. A fallback axis
+    /// stays at 0 until the finger has gone `startDistance` along it.
+    func clamped(_ translation: CGSize, cell: CGFloat) -> CGSize {
+        let distance = horizontal ? translation.width : translation.height
+        let follows = !isFallback || abs(distance) >= SlidingDragRule.startDistance
+        let limited = follows ? min(max(distance, -CGFloat(back) * cell), CGFloat(forward) * cell) : 0
+        return horizontal ? CGSize(width: limited, height: 0) : CGSize(width: 0, height: limited)
+    }
 }

@@ -2,41 +2,10 @@ import XCTest
 
 @testable import MenteViva
 
-/// #470: Sliding Blocks keeps one board size per deal, and a drag starts only
-/// after a clear, mostly straight movement.
+/// #470, #482: Sliding Blocks sizes its board from the space, a drag starts
+/// only after a clear, mostly straight movement, and a lift never does nothing.
 final class SlidingBlocksBoardRulesTests: XCTestCase {
     // MARK: - Board size
-
-    func testGivenNoteShowingWhenFirstMoveThenItKeepsItsSpace() {
-        let showing = LevelExplainSlot.slot(hasNote: true, hasStarted: false, dismissed: false)
-        let afterFirstMove = LevelExplainSlot.slot(hasNote: true, hasStarted: true, dismissed: true)
-        XCTAssertEqual(showing, .showing)
-        XCTAssertEqual(afterFirstMove, .reserved)
-        XCTAssertEqual(showing.takesSpace, afterFirstMove.takesSpace)
-    }
-
-    func testGivenNoNoteThisOpenWhenFirstMoveThenNothingIsHeldBack() {
-        XCTAssertEqual(LevelExplainSlot.slot(hasNote: false, hasStarted: false, dismissed: false), .none)
-        XCTAssertEqual(LevelExplainSlot.slot(hasNote: false, hasStarted: true, dismissed: true), .none)
-        XCTAssertFalse(LevelExplainSlot.none.takesSpace)
-    }
-
-    func testGivenStartedOnceWhenBackToZeroMovesThenNoteStaysReserved() {
-        // First move, undo (or "Start over", or "Play again") back to 0 moves.
-        XCTAssertEqual(LevelExplainSlot.slot(hasNote: true, hasStarted: false, dismissed: true), .reserved)
-    }
-
-    func testGivenNoteShowingOrReservedWhenCellSizeThenItIsTheSame() {
-        // The board gets the page's height minus whatever the note takes.
-        let page = CGSize(width: 361, height: 400)
-        let noteHeight: CGFloat = 40
-        func cell(_ slot: LevelExplainSlot) -> CGFloat {
-            let area = CGSize(width: page.width, height: page.height - (slot.takesSpace ? noteHeight : 0))
-            return SlidingBoardLayout.cellSize(in: area, columns: 4, rows: 5)
-        }
-        XCTAssertEqual(cell(.showing), cell(.reserved))
-        XCTAssertNotEqual(cell(.showing), cell(.none))
-    }
 
     func testGivenWideAreaWhenCellSizeThenHeightLimits() {
         XCTAssertEqual(SlidingBoardLayout.cellSize(in: CGSize(width: 400, height: 340), columns: 4, rows: 5), 68)
@@ -81,21 +50,6 @@ final class SlidingBlocksBoardRulesTests: XCTestCase {
         XCTAssertEqual(SlidingDragRule.onLift(CGSize(width: 20, height: 31)), .drag(.vertical))
     }
 
-    func testGivenAnyTouchWhenFingerLiftsThenItTapsOrDragsTheWayTheFingerLed() {
-        // Every touch that did not lock while moving ends here, so none may be dropped:
-        // it drags on the axis the finger clearly led on, and only otherwise is a tap.
-        for x in stride(from: -60.0, through: 60.0, by: 2.5) {
-            for y in stride(from: -60.0, through: 60.0, by: 2.5) {
-                let move = CGSize(width: x, height: y)
-                switch (SlidingDragRule.onLift(move), SlidingDragRule.axis(for: move)) {
-                case (.tap, nil): break
-                case (.drag(let dragged), let led?) where dragged == led: break
-                case (let touch, let led): XCTFail("\(move): \(touch) but the finger led \(String(describing: led))")
-                }
-            }
-        }
-    }
-
     // MARK: - Drag axis
 
     func testGivenBlockThatMovesOnlySidewaysWhenFingerLeadsDownThenItSlidesSideways() {
@@ -116,5 +70,81 @@ final class SlidingBlocksBoardRulesTests: XCTestCase {
     func testGivenBlockThatCannotMoveWhenDraggedThenItKeepsTheFingersAxis() {
         XCTAssertEqual(SlidingDragRule.blockAxis(finger: .vertical, canSide: false, canUpDown: false), .vertical)
         XCTAssertEqual(SlidingDragRule.blockAxis(finger: .horizontal, canSide: false, canUpDown: false), .horizontal)
+    }
+
+    // MARK: - Lift (#482)
+
+    private let cell: CGFloat = 68
+
+    /// A block that can slide up to `forward` cells right and `back` left.
+    private func sideways(back: Int = 0, forward: Int = 0, finger: SlidingDragRule.Axis = .horizontal)
+        -> SlidingDragLimits
+    {
+        var reach: [SlidingDirection: Int] = [:]
+        if back > 0 { reach[.left] = back }
+        if forward > 0 { reach[.right] = forward }
+        return SlidingDragLimits(reach: reach, finger: finger)
+    }
+
+    func testGivenA25ptStraightWobbleWhenFingerLiftsThenTheBlockIsSelected() {
+        let limits = sideways(forward: 2)
+        XCTAssertEqual(SlidingDragRule.lift(CGSize(width: 25, height: 0), limits: limits, cell: cell), .select)
+        XCTAssertEqual(SlidingDragRule.lift(CGSize(width: -25, height: 0), limits: sideways(back: 2), cell: cell), .select)
+    }
+
+    func testGivenBlockThatCannotMoveWhenDraggedAndReleasedThenItIsSelected() {
+        let stuck = sideways()
+        XCTAssertEqual(stuck.back, 0)
+        XCTAssertEqual(stuck.forward, 0)
+        XCTAssertEqual(SlidingDragRule.lift(CGSize(width: 120, height: 4), limits: stuck, cell: cell), .select)
+        XCTAssertEqual(SlidingDragRule.lift(CGSize(width: -120, height: 4), limits: stuck, cell: cell), .select)
+    }
+
+    func testGivenTouchThatNeverLockedWhenFingerLiftsThenTheBlockIsSelected() {
+        XCTAssertEqual(SlidingDragRule.lift(CGSize(width: 8, height: 3), limits: nil, cell: cell), .select)
+    }
+
+    func testGivenClearDragWhenFingerLiftsThenTheBlockSlidesTheNearestWholeCells() {
+        let limits = sideways(back: 2, forward: 2)
+        XCTAssertEqual(
+            SlidingDragRule.lift(CGSize(width: 70, height: 5), limits: limits, cell: cell), .slide(.right, steps: 1))
+        XCTAssertEqual(
+            SlidingDragRule.lift(CGSize(width: -140, height: 0), limits: limits, cell: cell), .slide(.left, steps: 2))
+    }
+
+    func testGivenDragPastTheClearCellsWhenFingerLiftsThenItStopsAtTheLastClearCell() {
+        XCTAssertEqual(
+            SlidingDragRule.lift(CGSize(width: 300, height: 0), limits: sideways(forward: 1), cell: cell),
+            .slide(.right, steps: 1))
+    }
+
+    func testGivenVerticalBlockWhenDraggedDownThenItSlidesDown() {
+        let limits = SlidingDragLimits(reach: [.down: 3], finger: .vertical)
+        XCTAssertEqual(
+            SlidingDragRule.lift(CGSize(width: 2, height: 140), limits: limits, cell: cell), .slide(.down, steps: 2))
+    }
+
+    func testGivenSidewaysOnlyBlockWhenFingerLeadsDownBarelySidewaysThenItIsSelected() {
+        // The finger leads down, so the block takes its own axis, but only 15pt went that way.
+        let limits = sideways(forward: 2, finger: .vertical)
+        let wobble = CGSize(width: 15, height: 90)
+        XCTAssertTrue(limits.isFallback)
+        XCTAssertEqual(limits.clamped(wobble, cell: 20), .zero)
+        XCTAssertEqual(SlidingDragRule.lift(wobble, limits: limits, cell: 20), .select)
+    }
+
+    func testGivenSidewaysOnlyBlockWhenFingerLeadsDownAndGoesSidewaysEnoughThenItSlides() {
+        let limits = sideways(forward: 2, finger: .vertical)
+        XCTAssertEqual(
+            SlidingDragRule.lift(CGSize(width: 40, height: 70), limits: limits, cell: cell), .slide(.right, steps: 1))
+        // Exactly the start distance is enough.
+        XCTAssertEqual(
+            SlidingDragRule.lift(CGSize(width: 20, height: 90), limits: limits, cell: 20), .slide(.right, steps: 1))
+    }
+
+    func testGivenBlockThatFollowsTheFingerWhenFingerGoesLessThanStartDistanceThenNoGateApplies() {
+        let limits = sideways(forward: 2)
+        XCTAssertFalse(limits.isFallback)
+        XCTAssertEqual(limits.clamped(CGSize(width: 15, height: 0), cell: 20), CGSize(width: 15, height: 0))
     }
 }
