@@ -50,7 +50,8 @@ struct QuickEyesView: View {
     @State private var startedAt = Date.now
     @State private var revealTask: Task<Void, Never>?
     /// A call or the app switcher cut the flash short (#415): deal the round again on return, uncounted.
-    @State private var flashInterrupted = false
+    /// `@State`, not `scenePhase`: the beat and flash closures hold an old copy of the view.
+    @State private var away = InterruptionPause()
     /// The answer beat (#235): set by a tap, cleared when the next picture flashes.
     @State private var beat: AnswerBeat<GamePicture>?
     @State private var showCelebration = false
@@ -205,6 +206,9 @@ struct QuickEyesView: View {
 
     private func startRound() {
         revealTask?.cancel()
+        // Started while the app is away (an answer beat ended in the background): deal, speak and flash
+        // on the return, so nothing is announced from the background and no round is spent.
+        guard away.roundStarts() else { return }
         var generator = SystemRandomNumberGenerator()
         let round = QuickEyesDeal.make(optionCount: QuickEyesDeal.optionCount(for: run.difficulty), using: &generator)
         target = round.target
@@ -217,11 +221,6 @@ struct QuickEyesView: View {
         revealedAt = .now
         // Paced rounds wait for "Got it"; nothing hides the picture on a timer.
         guard !isPaced else { return }
-        // Started while the app is away (an answer beat ended in the background): wait for the return.
-        guard scenePhase == .active else {
-            flashInterrupted = true
-            return
-        }
         // VoiceOver needs time to speak the picture; hold it longer (#64).
         let hold = UIAccessibility.isVoiceOverRunning ? max(run.displayTime, Self.voiceOverHold) : run.displayTime
         revealTask = Task { @MainActor in
@@ -237,12 +236,11 @@ struct QuickEyesView: View {
     /// answer beat finishes by itself, and cancelling it would leave taps locked.
     private func pauseOrResume(for newPhase: ScenePhase) {
         if newPhase != .active {
-            guard phase == .showing, !isPaced, !flashInterrupted else { return }
-            revealTask?.cancel()
-            flashInterrupted = true
-        } else if flashInterrupted {
-            flashInterrupted = false
-            if phase == .showing { startRound() }
+            let flashing = phase == .showing && !isPaced
+            away.leave(roundRunning: flashing)
+            if flashing { revealTask?.cancel() }
+        } else if away.comeBack() {
+            startRound()
         }
     }
 

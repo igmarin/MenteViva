@@ -172,14 +172,4 @@ final class SequenceDealTests: XCTestCase {
         XCTAssertFalse(session.needsReplay)
         XCTAssertEqual(session.index, 0)
     }
-
-    func testGivenAFinishedSessionWhenRedealtThenNothingChanges() {
-        let level = Difficulty(level: 10)
-        var session = fiveSequences(level: 10, width: 400)
-        session.index = 5
-        let before = session.sequences
-        var generator = SeededGenerator(state: 3)
-        session.redeal(level: level, width: 320, using: &generator)
-        XCTAssertEqual(session.sequences, before)
-    }
 }

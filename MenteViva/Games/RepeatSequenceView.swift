@@ -86,7 +86,8 @@ struct RepeatSequenceView: View {
     @State private var layout = SequenceDeal.fittedLayout(
         for: Difficulty.stored(.repeatSequence), width: Double(UIScreen.main.bounds.width))
     /// A call or the app switcher cut the demo short (#415): show it again on return, uncounted.
-    @State private var demoInterrupted = false
+    /// `@State`, not `scenePhase`: the pause and demo closures hold an old copy of the view.
+    @State private var away = InterruptionPause()
     @State private var isTransitioning = false
 
     private var instruction: String {
@@ -121,7 +122,11 @@ struct RepeatSequenceView: View {
         .padding()
         .fitOrScroll()
         .gameHeader(.repeatSequence, instruction: AppLanguage.localized("game.sequence.instruction"))
-        .onAppear { setup() }
+        .onAppear {
+            // Dealt on the first measured width (the geometry action below): the screen is wider than
+            // a Slide Over or Split View window, and a deal for it would be dealt again at once.
+            if boardWidth > 0 { setup() }
+        }
         .onChange(of: scenePhase) { _, newPhase in pauseOrResume(for: newPhase) }
         .onDisappear { task?.cancel() }
         .celebration(isPresented: $showCelebration, game: .repeatSequence, detail: finalDetail, onPlayAgain: setup)
@@ -164,7 +169,7 @@ struct RepeatSequenceView: View {
         } action: { width in
             guard width > 0 else { return }
             boardWidth = Double(width)
-            fitLayoutToBoard()
+            if session == nil { setup() } else { fitLayoutToBoard() }
         }
     }
 
@@ -184,11 +189,10 @@ struct RepeatSequenceView: View {
     /// so no attempt is counted. The answer pauses are left alone: cancelling one would lock the board.
     private func pauseOrResume(for newPhase: ScenePhase) {
         if newPhase != .active {
-            guard showing, !demoInterrupted else { return }
-            task?.cancel()
-            demoInterrupted = true
-        } else if demoInterrupted {
-            demoInterrupted = false
+            let demoing = showing && session != nil
+            away.leave(roundRunning: demoing)
+            if demoing { task?.cancel() }
+        } else if away.comeBack() {
             showNext()
         }
     }
@@ -224,9 +228,8 @@ struct RepeatSequenceView: View {
         tapped = []
         // Started while the app is away (an answer pause ended in the background): `showing` keeps the
         // board locked, and the demo plays when the app is active again.
-        guard scenePhase == .active else {
+        guard away.roundStarts() else {
             task?.cancel()
-            demoInterrupted = true
             return
         }
         // VoiceOver: speak the sequence names.
