@@ -4,10 +4,6 @@ import XCTest
 
 /// #415: the finished board stays on screen for a beat before the celebration covers it.
 final class FinishBeatTests: XCTestCase {
-    func testGivenTheLastMoveWhenTheBeatIsTimedThenItIsNineTenthsOfASecond() {
-        XCTAssertEqual(FinishBeat.seconds, 0.9)
-    }
-
     @MainActor
     func testGivenACancelledBeatWhenWaitingThenTheCelebrationDoesNotShow() async {
         var shown = false

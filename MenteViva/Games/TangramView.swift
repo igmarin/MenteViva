@@ -366,6 +366,8 @@ struct TangramView: View {
     }
 
     private func tapBoard(at point: CGPoint, boardSize: CGSize) {
+        // The finished figure stays up for a beat before the celebration; a tap on it asks for nothing.
+        guard !puzzle.isComplete else { return }
         guard let slot = selected else {
             say(AppLanguage.localized("game.tangram.a11y.pickfirst"))
             return
