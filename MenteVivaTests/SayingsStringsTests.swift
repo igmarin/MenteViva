@@ -30,6 +30,34 @@ final class SayingsStringsTests: XCTestCase {
         }
     }
 
+    func testGivenEveryIdWhenLookingUpStartAndEndThenBothLanguagesExist() throws {
+        // #414: checks ids 1-120 directly, so a missing range in `Sayings` can't hide a missing key.
+        let strings = try strings()
+        for id in 1...120 {
+            let saying = Saying(id: id, theme: .animals)
+            for key in [saying.startKey, saying.endKey] {
+                for language in ["en", "es"] {
+                    let text = value(strings[key], language)?.trimmingCharacters(in: .whitespaces) ?? ""
+                    XCTAssertFalse(text.isEmpty, "\(key) [\(language)]")
+                }
+            }
+        }
+    }
+
+    func testGivenEveryLanguageWhenJoiningStartAndEndThenNoSayingAppearsTwice() throws {
+        // #414: the second pack must not repeat a saying from the first.
+        let strings = try strings()
+        for language in ["en", "es"] {
+            let whole = Sayings.all.compactMap { saying -> String? in
+                guard let start = value(strings[saying.startKey], language),
+                    let end = value(strings[saying.endKey], language)
+                else { return nil }
+                return "\(start) \(end)".lowercased()
+            }
+            XCTAssertEqual(Set(whole).count, whole.count, language)
+        }
+    }
+
     func testGivenEveryLanguageThenNoTwoSlotsShareAnEnding() throws {
         let strings = try strings()
         for language in ["en", "es"] {
