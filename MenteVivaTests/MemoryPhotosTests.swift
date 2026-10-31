@@ -110,6 +110,25 @@ final class MemoryPhotosTests: XCTestCase {
         XCTAssertEqual(imported?.added.count, 3)
     }
 
+    /// #496 review: once the import is cancelled (the sheet closed), no other photo is asked for,
+    /// so no large transfer starts after the view has gone.
+    func testGivenACancelledImportWhenRunningThenNoPhotoIsLoaded() async throws {
+        let folder = try XCTUnwrap(folder)
+
+        let (cancelled, loads) = await Task { () -> (Bool, Int) in
+            withUnsafeCurrentTask { $0?.cancel() }
+            var loads = 0
+            let imported = await FamilyPhotoImport.run(Array(0..<2), folder: folder) { _ in
+                loads += 1
+                return Data()
+            }
+            return (imported == nil, loads)
+        }.value
+
+        XCTAssertTrue(cancelled)
+        XCTAssertEqual(loads, 0)
+    }
+
     func testGivenAnUnreadablePickAndAFullAlbumWhenImportingThenTheCountsAddUp() async throws {
         let folder = try XCTUnwrap(folder)
         _ = MemoryPhotos.add(Array(repeating: photoData(width: 10, height: 10), count: 23), to: folder)

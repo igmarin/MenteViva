@@ -50,15 +50,19 @@ enum FamilyPhotoImport {
     static func run<Item>(
         _ items: [Item], folder: URL = MemoryPhotos.folder, load: (Item) async -> Data?
     ) async -> (result: MemoryPhotos.AddResult, added: [URL])? {
-        let before = Set(MemoryPhotos.all(in: folder))
+        // Reading the folder stays off the main actor too: it can hold hundreds of photos.
+        let before = await Task.detached { Set(MemoryPhotos.all(in: folder)) }.value
         var result = MemoryPhotos.AddResult()
         for item in items {
+            // Checked before each load as well, so a cancel never starts another transfer.
+            guard !Task.isCancelled else { return nil }
             let data = await load(item)
             guard !Task.isCancelled else { return nil }
             // Decoding, shrinking and writing one photo stays off the main actor.
             result += await Task.detached { MemoryPhotos.add([data], to: folder) }.value
         }
-        return (result, MemoryPhotos.all(in: folder).filter { !before.contains($0) })
+        let added = await Task.detached { MemoryPhotos.all(in: folder).filter { !before.contains($0) } }.value
+        return (result, added)
     }
 
     /// The picker's own items, loaded as raw data.
