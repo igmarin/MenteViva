@@ -87,4 +87,27 @@ extension ModelContext {
             WarmUpStore.sessionFinished(game: game, accuracy: session.accuracy, today: PlanStore.dayStamp())
         }
     }
+
+    /// Every game with at least one saved session, ever, so a new start pace leaves it alone (#419).
+    /// Nil when the store can't be read: the caller then changes nothing.
+    func playedGames() -> Set<GameID>? {
+        var all = FetchDescriptor<GameSession>()
+        all.propertiesToFetch = [\.gameID]
+        return (try? fetch(all)).map { Set($0.compactMap(\.game)) }
+    }
+}
+
+/// Today's model, frozen as version 1 (#419). A store opens only with a model it matches, and a
+/// model change without a migration stage leaves the store unopenable, so play falls back to
+/// memory on every launch (#124). The next change adds `SchemaV2` (with its own copy of the model)
+/// and a stage to `SessionMigrationPlan`, so saved games move forward instead of being left behind.
+nonisolated enum SchemaV1: VersionedSchema {
+    static let versionIdentifier = Schema.Version(1, 0, 0)
+    static var models: [any PersistentModel.Type] { [GameSession.self] }
+}
+
+/// Every model version in order, and how to move between them. One version so far, so no stages.
+nonisolated enum SessionMigrationPlan: SchemaMigrationPlan {
+    static var schemas: [any VersionedSchema.Type] { [SchemaV1.self] }
+    static var stages: [MigrationStage] { [] }
 }

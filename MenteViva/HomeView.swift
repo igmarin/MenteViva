@@ -132,13 +132,20 @@ struct HomeView: View {
             playedWhileAway = atHome ? nil : today.done
         }
         .onChange(of: scenePhase) { _, phase in
-            guard phase == .active else { return }
-            let day = PlanStore.dayStamp()
-            // A new day must not deal yesterday's cards: clear them until today's plan is made.
-            if day != planDay { plan = HomeDeal.preloadedPlan(cached: PlanStore.cachedPlan(), today: day) }
-            planDay = day
+            if phase == .active { catchUpDay() }
+        }
+        // Midnight with the app left open (an iPad on its stand) never changes scenePhase (#419).
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.significantTimeChangeNotification)) { _ in
+            catchUpDay()
         }
         .environment(path)
+    }
+
+    /// A new day must not deal yesterday's cards: clear them until today's plan is made.
+    private func catchUpDay() {
+        let day = PlanStore.dayStamp()
+        if day != planDay { plan = HomeDeal.preloadedPlan(cached: PlanStore.cachedPlan(), today: day) }
+        planDay = day
     }
 
     // MARK: - Today

@@ -129,6 +129,7 @@
 		EB52E9FDB69CB05300000035 /* OnboardingStepsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C62977BDFEFF990000002F; };
 		74DF40655A8016C000000037 /* OnboardingStringsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35341DEF1F26544E00000031; };
 		CA75114F293B893100000036 /* PhotoCaptionDealTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28474CB38505F97700000030; };
+		7380C405ADFE051B0000002F /* PlanStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D1E8F4F3A3785F100000029; };
 		288A7358D7C5AA1900000033 /* PlayerProfileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B056BE6CAA0C14F0000002D; };
 		2E81FDB867FC926B00000038 /* PlayerStateSummaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9231182AE986A100000032; };
 		56E513B81D42ABF300000033 /* PluralStringsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478EE86492C1F2390000002D; };
@@ -279,6 +280,7 @@
 		83C62977BDFEFF990000002F /* OnboardingStepsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/OnboardingStepsTests.swift; sourceTree = SOURCE_ROOT; };
 		35341DEF1F26544E00000031 /* OnboardingStringsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/OnboardingStringsTests.swift; sourceTree = SOURCE_ROOT; };
 		28474CB38505F97700000030 /* PhotoCaptionDealTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/PhotoCaptionDealTests.swift; sourceTree = SOURCE_ROOT; };
+		4D1E8F4F3A3785F100000029 /* PlanStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/PlanStoreTests.swift; sourceTree = SOURCE_ROOT; };
 		5B056BE6CAA0C14F0000002D /* PlayerProfileTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/PlayerProfileTests.swift; sourceTree = SOURCE_ROOT; };
 		7D9231182AE986A100000032 /* PlayerStateSummaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/PlayerStateSummaryTests.swift; sourceTree = SOURCE_ROOT; };
 		478EE86492C1F2390000002D /* PluralStringsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/PluralStringsTests.swift; sourceTree = SOURCE_ROOT; };
@@ -469,6 +471,7 @@
 				83C62977BDFEFF990000002F /* OnboardingStepsTests.swift */,
 				35341DEF1F26544E00000031 /* OnboardingStringsTests.swift */,
 				28474CB38505F97700000030 /* PhotoCaptionDealTests.swift */,
+				4D1E8F4F3A3785F100000029 /* PlanStoreTests.swift */,
 				5B056BE6CAA0C14F0000002D /* PlayerProfileTests.swift */,
 				7D9231182AE986A100000032 /* PlayerStateSummaryTests.swift */,
 				478EE86492C1F2390000002D /* PluralStringsTests.swift */,
@@ -692,6 +695,7 @@
 				EB52E9FDB69CB05300000035 /* OnboardingStepsTests.swift in Sources */,
 				74DF40655A8016C000000037 /* OnboardingStringsTests.swift in Sources */,
 				CA75114F293B893100000036 /* PhotoCaptionDealTests.swift in Sources */,
+				7380C405ADFE051B0000002F /* PlanStoreTests.swift in Sources */,
 				288A7358D7C5AA1900000033 /* PlayerProfileTests.swift in Sources */,
 				2E81FDB867FC926B00000038 /* PlayerStateSummaryTests.swift in Sources */,
 				56E513B81D42ABF300000033 /* PluralStringsTests.swift in Sources */,

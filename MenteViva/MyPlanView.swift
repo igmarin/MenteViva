@@ -1,3 +1,4 @@
+import SwiftData
 import SwiftUI
 
 /// Settings → My plan (#212): the four first-run questions on one screen, so nothing asked
@@ -9,6 +10,7 @@ struct MyPlanView: View {
     /// The saved answers. Loaded once when the screen is made; this screen is the only writer
     /// while it is open.
     @State private var profile = ProfileStore.load()
+    @Environment(\.modelContext) private var modelContext
     /// Called once the warm-up has replaced today's plan. This screen is pushed inside Settings'
     /// own navigation stack, so its `dismiss` would only go back to Settings; the caller closes
     /// the whole Settings sheet instead, and Home re-reads the plan when it closes (#402).
@@ -76,10 +78,15 @@ struct MyPlanView: View {
 
     /// Saves the moment an answer changes: this screen has no "save" button, and an answer
     /// must survive the app being closed. Today's plan was dealt this morning, so it stands;
-    /// tomorrow's is dealt from here (the note at the end of the screen says so).
+    /// tomorrow's is dealt from here (the note at the end of the screen says so). A new start pace
+    /// also moves the games never played to it (#419); `PlanStore` decides which.
     private func choose(_ answer: ProfileAnswer) {
+        let old = profile
         profile = OnboardingSteps.choosing(answer, in: profile)
         ProfileStore.save(profile)
+        if let played = modelContext.playedGames() {
+            PlanStore.startPaceChanged(from: old, to: profile, played: played)
+        }
     }
 }
 
@@ -87,4 +94,5 @@ struct MyPlanView: View {
     NavigationStack {
         MyPlanView(onWarmUpStarted: {})
     }
+    .modelContainer(for: GameSession.self, inMemory: true)
 }

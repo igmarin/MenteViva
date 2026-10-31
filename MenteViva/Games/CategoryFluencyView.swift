@@ -71,7 +71,7 @@ struct CategoryFluencyView: View {
     var body: some View {
         VStack(spacing: 24) {
             LevelExplainBanner(
-                change: PlanStore.cachedPlan()?.changes[GameID.categoryFluency], game: GameID.categoryFluency,
+                change: PlanStore.todaysChange(GameID.categoryFluency), game: GameID.categoryFluency,
                 hasStarted: totalPicks > 0 || progress.completedRounds > 0)
             if let round = currentRound {
                 Group {

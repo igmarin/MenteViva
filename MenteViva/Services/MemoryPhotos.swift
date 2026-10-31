@@ -80,6 +80,18 @@ nonisolated enum MemoryPhotos {
     /// "stays on this device" promise holds for the photos and captions in it.
     private static func prepare(_ folder: URL) throws {
         try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+        try markExcludedFromBackup(folder)
+    }
+
+    /// Run at every launch (#419): a folder made by a version that set no flag, or restored without
+    /// it, is kept out of backups even if no photo is ever added again. Never creates the folder;
+    /// a failure is retried next launch and never stops the app from opening.
+    static func excludeFromBackup(folder: URL = folder) {
+        guard FileManager.default.fileExists(atPath: folder.path) else { return }
+        try? markExcludedFromBackup(folder)
+    }
+
+    private static func markExcludedFromBackup(_ folder: URL) throws {
         var folder = folder
         var values = URLResourceValues()
         values.isExcludedFromBackup = true

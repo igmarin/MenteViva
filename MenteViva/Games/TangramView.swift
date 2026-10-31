@@ -89,7 +89,7 @@ struct TangramView: View {
 
     private var banner: some View {
         LevelExplainBanner(
-            change: PlanStore.cachedPlan()?.changes[GameID.tangram], game: GameID.tangram,
+            change: PlanStore.todaysChange(GameID.tangram), game: GameID.tangram,
             hasStarted: puzzle.attempts > 0, keepsSpace: true)
     }
 
