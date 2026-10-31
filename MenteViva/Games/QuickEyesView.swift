@@ -279,25 +279,18 @@ struct QuickEyesView: View {
         if answer.isRight {
             if firstTry { correct += 1 }
             missedLastRound = false
-            Feedback.play(.success)
-            AccessibilityNotification.Announcement(AppLanguage.localized("game.answer.right")).post()
             // Speed bonus: up to 5 points, one less per half-second of reaction time.
             let reaction = Date.now.timeIntervalSince(optionsShownAt)
             if firstTry { speedBonus += max(0, 5 - Int(reaction / 0.5)) }
             if !isPaced { displayTime = max(minDisplayTime, displayTime * shrinkFactor) }
         } else {
             missedLastRound = true
-            Feedback.play(.miss)
-            AccessibilityNotification.Announcement(
-                String(format: AppLanguage.localized("game.answer.was %@"), name(of: target))
-            ).post()
             // Relax one step after a miss so the next round feels kinder.
             displayTime = min(startDisplayTime, displayTime / shrinkFactor)
         }
+        answer.play(rightName: name(of: target))
         // The beat shares revealTask, so leaving the game or restarting cancels it too.
-        revealTask = Task { @MainActor in
-            try? await Task.sleep(for: .seconds(answer.duration(voiceOver: UIAccessibility.isVoiceOverRunning)))
-            guard !Task.isCancelled else { return }
+        revealTask = answer.after {
             beat = nil
             let offerFaster =
                 isPaced && answer.isRight

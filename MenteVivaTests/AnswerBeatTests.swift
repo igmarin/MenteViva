@@ -25,6 +25,24 @@ final class AnswerBeatTests: XCTestCase {
         XCTAssertEqual(beat.duration(voiceOver: true), 1.2)
     }
 
+    @MainActor
+    func testGivenCancelledBeatWhenWaitingThenNextRoundDoesNotRun() async {
+        var advanced = false
+        let beat = AnswerBeat(tapped: 1, right: 1)
+        let task = beat.after { advanced = true }
+        task.cancel()
+        await task.value
+        XCTAssertFalse(advanced)
+    }
+
+    @MainActor
+    func testGivenBeatWhenWaitCompletesThenNextRoundRuns() async {
+        var advanced = false
+        let beat = AnswerBeat(tapped: 1, right: 1)
+        await beat.after { advanced = true }.value
+        XCTAssertTrue(advanced)
+    }
+
     func testGivenAnAnswerWhenAnnouncedThenBothLinesAreWarmInEnglishAndSpanish() throws {
         let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
         let data = try Data(contentsOf: root.appendingPathComponent("MenteViva/Localizable.xcstrings"))

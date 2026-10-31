@@ -140,17 +140,9 @@ struct ColorClashView: View {
         beat = answer
         if answer.isRight {
             correct += 1
-            Feedback.play(.success)
-            AccessibilityNotification.Announcement(AppLanguage.localized("game.answer.right")).post()
-        } else {
-            Feedback.play(.miss)
-            AccessibilityNotification.Announcement(
-                String(format: AppLanguage.localized("game.answer.was %@"), ink.label)
-            ).post()
         }
-        beatTask = Task { @MainActor in
-            try? await Task.sleep(for: .seconds(answer.duration(voiceOver: UIAccessibility.isVoiceOverRunning)))
-            guard !Task.isCancelled else { return }
+        answer.play(rightName: ink.label)
+        beatTask = answer.after {
             beat = nil
             if progress.completeRound() {
                 finish()

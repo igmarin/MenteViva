@@ -113,18 +113,11 @@ struct MathStreakView: View {
             streak += 1
             bestStreak = max(bestStreak, streak)
             correct += 1
-            Feedback.play(.success)
-            AccessibilityNotification.Announcement(AppLanguage.localized("game.answer.right")).post()
         } else {
             streak = 0
-            Feedback.play(.miss)
-            AccessibilityNotification.Announcement(
-                String(format: AppLanguage.localized("game.answer.was %@"), "\(question.answer)")
-            ).post()
         }
-        beatTask = Task { @MainActor in
-            try? await Task.sleep(for: .seconds(answer.duration(voiceOver: UIAccessibility.isVoiceOverRunning)))
-            guard !Task.isCancelled else { return }
+        answer.play(rightName: "\(question.answer)")
+        beatTask = answer.after {
             beat = nil
             if progress.completeRound() {
                 finish()
