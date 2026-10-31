@@ -32,12 +32,23 @@ MenteViva/            app (SwiftUI + SwiftData)
   MenteVivaApp.swift  entry; LOCAL_ONLY picks the store
   HomeView, OnboardingView, SettingsView, HistoryView,
   MyProgressView (rates, #141), SetUpView (hide/pin/photos)
-  Games/              one file per game (9) + CelebrationView, MissCue, FitOrScroll
+  Games/              14 games, one View file each (13 views: Names and Faces is Memory Lane's board),
+                      with its pure deal/puzzle file beside it (SudokuPuzzle, UpOrDownDeal, ...);
+                      shared: CelebrationView, DailyPictureCard, MissCue, FitOrScroll, AnswerBeat,
+                      RoundCounter, LevelExplainLine, PictureView
   Models/             GameSession, GameID, Difficulty, RoundProgress
-  Services/           DailyPolicy (on-device plan), PlanStore (saved plan + levels),
-                      FamilySettings, PlayerProfile (onboarding answers), MemoryPhotos,
-                      PlayerStateSummary, WeeklySummary, ProgressRates, AppLanguage, SoundPlayer, HotPath (signposts),
-                      CaptionSpeaker, EverydayObjects, GamePictures (one catalogue of game pictures)
+  Services/           plan and levels: DailyPolicy (on-device plan), PlanStore (saved plan + levels),
+                        LevelPolicy (level note + next-level offer rules), LevelOfferStore,
+                        LevelMigration (old easy/medium/hard to levels; temporary, #333)
+                      first run: OnboardingSteps, PlayerProfile (onboarding answers), WarmUp
+                      Home and the day: HomeDeal, HandLayout, TodayRun, TodayShare,
+                        CelebrationHeadline, DailyPicture, PictureAlbum
+                      family and progress: FamilySettings, MemoryPhotos, PlayerStateSummary,
+                        WeeklySummary, ProgressRates, FirstPlayGuideStore
+                      language, pictures, sound: AppLanguage, CaptionSpeaker, ConversationPrompts,
+                        EverydayObjects, GamePictures (one catalogue of game pictures),
+                        SoundPlayer, ToneSynth (the tones SoundPlayer plays)
+                      HotPath (signposts)
   Localizable.xcstrings  every string, EN + ES
 MenteVivaTests/       unit tests (Given/When/Then names)
 tools/                generate_project.swift (the only way to edit the Xcode project)
@@ -47,20 +58,15 @@ docs/                 start at docs/README.md
 
 ## Current status
 
-- 14 games playable (the list is `GameID.swift` and README.md); ES/EN complete; local-only build is the default.
-- **Daily picks and difficulty are decided on the device** (`DailyPolicy`, #101): no model,
-  no network, no cost. The app no longer calls Jev (#195); `docs/jev-json/` stays as the
-  evidence archive and `docs/jev-integration.md` as history.
-- Dad playtest #6 ran (findings on #6); its follow-ups #106–#110 and Remember Together (#139)
-  shipped. Three new games followed from the owner's playtests (decisions.md 2026-10-19):
-  Sudoku (#179), Up or Down (#180), Finish the Saying (#181).
-- **Card Table redesign shipped** (#154–#159, decisions.md 2026-10-12, Jev 015): each game is a
-  framed card in its own colour (`GameCard.swift`, palette in `Theme.swift`), Home deals today's
-  three, every game shares one header, and the end of a game adds its card to the week board.
-  Spec: `docs/design/2026-10-12-card-table.html`.
-- **Next: v0.3 then v1.0 on the App Store** (decisions.md 2026-10-26): Jev out of the app, levels
-  1–10, onboarding with goals, four new games, then release work. Built by several agents in
-  parallel; see "Several agents at once" below. The epics are the open issues labelled `epic`.
+- 14 games playable (the list is `GameID.swift` and README.md), levels 1–10 in every game but
+  Remember Together; ES/EN complete; local-only build is the default.
+- **Daily picks and levels are decided on the device** (`DailyPolicy`, #101): no model, no network,
+  no cost. The app no longer calls Jev (#195); `docs/jev-json/` and `docs/jev-integration.md` are history.
+- Onboarding with goals and an optional warm-up set the starting levels (#212, #213). Each game is a
+  framed card in its own colour (`GameCard.swift`, palette in `Theme.swift`; spec
+  `docs/design/2026-10-12-card-table.html`).
+- **TestFlight beta is running** (#229). **v1.0 on the App Store is pending** (epic #194); the
+  hackathon submission is due **Nov 4, 9 PM ET** (epic #422). Epics are the open issues labelled `epic`.
 - Live state is in the [issues](https://github.com/igmarin/menteviva/issues), not here.
 
 ## Signing
@@ -155,8 +161,8 @@ docs/                 start at docs/README.md
 
 ## Several agents at once (decisions.md 2026-10-26)
 
-Muse Code, Cline and Claude work tickets in parallel. The owner decides and merges; Claude is the
-lead and reviews every PR; no agent merges.
+Claude agents implement every ticket, several in parallel (decisions.md 2026-10-29). The owner decides
+and merges; the lead agent reviews every PR; no agent merges.
 
 1. **Take only an issue labelled `ready` whose "Depends on" issues are all closed.** One issue, one
    agent, one branch (`agent/<issue>-<slug>`), one PR with `Closes #<issue>`. Label the issue
@@ -171,11 +177,11 @@ lead and reviews every PR; no agent merges.
    and license recorded in `docs/ip-clearance.md`.
 5. **Labels.** Type: `game`, `feature`, `design`, `research`, `infra`, `docs`, `decision`.
    Priority: `p0` (blocks the App Store), `p1`, `p2`. Size: `size:S` (<2 h), `size:M` (half a day),
-   `size:L` (split before taking). Who: `agent:muse`, `agent:cline`, `agent:claude`, `owner`.
+   `size:L` (split before taking). Who: `agent:claude`, `owner`.
    State: `ready`, `review`, `blocked`. Epics are parent issues; tickets are their sub-issues.
 6. **One worktree per ticket**, never the main checkout:
    `git worktree add ../mv-<issue> -b agent/<issue>-<slug> origin/main`. Remove it after the merge
-   (`git worktree remove ../mv-<issue>`). Agents that don't do this on their own (Muse) are told to.
+   (`git worktree remove ../mv-<issue>`).
 7. **Split tickets stack with `gh stack`.** A "(2/2)" screen ticket builds on its "(1/2)" logic
    ticket: its branch starts from the logic branch and its PR targets that branch, not `main`. Let
    `gh stack` keep the stack in order; never rebase or force-push a branch someone else pushed to.
