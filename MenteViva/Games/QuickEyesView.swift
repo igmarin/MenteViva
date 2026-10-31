@@ -10,6 +10,7 @@ import SwiftUI
 struct QuickEyesView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dynamicTypeSize) private var typeSize
+    @Environment(\.scenePhase) private var scenePhase
 
     private static let totalRounds = 12
     /// Whether the picture waits for "Got it" instead of flashing (#46).
@@ -48,6 +49,9 @@ struct QuickEyesView: View {
     @State private var optionsShownAt = Date.now
     @State private var startedAt = Date.now
     @State private var revealTask: Task<Void, Never>?
+    /// A call or the app switcher cut the flash short (#415): deal the round again on return, uncounted.
+    /// `@State`, not `scenePhase`: the beat and flash closures hold an old copy of the view.
+    @State private var away = InterruptionPause()
     /// The answer beat (#235): set by a tap, cleared when the next picture flashes.
     @State private var beat: AnswerBeat<GamePicture>?
     @State private var showCelebration = false
@@ -174,6 +178,7 @@ struct QuickEyesView: View {
                     : phase == .invite ? "game.quickeyes.invite.title" : "game.quickeyes.prompt")
         )
         .onAppear(perform: startRound)
+        .onChange(of: scenePhase) { _, newPhase in pauseOrResume(for: newPhase) }
         .onDisappear {
             // A beat cut short must not leave taps locked if this state comes back.
             revealTask?.cancel()
@@ -201,6 +206,9 @@ struct QuickEyesView: View {
 
     private func startRound() {
         revealTask?.cancel()
+        // Started while the app is away (an answer beat ended in the background): deal, speak and flash
+        // on the return, so nothing is announced from the background and no round is spent.
+        guard away.roundStarts() else { return }
         var generator = SystemRandomNumberGenerator()
         let round = QuickEyesDeal.make(optionCount: QuickEyesDeal.optionCount(for: run.difficulty), using: &generator)
         target = round.target
@@ -220,6 +228,19 @@ struct QuickEyesView: View {
             guard !Task.isCancelled, phase == .showing else { return }
             optionsShownAt = .now
             phase = .choosing
+        }
+    }
+
+    /// A flash cut short by a call or the app switcher must not cost a round (#415): stop its timer,
+    /// and when the app is active again show the round again. Only the flash timer is stopped; the
+    /// answer beat finishes by itself, and cancelling it would leave taps locked.
+    private func pauseOrResume(for newPhase: ScenePhase) {
+        if newPhase != .active {
+            let flashing = phase == .showing && !isPaced
+            away.leave(roundRunning: flashing)
+            if flashing { revealTask?.cancel() }
+        } else if away.comeBack() {
+            startRound()
         }
     }
 
