@@ -152,3 +152,29 @@ save about 0.2 ms of that (0.5 to 0.3 ms), some 1.2% of a 16 ms frame, roughly 1
 Most of the cost is the interpolated cell names inside `String(localized:)`, which a cache
 does not touch, and no drag was traced, so the cost does not "show" yet. Recorded and
 dropped; revisit only if a device trace of a drag shows dropped frames.
+
+## Sliding Blocks hint table (#417, 2026-10-31)
+
+Measured on an iPhone simulator on an Apple Silicon Mac with a temporary app-hosted XCTest
+(removed after), building `SlidingBlocksMap(from:)` as `SlidingBlocksView` does. Time is
+best of 3 with `ContinuousClock`, in an optimised (`-O`, whole-module) build like the App
+Store one; `-Onone` test builds are about 30x slower. Memory is `phys_footprint` growth from
+`task_info`, peak taken in a fresh test process, so it does not depend on the device. The
+largest board shipped is level 10's `BBoo/BB<>/<>^o/o^vo/.v.o` (levels 5 to 9 reach at most
+143,462 positions).
+
+| Board | Positions | Time (Mac) | ~10x old device | Peak growth | Kept after |
+|---|---|---|---|---|---|
+| level 1 `ooo/ooo/.BB/.BB`, before | 168 | 0.2 ms | 2 ms | — | — |
+| level 10 largest, before | 175,580 | 300 ms | 3 s | 97 MB | 4.0 MB |
+| level 10 largest, after | 175,580 | 320 ms | 3 s | 6 MB | 3.0 MB |
+
+**Decision: over both gates, step 2 done.** The 97 MB peak was the queue holding every
+board (each with its own block array), plus one neighbour array per position. The walk now
+keeps only each position's 8-byte layout key, decodes a board from it when it is its turn,
+and stores the links in one flat `[Int32]` with an offset per position; the answer reuses
+the index table's storage. Peak memory fell from 97 MB to 6 MB. Time did not move: it is
+the move generation, not the storage. The build runs off the main thread (a detached task
+when a puzzle is dealt), so its time decides how soon "Show me a move" turns on, not the
+frame rate; on an old device that is a few seconds on levels 5 to 10. Revisit time only if
+a device trace shows players waiting on the button.
