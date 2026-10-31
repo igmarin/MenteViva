@@ -71,7 +71,7 @@ struct LevelExplainBanner: View {
                     .onAppear { LevelOfferStore.markExplainSeen(for: game, today: PlanStore.dayStamp()) }
             }
         }
-        .onChange(of: hasStarted) { _, started in
+        .onChange(of: hasStarted, initial: true) { _, started in
             if started { dismissed = true }
         }
     }

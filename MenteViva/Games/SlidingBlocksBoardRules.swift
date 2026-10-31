@@ -36,8 +36,9 @@ nonisolated enum SlidingDragRule {
         return nil
     }
 
-    /// A finger that lifts after wobbling less than `startDistance` is a tap.
+    /// A finger that lifts after wobbling less than `startDistance` is a tap. Measured the same
+    /// way as `axis(for:)`, so every touch is either a tap or a drag, never neither.
     static func isTap(_ translation: CGSize) -> Bool {
-        hypot(translation.width, translation.height) < startDistance
+        max(abs(translation.width), abs(translation.height)) < startDistance
     }
 }

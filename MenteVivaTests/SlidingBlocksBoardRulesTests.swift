@@ -72,6 +72,18 @@ final class SlidingBlocksBoardRulesTests: XCTestCase {
         XCTAssertTrue(SlidingDragRule.isTap(.zero))
         XCTAssertTrue(SlidingDragRule.isTap(CGSize(width: 12, height: 12)))
         XCTAssertFalse(SlidingDragRule.isTap(CGSize(width: 20, height: 0)))
-        XCTAssertFalse(SlidingDragRule.isTap(CGSize(width: 15, height: 15)))
+        // A diagonal wobble under the threshold on both axes is still a tap, not a lost touch.
+        XCTAssertTrue(SlidingDragRule.isTap(CGSize(width: 15, height: 15)))
+        XCTAssertFalse(SlidingDragRule.isTap(CGSize(width: 25, height: 25)))
+    }
+
+    func testGivenAnyTouchWhenFingerLiftsThenItIsATapOrADragNeverNeither() {
+        for x in stride(from: -40.0, through: 40.0, by: 5) {
+            for y in stride(from: -40.0, through: 40.0, by: 5) {
+                let move = CGSize(width: x, height: y)
+                let isDragOrDiagonal = max(abs(x), abs(y)) >= SlidingDragRule.startDistance
+                XCTAssertNotEqual(SlidingDragRule.isTap(move), isDragOrDiagonal, "\(move)")
+            }
+        }
     }
 }
