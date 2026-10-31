@@ -18,7 +18,7 @@ struct ColorClashView: View {
     @State private var ink: Ink = .blue
     @State private var progress = RoundProgress(totalRounds: Self.totalRounds)
     @State private var correct = 0
-    /// True once a word is dealt: `.onAppear` runs again under the celebration cover (#415).
+    /// True once a word is dealt: `.onAppear` runs again when the celebration closes (#415).
     @State private var hasDealt = false
     @State private var startedAt = Date.now
     @State private var showCelebration = false
