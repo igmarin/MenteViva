@@ -6,7 +6,8 @@ import Foundation
 /// Every game line carries its title, so the check mark is never the only meaning when read
 /// aloud. Sharing is always player-initiated; the app sends nothing by itself.
 nonisolated enum TodayShare {
-    /// `localize` and `locale` come in so a test (or a language change) controls the words.
+    /// `localize` and `locale` come in so a test (or a language change) controls the words. No
+    /// default for `locale`: `AppLanguage.currentLocale` is main-actor state and this is nonisolated.
     static func text(
         games: [GameID], date: Date, locale: Locale,
         localize: (String.LocalizationValue) -> String
