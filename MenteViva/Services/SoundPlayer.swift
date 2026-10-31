@@ -6,7 +6,7 @@ import UIKit
 @MainActor
 enum Feedback {
     /// A user interaction that receives synchronized sound and haptic feedback.
-    enum Event: CaseIterable {
+    nonisolated enum Event: CaseIterable {
         case tap
         case success
         case complete
