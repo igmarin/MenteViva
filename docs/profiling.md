@@ -114,3 +114,40 @@ git config core.hooksPath .githooks
 Nothing automatic records a trace: profiling needs a booted simulator, the app installed,
 and someone playing. `tools/profile.sh` is the whole ritual; run it by hand after a change
 that touches photos, dealing, or the weekly screens.
+
+## Measured once, no signpost (#417, 2026-10-31)
+
+Both on an iPhone simulator on an Apple Silicon Mac, with a temporary app-hosted XCTest
+(removed after). Body counts do not depend on the hardware; times are an upper bound on
+speed, so scale them by about 10x for an old device.
+
+**`fitOrScroll()` — dropped, no change.** A counting view in a `UIHostingController`, read
+after layout, at the default size and at accessibility xxxLarge:
+
+| Content | Bodies on first layout | Bodies per state change | ScrollView built |
+|---|---|---|---|
+| plain, no `fitOrScroll` | 1 | 1 | — |
+| fits (everyday sizes) | 1 | 1 | no |
+| does not fit (any size) | 2 | 2 | yes |
+
+A re-layout without a state change evaluates no body either way. So the body doubles only
+when the screen is already scrolling. The proposed fix (`ViewThatFits` only at `.xLarge`
+and up) would save nothing where the screen fits and, below `.xLarge`, would cut off a
+screen that does not fit a small phone, which #117 exists to prevent. Recorded and dropped.
+
+**`AppLanguage.localized` — cached.** A `ContinuousClock` loop of 10k calls, best of 5:
+
+| Per call | Before | After the cache |
+|---|---|---|
+| plain key (`game.sliding.block.small`) | 7.3 µs | 2.7 µs |
+| interpolated key (`game.sliding.place.cell`) | 22.5 µs | 17.5 µs |
+
+English and Spanish within 10% of each other. Of the 7.3 µs, finding the `.lproj` and
+building its `Bundle` was 3.4 µs; `String(localized:)` itself is 1.8 µs plain, 15.4 µs
+interpolated. A Sliding Blocks body redraws on every drag update (the touch is read in it)
+and makes 38 to 44 lookups with 12 to 14 blocks (3 per block for its VoiceOver name, the
+rest for the instruction, the guide and the buttons). That was about 0.5 ms a frame, 3% of
+a 16 ms frame and some 30% at 10x, well over the 1% bar, so `lookup(in:)` keeps the bundle
+and locale behind an `NSLock` and rebuilds them when the stored choice changes (#134 still
+switches at once; `AppLanguageTests`). Now about 0.3 ms a frame; what is left is the
+interpolated cell names, inside `String(localized:)`.
