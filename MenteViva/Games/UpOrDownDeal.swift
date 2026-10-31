@@ -41,33 +41,46 @@ nonisolated struct UpOrDownDeal: Equatable {
     private(set) var open: PlayingCard
     private(set) var deck: [PlayingCard]  // last element = next to turn
     let wraps: Bool
+    /// Cards in each pile when it was dealt; the table's count is this times the piles.
+    let cardsPerPile: Int
 
     /// Narrowest card the player taps, in points (conventions §4), and the space between cards.
     static let minTarget = 60.0
     static let gap = 8.0
-    static let cardsPerPile = 3
     private static let easyTries = 50
+    /// How much of each card under the top shows, in points.
+    static let cardEdge = 12.0
 
-    /// One row per level 1...10 (#202): piles, whether King–Ace wraps, and
-    /// whether the deal retries until it can always be cleared. Levels 2/4/6
+    /// A pile's frame: one card and the edge of every card under it, so the top card stays inside.
+    static func pileHeight(cardWidth: Double, cardsPerPile: Int) -> Double {
+        cardWidth * 1.4 + Double(max(cardsPerPile - 1, 0)) * cardEdge
+    }
+
+    /// What a level asks of the table: piles, whether King–Ace wraps, whether the deal retries until it
+    /// can always be cleared, and how deep each pile is.
+    typealias Rules = (piles: Int, wraps: Bool, clearable: Bool, cardsPerPile: Int)
+
+    /// One row per level 1...10 (#202): piles, whether King–Ace wraps, whether the deal retries until
+    /// it can always be cleared, and cards per pile (#415). Levels 2/4/6
     /// match old easy/medium/hard (4/5/6 piles, wrapping except hard, retries
-    /// only where easy did) so migrated players notice nothing; piles never
-    /// shrink, and wrapping and retries never come back once off.
-    static let rulesPerLevel: [(piles: Int, wraps: Bool, clearable: Bool)] = [
-        (3, true, true),
-        (4, true, true),
-        (4, true, true),
-        (5, true, false),
-        (5, true, false),
-        (6, false, false),
-        (6, false, false),
-        (7, false, false),
-        (7, false, false),
-        (7, false, false),
+    /// only where easy did, three cards) so migrated players notice nothing; piles never
+    /// shrink, and wrapping and retries never come back once off. A phone cannot show more than
+    /// five piles, so levels 8-10 grow deeper instead of wider: four cards a pile.
+    static let rulesPerLevel: [Rules] = [
+        (3, true, true, 3),
+        (4, true, true, 3),
+        (4, true, true, 3),
+        (5, true, false, 3),
+        (5, true, false, 3),
+        (6, false, false, 3),
+        (6, false, false, 3),
+        (7, false, false, 4),
+        (7, false, false, 4),
+        (7, false, false, 4),
     ]
 
     /// The table row for a level.
-    static func rules(for difficulty: Difficulty) -> (piles: Int, wraps: Bool, clearable: Bool) {
+    static func rules(for difficulty: Difficulty) -> Rules {
         difficulty.values(rulesPerLevel)
     }
 
@@ -83,12 +96,12 @@ nonisolated struct UpOrDownDeal: Equatable {
     ) -> UpOrDownDeal {
         let rules = rules(for: difficulty)
         let count = pileCount(for: difficulty, width: width)
-        var made = deal(piles: count, wraps: rules.wraps, using: &generator)
+        var made = deal(piles: count, wraps: rules.wraps, cardsPerPile: rules.cardsPerPile, using: &generator)
         guard rules.clearable else { return made }
         // Every candidate is checked before it is returned.
         for _ in 0..<easyTries {
             if greedyClears(made) { return made }
-            made = deal(piles: count, wraps: rules.wraps, using: &generator)
+            made = deal(piles: count, wraps: rules.wraps, cardsPerPile: rules.cardsPerPile, using: &generator)
         }
         return made
     }
@@ -130,7 +143,7 @@ nonisolated struct UpOrDownDeal: Equatable {
 
     var isCleared: Bool { piles.allSatisfy(\.isEmpty) }
     var isStuck: Bool { !isCleared && deck.isEmpty && playablePiles.isEmpty }
-    var tableCards: Int { piles.count * Self.cardsPerPile }
+    var tableCards: Int { piles.count * cardsPerPile }
     var cardsLeftOnTable: Int { piles.reduce(0) { $0 + $1.count } }
 
     /// Whether this row of piles keeps 60pt cards at `width`. A six-pile row dealt in
@@ -158,12 +171,12 @@ nonisolated struct UpOrDownDeal: Equatable {
     }
 
     private static func deal<G: RandomNumberGenerator>(
-        piles count: Int, wraps: Bool, using generator: inout G
+        piles count: Int, wraps: Bool, cardsPerPile: Int, using generator: inout G
     ) -> UpOrDownDeal {
         var cards = PlayingCard.Suit.allCases.flatMap { suit in (1...13).map { PlayingCard(rank: $0, suit: suit) } }
             .shuffled(using: &generator)
         let piles = (0..<count).map { _ in (0..<cardsPerPile).map { _ in cards.removeLast() } }
         let open = cards.removeLast()
-        return UpOrDownDeal(piles: piles, open: open, deck: cards, wraps: wraps)
+        return UpOrDownDeal(piles: piles, open: open, deck: cards, wraps: wraps, cardsPerPile: cardsPerPile)
     }
 }
