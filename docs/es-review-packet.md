@@ -1,8 +1,7 @@
 # ES review packet — for the native-speaker pass (#12)
 
 Hand this whole file to the reviewer. Generated from `Localizable.xcstrings`
-(490 user-facing strings; keys that are only format specifiers are omitted).
-(476 user-facing strings; keys that are only format specifiers are omitted).
+(815 user-facing strings; keys that are only format specifiers are omitted).
 Rows already signed off on #12 are pre-marked ✅.
 Regenerate after any string change: `python3 tools/generate_es_packet.py`.
 
@@ -25,18 +24,27 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 
 | Key | English | Español | Used in | ✓ |
 |---|---|---|---|---|
-| `app.title` | Mente Viva | Mente Viva | HomeView, OnboardingView |  |
-| `difficulty.level` | Level %lld | Nivel %lld | SetUpView, UpOrDownDeal |  |
+| `Level %lld` | Level %lld | Nivel %lld | CategoryDeal, CategoryFluencyView, CelebrationView, ColorClashDeal, ColorClashView, DailyPolicy, Difficulty, FamilySettings, GameID, GameSession, HistoryView, LevelExplainLine, LevelMigration, LevelOfferStore, LevelPolicy, MathStreakView, MemoryMatchView, MenteVivaApp, NumberTrailQuestion, PhotoCaptionDeal, PlanStore, PlayerStateSummary, ProgressRates, QuickEyesDeal, QuickEyesRun, QuickEyesView, RepeatSequenceView, SayingsDeck, SayingsView, SequenceDeal, SetUpView, SlidingBlocksLevels, SlidingBlocksPuzzle, SlidingBlocksView, SudokuPuzzle, SudokuView, TangramPuzzle, TangramView, TilePairsDeal, TilePairsView, ToneSynth, UpOrDownDeal, UpOrDownView, WarmUp, WeeklySummary |  |
+| `about.build` | The app was built with the help of AI coding assistants, including Meta's Muse Code. | La app se creó con ayuda de asistentes de programación con IA, entre ellos Muse Code de Meta. | AboutView |  |
+| `about.offline` | Nothing in the app uses AI while you play. Your games and photos stay on this device. | Nada en la app usa IA mientras juegas. Tus partidas y fotos se quedan en este dispositivo. | AboutView |  |
+| `about.pictures` | The pictures in this app were made with AI image tools, including Meta's Muse Image, and checked by a person. | Las imágenes de esta app se hicieron con herramientas de IA, entre ellas Muse Image de Meta, y las revisó una persona. | AboutView |  |
+| `about.row` | About | Acerca de | AboutView, SettingsView |  |
+| `about.row.hint` | How the pictures and the app were made. | Cómo se hicieron las imágenes y la app. | SettingsView |  |
+| `about.title` | About MenteViva | Acerca de MenteViva | AboutView |  |
+| `album.title` | Your picture album | Tu álbum de imágenes | HistoryView |  |
+| `album.today %@` | Today's picture: %@. It's in your album. | La imagen de hoy: %@. Ya está en tu álbum. | DailyPictureCard |  |
+| `app.title` | MenteViva | MenteViva | HomeView, OnboardingView |  |
+| `difficulty.level` | Level %lld | Nivel %lld | QuickEyesDeal, SetUpView, SlidingBlocksPuzzle, UpOrDownDeal |  |
 | `family.auto` | set automatically | ajustado automáticamente | SetUpView |  |
 | `family.caption.field` | A name or a few words | Un nombre o unas palabras | FamilyPhotoCaptionSheet |  |
 | `family.caption.placeholder` | Mom's house | La casa de mamá | FamilyPhotoCaptionSheet |  |
-| `family.caption.privacy` | Saved on this device. The app never shares or sends it. Your own backup, if you use one, may include it. | Se guarda en este dispositivo. La app nunca lo comparte ni lo envía. Tu propia copia de seguridad, si la usas, puede incluirlo. | FamilyPhotoCaptionSheet |  |
+| `family.caption.privacy` | Saved on this device. The app never shares or sends it. Your photos and their names are excluded from new device backups. | Se guarda en este dispositivo. La app nunca lo comparte ni lo envía. Tus fotos y sus nombres se excluyen de las nuevas copias de seguridad. | FamilyPhotoCaptionSheet |  |
 | `family.caption.save` | Save | Guardar | FamilyPhotoCaptionSheet |  |
 | `family.caption.save.problem` | We couldn't save that name. Please try again. | No pudimos guardar ese nombre. Inténtalo de nuevo. | FamilyPhotoCaptionSheet |  |
 | `family.caption.title` | Name this photo | Ponle nombre a esta foto | FamilyPhotoCaptionSheet |  |
 | `family.difficulty` | Difficulty | Dificultad | SetUpView |  |
 | `family.difficulty.auto` | Automatic (recommended) | Automática (recomendada) | SetUpView |  |
-| `family.difficulty.footer` | Automatic moves at most one step a week, based on how the games go. A level you choose stays until you switch back to Automatic, which then continues from it. | La automática cambia como mucho un paso por semana, según cómo van los juegos. Un nivel que elijas se mantiene hasta que vuelvas a Automática, que sigue desde ese nivel. | SetUpView |  |
+| `family.difficulty.footer` | Automatic changes the level between games, never during one: up after strong games, down after a hard one. A level you choose stays until you switch back to Automatic, which then continues from it. | La automática cambia el nivel entre partidas, nunca durante una: sube tras partidas muy buenas y baja tras una difícil. Un nivel que elijas se mantiene hasta que vuelvas a Automática, que sigue desde ese nivel. | SetUpView |  |
 | `family.game.hint` | Opens this game's settings | Abre los ajustes de este juego | SetUpView |  |
 | `family.game.nolevel` | Photos and names, no levels | Fotos y nombres, sin niveles | SetUpView |  |
 | `family.games.footer` | Changes apply from the next game, on this device only. | Los cambios se aplican desde el próximo juego, solo en este dispositivo. | SetUpView |  |
@@ -47,13 +55,13 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `family.level.lower` | Lower level | Bajar de nivel | SetUpView |  |
 | `family.level.max` | This is the highest level | Es el nivel más alto | SetUpView |  |
 | `family.level.min` | This is the lowest level | Es el nivel más bajo | SetUpView |  |
-| `family.photos.add` | Add photos | Añadir fotos | MemoryMatchView, SetUpView |  |
+| `family.photos.add` | Add photos | Añadir fotos | MemoryMatchView, OnboardingView, SetUpView |  |
 | `family.photos.added %lld` | one: Added %lld photo. / other: Added %lld photos. | one: Se agregó %lld foto. / other: Se agregaron %lld fotos. | MemoryMatchView, SetUpView |  |
 | `family.photos.caption.a11y %lld` | Photo %lld: add or change its name | Foto %lld: poner o cambiar su nombre | SetUpView |  |
 | `family.photos.caption.add` | Add a name | Poner un nombre | SetUpView |  |
-| `family.photos.footer` | Up to 8 photos from this device become Memory Lane cards. They stay on this device and are never uploaded. | Hasta 8 fotos de este dispositivo se convierten en cartas de Camino de Memoria. Se quedan en este dispositivo y nunca se suben a internet. | SetUpView |  |
+| `family.photos.footer %lld` | Up to %lld photos. Memory Lane, Remember Together and Names and Faces use them. They stay on this device and are never uploaded. | Hasta %lld fotos. Camino de Memoria, Recordar juntos y Nombres y Caras las usan. Se quedan en este dispositivo y nunca se suben a internet. | SetUpView |  |
 | `family.photos.full %lld` | The album holds %lld photos. Remove one to add another. | El álbum guarda %lld fotos. Quita una para agregar otra. | SetUpView |  |
-| `family.photos.header` | Memory Lane photos | Fotos para Camino de Memoria | SetUpView |  |
+| `family.photos.header` | Family photos | Fotos de la familia | SetUpView |  |
 | `family.photos.remove` | Remove | Quitar | FamilyPhotoCaptionSheet |  |
 | `family.photos.remove.cancel` | Keep it | Dejarla | FamilyPhotoCaptionSheet |  |
 | `family.photos.remove.confirm` | Remove this photo and its name? | ¿Quitar esta foto y su nombre? | FamilyPhotoCaptionSheet |  |
@@ -64,76 +72,93 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `family.share.title` | MenteViva — how each game went this week | MenteViva — cómo fue cada juego esta semana | MyProgressView |  |
 | `family.show` | Show on home | Mostrar en el inicio | SetUpView |  |
 | `family.show.last` | At least one game always stays on home. | Al menos un juego siempre queda en el inicio. | SetUpView |  |
-| `game.answer.right` | That's it! | ¡Eso es! | ColorClashView, MathStreakView, QuickEyesView |  |
-| `game.answer.was %@` | The answer was %@ | La respuesta era %@ | ColorClashView, MathStreakView, QuickEyesView |  |
+| `game.answer.right` | That's it! | ¡Eso es! | AnswerBeat, RepeatSequenceView, UpOrDownView |  |
+| `game.answer.was %@` | The answer was %@ | La respuesta era %@ | AnswerBeat |  |
 | `game.category.a11y.picked` | Already picked | Ya elegido | CategoryFluencyView |  |
 | `game.category.a11y.position %lld %lld` | Tile %lld of %lld | Ficha %lld de %lld | CategoryFluencyView |  |
-| `game.category.animals` | Animals | Animales | CategoryFluencyView |  |
-| `game.category.colors` | Colors | Colores | CategoryFluencyView |  |
+| `game.category.a11y.tried` | Not in this group | No es de este grupo | CategoryFluencyView |  |
+| `game.category.animals` | Animals | Animales | CategoryDeal |  |
+| `game.category.colors` | Colors | Colores | CategoryDeal |  |
 | `game.category.complete %@` | %@: all found! | %@: ¡todo encontrado! | CategoryFluencyView |  |
 | `game.category.found %lld %lld` | %1$lld of %2$lld found | %1$lld de %2$lld encontrados | CategoryFluencyView |  |
-| `game.category.fruits` | Fruits | Frutas | CategoryFluencyView |  |
+| `game.category.fruits` | Fruits | Frutas | CategoryDeal |  |
+| `game.category.home` | Around the house | Cosas de la casa | CategoryDeal |  |
 | `game.category.instruction` | Tap every picture for: | Toca cada imagen de: | CategoryFluencyView |  |
+| `game.category.kitchen` | In the kitchen | En la cocina | CategoryDeal |  |
 | `game.category.miss` | Not in this group, try another | Ese no es de este grupo, prueba otro | CategoryFluencyView |  |
+| `game.category.plants` | Plants and flowers | Plantas y flores | CategoryDeal |  |
 | `game.category.title` | Name the Herd | Nombra la Manada | GameID |  |
-| `game.category.vehicles` | Vehicles | Vehículos | CategoryFluencyView |  |
+| `game.category.vehicles` | Vehicles | Vehículos | CategoryDeal |  |
 | `game.celebration.added` | Added to your week | Agregado a tu semana | CelebrationView | ✅ |
 | `game.celebration.cards %lld` | You cleared %lld cards | Quitaste %lld cartas | UpOrDownView |  |
+| `game.celebration.daydone` | That's today's table. Lovely! | Esa fue la mesa de hoy. ¡Qué bien! | CelebrationHeadline |  |
 | `game.celebration.headline.1` | Well done! | ¡Muy bien! | CelebrationHeadline |  |
 | `game.celebration.headline.2` | Lovely work! | ¡Qué buen trabajo! | — |  |
 | `game.celebration.headline.3` | That was great! | ¡Estuvo genial! | — |  |
 | `game.celebration.headline.4` | Beautifully done! | ¡Lo hiciste muy bien! | — |  |
 | `game.celebration.headline.5` | Nicely played! | ¡Bien jugado! | — |  |
-| `game.celebration.home` | Home | Inicio | CelebrationView |  |
+| `game.celebration.home` | Home | Inicio | CelebrationView, LeaveGuard |  |
 | `game.celebration.items %lld` | You found %lld of them! | ¡Encontraste %lld! | CategoryFluencyView |  |
 | `game.celebration.next %@` | Next: %@ | Siguiente: %@ | CelebrationView | ✅ |
-| `game.celebration.pairs %lld` | You found all %lld pairs! | ¡Encontraste las %lld parejas! | MemoryMatchView |  |
+| `game.celebration.pairs %lld` | You found all %lld pairs! | ¡Encontraste las %lld parejas! | MemoryBoard, MemoryMatchView |  |
 | `game.celebration.playagain` | Play again | Jugar de nuevo | CelebrationView |  |
 | `game.celebration.questions %lld` | You answered all %lld questions! | ¡Respondiste las %lld preguntas! | MathStreakView |  |
 | `game.celebration.reminiscence %lld` | one: You looked at %lld picture today / other: You looked at %lld pictures today | one: Miraste %lld imagen hoy / other: Miraste %lld imágenes hoy | ReminiscenceView |  |
-| `game.celebration.rounds %lld` | You finished all %lld rounds! | ¡Terminaste las %lld rondas! | ColorClashView, RepeatSequenceView |  |
+| `game.celebration.rounds %lld` | You finished all %lld rounds! | ¡Terminaste las %lld rondas! | ColorClashView, QuickEyesView, RepeatSequenceView |  |
 | `game.celebration.sayings %lld` | You finished %lld sayings | Terminaste %lld refranes | SayingsView |  |
 | `game.celebration.squares %lld` | You filled %lld squares | Llenaste %lld cuadros | SudokuView |  |
-| `game.celebration.table` | You cleared the table! | ¡Limpiaste la mesa! | UpOrDownView |  |
+| `game.celebration.table` | You cleared the table! | ¡Limpiaste la mesa! | TilePairsView, UpOrDownView |  |
 | `game.celebration.today %lld %lld` | %1$lld of %2$lld today | Hoy: %1$lld de %2$lld | CelebrationView | ✅ |
 | `game.colorclash.a11y.stimulus %@ %@` | Ink colour: %1$@, shape: %2$@ | Color de la tinta: %1$@, forma: %2$@ | ColorClashView |  |
 | `game.colorclash.a11y.stimulus.hint` | The written word is a decoy. Tap the button with the ink colour. | La palabra escrita es un señuelo. Toca el botón con el color de la tinta. | ColorClashView |  |
-| `game.colorclash.color.blue` | Blue | Azul | ColorClashView |  |
-| `game.colorclash.color.green` | Green | Verde | ColorClashView |  |
-| `game.colorclash.color.orange` | Orange | Naranja | ColorClashView |  |
-| `game.colorclash.color.purple` | Purple | Morado | ColorClashView |  |
-| `game.colorclash.color.red` | Red | Rojo | ColorClashView |  |
-| `game.colorclash.color.yellow` | Yellow | Amarillo | ColorClashView |  |
+| `game.colorclash.color.blue` | Blue | Azul | — |  |
+| `game.colorclash.color.green` | Green | Verde | — |  |
+| `game.colorclash.color.orange` | Orange | Naranja | — |  |
+| `game.colorclash.color.purple` | Purple | Morado | — |  |
+| `game.colorclash.color.red` | Red | Rojo | — |  |
+| `game.colorclash.color.yellow` | Yellow | Amarillo | — |  |
 | `game.colorclash.instruction` | Tap the color of the ink, not the word | Toca el color de la tinta, no la palabra | ColorClashView |  |
-| `game.colorclash.shape.circle` | Circle | Círculo | ColorClashView |  |
-| `game.colorclash.shape.diamond` | Diamond | Rombo | ColorClashView |  |
-| `game.colorclash.shape.hexagon` | Hexagon | Hexágono | ColorClashView |  |
-| `game.colorclash.shape.square` | Square | Cuadrado | ColorClashView |  |
-| `game.colorclash.shape.star` | Star | Estrella | ColorClashView |  |
-| `game.colorclash.shape.triangle` | Triangle | Triángulo | ColorClashView |  |
+| `game.colorclash.shape.circle` | Circle | Círculo | ColorClashDeal |  |
+| `game.colorclash.shape.diamond` | Diamond | Rombo | ColorClashDeal |  |
+| `game.colorclash.shape.hexagon` | Hexagon | Hexágono | ColorClashDeal |  |
+| `game.colorclash.shape.square` | Square | Cuadrado | ColorClashDeal |  |
+| `game.colorclash.shape.star` | Star | Estrella | ColorClashDeal |  |
+| `game.colorclash.shape.triangle` | Triangle | Triángulo | ColorClashDeal |  |
 | `game.colorclash.title` | Color Clash | Choque de Colores | GameID |  |
-| `game.colorclash.word.blue` | BLUE | AZUL | ColorClashView |  |
-| `game.colorclash.word.green` | GREEN | VERDE | ColorClashView |  |
-| `game.colorclash.word.orange` | ORANGE | NARANJA | ColorClashView |  |
-| `game.colorclash.word.purple` | PURPLE | MORADO | ColorClashView |  |
-| `game.colorclash.word.red` | RED | ROJO | ColorClashView |  |
-| `game.colorclash.word.yellow` | YELLOW | AMARILLO | ColorClashView |  |
+| `game.colorclash.word.blue` | BLUE | AZUL | — |  |
+| `game.colorclash.word.green` | GREEN | VERDE | — |  |
+| `game.colorclash.word.orange` | ORANGE | NARANJA | — |  |
+| `game.colorclash.word.purple` | PURPLE | MORADO | — |  |
+| `game.colorclash.word.red` | RED | ROJO | — |  |
+| `game.colorclash.word.yellow` | YELLOW | AMARILLO | — |  |
+| `game.leave.go` | Leave | Salir | LeaveGuard |  |
+| `game.leave.note` | It won't be saved, but you can start a new one any time. | No se guardará, pero puedes empezar otro cuando quieras. | LeaveGuard |  |
+| `game.leave.stay` | Keep playing | Seguir jugando | LeaveGuard |  |
+| `game.leave.title` | Leave this game? | ¿Salir de este juego? | LeaveGuard |  |
 | `game.math.instruction` | Tap the correct answer | Toca la respuesta correcta | MathStreakView |  |
 | `game.math.operator.dividedBy` | divided by | entre | NumberTrailQuestion |  |
 | `game.math.operator.minus` | minus | menos | NumberTrailQuestion |  |
 | `game.math.operator.plus` | plus | más | NumberTrailQuestion |  |
 | `game.math.operator.times` | times | por | NumberTrailQuestion |  |
 | `game.math.title` | Number Trail | Sendero de Números | GameID |  |
-| `game.memory.a11y.matched` | Pair found | Pareja encontrada | MemoryMatchView |  |
+| `game.memory.a11y.matched` | Pair found | Pareja encontrada | MemoryBoard, MemoryMatchView |  |
 | `game.memory.a11y.position %lld %lld` | Card %lld of %lld | Carta %lld de %lld | MemoryMatchView |  |
 | `game.memory.card.hidden` | Hidden card | Carta oculta | MemoryMatchView |  |
 | `game.memory.instruction` | Find the matching pairs | Encuentra las parejas | MemoryMatchView |  |
 | `game.memory.miss` | Almost — %1$@ and %2$@ are different | Casi — %1$@ y %2$@ no son pareja | MemoryBoard |  |
 | `game.memory.photo %lld` | Family photo %lld | Foto familiar %lld | MemoryMatchView |  |
 | `game.memory.title` | Memory Lane | Camino de Memoria | GameID |  |
+| `game.photocaptions.instruction` | Turn over a photo and a name. Find the name that goes with each photo | Voltea una foto y un nombre. Encuentra el nombre que va con cada foto | MemoryMatchView |  |
+| `game.photocaptions.title` | Names and Faces | Nombres y Caras | GameID |  |
 | `game.quickeyes.a11y.flash %@` | Picture shown: %@ | Imagen mostrada: %@ | QuickEyesView |  |
 | `game.quickeyes.almost` | Almost — let's slow down a touch | Casi — vamos un poquito más despacio | QuickEyesView |  |
+| `game.quickeyes.gotit` | Got it | Listo | QuickEyesView |  |
 | `game.quickeyes.instruction` | A picture flashes on screen. Look closely, then tap the one you saw | Aparecerá una imagen por un instante. Mírala bien y luego tócala | QuickEyesView |  |
+| `game.quickeyes.instruction.paced` | A picture appears. Look as long as you like, tap “Got it”, then tap the one you saw | Aparecerá una imagen. Mírala el tiempo que quieras, toca «Listo» y luego toca la que viste | QuickEyesView |  |
+| `game.quickeyes.invite.no` | No, this is fine | No, así está bien | QuickEyesView |  |
+| `game.quickeyes.invite.title` | Want a faster one? | ¿Quieres una más rápida? | QuickEyesView |  |
+| `game.quickeyes.invite.yes` | Yes, a faster one | Sí, más rápida | QuickEyesView |  |
+| `game.quickeyes.lookagain` | Almost — look again | Casi — mira otra vez | QuickEyesView |  |
 | `game.quickeyes.prompt` | Which one did you see? | ¿Cuál viste? | QuickEyesView |  |
 | `game.quickeyes.title` | Quick Eyes | Ojos Ágiles | GameID |  |
 | `game.readaloud` | Read aloud | Leer en voz alta | GameHeader | ✅ |
@@ -142,11 +167,11 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `game.reminiscence.a11y.photo` | Family photo, no name yet | Foto de familia, todavía sin nombre | ReminiscenceView |  |
 | `game.reminiscence.hear` | Hear it again | Escucharlo otra vez | ReminiscenceView |  |
 | `game.reminiscence.next` | Next | Siguiente | ReminiscenceView |  |
-| `game.reminiscence.prompt.object` | What is this? | ¿Qué es esto? | ReminiscenceView |  |
-| `game.reminiscence.prompt.photo` | Who is this? | ¿Quién es? | ReminiscenceView |  |
+| `game.reminiscence.prompt.object` | What is this? | ¿Qué es esto? | ReminiscenceDeck |  |
+| `game.reminiscence.prompt.photo` | Who is this? | ¿Quién es? | OnboardingView, ReminiscenceDeck |  |
 | `game.reminiscence.show` | Show me | Muéstrame | ReminiscenceView |  |
 | `game.reminiscence.title` | Remember Together | Recordar juntos | GameID |  |
-| `game.reminiscence.together` | Let's look together | Veámoslo juntos | ReminiscenceView |  |
+| `game.reminiscence.together` | Let's look together | Veámoslo juntos | ReminiscenceDeck |  |
 | `game.round.a11y %lld %lld` | Round %1$lld of %2$lld | Ronda %1$lld de %2$lld | RoundCounter |  |
 | `game.sayings.a11y.listen` | Hear the saying | Escuchar el refrán | SayingsView |  |
 | `game.sayings.instruction` | How does this saying end? | ¿Cómo termina este refrán? | SayingsView |  |
@@ -168,7 +193,32 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `game.sequence.title` | Repeat the Sequence | Repite la secuencia | GameID |  |
 | `game.sequence.turn` | Your turn | Tu turno | RepeatSequenceView |  |
 | `game.sequence.watch` | Watch… | Mira… | RepeatSequenceView |  |
+| `game.sliding.block.big` | big block | bloque grande | SlidingBlocksView |  |
+| `game.sliding.block.small` | small block | bloque pequeño | SlidingBlocksView |  |
+| `game.sliding.block.tall` | tall block | bloque alto | SlidingBlocksView |  |
+| `game.sliding.block.wide` | wide block | bloque ancho | SlidingBlocksView |  |
+| `game.sliding.hint` | Show me a move | Muéstrame un paso | SlidingBlocksView |  |
+| `game.sliding.instruction` | Slide the blocks to free the big one. | Desliza los bloques para sacar el grande. | SlidingBlocksView |  |
+| `game.sliding.move.down` | Move down | Mover abajo | — |  |
+| `game.sliding.move.left` | Move left | Mover a la izquierda | — |  |
+| `game.sliding.move.right` | Move right | Mover a la derecha | — |  |
+| `game.sliding.move.up` | Move up | Mover arriba | — |  |
+| `game.sliding.out` | It's out! | ¡Salió! | SlidingBlocksView |  |
+| `game.sliding.place.bottomleft` | bottom left | abajo a la izquierda | SlidingBlocksView |  |
+| `game.sliding.place.bottommiddle` | bottom middle | abajo en el centro | SlidingBlocksView |  |
+| `game.sliding.place.bottomright` | bottom right | abajo a la derecha | SlidingBlocksView |  |
+| `game.sliding.place.cell %lld %lld` | row %1$lld, column %2$lld | fila %1$lld, columna %2$lld | SlidingBlocksView |  |
+| `game.sliding.place.middle` | middle | en el centro | SlidingBlocksView |  |
+| `game.sliding.place.middleleft` | middle left | en el centro a la izquierda | SlidingBlocksView |  |
+| `game.sliding.place.middleright` | middle right | en el centro a la derecha | SlidingBlocksView |  |
+| `game.sliding.place.topleft` | top left | arriba a la izquierda | SlidingBlocksView |  |
+| `game.sliding.place.topmiddle` | top middle | arriba en el centro | SlidingBlocksView |  |
+| `game.sliding.place.topright` | top right | arriba a la derecha | SlidingBlocksView |  |
+| `game.sliding.restart` | Start over | Empezar de nuevo | SlidingBlocksView |  |
+| `game.sliding.tapblock` | Tap a block to move it. | Toca un bloque para moverlo. | SlidingBlocksView |  |
 | `game.sliding.title` | Sliding Blocks | Bloques deslizantes | GameID |  |
+| `game.sliding.undo` | Undo | Deshacer | SlidingBlocksView |  |
+| `game.slidingblocks.guide` | Tap a block, then an arrow to slide it. | Toca un bloque y luego una flecha para deslizarlo. | SlidingBlocksView |  |
 | `game.sudoku.a11y.cell %lld %lld %lld` | Row %1$lld, column %2$lld, %3$lld | Fila %1$lld, columna %2$lld, %3$lld | SudokuView |  |
 | `game.sudoku.a11y.empty %lld %lld` | Row %1$lld, column %2$lld, empty | Fila %1$lld, columna %2$lld, vacío | SudokuView |  |
 | `game.sudoku.a11y.put %lld` | Put %lld | Poner %lld | SudokuView |  |
@@ -184,6 +234,7 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `game.tangram.a11y.pickfirst` | Pick a piece first | Elige primero una pieza | TangramView |  |
 | `game.tangram.a11y.place %@` | Place in %@ | Colocar %@ | TangramView |  |
 | `game.tangram.flip` | Flip | Voltear | TangramView |  |
+| `game.tangram.guide` | Tap a piece, then tap where it fits. | Toca una pieza y luego toca dónde encaja. | TangramView |  |
 | `game.tangram.instruction` | Fill the shape with the pieces. | Llena la figura con las piezas. | TangramView |  |
 | `game.tangram.miss.flip` | Almost — try flipping it | Casi — prueba a voltearla | TangramView |  |
 | `game.tangram.miss.spot` | Almost — try another spot | Casi — prueba otro lugar | TangramView |  |
@@ -205,6 +256,15 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `game.tangram.slot.top.right` | top right | arriba a la derecha | — |  |
 | `game.tangram.title` | Tangram | Tangram | GameID |  |
 | `game.tangram.turn` | Turn | Girar | TangramView |  |
+| `game.tilepairs.a11y.hint` | Double tap to pick this tile | Toca dos veces para elegir esta ficha | TilePairsView |  |
+| `game.tilepairs.covered` | That one's covered — try a tile on the edge | Esa está tapada — prueba una del borde | TilePairsView |  |
+| `game.tilepairs.guide` | Tap two matching tiles that are not covered. | Toca dos fichas iguales que no estén tapadas. | TilePairsView |  |
+| `game.tilepairs.hint %@` | Look for the two %@ tiles | Busca las dos fichas de %@ | TilePairsView |  |
+| `game.tilepairs.instruction` | Find two free tiles that match. | Busca dos fichas libres iguales. | TilePairsView |  |
+| `game.tilepairs.matched %@` | Nice — you matched the %@! | ¡Bien — encontraste el par: %@! | TilePairsView |  |
+| `game.tilepairs.mismatch` | Almost — those two are different | Casi — esas dos son distintas | TilePairsView |  |
+| `game.tilepairs.showpair` | Show me a pair | Muéstrame una pareja | TilePairsView |  |
+| `game.tilepairs.stuck` | Let's mix the tiles | Mezclemos las fichas | TilePairsView |  |
 | `game.tilepairs.title` | Tile Pairs | Parejas de fichas | GameID |  |
 | `game.upordown.a11y.card %@ %@` | %1$@ of %2$@ | %1$@ de %2$@ | UpOrDownView |  |
 | `game.upordown.a11y.deck %lld` | Turn a new card, %lld left | Voltear una carta nueva, quedan %lld | UpOrDownView |  |
@@ -236,7 +296,10 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `guide.again` | Show me again | Muéstramelo otra vez | FirstPlayGuide |  |
 | `guide.colorclash.example %@` | The ink is %@: tap that color. | La tinta es de color %@: toca ese color. | ColorClashView |  |
 | `guide.gotit` | Got it | Entendido | FirstPlayGuide |  |
+| `guide.slidingblocks.example` | Try this block. | Prueba este bloque. | SlidingBlocksView |  |
 | `guide.sudoku.example %lld` | The framed square is chosen. The number %lld fits there. | El cuadro con marco está elegido. Ahí encaja el número %lld. | SudokuView |  |
+| `guide.tangram.example` | Start with this piece. | Empieza con esta pieza. | TangramView |  |
+| `guide.tilepairs.example` | This one has a twin that is not covered. | Esta tiene una gemela que no está tapada. | TilePairsView |  |
 | `guide.upordown.example %@` | This one fits: %@ is one away from the open card. | Esta encaja: %@ está a un número de la carta abierta. | UpOrDownView |  |
 | `guide.upordown.example.none` | Look for a card one higher or one lower than the open card. | Busca una carta que sea uno más o uno menos que la carta abierta. | UpOrDownView |  |
 | `history.day.times %lld` | one: once / other: %lld times | one: una vez / other: %lld veces | HistoryView |  |
@@ -252,8 +315,8 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `history.share.title` | 🌻 My week with MenteViva | 🌻 Mi semana con MenteViva | WeeklySummary |  |
 | `history.summary %lld` | one: You played %lld time this week! 🌟 / other: You played %lld times this week! 🌟 | one: ¡Jugaste %lld vez esta semana! 🌟 / other: ¡Jugaste %lld veces esta semana! 🌟 | HistoryView |  |
 | `history.title` | My Week | Mi Semana | HistoryView, HomeView |  |
-| `history.today` | Today | Hoy | HistoryView |  |
-| `history.yesterday` | Yesterday | Ayer | HistoryView |  |
+| `history.today` | Today | Hoy | WeeklySummary |  |
+| `history.yesterday` | Yesterday | Ayer | WeeklySummary |  |
 | `home.allgames` | All games | Todos los juegos | HomeView | ✅ |
 | `home.greeting` | Shall we play a game? | ¿Jugamos un rato? | HomeView, TodayRun |  |
 | `home.greeting.afternoon` | Good afternoon | Buenas tardes | TodayRun | ✅ |
@@ -269,7 +332,7 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `home.week.hint` | See what you played this week | Mira lo que jugaste esta semana | HomeView |  |
 | `home.week.title` | This week | Esta semana | HomeView | ✅ |
 | `level.explain.eased` | We made it a little calmer, so you enjoy it more. | Lo pusimos más tranquilo para que lo disfrutes más. | LevelPolicy |  |
-| `level.explain.raised1` | We made it a little harder: you've been doing great. | Lo subimos un poquito: te ha ido muy bien. | LevelPolicy |  |
+| `level.explain.raised1` | We made it a little harder: you've been doing great. | Lo subimos un poquito: te ha ido muy bien. | CelebrationView, LevelPolicy |  |
 | `level.explain.raised2` | Two steps up: you're flying! | Subimos dos pasos: ¡vas volando! | LevelPolicy |  |
 | `level.offer.keep` | Keep it as it is | Así está bien | CelebrationView |  |
 | `level.offer.prompt` | That was perfect. Shall we try the next level? | ¡Te salió perfecto! ¿Probamos el siguiente nivel? | CelebrationView |  |
@@ -306,6 +369,11 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `onboarding.pace.challenge` | A challenge | Con reto | OnboardingSteps |  |
 | `onboarding.pace.normal` | Normal | Normal | OnboardingSteps |  |
 | `onboarding.pace.title` | How would you like to start? | ¿Cómo quieres empezar? | OnboardingSteps |  |
+| `onboarding.photos.add.hint` | Opens your photos. Pick a few of people you love. | Abre tus fotos. Elige unas de personas queridas. | OnboardingView |  |
+| `onboarding.photos.body` | Three games use them: Memory Lane, Remember Together and Names and Faces. They stay on this device. | Tres juegos las usan: Camino de Memoria, Recordar juntos y Nombres y Caras. Se quedan en este dispositivo. | OnboardingView |  |
+| `onboarding.photos.later` | Later, in Settings | Más tarde, en Ajustes | OnboardingView |  |
+| `onboarding.photos.later.hint` | Goes on without photos. You can add them any time in Settings. | Sigue sin fotos. Puedes añadirlas cuando quieras en Ajustes. | OnboardingView |  |
+| `onboarding.photos.title` | Add a few photos of people you love? | ¿Añadimos unas fotos de personas queridas? | OnboardingView |  |
 | `onboarding.skip` | Skip | Omitir | OnboardingView |  |
 | `onboarding.skip.hint` | Leaves this one unanswered. You can change it later in Settings, My plan. | Deja esta pregunta sin responder. Puedes cambiarla después en Ajustes, Mi plan. | OnboardingView |  |
 | `onboarding.start` | Let's play | A jugar | OnboardingView |  |
@@ -314,6 +382,82 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `onboarding.who.family` | A family member | Un familiar | OnboardingSteps |  |
 | `onboarding.who.me` | Me | Yo | OnboardingSteps |  |
 | `onboarding.who.title` | Who will play? | ¿Quién va a jugar? | OnboardingSteps |  |
+| `picture.accordion` | Accordion | Acordeón | — |  |
+| `picture.airplane` | Airplane | Avión | — |  |
+| `picture.apple` | Apple | Manzana | — |  |
+| `picture.banana` | Banana | Plátano | — |  |
+| `picture.beach` | Beach | Playa | — |  |
+| `picture.bee` | Bee | Abeja | — |  |
+| `picture.bicycle` | Bicycle | Bicicleta | — |  |
+| `picture.book` | Book | Libro | — |  |
+| `picture.bread` | Bread | Pan | — |  |
+| `picture.bus` | Bus | Autobús | — |  |
+| `picture.butterfly` | Butterfly | Mariposa | — |  |
+| `picture.cactus` | Cactus | Cactus | — |  |
+| `picture.cake` | Cake | Pastel | — |  |
+| `picture.car` | Car | Auto | — |  |
+| `picture.cat` | Cat | Gato | — |  |
+| `picture.chair` | Chair | Silla | — |  |
+| `picture.cheese` | Cheese | Queso | — |  |
+| `picture.chocolate` | Chocolate | Chocolate | — |  |
+| `picture.clock` | Clock | Reloj | — |  |
+| `picture.coffee` | Cup of coffee | Taza de café | — |  |
+| `picture.color.blue` | Blue | Azul | — |  |
+| `picture.color.brown` | Brown | Café | — |  |
+| `picture.color.green` | Green | Verde | — |  |
+| `picture.color.orange` | Orange | Naranja | — |  |
+| `picture.color.purple` | Purple | Morado | — |  |
+| `picture.color.red` | Red | Rojo | — |  |
+| `picture.color.yellow` | Yellow | Amarillo | — |  |
+| `picture.croissant` | Croissant | Cuernito | — |  |
+| `picture.dog` | Dog | Perro | — |  |
+| `picture.egg` | Egg | Huevo | — |  |
+| `picture.elephant` | Elephant | Elefante | — |  |
+| `picture.frog` | Frog | Rana | — |  |
+| `picture.grapes` | Grapes | Uvas | — |  |
+| `picture.guitar` | Guitar | Guitarra | — |  |
+| `picture.helicopter` | Helicopter | Helicóptero | — |  |
+| `picture.honey` | Honey | Miel | — |  |
+| `picture.house` | House | Casa | — |  |
+| `picture.key` | Key | Llave | — |  |
+| `picture.ladybug` | Ladybug | Catarina | — |  |
+| `picture.lamp` | Lamp | Lámpara | — |  |
+| `picture.lemon` | Lemon | Limón | — |  |
+| `picture.lighthouse` | Lighthouse | Faro | — |  |
+| `picture.lion` | Lion | León | — |  |
+| `picture.map` | Map | Mapa | — |  |
+| `picture.moon` | Moon | Luna | — |  |
+| `picture.mountain` | Mountain | Montaña | — |  |
+| `picture.olives` | Olives | Aceitunas | — |  |
+| `picture.orange` | Orange | Naranja | — |  |
+| `picture.peach` | Peach | Durazno | — |  |
+| `picture.pear` | Pear | Pera | — |  |
+| `picture.piano` | Piano | Piano | — |  |
+| `picture.picture_frame` | Picture | Cuadro | — |  |
+| `picture.pine` | Pine tree | Pino | — |  |
+| `picture.potted_plant` | Plant | Maceta | — |  |
+| `picture.radio` | Radio | Radio | — |  |
+| `picture.rocket` | Rocket | Cohete | — |  |
+| `picture.rose` | Rose | Rosa | — |  |
+| `picture.sailboat` | Sailboat | Velero | — |  |
+| `picture.sofa` | Sofa | Sofá | — |  |
+| `picture.star` | Star | Estrella | — |  |
+| `picture.strawberry` | Strawberry | Fresa | — |  |
+| `picture.suitcase` | Suitcase | Maleta | — |  |
+| `picture.sunflower` | Sunflower | Girasol | — |  |
+| `picture.teapot` | Teapot | Tetera | — |  |
+| `picture.telephone` | Telephone | Teléfono | — |  |
+| `picture.tent` | Tent | Tienda de campaña | — |  |
+| `picture.train` | Train | Tren | — |  |
+| `picture.tree` | Tree | Árbol | — |  |
+| `picture.trumpet` | Trumpet | Trompeta | — |  |
+| `picture.tulip` | Tulip | Tulipán | — |  |
+| `picture.turtle` | Turtle | Tortuga | — |  |
+| `picture.umbrella` | Umbrella | Paraguas | — |  |
+| `picture.violin` | Violin | Violín | — |  |
+| `picture.watermelon` | Watermelon | Sandía | — |  |
+| `picture.wine_glass` | Glass of wine | Copa de vino | — |  |
+| `picture.yarn` | Yarn | Estambre | — |  |
 | `progress.accuracy %lld` | On average, %lld%% right each game | En promedio, %lld%% de aciertos por juego | MyProgressView |  |
 | `progress.days %lld` | Played on %lld of the last 7 days | Jugaste %lld de los últimos 7 días | MyProgressView |  |
 | `progress.empty` | No games in the last 7 days yet. Whenever you play, it shows up here. | Todavía no hay juegos en los últimos 7 días. Cuando juegues, aparecerá aquí. | MyProgressView |  |
@@ -331,6 +475,30 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `progress.trend.level.down %@` | An easier level than your earlier weeks: now %@ | Un nivel más fácil que en tus semanas anteriores: ahora %@ | MyProgressView |  |
 | `progress.trend.level.up %@` | A level up from your earlier weeks: now %@ | Un nivel más que en tus semanas anteriores: ahora %@ | MyProgressView |  |
 | `progress.trend.wait %lld` | After %lld games this week, you'll see how it compares with your earlier weeks. | Después de %lld juegos esta semana, verás cómo se compara con tus semanas anteriores. | MyProgressView |  |
+| `reminiscence.ask.01` | Where was this? | ¿Dónde fue esto? | ConversationPrompts |  |
+| `reminiscence.ask.02` | What made you laugh that day? | ¿Qué los hizo reír ese día? | — |  |
+| `reminiscence.ask.03` | What does this picture make you think of? | ¿En qué te hace pensar esta foto? | — |  |
+| `reminiscence.ask.04` | Is there a story that goes with this one? | ¿Hay alguna historia que acompañe a esta foto? | — |  |
+| `reminiscence.ask.05` | What do you like most about this picture? | ¿Qué es lo que más te gusta de esta foto? | — |  |
+| `reminiscence.ask.06` | What time of year does this feel like? | ¿A qué época del año te recuerda? | — |  |
+| `reminiscence.ask.07` | What do you imagine was happening here? | ¿Qué te imaginas que pasaba aquí? | — |  |
+| `reminiscence.ask.08` | If you could step into this picture, what would you do first? | Si pudieras entrar en esta foto, ¿qué harías primero? | — |  |
+| `reminiscence.ask.09` | What sounds or smells go with this picture? | ¿Qué sonidos o aromas acompañan a esta foto? | — |  |
+| `reminiscence.ask.10` | What would you tell someone who has never seen this one? | ¿Qué le contarías a alguien que nunca ha visto esta foto? | — |  |
+| `reminiscence.ask.11` | What do you notice in this picture today? | ¿Qué notas hoy en esta foto? | — |  |
+| `reminiscence.ask.12` | Does this one bring a smile? What comes to mind? | ¿Te saca una sonrisa esta foto? ¿Qué te viene a la mente? | — |  |
+| `reminiscence.ask.13` | What feeling does this picture have? | ¿Qué ambiente se siente en esta foto? | — |  |
+| `reminiscence.ask.14` | What would be a good name for this moment? | ¿Qué nombre le pondrías a este momento? | — |  |
+| `reminiscence.ask.15` | What would you like to say about this picture? | ¿Qué te gustaría contar de esta foto? | — |  |
+| `reminiscence.ask.16` | What kind of day does this look like? | ¿Qué tipo de día parece este? | — |  |
+| `reminiscence.askobject.01` | Did you have one of these at home? | ¿Tenían uno de estos en casa? | ConversationPrompts |  |
+| `reminiscence.askobject.02` | What do you picture when you see this? | ¿Qué te imaginas al ver esto? | — |  |
+| `reminiscence.askobject.03` | What does this remind you of? | ¿Qué te recuerda esto? | — |  |
+| `reminiscence.askobject.04` | Is this something you enjoy using? | ¿Es algo que disfrutas usar? | — |  |
+| `reminiscence.askobject.05` | What do you like about this one? | ¿Qué te gusta de esto? | — |  |
+| `reminiscence.askobject.06` | Is there a story that goes with something like this? | ¿Hay alguna historia con algo así? | — |  |
+| `reminiscence.askobject.07` | What would you use this for on a quiet day? | ¿Para qué lo usarías en un día tranquilo? | — |  |
+| `reminiscence.askobject.08` | Where would you put this in your home today? | ¿Dónde lo pondrías hoy en tu casa? | — |  |
 | `saying.01.end` | is worth two in the bush | que ciento volando | — |  |
 | `saying.01.start` | A bird in the hand | Más vale pájaro en mano | — |  |
 | `saying.02.end` | seldom bite | no muerde | — |  |
@@ -578,11 +746,18 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `settings.language.restart` | The language changes right away. | El idioma cambia al instante. | SettingsView |  |
 | `settings.language.system` | Device | Sistema | AppLanguage |  |
 | `settings.open.hint` | Language, bigger text and privacy | Idioma, texto más grande y privacidad | HomeView |  |
-| `settings.privacy.backup %@` | If you back up this %@, the backup keeps them too. | Si haces copia de seguridad de este %@, la copia también los guarda. | SettingsView |  |
+| `settings.privacy.backup %@` | A backup of this %@ may include your games. Your photos and their names are never included. | Una copia de seguridad de este %@ puede incluir tus partidas. Tus fotos y sus nombres nunca se incluyen. | SettingsView |  |
 | `settings.privacy.device %@` | Your games stay on this %@. | Tus juegos se quedan en este %@. | SettingsView |  |
 | `settings.privacy.noaccount` | No account, no ads, no tracking. | Sin cuenta, sin anuncios, sin rastreo. | SettingsView |  |
 | `settings.privacy.photos` | Your photos and their names never leave it. | Tus fotos y sus nombres nunca salen de aquí. | SettingsView |  |
+| `settings.privacy.policy` | Privacy policy | Política de privacidad | SettingsView |  |
+| `settings.privacy.policy.url` | https://menteviva-e4s.pages.dev/en/privacy | https://menteviva-e4s.pages.dev/es/privacy | SettingsView |  |
+| `settings.privacy.support` | Help and support | Ayuda y soporte | SettingsView |  |
+| `settings.privacy.support.url` | https://menteviva-e4s.pages.dev/en/support | https://menteviva-e4s.pages.dev/es/support | SettingsView |  |
 | `settings.privacy.title` | Your privacy | Tu privacidad | SettingsView |  |
+| `settings.section.about` | About | Acerca de | SettingsView |  |
+| `settings.section.family` | For the family | Para la familia | SettingsView |  |
+| `settings.section.you` | For you | Para ti | SettingsView |  |
 | `settings.sound` | Sound & haptics | Sonido y vibración | SettingsView |  |
 | `settings.sound.hint` | Gentle tones and taps | Tonos y toques suaves | SettingsView |  |
 | `settings.speak` | Read names aloud | Leer los nombres en voz alta | SettingsView |  |
@@ -590,7 +765,7 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `settings.textsize` | Bigger text | Texto más grande | SettingsView |  |
 | `settings.title` | Settings | Ajustes | HomeView, SettingsView |  |
 | `settings.version` | Version | Versión | SettingsView |  |
-| `setup.open.hint` | Which games show, their difficulty, and Memory Lane photos | Qué juegos se muestran, su dificultad y las fotos de Camino de Memoria | SettingsView |  |
+| `setup.open.hint` | Which games show, their difficulty, and family photos | Qué juegos se muestran, su dificultad y las fotos de la familia | SettingsView |  |
 | `setup.title` | Set up | Ajustes de juego | SetUpView, SettingsView |  |
 | `tangram.shape.01` | Boat | Barco | TangramShapes |  |
 | `tangram.shape.02` | Fish | Pez | TangramShapes |  |
@@ -615,11 +790,20 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `tangram.shape.27` | Slide | Tobogán | TangramShapes |  |
 | `tangram.shape.28` | Snail | Caracol | TangramShapes |  |
 | `tangram.shape.29` | Penguin | Pingüino | TangramShapes |  |
+| `today.share` | Share today's games | Compartir los juegos de hoy | HomeView, TodayShare |  |
+| `today.share.footer` | Today's games, done. | Los juegos de hoy, listos. | TodayShare |  |
+| `today.share.hint` | Sends a short message; nothing else leaves the device | Envía un mensaje corto; nada más sale del dispositivo | HomeView |  |
+| `today.share.title` | MenteViva · %@ | MenteViva · %@ | TodayShare |  |
+| `warmup.accept` | Let's play | Juguemos | MyPlanView, OnboardingView |  |
+| `warmup.accept.hint` | Deals three games for today. | Reparte tres juegos para hoy. | MyPlanView, OnboardingView |  |
+| `warmup.notnow` | Not now | Ahora no | OnboardingView |  |
+| `warmup.offer.title` | Shall we play three games to find your pace? | ¿Jugamos tres partidas para encontrar tu ritmo? | MyPlanView, OnboardingView |  |
 | `why.footer` | Educational information, not medical advice. | Información educativa, no consejo médico. | WhyTheseGamesView |  |
 | `why.game.category` | Name the Herd exercises finding words. | Nombra la Manada ejercita encontrar palabras. | WhyTheseGamesView |  |
 | `why.game.colorclash` | Color Clash exercises paying attention to what matters and ignoring the rest. | Choque de Colores ejercita fijarse en lo importante y dejar pasar lo demás. | WhyTheseGamesView |  |
 | `why.game.math` | Number Trail exercises quick, easy sums. | Sendero de Números ejercita las cuentas sencillas y rápidas. | WhyTheseGamesView |  |
 | `why.game.memory` | Memory Lane exercises remembering where things are. | Camino de Memoria ejercita recordar dónde está cada cosa. | WhyTheseGamesView |  |
+| `why.game.photocaptions` | Names and Faces exercises matching a name to a face. | Nombres y Caras ejercita unir un nombre con una cara. | WhyTheseGamesView |  |
 | `why.game.quickeyes` | Quick Eyes exercises noticing things quickly. | Ojos Ágiles ejercita fijarse en las cosas con rapidez. | WhyTheseGamesView |  |
 | `why.game.reminiscence` | Remember Together is a chance to enjoy your own photos and talk about them with someone. There are no right or wrong answers. | Recordar juntos es una ocasión para disfrutar tus fotos y conversar sobre ellas con alguien. No hay respuestas buenas ni malas. | WhyTheseGamesView |  |
 | `why.game.sayings` | Finish the Saying exercises finding words you already know. | Termina el refrán ejercita encontrar palabras que ya conoces. | WhyTheseGamesView |  |

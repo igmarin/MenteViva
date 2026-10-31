@@ -1,4 +1,4 @@
-# Product Brief — Mente Viva
+# Product Brief — MenteViva
 
 Current truth as of 2026-09-29. History and reasons: `decisions.md`.
 

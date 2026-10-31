@@ -5,7 +5,7 @@ hosted next to the privacy policy; link from Settings and App Store Connect's su
 
 ---
 
-**Mente Viva — Support**
+**MenteViva — Support**
 
 **The app stopped opening after a week (beta installs).** Free-account test
 builds expire 7 days after they were installed. Whoever installed it for you
