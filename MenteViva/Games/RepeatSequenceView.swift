@@ -12,19 +12,26 @@ struct RepeatSequenceView: View {
     private enum Tile: CaseIterable {
         case circle, star, square, triangle, heart, moon, drop, leaf, sun
 
+        /// The print palette (#398): the same in light and dark, each with an espresso edge.
         var color: Color {
             switch self {
-            case .circle: .red
-            case .star: .blue
-            case .square: .green
-            case .triangle: .orange
-            case .heart: .pink
-            case .moon: .purple
-            case .drop: Color(red: 0.0, green: 0.55, blue: 0.8)
-            case .leaf: Color(red: 0.2, green: 0.6, blue: 0.2)
-            case .sun: Color(red: 0.8, green: 0.55, blue: 0.0)
+            case .circle: Self.fixed(0x246456)
+            case .star: Self.fixed(0xAF3F32)
+            case .square: Self.fixed(0xE7AC45)
+            case .triangle: Self.fixed(0x35566D)
+            case .heart: Self.fixed(0x7A4B2A)
+            case .moon: Self.fixed(0x6B3FA0)
+            case .drop: Self.fixed(0x2E7D4F)
+            case .leaf: Self.fixed(0xC8372D)
+            case .sun: Self.fixed(0x1F5F7A)
             }
         }
+
+        /// White on every tile but the light mustard one, which takes `onAmber`: espresso that stays
+        /// dark in dark mode too (`Color.espresso` turns cream there, unreadable on mustard).
+        var symbolColor: Color { self == .square ? Color.onAmber : .white }
+
+        private static func fixed(_ rgb: UInt32) -> Color { Color(light: rgb, dark: rgb) }
 
         var shape: String {
             switch self {
@@ -69,6 +76,8 @@ struct RepeatSequenceView: View {
     @State private var showCelebration = false
     @State private var finalDetail = ""
     @State private var showMiss = false
+    /// True during the short pause after a right round, so "That's it!" shows.
+    @State private var showRight = false
     @State private var task: Task<Void, Never>?
     @State private var boardWidth: Double = 0
     @State private var isTransitioning = false
@@ -79,6 +88,9 @@ struct RepeatSequenceView: View {
         }
         if showMiss {
             return AppLanguage.localized("game.sequence.almost")
+        }
+        if showRight {
+            return AppLanguage.localized("game.answer.right")
         }
         return AppLanguage.localized("game.sequence.turn")
     }
@@ -124,11 +136,11 @@ struct RepeatSequenceView: View {
                         RoundedRectangle(cornerRadius: 16)
                             .fill(tile.color.opacity(lit == idx ? 0.95 : 0.75))
                             .frame(minHeight: 100)
+                            .overlay(RoundedRectangle(cornerRadius: 16).strokeBorder(Color.espresso, lineWidth: 3))
                             .overlay {
                                 Image(systemName: tile.shape)
                                     .font(.system(size: 40, weight: .bold))
-                                    .foregroundStyle(.white)
-                                    .shadow(color: .black.opacity(0.35), radius: 2, y: 1)
+                                    .foregroundStyle(tile.symbolColor)
                                     .accessibilityHidden(true)
                             }
                             .scaleEffect(lit == idx && !reduceMotion ? 1.06 : 1)
@@ -156,6 +168,7 @@ struct RepeatSequenceView: View {
         showing = true
         isTransitioning = false
         showMiss = false
+        showRight = false
         startedAt = .now
         var gen = SystemRandomNumberGenerator()
         let width = boardWidth > 0 ? boardWidth + 32 : Double(UIScreen.main.bounds.width)
@@ -172,6 +185,7 @@ struct RepeatSequenceView: View {
             return
         }
         showing = true
+        showRight = false
         isTransitioning = false
         tapped = []
         // VoiceOver: speak the sequence names.
@@ -188,7 +202,7 @@ struct RepeatSequenceView: View {
             for idx in seq {
                 guard !Task.isCancelled else { return }
                 lit = idx
-                SoundPlayer.play(.success)
+                SoundPlayer.playTile(idx)
                 try? await Task.sleep(for: .seconds(rules.light))
                 lit = nil
                 try? await Task.sleep(for: .seconds(0.25))
@@ -200,7 +214,7 @@ struct RepeatSequenceView: View {
     private func tap(_ idx: Int) {
         guard !showing, !isTransitioning, session?.current != nil else { return }
         tapped.append(idx)
-        SoundPlayer.play(.success)
+        Feedback.playTile(idx)
         lit = idx
         Task { @MainActor in
             try? await Task.sleep(for: .seconds(0.15))
@@ -210,9 +224,14 @@ struct RepeatSequenceView: View {
         // prefix stays quiet until the sequence is complete.
         guard let result = session?.record(tapped: tapped), result != .keepGoing else { return }
         tapped = []
+        // The result tone below deliberately interrupts the last tile's note: the result wins.
         switch result {
         case .correct:
             showMiss = false
+            showRight = true
+            Feedback.play(.success)
+            // Short on purpose: showNext() announces the next names ~0.6 s later.
+            AccessibilityNotification.Announcement(AppLanguage.localized("game.answer.right")).post()
             _ = progress.completeRound()
             if progress.isFinished {
                 finish()
@@ -229,7 +248,8 @@ struct RepeatSequenceView: View {
         case .almost:
             // First miss: warm cue then replay same sequence once.
             showMiss = true
-            SoundPlayer.play(.miss)
+            Feedback.play(.miss)
+            AccessibilityNotification.Announcement(AppLanguage.localized("game.sequence.almost")).post()
             // If we already consumed replay, session moved on.
             let wasReplay = session?.needsReplay == true
             if wasReplay {
