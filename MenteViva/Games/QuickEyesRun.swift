@@ -33,8 +33,6 @@ nonisolated struct QuickEyesRun {
     let difficulty: Difficulty
     /// Right first try only, as the level staircase reads it.
     private(set) var correct = 0
-    /// Hidden bonus for quick first-try picks; nothing shows it (#45).
-    private(set) var speedBonus = 0
     private(set) var missedLastRound = false
     /// Wrong pictures faded this round (paced levels).
     private(set) var fadedPictures: Set<GamePicture> = []
@@ -60,7 +58,7 @@ nonisolated struct QuickEyesRun {
     /// Applies one pick. Paced levels never lose a round to a miss: the wrong picture fades and the
     /// player looks again (#46). Flash levels shrink the flash on a right pick and relax one step on a miss
     /// so the next round feels kinder.
-    mutating func pick(_ picture: GamePicture, target: GamePicture, reactionSeconds: Double) -> Pick {
+    mutating func pick(_ picture: GamePicture, target: GamePicture) -> Pick {
         let result: Pick
         if isPaced, picture != target {
             fadedPictures.insert(picture)
@@ -69,8 +67,6 @@ nonisolated struct QuickEyesRun {
             let firstTry = fadedPictures.isEmpty
             if firstTry {
                 correct += 1
-                // Up to 5 points, one less per half-second of reaction time.
-                speedBonus += max(0, 5 - Int(reactionSeconds / 0.5))
             }
             missedLastRound = false
             if !isPaced { displayTime = max(Self.displayTimes(for: difficulty).floor, displayTime * Self.shrinkFactor) }

@@ -36,10 +36,6 @@ struct ColorClashView: View {
         String(format: AppLanguage.localized("guide.colorclash.example %@"), ink.label.lowercased())
     }
 
-    static func score(correct: Int) -> Int {
-        correct * 10
-    }
-
     var body: some View {
         VStack(spacing: 32) {
             LevelExplainBanner(
@@ -158,12 +154,11 @@ struct ColorClashView: View {
 
     private func finish() {
         let elapsed = Int(Date.now.timeIntervalSince(startedAt))
-        let score = Self.score(correct: correct)
         // Completion, never a hit count: Color Clash is error-inducing by
         // design (Stroop), so the warm message celebrates finishing (#45).
         modelContext.record(
             GameSession(
-                gameID: .stroop, score: score,
+                gameID: .stroop,
                 rounds: Self.totalRounds, durationSeconds: elapsed,
                 correct: correct, attempts: Self.totalRounds,
                 difficulty: difficulty))

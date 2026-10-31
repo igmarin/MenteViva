@@ -347,7 +347,7 @@ struct SudokuView: View {
         let blanks = puzzle.solution.count - puzzle.givens.count
         modelContext.record(
             GameSession(
-                gameID: .sudoku, score: correct * 10,
+                gameID: .sudoku,
                 rounds: blanks, durationSeconds: Int(Date.now.timeIntervalSince(startedAt)),
                 correct: correct, attempts: attempts,
                 difficulty: difficulty))
