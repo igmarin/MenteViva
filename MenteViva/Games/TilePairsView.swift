@@ -96,7 +96,10 @@ struct TilePairsView: View {
                                     tileButton(tile, tileSize: tileSize)
                                 }
                             }
-                            .frame(width: boardDims.width, height: boardDims.height)
+                            // Top-leading: the tiles are placed by `.offset`, which does not size the ZStack,
+                            // so a centred frame put the first tile in the middle and pushed the board
+                            // off the right and bottom edges.
+                            .frame(width: boardDims.width, height: boardDims.height, alignment: .topLeading)
                             .frame(minWidth: size.width, minHeight: size.height)
                         }
                         .scrollDisabled(fitsSpace)
