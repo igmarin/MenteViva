@@ -48,6 +48,18 @@ enum ToneSynth {
         }
     }
 
+    /// One pentatonic pitch per Repeat the Sequence tile (C D E G A, then up to G), so any
+    /// order the tiles are played in sounds pleasant and no two tiles share a pitch.
+    static let tilePitches: [Double] = [262, 294, 330, 392, 440, 523, 587, 659, 784]
+
+    /// The note a tile sounds when it lights or is tapped. An index off the board is
+    /// clamped to the nearest tile rather than failing, since this runs during play.
+    /// Amplitude 0.45 plus the second harmonic peaks near 0.54, under `headroom`.
+    static func tileNote(_ index: Int) -> Note {
+        let safe = min(max(index, 0), tilePitches.count - 1)
+        return Note(frequency: tilePitches[safe], duration: 0.28, amplitude: 0.45)
+    }
+
     /// The samples for an event: its notes rendered one after another.
     static func samples(for event: Feedback.Event) -> [Float] {
         render(notes(for: event))

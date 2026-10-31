@@ -387,7 +387,10 @@ nonisolated enum TangramLayout: Equatable, Sendable {
         let rows = max(1, (tiles + columns - 1) / columns)
         let grid = CGFloat(rows) * cell + CGFloat(rows - 1) * cellGap
         let board = rows == 1 ? boardMinimum : boardComfortable
-        if stackedText + board + grid <= area.height { return .grid }
+        // A wrapped grid needs room for the optional level note too; otherwise a row can fit
+        // while the grid pushes the whole page into scrolling. A one-row grid is no taller.
+        let note = rows > 1 ? 60 + partGap : 0
+        if stackedText + board + grid + note <= area.height { return .grid }
         if stackedText + boardMinimum + cell <= area.height || area.height >= area.width { return .row }
         return .sideBySide
     }

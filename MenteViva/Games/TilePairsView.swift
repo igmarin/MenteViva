@@ -29,7 +29,7 @@ struct TilePairsView: View {
         VStack(spacing: 20) {
             LevelExplainBanner(
                 change: PlanStore.cachedPlan()?.changes[GameID.tilePairs], game: GameID.tilePairs,
-                hasStarted: (deal?.attempts ?? 0) > 0)
+                hasStarted: (deal?.attempts ?? 0) > 0, keepsSpace: true)
             Text(AppLanguage.localized("game.tilepairs.instruction"))
                 .font(.title2)
                 .multilineTextAlignment(.center)

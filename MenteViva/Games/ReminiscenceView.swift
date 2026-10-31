@@ -43,6 +43,7 @@ struct ReminiscenceView: View {
                 controls(for: card)
             }
         }
+        .gameColumn()
         .padding()
         .fitOrScroll()
         .gameHeader(.reminiscence, instruction: card.map { AppLanguage.localized($0.promptKey) } ?? "")

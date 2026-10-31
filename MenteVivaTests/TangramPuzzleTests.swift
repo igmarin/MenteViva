@@ -454,6 +454,11 @@ final class TangramPuzzleTests: XCTestCase {
         }
     }
 
+    func testGivenRoomForAGridWithoutTheLevelBannerWhenChoosingLayoutThenTheTraySlides() {
+        // Two tray rows fit at 820pt only if the level explanation is omitted.
+        XCTAssertEqual(TangramLayout.choose(for: CGSize(width: 600, height: 820)), .row)
+    }
+
     func testGivenTheLayoutsWhenTheTrayIsAskedThenOnlyTheGridWraps() {
         XCTAssertFalse(TangramLayout.grid.traySlides)
         XCTAssertTrue(TangramLayout.row.traySlides)
