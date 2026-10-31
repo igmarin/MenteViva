@@ -23,6 +23,27 @@ final class PlayerProfileTests: XCTestCase {
         XCTAssertEqual(ProfileStore.load(defaults: defaults), profile)
     }
 
+    func testGivenSavedProfileWithoutFocusWhenLoadedThenOtherAnswersRemain() {
+        defaults.set(
+            Data(#"{"forWhom":"familyMember","minutesPerDay":15,"startPace":"challenge"}"#.utf8), forKey: ProfileStore.key)
+        XCTAssertEqual(
+            ProfileStore.load(defaults: defaults),
+            PlayerProfile(forWhom: .familyMember, minutesPerDay: 15, startPace: .challenge))
+    }
+
+    func testGivenNullFocusWhenLoadedThenOtherAnswersRemain() {
+        defaults.set(Data(#"{"focus":null,"minutesPerDay":10}"#.utf8), forKey: ProfileStore.key)
+        XCTAssertEqual(ProfileStore.load(defaults: defaults), PlayerProfile(minutesPerDay: 10))
+    }
+
+    func testGivenAnUnknownAnswerValueWhenLoadedThenTheOtherAnswersRemain() {
+        defaults.set(
+            Data(#"{"forWhom":"me","focus":["memory","gone"],"minutesPerDay":10,"startPace":"sprint"}"#.utf8),
+            forKey: ProfileStore.key)
+        XCTAssertEqual(
+            ProfileStore.load(defaults: defaults), PlayerProfile(forWhom: .me, minutesPerDay: 10))
+    }
+
     func testGivenUnreadableDataWhenLoadedThenTheProfileIsEmpty() {
         defaults.set(Data("not a profile".utf8), forKey: ProfileStore.key)
         XCTAssertEqual(ProfileStore.load(defaults: defaults), PlayerProfile())
