@@ -33,7 +33,7 @@ nonisolated struct PlayingCard: Hashable {
     var rankKey: String { "game.upordown.rank.\(rank)" }
 }
 
-/// Up or Down (#180), a golf solitaire: a row of piles of three, an open card and the
+/// Up or Down (#180), a golf solitaire: a row of piles, an open card and the
 /// deck. A pile's top card can be played when it is one higher or one lower than the
 /// open card; suit never matters. Easy deals are checked so they can always be cleared.
 nonisolated struct UpOrDownDeal: Equatable {
@@ -41,33 +41,34 @@ nonisolated struct UpOrDownDeal: Equatable {
     private(set) var open: PlayingCard
     private(set) var deck: [PlayingCard]  // last element = next to turn
     let wraps: Bool
+    /// The initial table count stays fixed as cards leave their piles.
+    let tableCards: Int
 
     /// Narrowest card the player taps, in points (conventions §4), and the space between cards.
     static let minTarget = 60.0
     static let gap = 8.0
-    static let cardsPerPile = 3
     private static let easyTries = 50
 
-    /// One row per level 1...10 (#202): piles, whether King–Ace wraps, and
-    /// whether the deal retries until it can always be cleared. Levels 2/4/6
+    /// One row per level 1...10 (#202): piles, whether King–Ace wraps, whether
+    /// the deal retries until it can always be cleared, and cards per pile. Levels 2/4/6
     /// match old easy/medium/hard (4/5/6 piles, wrapping except hard, retries
     /// only where easy did) so migrated players notice nothing; piles never
     /// shrink, and wrapping and retries never come back once off.
-    static let rulesPerLevel: [(piles: Int, wraps: Bool, clearable: Bool)] = [
-        (3, true, true),
-        (4, true, true),
-        (4, true, true),
-        (5, true, false),
-        (5, true, false),
-        (6, false, false),
-        (6, false, false),
-        (7, false, false),
-        (7, false, false),
-        (7, false, false),
+    static let rulesPerLevel: [(piles: Int, wraps: Bool, clearable: Bool, cardsPerPile: Int)] = [
+        (3, true, true, 3),
+        (4, true, true, 3),
+        (4, true, true, 3),
+        (5, true, false, 3),
+        (5, true, false, 3),
+        (6, false, false, 3),
+        (6, false, false, 3),
+        (7, false, false, 4),
+        (7, false, false, 4),
+        (7, false, false, 4),
     ]
 
     /// The table row for a level.
-    static func rules(for difficulty: Difficulty) -> (piles: Int, wraps: Bool, clearable: Bool) {
+    static func rules(for difficulty: Difficulty) -> (piles: Int, wraps: Bool, clearable: Bool, cardsPerPile: Int) {
         difficulty.values(rulesPerLevel)
     }
 
@@ -83,12 +84,12 @@ nonisolated struct UpOrDownDeal: Equatable {
     ) -> UpOrDownDeal {
         let rules = rules(for: difficulty)
         let count = pileCount(for: difficulty, width: width)
-        var made = deal(piles: count, wraps: rules.wraps, using: &generator)
+        var made = deal(piles: count, wraps: rules.wraps, cardsPerPile: rules.cardsPerPile, using: &generator)
         guard rules.clearable else { return made }
         // Every candidate is checked before it is returned.
         for _ in 0..<easyTries {
             if greedyClears(made) { return made }
-            made = deal(piles: count, wraps: rules.wraps, using: &generator)
+            made = deal(piles: count, wraps: rules.wraps, cardsPerPile: rules.cardsPerPile, using: &generator)
         }
         return made
     }
@@ -130,7 +131,6 @@ nonisolated struct UpOrDownDeal: Equatable {
 
     var isCleared: Bool { piles.allSatisfy(\.isEmpty) }
     var isStuck: Bool { !isCleared && deck.isEmpty && playablePiles.isEmpty }
-    var tableCards: Int { piles.count * Self.cardsPerPile }
     var cardsLeftOnTable: Int { piles.reduce(0) { $0 + $1.count } }
 
     /// Whether this row of piles keeps 60pt cards at `width`. A six-pile row dealt in
@@ -158,12 +158,12 @@ nonisolated struct UpOrDownDeal: Equatable {
     }
 
     private static func deal<G: RandomNumberGenerator>(
-        piles count: Int, wraps: Bool, using generator: inout G
+        piles count: Int, wraps: Bool, cardsPerPile: Int, using generator: inout G
     ) -> UpOrDownDeal {
         var cards = PlayingCard.Suit.allCases.flatMap { suit in (1...13).map { PlayingCard(rank: $0, suit: suit) } }
             .shuffled(using: &generator)
         let piles = (0..<count).map { _ in (0..<cardsPerPile).map { _ in cards.removeLast() } }
         let open = cards.removeLast()
-        return UpOrDownDeal(piles: piles, open: open, deck: cards, wraps: wraps)
+        return UpOrDownDeal(piles: piles, open: open, deck: cards, wraps: wraps, tableCards: count * cardsPerPile)
     }
 }

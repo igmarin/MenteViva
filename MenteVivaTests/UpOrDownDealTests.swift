@@ -68,6 +68,33 @@ final class UpOrDownDealTests: XCTestCase {
         }
     }
 
+    func testGivenLevelsEightToTenWhenDealtThenEachPileHasFourCards() {
+        for level in 8...10 {
+            for width in [Self.iPhoneSE, Self.wide] {
+                let made = deal(Difficulty(level: level), width: width)
+                XCTAssertTrue(made.piles.allSatisfy { $0.count == 4 }, "level \(level), width \(width)")
+                XCTAssertEqual(made.tableCards, made.piles.count * 4)
+                let all = made.piles.flatMap { $0 } + [made.open] + made.deck
+                XCTAssertEqual(all.count, 52)
+                XCTAssertEqual(Set(all).count, 52)
+            }
+        }
+    }
+
+    func testGivenFourCardPilesWhenAFullPileIsPlayedThenRecordedTableCountStaysTheSame() {
+        var made = deal(Difficulty(level: 8))
+        let initialCount = made.tableCards
+        while !made.piles[0].isEmpty {
+            if made.playablePiles.contains(0) {
+                made.play(pile: 0)
+            } else if !made.turn() {
+                break
+            }
+        }
+        XCTAssertTrue(made.piles[0].isEmpty)
+        XCTAssertEqual(made.tableCards, initialCount)
+    }
+
     func testGivenFiftySeedsWhenMakeEasyThenEveryDealGreedyClears() {
         for seed in 1...50 {
             XCTAssertTrue(UpOrDownDeal.greedyClears(deal(Difficulty(level: 2), seed: UInt64(seed))), "seed \(seed)")
@@ -173,6 +200,7 @@ final class UpOrDownDealTests: XCTestCase {
     func testGivenRisingLevelsWhenRulesThenNeverEasier() {
         let rules = (1...10).map { UpOrDownDeal.rules(for: Difficulty(level: $0)) }
         XCTAssertEqual(rules.map(\.piles), [3, 4, 4, 5, 5, 6, 6, 7, 7, 7])
+        XCTAssertEqual(rules.map(\.cardsPerPile), [3, 3, 3, 3, 3, 3, 3, 4, 4, 4])
         for pair in zip(rules, rules.dropFirst()) {
             XCTAssertLessThanOrEqual(pair.0.piles, pair.1.piles)
             // Wrapping and clearability never come back once off.
