@@ -81,6 +81,25 @@ final class GameProgressTests: XCTestCase {
         XCTAssertEqual(p.map(\.previousSessions), [1])
     }
 
+    func testGivenAnyFirstWeekdayWhenSinceOnTheWeeksLastDayThenFirstDayOfLastWeekIsInside() {
+        // My Week fetches from `since`; the longest look-back is the last day of the week.
+        for firstWeekday in [1, 2] {
+            var utc = Calendar(identifier: .gregorian)
+            utc.timeZone = TimeZone(identifier: "UTC")!
+            utc.firstWeekday = firstWeekday
+            let weekStart = utc.dateInterval(of: .weekOfYear, for: now)!.start
+            let lastDay = utc.date(byAdding: .day, value: 6, to: weekStart)!
+            let firstOfLastWeek = utc.date(byAdding: .day, value: -7, to: weekStart)!
+            let since = GameProgress.since(now: lastDay, calendar: utc)
+            XCTAssertEqual(since, firstOfLastWeek)
+            let early = GameSession(gameID: .stroop, score: 0, rounds: 6, durationSeconds: 30)
+            early.playedAt = firstOfLastWeek.addingTimeInterval(60)
+            XCTAssertGreaterThanOrEqual(early.playedAt, since)
+            let p = GameProgress.weekly([early], now: lastDay, calendar: utc)
+            XCTAssertEqual(p.map(\.previousSessions), [1])
+        }
+    }
+
     func testGivenNoSessionsWhenWeeklyThenEmpty() {
         XCTAssertEqual(weekly([]), [])
     }

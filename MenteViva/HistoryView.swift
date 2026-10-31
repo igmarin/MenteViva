@@ -53,11 +53,7 @@ struct HistoryView: View {
             }
         }
         .pageBackground()
-        .task {
-            let today = Calendar.current.startOfDay(for: .now)
-            let start = Calendar.current.date(byAdding: .day, value: -14, to: today) ?? .distantPast
-            sessions = modelContext.sessions(since: start)
-        }
+        .task { sessions = modelContext.sessions(since: GameProgress.since()) }
         .navigationTitle(AppLanguage.localized("history.title"))
         .toolbar {
             if snapshot.weekCount > 0 {

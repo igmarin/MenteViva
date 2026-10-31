@@ -44,7 +44,8 @@ enum FamilyPhotoImport {
     /// Loads each photo the picker handed over and shrinks it before asking for the next, so only
     /// one original is in memory at a time (#417), all off the main actor. Returns what happened
     /// and the new photos, oldest first, so the first run can ask for each one's name in the
-    /// order they were picked; nil when the task was cancelled mid-pick. `load` is a parameter so
+    /// order they were picked; nil when the task was cancelled mid-pick (photos stored before the cancel are kept and go
+    /// unnamed until Set up). `load` is a parameter so
     /// a test can stand in for the picker.
     static func run<Item>(
         _ items: [Item], folder: URL = MemoryPhotos.folder, load: (Item) async -> Data?
