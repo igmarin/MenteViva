@@ -47,7 +47,19 @@ struct CategoryFluencyView: View {
         return hasNextRound ? .showBeatThenNextCategory : .showBeatThenFinish
     }
 
-    private let columns = [GridItem(.adaptive(minimum: 100), spacing: 16)]
+    /// Picture and its margin inside the tile (#413). Both grow with the text; the tick below stops
+    /// growing at xxxLarge, so the margin outpaces it and the tick keeps off the picture.
+    @ScaledMetric(relativeTo: .title2) private var pictureSize: CGFloat = 72
+    @ScaledMetric(relativeTo: .title2) private var pictureMargin: CGFloat = 14
+
+    /// Columns are as narrow as the picture and its margin allow (100pt at the default size).
+    private var columns: [GridItem] {
+        [
+            GridItem(
+                .adaptive(minimum: PictureView.columnMinimum(picture: pictureSize, margin: pictureMargin)),
+                spacing: 16)
+        ]
+    }
 
     /// The round being played, or nil once the session ends. Body reads this
     /// instead of indexing the deal: a counter that runs one past the end used
@@ -89,7 +101,8 @@ struct CategoryFluencyView: View {
                             Button {
                                 tap(tile.id)
                             } label: {
-                                PictureView(picture: tile.picture, size: 52)
+                                PictureView(picture: tile.picture, size: pictureSize)
+                                    .padding(pictureMargin)
                             }
                             .buttonStyle(
                                 AnswerTileStyle(strength: tile.isPicked ? 0.32 : 0.12, minHeight: 100)
@@ -97,7 +110,11 @@ struct CategoryFluencyView: View {
                             // Non-color cue: picked tiles get a visible checkmark,
                             // not just a stronger tint (WCAG 1.4.1, conventions.md §4).
                             .overlay(alignment: .topTrailing) {
-                                if tile.isPicked { CheckBadge() }
+                                // Hangs 12pt over the tile's corner so the tick never covers the picture, and
+                                // stops growing at xxxLarge so it stays inside the screen's 16pt edge (#413).
+                                if tile.isPicked {
+                                    CheckBadge().dynamicTypeSize(...DynamicTypeSize.xxxLarge).offset(x: 12, y: -12)
+                                }
                             }
                             .modifier(
                                 MissCue(

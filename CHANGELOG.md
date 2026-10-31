@@ -4,6 +4,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 
 ## [Unreleased]
 
+### Changed
+- **Bigger pictures in Name the Herd and Quick Eyes (#413):** Name the Herd pictures grow from 52 to 72, Quick Eyes choices from 56 to 84, the Quick Eyes picture from 120 to up to 240 (a little over half the screen width on a phone) and the look-again picture from 72 to 96. They grow with the text size too, and the tick in Name the Herd now sits on the tile's corner so it never covers a picture.
+
 ### Fixed
 - **VoiceOver reads the next question (#391):** in Number Trail, Finish the Saying and Remember Together, moving on now reads the new sum, the start of the new saying, or the new "Who is this?" prompt, so nobody has to swipe around to find it. Nothing changes with VoiceOver off.
 - **My Week names its days in the app's language (#407):** with Spanish picked on an English phone (or English on a Spanish one), earlier days now read "miércoles, 28 de octubre" instead of "Wednesday, October 28", and VoiceOver reads the same words. "Today" and "Yesterday" are unchanged.
