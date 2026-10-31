@@ -27,8 +27,9 @@ struct RepeatSequenceView: View {
             }
         }
 
-        /// White on every tile but the light mustard one, which takes espresso to stay readable.
-        var symbolColor: Color { self == .square ? Color.espresso : .white }
+        /// White on every tile but the light mustard one, which takes `onAmber`: espresso that stays
+        /// dark in dark mode too (`Color.espresso` turns cream there, unreadable on mustard).
+        var symbolColor: Color { self == .square ? Color.onAmber : .white }
 
         private static func fixed(_ rgb: UInt32) -> Color { Color(light: rgb, dark: rgb) }
 
