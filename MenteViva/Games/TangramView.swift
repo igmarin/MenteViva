@@ -8,7 +8,6 @@ import SwiftUI
 /// drawing. A tile that doesn't fit goes back to the tray with a warm hint. Fully offline.
 struct TangramView: View {
     @Environment(\.modelContext) private var modelContext
-    @Environment(\.horizontalSizeClass) private var sizeClass
 
     /// The screen's coordinate space: a tray drag ends in it, so the drop reads as a board point.
     private static let space = "tangram.table"
@@ -28,49 +27,100 @@ struct TangramView: View {
     @State private var startedAt = Date.now
     @State private var showCelebration = false
     @State private var finalDetail = ""
+    /// The space the game gets, measured: it picks the layout (`TangramLayout`).
+    @State private var area = CGSize.zero
 
     private var shape: TangramShape { puzzle.shape }
     private var rules: TangramRules { puzzle.rules }
+    private var layout: TangramLayout { TangramLayout.choose(for: area) }
 
     var body: some View {
-        VStack(spacing: 16) {
-            LevelExplainBanner(
-                change: PlanStore.cachedPlan()?.changes[GameID.tangram], game: GameID.tangram,
-                hasStarted: puzzle.attempts > 0, keepsSpace: true)
-            Text(AppLanguage.localized("game.tangram.instruction"))
-                .font(.title2)
-                .multilineTextAlignment(.center)
-
-            GeometryReader { geometry in
-                board(size: geometry.size)
+        table
+            .padding(.horizontal, TangramLayout.padding)
+            .padding(.vertical, layout == .sideBySide ? TangramLayout.cellGap / 2 : TangramLayout.padding)
+            .coordinateSpace(.named(Self.space))
+            .fitOrScroll()
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .onGeometryChange(for: CGSize.self) {
+                $0.size
+            } action: {
+                area = $0
             }
-            .frame(minHeight: 280)
-            .onGeometryChange(for: CGRect.self) {
-                $0.frame(in: .named(Self.space))
-            } action: { frame in
-                boardFrame = frame
-            }
-            .modifier(MissCue(active: $missed))
+            .gameHeader(.tangram, instruction: AppLanguage.localized("game.tangram.instruction"))
+            .onAppear(perform: deal)
+            .onDisappear { CaptionSpeaker.stop() }
+            .celebration(isPresented: $showCelebration, game: .tangram, detail: finalDetail, onPlayAgain: deal)
+    }
 
-            if let hint {
-                Text(hint)
-                    .font(.title2)
-                    .multilineTextAlignment(.center)
+    /// Stacked on an iPad or an upright iPhone; on an iPhone on its side the board takes the left
+    /// half and the rest stands beside it, since the stack is taller than the screen there. Side by
+    /// side the gaps and the top and bottom padding are halved: an iPhone SE on its side leaves
+    /// about 300pt, and the hint, buttons and tray need 272pt of it.
+    @ViewBuilder private var table: some View {
+        let gap = TangramLayout.partGap
+        if layout == .sideBySide {
+            HStack(spacing: gap) {
+                VStack(spacing: gap / 2) {
+                    banner
+                    instruction
+                    boardArea
+                }
+                VStack(spacing: TangramLayout.cellGap / 1.5) {
+                    hintLine
+                    controls
+                    tray
+                }
             }
-
-            controls
-            tray
+        } else {
+            VStack(spacing: gap) {
+                banner
+                instruction
+                boardArea
+                hintLine
+                controls
+                tray
+            }
         }
-        .padding()
-        .coordinateSpace(.named(Self.space))
-        .fitOrScroll()
-        .gameHeader(.tangram, instruction: AppLanguage.localized("game.tangram.instruction"))
-        .onAppear(perform: deal)
-        .onDisappear { CaptionSpeaker.stop() }
-        .celebration(isPresented: $showCelebration, game: .tangram, detail: finalDetail, onPlayAgain: deal)
+    }
+
+    private var banner: some View {
+        LevelExplainBanner(
+            change: PlanStore.cachedPlan()?.changes[GameID.tangram], game: GameID.tangram,
+            hasStarted: puzzle.attempts > 0, keepsSpace: true)
+    }
+
+    private var instruction: some View {
+        Text(AppLanguage.localized("game.tangram.instruction"))
+            .font(.title2)
+            .multilineTextAlignment(.center)
+    }
+
+    /// The hint's two lines are kept even while it is empty, so a miss never makes the page taller:
+    /// on a small iPhone that pushed the page into scrolling and sent the tray back to its first tile.
+    private var hintLine: some View {
+        ZStack {
+            Text(verbatim: " \n ").hidden()
+            if let hint { Text(hint) }
+        }
+        .font(.title2)
+        .multilineTextAlignment(.center)
+        .frame(maxWidth: .infinity)
     }
 
     // MARK: - Board
+
+    private var boardArea: some View {
+        GeometryReader { geometry in
+            board(size: geometry.size)
+        }
+        .frame(minHeight: TangramLayout.boardMinimum)
+        .onGeometryChange(for: CGRect.self) {
+            $0.frame(in: .named(Self.space))
+        } action: { frame in
+            boardFrame = frame
+        }
+        .modifier(MissCue(active: $missed))
+    }
 
     /// The silhouette and the slots already home. A free slot shows its own outline while the
     /// level gives it; a filled one is drawn solid with a dark edge. One tap handler reads the point.
@@ -86,11 +136,14 @@ struct TangramView: View {
         .onTapGesture { point in
             tapBoard(at: TangramPuzzle.fromScreen(point, scale: fit.scale, origin: fit.origin), scale: fit.scale)
         }
-        // The iPhone tray's tiles arrive by system drag (see `TrayDrag`), carrying their slot.
+        // A sliding tray's tiles arrive by system drag (see `withDrag`), carrying their slot. Only a
+        // tile that went home counts as dropped; after a miss the system sends it back to the tray.
         .dropDestination(for: String.self) { items, point in
             guard let slot = items.first.flatMap({ Int($0) }), puzzle.freeSlots.contains(slot) else { return false }
-            place(slot, at: TangramPuzzle.fromScreen(point, scale: fit.scale, origin: fit.origin), scale: fit.scale)
-            return true
+            let result = place(
+                slot, at: TangramPuzzle.fromScreen(point, scale: fit.scale, origin: fit.origin), scale: fit.scale)
+            if case .snapped = result { return true }
+            return false
         }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(
@@ -146,38 +199,41 @@ struct TangramView: View {
     // MARK: - Tray
 
     /// One 100pt cell per tile still to place. Tapping selects (a thick edge, not colour, marks it);
-    /// dragging drops it on the board; VoiceOver lists the slots it fits as actions. On iPad the
-    /// cells wrap in a grid. On iPhone they sit in one row that scrolls sideways (#396): two or
-    /// three wrapped rows pushed the whole page into scrolling. At 12pt apart a fourth tile peeks
-    /// in at the edge, so there is plainly more; VoiceOver reads the tiles in the same order.
+    /// dragging drops it on the board; VoiceOver lists the slots it fits as actions. Where there is
+    /// room (a full-screen iPad) the cells wrap in a grid. Elsewhere they sit in one row that
+    /// scrolls sideways (#396): two or three wrapped rows pushed the whole page into scrolling. At
+    /// 12pt apart a fourth tile peeks in at the edge, so there is plainly more; VoiceOver reads the
+    /// tiles in the same order.
     @ViewBuilder private var tray: some View {
-        if sizeClass == .compact {
+        let gap = TangramLayout.cellGap
+        if layout.traySlides {
             ScrollView(.horizontal) {
-                LazyHStack(spacing: 12) { trayTiles }
+                LazyHStack(spacing: gap) { trayTiles }
             }
-            .frame(height: 100)
+            .frame(height: TangramLayout.cell)
             .scrollIndicators(.visible)
         } else {
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: 100), spacing: 12)], spacing: 12) {
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: TangramLayout.cell), spacing: gap)], spacing: gap) {
                 trayTiles
             }
         }
     }
 
     private var trayTiles: some View {
-        ForEach(puzzle.freeSlots, id: \.self) { slot in
-            trayTile(slot)
+        let scale = TangramPuzzle.trayScale(for: puzzle.freeSlots.map { shape.placements[$0].piece })
+        return ForEach(puzzle.freeSlots, id: \.self) { slot in
+            trayTile(slot, scale: scale)
         }
     }
 
-    private func trayTile(_ slot: Int) -> some View {
+    private func trayTile(_ slot: Int, scale: Double) -> some View {
         let tile = orientation(of: slot)
         let isSelected = selected == slot
-        return Button {
+        let button = Button {
             selected = isSelected ? nil : slot
             hint = nil
         } label: {
-            Self.drawing(of: tile)
+            Self.drawing(of: tile, scale: scale)
                 .frame(width: 100, height: 100)
                 .background(Color.paper, in: .rect(cornerRadius: 16))
                 .overlay {
@@ -188,35 +244,45 @@ struct TangramView: View {
                 }
         }
         .buttonStyle(.plain)
-        .modifier(TrayDrag(compact: sizeClass == .compact, slot: slot, preview: Self.drawing(of: tile)))
-        .offset(dragged == slot ? dragOffset : .zero)
-        .zIndex(dragged == slot ? 1 : 0)
-        .simultaneousGesture(
-            DragGesture(minimumDistance: 10, coordinateSpace: .named(Self.space))
-                .onChanged { value in
-                    dragged = slot
-                    dragOffset = value.translation
+        return withDrag(button, slot: slot, preview: Self.drawing(of: tile, scale: scale))
+            .accessibilityLabel(AppLanguage.localized(tile.piece.nameKey))
+            .accessibilityAddTraits(isSelected ? .isSelected : [])
+            .accessibilityActions {
+                ForEach(puzzle.fittingSlots(for: tile.piece), id: \.self) { target in
+                    Button(slotActionName(target)) { placeByName(slot, into: target) }
                 }
-                .onEnded { value in
-                    dragged = nil
-                    dragOffset = .zero
-                    drop(slot, at: value.location)
-                },
-            including: sizeClass == .compact ? .subviews : .all
-        )
-        .accessibilityLabel(AppLanguage.localized(tile.piece.nameKey))
-        .accessibilityAddTraits(isSelected ? .isSelected : [])
-        .accessibilityActions {
-            ForEach(puzzle.fittingSlots(for: tile.piece), id: \.self) { target in
-                Button(slotActionName(target)) { placeByName(slot, into: target) }
             }
+    }
+
+    /// One drag path per tray. A sliding row hands its tile to the system drag, which lifts it after
+    /// a press and leaves swipes to the scroll: any SwiftUI gesture on a tile, even one that waited
+    /// for a hold, took every swipe and the row never scrolled (#396). The grid doesn't scroll, so
+    /// its tile follows the finger and drops where the drag ends.
+    @ViewBuilder private func withDrag(_ tile: some View, slot: Int, preview: some View) -> some View {
+        if layout.traySlides {
+            tile.draggable(String(slot)) { preview.frame(width: 100, height: 100) }
+        } else {
+            tile
+                .offset(dragged == slot ? dragOffset : .zero)
+                .zIndex(dragged == slot ? 1 : 0)
+                .simultaneousGesture(
+                    DragGesture(minimumDistance: 10, coordinateSpace: .named(Self.space))
+                        .onChanged { value in
+                            dragged = slot
+                            dragOffset = value.translation
+                        }
+                        .onEnded { value in
+                            dragged = nil
+                            dragOffset = .zero
+                            drop(slot, at: value.location)
+                        })
         }
     }
 
     /// A tray tile drawn turned and mirrored as it is now, at the tray's one shared scale.
-    private static func drawing(of tile: TangramPlacement) -> some View {
+    private static func drawing(of tile: TangramPlacement, scale: Double) -> some View {
         var path = Path()
-        path.addLines(TangramPuzzle.trayPoints(of: tile))
+        path.addLines(TangramPuzzle.trayPoints(of: tile, scale: scale))
         path.closeSubpath()
         return path.fill(GameID.tangram.ink.opacity(0.55))
     }
@@ -257,13 +323,14 @@ struct TangramView: View {
     /// `scale` is the board's points per unit. Every slot takes a tap or drop within 30pt of its
     /// middle, a 60pt target (#396): on an iPhone board a small tile's own share of reach is
     /// under 30pt. On an iPad-sized board the share is usually wider already and stays as it was.
-    private func place(_ slot: Int, at point: CGPoint, scale: CGFloat) {
+    @discardableResult
+    private func place(_ slot: Int, at point: CGPoint, scale: CGFloat) -> TangramPlaceResult {
         let tile = orientation(of: slot)
-        respond(
-            to: puzzle.place(
-                tile.piece, at: point, rotation: tile.rotation, flipped: tile.flipped,
-                minimumReach: Double(30 / scale)),
-            from: slot)
+        let result = puzzle.place(
+            tile.piece, at: point, rotation: tile.rotation, flipped: tile.flipped,
+            minimumReach: TangramPuzzle.reachFloor(points: 30, scale: scale))
+        respond(to: result, from: slot)
+        return result
     }
 
     private func placeByName(_ slot: Int, into target: Int) {
@@ -349,24 +416,6 @@ struct TangramView: View {
     /// Progress, never points: a full round starts at 140 and each miss costs 5.
     static func score(misses: Int) -> Int {
         max(10, 140 - misses * 5)
-    }
-}
-
-/// How an iPhone tray tile travels to the board (#396). Any SwiftUI gesture on a tile, even one
-/// that waits for a hold, took every swipe and the sideways tray never scrolled. The system drag
-/// lifts a tile after a press and leaves swipes to the scroll; the board's `dropDestination`
-/// reads the slot it carries. On iPad the grid keeps its own drag gesture, so this does nothing.
-private struct TrayDrag<Preview: View>: ViewModifier {
-    let compact: Bool
-    let slot: Int
-    let preview: Preview
-
-    func body(content: Content) -> some View {
-        if compact {
-            content.draggable(String(slot)) { preview.frame(width: 100, height: 100) }
-        } else {
-            content
-        }
     }
 }
 
