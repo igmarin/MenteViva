@@ -143,8 +143,7 @@ struct TilePairsView: View {
         .frame(width: tileSize, height: tileSize)
     }
 
-    /// Tile face: paper card with the 18 symbols drawn in code, game ink on a
-    /// paper background. Covered tiles are dimmed and hatched so free vs covered
+    /// Tile face: paper card with one of our illustrations (#411). Covered tiles are dimmed and hatched so free vs covered
     /// never relies on colour alone (WCAG 1.4.1).
     private func tileFace(
         _ tile: TilePairsTile, size: CGFloat, free: Bool, selected: Bool, highlighted: Bool
@@ -154,10 +153,10 @@ struct TilePairsView: View {
                 .fill(Color.paper)
             RoundedRectangle(cornerRadius: 10)
                 .strokeBorder(
-                    highlighted ? Color.amber : (selected ? GameID.tilePairs.ink : Color.secondary.opacity(0.4)),
+                    highlighted ? Color.amber : (selected ? GameID.tilePairs.ink : Color.espresso),
                     lineWidth: selected || highlighted ? 5 : 1.5
                 )
-            symbolView(tile.symbol, size: size)
+            PictureView(picture: tile.symbol.picture, size: size * 0.68)
                 .opacity(free ? 1 : 0.55)
             if !free {
                 // Covered pattern: diagonal hatching over a soft dim.
@@ -169,73 +168,9 @@ struct TilePairsView: View {
         .opacity(free ? 1 : 0.7)
     }
 
-    @ViewBuilder
-    private func symbolView(_ symbol: TilePairsSymbol, size: CGFloat) -> some View {
-        let ink = GameID.tilePairs.ink
-        let iconSize = size * 0.52
-        switch symbol {
-        case .circle:
-            Circle().fill(ink).frame(width: iconSize, height: iconSize)
-        case .square:
-            RoundedRectangle(cornerRadius: 4).fill(ink).frame(width: iconSize, height: iconSize)
-        case .triangle:
-            TriangleShape().fill(ink).frame(width: iconSize, height: iconSize)
-        case .diamond:
-            DiamondShape().fill(ink).frame(width: iconSize * 0.7, height: iconSize * 0.7)
-        case .star:
-            Image(systemName: "star.fill").font(.system(size: iconSize * 0.85, weight: .bold)).foregroundStyle(ink)
-        case .heart:
-            Image(systemName: "heart.fill").font(.system(size: iconSize * 0.85)).foregroundStyle(ink)
-        case .number1:
-            Text("1").font(.system(size: iconSize, weight: .heavy, design: .rounded)).foregroundStyle(ink)
-        case .number2:
-            Text("2").font(.system(size: iconSize, weight: .heavy, design: .rounded)).foregroundStyle(ink)
-        case .number3:
-            Text("3").font(.system(size: iconSize, weight: .heavy, design: .rounded)).foregroundStyle(ink)
-        case .number4:
-            Text("4").font(.system(size: iconSize, weight: .heavy, design: .rounded)).foregroundStyle(ink)
-        case .number5:
-            Text("5").font(.system(size: iconSize, weight: .heavy, design: .rounded)).foregroundStyle(ink)
-        case .number6:
-            Text("6").font(.system(size: iconSize, weight: .heavy, design: .rounded)).foregroundStyle(ink)
-        case .number7:
-            Text("7").font(.system(size: iconSize, weight: .heavy, design: .rounded)).foregroundStyle(ink)
-        case .number8:
-            Text("8").font(.system(size: iconSize, weight: .heavy, design: .rounded)).foregroundStyle(ink)
-        case .number9:
-            Text("9").font(.system(size: iconSize, weight: .heavy, design: .rounded)).foregroundStyle(ink)
-        case .leaf:
-            Image(systemName: "leaf.fill").font(.system(size: iconSize * 0.9)).foregroundStyle(ink)
-        case .sun:
-            Image(systemName: "sun.max.fill").font(.system(size: iconSize * 0.9)).foregroundStyle(ink)
-        case .flower:
-            Image(systemName: "apple.meditate").font(.system(size: iconSize * 0.85)).foregroundStyle(ink)
-                .accessibilityHidden(true)
-        }
-    }
-
-    /// VoiceOver label for the symbol: "number 7", "leaf", etc.
+    /// VoiceOver label for a symbol: its picture's name in the app language ("Apple", "Manzana").
     private func symbolLabel(_ symbol: TilePairsSymbol) -> String {
-        switch symbol {
-        case .circle: AppLanguage.localized("game.tilepairs.symbol.circle")
-        case .square: AppLanguage.localized("game.tilepairs.symbol.square")
-        case .triangle: AppLanguage.localized("game.tilepairs.symbol.triangle")
-        case .diamond: AppLanguage.localized("game.tilepairs.symbol.diamond")
-        case .star: AppLanguage.localized("game.tilepairs.symbol.star")
-        case .heart: AppLanguage.localized("game.tilepairs.symbol.heart")
-        case .number1: String(format: AppLanguage.localized("game.tilepairs.symbol.number %@"), "1")
-        case .number2: String(format: AppLanguage.localized("game.tilepairs.symbol.number %@"), "2")
-        case .number3: String(format: AppLanguage.localized("game.tilepairs.symbol.number %@"), "3")
-        case .number4: String(format: AppLanguage.localized("game.tilepairs.symbol.number %@"), "4")
-        case .number5: String(format: AppLanguage.localized("game.tilepairs.symbol.number %@"), "5")
-        case .number6: String(format: AppLanguage.localized("game.tilepairs.symbol.number %@"), "6")
-        case .number7: String(format: AppLanguage.localized("game.tilepairs.symbol.number %@"), "7")
-        case .number8: String(format: AppLanguage.localized("game.tilepairs.symbol.number %@"), "8")
-        case .number9: String(format: AppLanguage.localized("game.tilepairs.symbol.number %@"), "9")
-        case .leaf: AppLanguage.localized("game.tilepairs.symbol.leaf")
-        case .sun: AppLanguage.localized("game.tilepairs.symbol.sun")
-        case .flower: AppLanguage.localized("game.tilepairs.symbol.flower")
-        }
+        AppLanguage.localized(symbol.picture.nameKey)
     }
 
     // MARK: - Layout
@@ -401,31 +336,6 @@ struct TilePairsView: View {
                 difficulty: difficulty))
         finalDetail = AppLanguage.localized("game.celebration.table")
         showCelebration = true
-    }
-}
-
-// MARK: - Shapes drawn in code (no copied art)
-
-private struct TriangleShape: Shape {
-    func path(in rect: CGRect) -> Path {
-        var p = Path()
-        p.move(to: CGPoint(x: rect.midX, y: rect.minY))
-        p.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
-        p.addLine(to: CGPoint(x: rect.minX, y: rect.maxY))
-        p.closeSubpath()
-        return p
-    }
-}
-
-private struct DiamondShape: Shape {
-    func path(in rect: CGRect) -> Path {
-        var p = Path()
-        p.move(to: CGPoint(x: rect.midX, y: rect.minY))
-        p.addLine(to: CGPoint(x: rect.maxX, y: rect.midY))
-        p.addLine(to: CGPoint(x: rect.midX, y: rect.maxY))
-        p.addLine(to: CGPoint(x: rect.minX, y: rect.midY))
-        p.closeSubpath()
-        return p
     }
 }
 

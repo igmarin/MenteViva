@@ -193,4 +193,23 @@ final class TilePairsDealTests: XCTestCase {
         XCTAssertEqual(deal.pick(0, after: 1, lifting: false), .covered)
         XCTAssertEqual(deal.attempts, 0)
     }
+
+    // MARK: Pictures on the tiles (#411)
+
+    func testGivenEverySymbolWhenPictureThenSlugsAreDistinctAndInCatalogue() {
+        let pictures = TilePairsSymbol.allCases.map(\.picture)
+        XCTAssertEqual(pictures.count, 18)
+        XCTAssertEqual(Set(pictures.map(\.slug)).count, 18, "two symbols share one picture")
+        XCTAssertTrue(Set(pictures).isSubset(of: Set(GamePictures.all)))
+    }
+
+    func testGivenEverySymbolWhenPictureThenAssetExists() {
+        // An emoji fallback would draw a different face per iOS version; every tile ships real art.
+        for symbol in TilePairsSymbol.allCases {
+            let picture = symbol.picture
+            XCTAssertEqual(
+                picture.look(hasAsset: PictureView.bundleHasAsset), .asset(picture.assetName),
+                "\(symbol) has no asset \(picture.assetName)")
+        }
+    }
 }
