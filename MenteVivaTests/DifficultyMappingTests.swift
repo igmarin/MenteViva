@@ -63,13 +63,13 @@ final class DifficultyMappingTests: XCTestCase {
     // MARK: Quick Eyes levels 1–10 (#200)
 
     func testGivenLevelsTwoFourSixWhenDisplayTimesThenMatchesOldEasyMediumHard() {
-        let times = [2, 4, 6].map { QuickEyesView.displayTimes(for: Difficulty(level: $0)) }
+        let times = [2, 4, 6].map { QuickEyesRun.displayTimes(for: Difficulty(level: $0)) }
         XCTAssertEqual(times.map(\.start), [1.6, 1.2, 1.0])
         XCTAssertEqual(times.map(\.floor), [0.8, 0.35, 0.25])
     }
 
     func testGivenRisingLevelsWhenDisplayTimesThenNeverSlower() {
-        let times = (1...10).map { QuickEyesView.displayTimes(for: Difficulty(level: $0)) }
+        let times = (1...10).map { QuickEyesRun.displayTimes(for: Difficulty(level: $0)) }
         for (lower, higher) in zip(times, times.dropFirst()) {
             XCTAssertLessThanOrEqual(higher.start, lower.start)
             XCTAssertLessThanOrEqual(higher.floor, lower.floor)
