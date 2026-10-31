@@ -141,7 +141,8 @@ struct HistoryView: View {
     /// One row per day (#140): the day, then one chip per game with its count.
     /// The chips sit side by side while they fit and stack at large text sizes.
     private func dayRow(_ tally: DayTally) -> some View {
-        let title = dayTitle(tally.day)
+        // One title for the text and the VoiceOver label, in the app's language, not the device's (#407).
+        let title = DayGrouping.dayTitle(tally.day, locale: AppLanguage.currentLocale)
         let chips = ForEach(tally.games, id: \.game) { gameChip($0) }
         return VStack(alignment: .leading, spacing: 12) {
             Text(title)
@@ -232,18 +233,6 @@ struct HistoryView: View {
             .font(.title2)
             .multilineTextAlignment(.center)
             .padding(.horizontal, 32)
-    }
-
-    // MARK: - Helpers
-
-    private func dayTitle(_ day: Date) -> String {
-        if Calendar.current.isDateInToday(day) {
-            return AppLanguage.localized("history.today")
-        }
-        if Calendar.current.isDateInYesterday(day) {
-            return AppLanguage.localized("history.yesterday")
-        }
-        return day.formatted(.dateTime.weekday(.wide).day().month(.wide))
     }
 }
 
