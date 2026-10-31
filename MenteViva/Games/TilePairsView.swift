@@ -143,8 +143,8 @@ struct TilePairsView: View {
         .frame(width: tileSize, height: tileSize)
     }
 
-    /// Tile face: paper card with one of our illustrations (#411). Covered tiles are dimmed and hatched so free vs covered
-    /// never relies on colour alone (WCAG 1.4.1).
+    /// Tile face: paper card with one of our illustrations (#411). Covered tiles are dimmed and
+    /// hatched so free vs covered never relies on colour alone (WCAG 1.4.1).
     private func tileFace(
         _ tile: TilePairsTile, size: CGFloat, free: Bool, selected: Bool, highlighted: Bool
     ) -> some View {

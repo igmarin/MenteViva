@@ -8,7 +8,7 @@ import Foundation
 nonisolated enum TodayShare {
     /// `localize` and `locale` come in so a test (or a language change) controls the words.
     static func text(
-        games: [GameID], date: Date, locale: Locale = AppLanguage.currentLocale,
+        games: [GameID], date: Date, locale: Locale,
         localize: (String.LocalizationValue) -> String
     ) -> String {
         let day = date.formatted(.dateTime.weekday(.wide).day().month(.wide).locale(locale))
