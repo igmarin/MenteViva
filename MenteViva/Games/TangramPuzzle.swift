@@ -258,6 +258,12 @@ nonisolated struct TangramPuzzle: Sendable {
         CGPoint(x: (point.x - origin.x) / scale, y: (origin.y - point.y) / scale)
     }
 
+    /// Where a grid tray tile lands (#415): its cell's middle moved by the drag, so a tile held by
+    /// its corner drops where the tile is drawn, not under the finger. Both in one coordinate space.
+    static func dropPoint(cell: CGRect, translation: CGSize) -> CGPoint {
+        CGPoint(x: cell.midX + translation.width, y: cell.midY + translation.height)
+    }
+
     /// The view's 60pt target as a reach in authoring units (#396): `points` from a slot's middle
     /// on a board of `size` showing `shape`. No cap: on an iPhone SE the tall figures draw at under
     /// 10pt per unit, where a large tile's own share is only about 27pt (#481). A board with no size

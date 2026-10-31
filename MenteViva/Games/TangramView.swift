@@ -23,11 +23,15 @@ struct TangramView: View {
     /// cancels (Control Center, an alert, a resize) drops back to nil with no `onEnded` needed (#481).
     @GestureState private var grab: TrayGrab?
     @State private var boardFrame = CGRect.zero
+    /// Each grid tray cell where it rests, in the table's space: a drop lands at the tile's middle.
+    @State private var trayFrames: [Int: CGRect] = [:]
     @State private var hint: String?
     @State private var missed = false
     @State private var startedAt = Date.now
     @State private var showCelebration = false
     @State private var finalDetail = ""
+    /// The beat between the whole figure and the celebration (#415); cancelled on leaving and on a deal.
+    @State private var finishTask: Task<Void, Never>?
     /// The space the game gets, measured: it picks the layout (`TangramLayout`).
     @State private var area = CGSize.zero
     @Environment(\.dynamicTypeSize) private var typeSize
@@ -51,7 +55,10 @@ struct TangramView: View {
             } action: {
                 area = $0
             }
-            .leaveGuard(inProgress: puzzle.attempts > 0 || !turns.isEmpty, celebrating: showCelebration)
+            // A whole figure is recorded already, so leaving in the beat before the cover never asks.
+            .leaveGuard(
+                inProgress: puzzle.attempts > 0 || !turns.isEmpty, celebrating: showCelebration || puzzle.isComplete
+            )
             .gameHeader(.tangram, instruction: AppLanguage.localized("game.tangram.instruction"))
             .firstPlayGuide(
                 .tangram, line: AppLanguage.localized("game.tangram.guide"),
@@ -59,7 +66,11 @@ struct TangramView: View {
             )
             // Not when the celebration closes: Play again has dealt already (#415).
             .onAppear { if seen.isEmpty { deal() } }
-            .onDisappear { CaptionSpeaker.stop() }
+            .onDisappear {
+                CaptionSpeaker.stop()
+                finishTask?.cancel()
+                finishTask = nil
+            }
             .celebration(isPresented: $showCelebration, game: .tangram, detail: finalDetail, onPlayAgain: deal)
     }
 
@@ -300,7 +311,7 @@ struct TangramView: View {
     /// One drag path per tray. A sliding row hands its tile to the system drag, which lifts it after
     /// a press and leaves swipes to the scroll: any SwiftUI gesture on a tile, even one that waited
     /// for a hold, took every swipe and the row never scrolled (#396). The grid doesn't scroll, so
-    /// its tile follows the finger and drops where the drag ends.
+    /// its tile follows the finger and drops where the tile's middle is when the drag ends (#415).
     @ViewBuilder private func withDrag(_ tile: some View, slot: Int, preview: some View) -> some View {
         if layout.traySlides {
             tile.draggable(String(slot)) { preview.frame(width: 100, height: 100) }
@@ -308,13 +319,23 @@ struct TangramView: View {
             tile
                 .offset(grab?.slot == slot ? grab?.offset ?? .zero : .zero)
                 .zIndex(grab?.slot == slot ? 1 : 0)
+                // Read outside the offset, so this is the cell, not where the tile is being carried.
+                .onGeometryChange(for: CGRect.self) {
+                    $0.frame(in: .named(Self.space))
+                } action: { frame in
+                    trayFrames[slot] = frame
+                }
                 .simultaneousGesture(
                     DragGesture(minimumDistance: 10, coordinateSpace: .named(Self.space))
                         .updating($grab) { value, state, _ in
                             state = TrayGrab(slot: slot, offset: value.translation)
                         }
                         .onEnded { value in
-                            drop(slot, at: value.location)
+                            let cell = trayFrames[slot]
+                            drop(
+                                slot,
+                                at: cell.map { TangramPuzzle.dropPoint(cell: $0, translation: value.translation) }
+                                    ?? value.location)
                         })
         }
     }
@@ -425,6 +446,8 @@ struct TangramView: View {
     }
 
     private func deal() {
+        finishTask?.cancel()
+        finishTask = nil
         difficulty = Difficulty.stored(.tangram)
         var generator = SystemRandomNumberGenerator()
         let next = TangramPuzzle.pick(from: TangramShapes.all, seen: seen, using: &generator)
@@ -437,7 +460,8 @@ struct TangramView: View {
         startedAt = .now
     }
 
-    /// The whole figure, named on screen and aloud, then the shared celebration.
+    /// The whole figure, recorded and named aloud at once, then seen for a beat before the shared
+    /// celebration (#415): the cover used to rise in the same frame and hide the finished figure.
     private func finish() {
         let elapsed = Int(Date.now.timeIntervalSince(startedAt))
         modelContext.record(
@@ -448,7 +472,8 @@ struct TangramView: View {
         finalDetail = AppLanguage.localized(shape.key)
         if CaptionSpeaker.autoSpeaks() { CaptionSpeaker.speak(finalDetail) }
         AccessibilityNotification.Announcement(finalDetail).post()
-        showCelebration = true
+        finishTask?.cancel()
+        finishTask = FinishBeat.after { showCelebration = true }
     }
 
     /// Progress, never points: a full round starts at 140 and each miss costs 5.

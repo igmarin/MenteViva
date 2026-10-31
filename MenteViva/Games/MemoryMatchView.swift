@@ -53,6 +53,8 @@ struct MemoryMatchView: View {
     @State private var showCelebration = false
     @State private var finalDetail = ""
     @State private var cardPositions: [Int: Int] = [:]
+    /// The one pending beat: a missed pair turning back, or the finished board before the
+    /// celebration (#415). Cancelled on leaving and on every deal.
     @State private var flipBackTask: Task<Void, Never>?
 
     struct Card: Identifiable {
@@ -195,7 +197,8 @@ struct MemoryMatchView: View {
             }
         }
         .padding()
-        .leaveGuard(inProgress: moves > 0 || !board.faceUp.isEmpty, celebrating: showCelebration)
+        // A finished board is recorded already, so leaving in the beat before the cover never asks.
+        .leaveGuard(inProgress: moves > 0 || !board.faceUp.isEmpty, celebrating: showCelebration || board.isComplete)
         .gameHeader(variant.game, instruction: AppLanguage.localized(variant.instructionKey))
         .onDisappear {
             flipBackTask?.cancel()
@@ -397,6 +400,8 @@ struct MemoryMatchView: View {
         }
     }
 
+    /// Records the round at once, then lets the last pair be seen for a beat before the celebration
+    /// (#415). The match was already announced to VoiceOver by `flip`, so nothing waits on it.
     private func finish() {
         let elapsed = Int(Date.now.timeIntervalSince(startedAt))
         let score = Self.score(pairCount: faces.count, moves: moves)
@@ -409,7 +414,8 @@ struct MemoryMatchView: View {
                 correct: faces.count, attempts: moves,
                 difficulty: difficulty))
         finalDetail = String(format: AppLanguage.localized("game.celebration.pairs %lld"), faces.count)
-        showCelebration = true
+        flipBackTask?.cancel()
+        flipBackTask = FinishBeat.after { showCelebration = true }
     }
 }
 
