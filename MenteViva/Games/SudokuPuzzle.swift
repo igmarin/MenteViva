@@ -35,17 +35,6 @@ nonisolated struct SudokuPuzzle: Equatable {
         ((9, 46), (6, 28)),
     ]
 
-    /// Board size and blanks for a level: the wanted board where its squares
-    /// keep 60pt, else its fallback, else a 4×4 that fits everywhere the app
-    /// runs (4×60 + 3×2 = 246pt, under the narrowest board). The last resort
-    /// keeps the table's hardest 4×4 blanks, never more cells than exist.
-    static func layout(for difficulty: Difficulty, width: Double) -> (size: Int, blanks: Int) {
-        let row = difficulty.values(layoutsPerLevel)
-        if squaresFit(row.wanted.size, in: width) { return row.wanted }
-        if let fallback = row.fallback, squaresFit(fallback.size, in: width) { return fallback }
-        return (4, min(row.fallback?.blanks ?? row.wanted.blanks, 12))
-    }
-
     /// Where the number pad sits next to the board (#400).
     enum PadPlacement: Equatable {
         /// Under the board in columns, as on every iPhone and for the 4×4 and 6×6 boards in portrait.
@@ -54,15 +43,6 @@ nonisolated struct SudokuPuzzle: Equatable {
         case row
         /// Three columns of keys beside the board: landscape iPad.
         case beside
-    }
-
-    /// What the screen can carry for one deal: the board, the side of its squares and the pad.
-    struct Layout: Equatable {
-        let size: Int
-        let blanks: Int
-        /// Side of one square, in points, never under `minTarget`.
-        let side: Double
-        let pad: PadPlacement
     }
 
     /// Space between the pad's keys, in points.
@@ -86,23 +66,20 @@ nonisolated struct SudokuPuzzle: Equatable {
     /// The note shown after a miss, with its spacing, kept free in portrait so a wrong number
     /// never tips the screen into scrolling.
     private static let noteHeight = 72.0
+    /// The same note in the narrower column beside the board, where it can take two lines.
+    private static let besideNoteHeight = 76.0
 
-    /// The layout for a level on a screen whose play area (inside its padding) is `width` by
-    /// `height` points. The square budget is the smaller of the width and the height, so a board
-    /// that truly cannot keep 60pt squares still falls back (9×9 to 6×6 to 4×4) as it always did.
-    /// `height == nil` means "don't budget by height" (a phone: those screens scroll or fall
-    /// back by width alone, as before) and always gives the stacked pad.
-    static func layout(for difficulty: Difficulty, width: Double, height: Double?) -> Layout {
+    /// Board size and blanks for a level on a screen whose play area (inside its padding) is
+    /// `width` by `height` points: the wanted board where `arrangement` keeps its squares at 60pt,
+    /// else its fallback, else a 4×4 (9×9 → 6×6 → 4×4). `height == nil` (a phone) asks the width
+    /// alone, and 4×4 fits every phone (4×60 + 3×2 = 246pt). Only when even 4×4 cannot fit is it
+    /// dealt anyway, and the screen scrolls. The last resort keeps the table's hardest 4×4 blanks,
+    /// never more cells than exist. The screen draws the board with `keptArrangement`.
+    static func layout(for difficulty: Difficulty, width: Double, height: Double? = nil) -> BoardSpec {
         let row = difficulty.values(layoutsPerLevel)
-        if let fits = arrangement(size: row.wanted.size, width: width, height: height) {
-            return Layout(size: row.wanted.size, blanks: row.wanted.blanks, side: fits.side, pad: fits.pad)
-        }
-        if let fallback = row.fallback, let fits = arrangement(size: fallback.size, width: width, height: height) {
-            return Layout(size: fallback.size, blanks: fallback.blanks, side: fits.side, pad: fits.pad)
-        }
-        let (size, blanks) = layout(for: difficulty, width: width)
-        let side = min(100, (width - gap * Double(size - 1)) / Double(size))
-        return Layout(size: size, blanks: blanks, side: side, pad: .stacked)
+        let smallest: BoardSpec = (4, min(row.fallback?.blanks ?? row.wanted.blanks, 12))
+        let boards = [row.wanted] + (row.fallback.map { [$0] } ?? []) + [smallest]
+        return boards.first { arrangement(size: $0.size, width: width, height: height) != nil } ?? smallest
     }
 
     /// Square side and pad placement for a board of `size`, or nil when its squares (or, in a
@@ -118,9 +95,12 @@ nonisolated struct SudokuPuzzle: Equatable {
         if width > height {
             // Landscape: board left, pad right. The pad keeps its three columns of keys, so the
             // board takes the width that is left; the instruction and the banner sit above it.
+            // The column beside it (keys, Show me one and the miss note) must fit too; the note
+            // only shows once he has tried, when the banner has gone.
             let beside = min(100, (width - stackSpacing - padColumnsWidth - gaps) / count)
             let side = min(beside, (height - headerHeight - bannerHeight - gaps) / count)
-            return side >= minTarget ? (side, .beside) : nil
+            let columnFits = besideColumnHeight(size: size) <= height - headerHeight
+            return side >= minTarget && columnFits ? (side, .beside) : nil
         }
         // Portrait: a 9×9 board's pad is one row of nine keys, as square as the width allows;
         // the smaller boards keep their columns of 100pt keys (two rows for 6×6).
@@ -148,6 +128,24 @@ nonisolated struct SudokuPuzzle: Equatable {
             return (side, room >= side * count + gap * (count - 1) ? .beside : .stacked)
         }
         return (side, size == 9 && padKeyHeight(width: width) >= minTarget ? .row : .stacked)
+    }
+
+    /// Columns of keys in the number pad: nine in a row under a portrait iPad's 9×9; beside the
+    /// board three, or the 4×4's four keys in one row; stacked three for 6×6, else four.
+    static func padColumns(size: Int, pad: PadPlacement) -> Int {
+        switch pad {
+        case .row: 9
+        case .beside: size == 4 ? 4 : 3
+        case .stacked: size == 6 ? 3 : 4
+        }
+    }
+
+    /// Height of the column beside the board: rows of 100pt keys, Show me one and a two-line
+    /// miss note, with the spacing between them.
+    static func besideColumnHeight(size: Int) -> Double {
+        let columns = padColumns(size: size, pad: .beside)
+        let rows = Double((size + columns - 1) / columns)
+        return rows * 100 + (rows - 1) * 12 + stackSpacing + showMeHeight + stackSpacing + besideNoteHeight
     }
 
     /// Height (and width) of one key when the pad is a single row of nine, at most 100pt.
@@ -179,7 +177,7 @@ nonisolated struct SudokuPuzzle: Equatable {
     }
 
     /// A board made for the screen's `layout`, which may have been budgeted by height too (#400).
-    static func make<G: RandomNumberGenerator>(layout: Layout, using generator: inout G) -> SudokuPuzzle {
+    static func make<G: RandomNumberGenerator>(layout: BoardSpec, using generator: inout G) -> SudokuPuzzle {
         make(size: layout.size, blanks: layout.blanks, using: &generator)
     }
 

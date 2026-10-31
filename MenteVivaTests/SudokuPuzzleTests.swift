@@ -213,12 +213,24 @@ final class SudokuPuzzleTests: XCTestCase {
 
     // MARK: - iPad layout (#400)
 
+    /// What the screen draws for a level: the board it deals and the arrangement it lays it out
+    /// with, from the same two functions `SudokuView` calls.
+    private func drawn(level: Int, width: Double, height: Double?) -> (
+        size: Int, blanks: Int, side: Double, pad: SudokuPuzzle.PadPlacement, fits: Bool
+    ) {
+        let layout = SudokuPuzzle.layout(for: Difficulty(level: level), width: width, height: height)
+        let shown = SudokuPuzzle.keptArrangement(size: layout.size, width: width, height: height)
+        let fits = SudokuPuzzle.arrangement(size: layout.size, width: width, height: height) != nil
+        return (layout.size, layout.blanks, shown.side, shown.pad, fits)
+    }
+
     func testGivenLevelNineOnAnIPadPortraitBudgetWhenLaidOutThenNineByNineKeepsSixtyPointSquares() {
         // 10th-generation iPad, portrait: 820pt wide less 32pt of padding, about 1,018pt of play area.
-        let layout = SudokuPuzzle.layout(for: Difficulty(level: 9), width: 788, height: 1018)
+        let layout = drawn(level: 9, width: 788, height: 1018)
         XCTAssertEqual(layout.size, 9)
         XCTAssertEqual(layout.blanks, 40)
         XCTAssertEqual(layout.pad, .row)
+        XCTAssertTrue(layout.fits)
         XCTAssertGreaterThanOrEqual(layout.side, SudokuPuzzle.minTarget)
         XCTAssertLessThanOrEqual(layout.side, 100)
         // Board, pad row, Show me one and the header all fit the height.
@@ -229,16 +241,17 @@ final class SudokuPuzzleTests: XCTestCase {
 
     func testGivenLevelNineWithAHeightBudgetUnderSixtyPerSquareWhenLaidOutThenFallsBackToSixBySix() {
         // Portrait with plenty of width, but a height that leaves about 57pt a square.
-        let layout = SudokuPuzzle.layout(for: Difficulty(level: 9), width: 788, height: 900)
+        let layout = drawn(level: 9, width: 788, height: 900)
         XCTAssertEqual(layout.size, 6)
         XCTAssertEqual(layout.blanks, 26)
         XCTAssertEqual(layout.pad, .stacked)
+        XCTAssertTrue(layout.fits)
     }
 
     func testGivenAWideShortScreenWhenLaidOutThenBoardSideComesFromHeight() {
         // Landscape: 1,100pt wide would allow 76pt squares beside the pad; 700pt of height allows
         // (700 - 128 - 16) / 9, with the level banner's room counted in the 128.
-        let layout = SudokuPuzzle.layout(for: Difficulty(level: 10), width: 1100, height: 700)
+        let layout = drawn(level: 10, width: 1100, height: 700)
         XCTAssertEqual(layout.size, 9)
         XCTAssertEqual(layout.pad, .beside)
         XCTAssertEqual(layout.side, (700.0 - 128 - 16) / 9, accuracy: 0.001)
@@ -247,9 +260,10 @@ final class SudokuPuzzleTests: XCTestCase {
     func testGivenAShortLandscapeWhenLevelTenIsLaidOutThenSixBySixFitsTheHeightWithItsPadBeside() {
         // iPad mini landscape: about 1,101 × 608pt of play area. Nine squares cannot keep 60pt
         // there once the banner has its room, but six can, and they never scroll.
-        let layout = SudokuPuzzle.layout(for: Difficulty(level: 10), width: 1101, height: 608)
+        let layout = drawn(level: 10, width: 1101, height: 608)
         XCTAssertEqual(layout.size, 6)
         XCTAssertEqual(layout.pad, .beside)
+        XCTAssertTrue(layout.fits)
         XCTAssertGreaterThanOrEqual(layout.side, SudokuPuzzle.minTarget)
         XCTAssertLessThanOrEqual(layout.side * 6 + SudokuPuzzle.gap * 5 + 128, 608)
     }
@@ -257,7 +271,7 @@ final class SudokuPuzzleTests: XCTestCase {
     func testGivenANearlySquareWideWindowWhenLaidOutThenThePadKeepsSixtyPointKeys() {
         // Stage Manager window, play area 968 × 868: the height alone would allow 80pt squares,
         // a 720pt board, which leaves the three key columns only 228pt.
-        let layout = SudokuPuzzle.layout(for: Difficulty(level: 9), width: 968, height: 868)
+        let layout = drawn(level: 9, width: 968, height: 868)
         XCTAssertEqual(layout.size, 9)
         XCTAssertEqual(layout.pad, .beside)
         let board = layout.side * 9 + SudokuPuzzle.gap * 8
@@ -268,8 +282,43 @@ final class SudokuPuzzleTests: XCTestCase {
 
     func testGivenAWindowTooNarrowForNineSquaresAndThreeKeyColumnsWhenLaidOutThenSixBySix() {
         // 800 × 700: nine 60pt squares (556pt) plus the 324pt pad would need 900pt.
-        let layout = SudokuPuzzle.layout(for: Difficulty(level: 9), width: 800, height: 700)
+        let layout = drawn(level: 9, width: 800, height: 700)
         XCTAssertEqual(layout.size, 6)
+        XCTAssertTrue(layout.fits)
+    }
+
+    func testGivenAWindowWhereNeitherNineNorSixFitWhenLaidOutThenFourByFourFitsWithoutScrolling() {
+        // 700 × 690: 9×9 beside its pad needs 900pt of width, 6×6 leaves (700 - 344 - 10) / 6 ≈ 57.7pt
+        // squares. A width-only check would still pick 9×9 and draw it stacked at 60pt, about
+        // 1,100pt tall in 690pt; 4×4 fits beside its pad instead.
+        let layout = drawn(level: 9, width: 700, height: 690)
+        XCTAssertEqual(layout.size, 4)
+        XCTAssertEqual(layout.blanks, 12)
+        XCTAssertEqual(layout.pad, .beside)
+        XCTAssertTrue(layout.fits)
+        XCTAssertGreaterThanOrEqual(layout.side, SudokuPuzzle.minTarget)
+    }
+
+    func testGivenAWindowTooShortEvenForFourByFourWhenLaidOutThenFourByFourScrollsAtSixtyPoints() {
+        // 700 × 350: no board keeps 60pt squares under the header, so the smallest one is dealt and
+        // the screen scrolls, never the wanted 9×9.
+        let layout = drawn(level: 9, width: 700, height: 350)
+        XCTAssertEqual(layout.size, 4)
+        XCTAssertFalse(layout.fits)
+        XCTAssertEqual(layout.side, SudokuPuzzle.minTarget)
+    }
+
+    func testGivenAShortLandscapeWhenTheMissNoteWouldNotFitBesideSixBySixThenFourByFourIsDealt() {
+        // 1,100 × 500: the 6×6 board alone fits ((500 - 128 - 10) / 6 ≈ 60.3pt), but its two rows of
+        // keys, Show me one and a two-line miss note need 428pt beside it, more than the 420pt under
+        // the instruction. 4×4, its four keys in one row, leaves room for the note.
+        let layout = drawn(level: 7, width: 1100, height: 500)
+        XCTAssertEqual(layout.size, 4)
+        XCTAssertEqual(layout.pad, .beside)
+        XCTAssertTrue(layout.fits)
+        XCTAssertEqual(SudokuPuzzle.padColumns(size: 4, pad: .beside), 4)
+        XCTAssertLessThanOrEqual(SudokuPuzzle.besideColumnHeight(size: 4) + 80, 500)
+        XCTAssertGreaterThan(SudokuPuzzle.besideColumnHeight(size: 6) + 80, 500)
     }
 
     func testGivenAPortraitPadRowWhenTheBoardIsNarrowerThanTheWidthThenKeysStillKeepSixtyPoints() {
@@ -281,13 +330,11 @@ final class SudokuPuzzleTests: XCTestCase {
         XCTAssertLessThanOrEqual(SudokuPuzzle.rowPadWidth(side: 100, width: 788), 788)
     }
 
-    func testGivenNoKnownHeightWhenLaidOutThenItIsTheWidthOnlyLayoutWithAStackedPad() {
+    func testGivenNoKnownHeightWhenLaidOutThenThePhoneBoardsKeepAStackedPad() {
         for level in [2, 6, 9, 10] {
-            let old = SudokuPuzzle.layout(for: Difficulty(level: level), width: 700)
-            let new = SudokuPuzzle.layout(for: Difficulty(level: level), width: 700, height: nil)
-            XCTAssertEqual(new.size, old.size, "level \(level)")
-            XCTAssertEqual(new.blanks, old.blanks, "level \(level)")
-            XCTAssertEqual(new.pad, .stacked, "level \(level)")
+            let layout = drawn(level: level, width: 700, height: nil)
+            XCTAssertEqual(layout.size, level >= 9 ? 9 : (level >= 6 ? 6 : 4), "level \(level)")
+            XCTAssertEqual(layout.pad, .stacked, "level \(level)")
         }
     }
 

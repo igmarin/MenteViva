@@ -179,14 +179,15 @@ struct SudokuView: View {
         }
     }
 
-    /// Four columns on a phone (three for 6×6), one row of nine under a portrait iPad's 9×9 board,
-    /// three columns beside a landscape iPad's (#400).
+    /// Columns of keys as `SudokuPuzzle.padColumns` says: four on a phone (three for 6×6), one row
+    /// of nine under a portrait iPad's 9×9 board, three beside a landscape iPad's, or one row of
+    /// four beside a 4×4 (#400).
     /// The row is as wide as the board above it, so the keys line up with the squares.
     private func numberPad(
         _ puzzle: SudokuPuzzle, _ arrangement: (side: Double, pad: SudokuPuzzle.PadPlacement)
     ) -> some View {
         let pad = arrangement.pad
-        let count = pad == .row ? 9 : (pad == .beside || puzzle.size == 6 ? 3 : 4)
+        let count = SudokuPuzzle.padColumns(size: puzzle.size, pad: pad)
         let spacing = pad == .row ? SudokuPuzzle.padSpacing : 12
         let rowWidth = SudokuPuzzle.rowPadWidth(side: arrangement.side, width: playArea.width)
         let keyHeight = pad == .row ? SudokuPuzzle.padKeyHeight(width: rowWidth) : 100
