@@ -249,9 +249,13 @@ struct RepeatSequenceView: View {
                 guard !Task.isCancelled else { return }
                 lit = idx
                 SoundPlayer.playTile(idx)
-                try? await Task.sleep(for: .seconds(rules.light))
-                lit = nil
-                try? await Task.sleep(for: .seconds(0.25))
+                // A cancelled sleep throws at once: leave before touching `lit`, or a demo stopped by an
+                // interruption could put out the first tile of the demo that replaces it.
+                do {
+                    try await Task.sleep(for: .seconds(rules.light))
+                    lit = nil
+                    try await Task.sleep(for: .seconds(0.25))
+                } catch { return }
             }
             // A demo stopped by an interruption is shown again, so it must not unlock the board.
             guard !Task.isCancelled else { return }
