@@ -17,6 +17,7 @@ struct TilePairsView: View {
     @State private var mismatched: Set<Int> = []
     @State private var shakeID: Int?
     @State private var hint: String?
+    @State private var hintsUsed = 0
     @State private var startedAt = Date.now
     @State private var showCelebration = false
     @State private var finalDetail = ""
@@ -234,6 +235,7 @@ struct TilePairsView: View {
         mismatched = []
         shakeID = nil
         hint = nil
+        hintsUsed = 0
         startedAt = .now
     }
 
@@ -302,8 +304,9 @@ struct TilePairsView: View {
         }
     }
 
+    /// Highlighting adds one attempt and no correct pair; wait for a lift to avoid the stale board.
     private func showPair() {
-        guard var current = deal else { return }
+        guard removing.isEmpty, var current = deal else { return }
         if current.isStuck {
             hint = AppLanguage.localized("game.tilepairs.stuck")
             AccessibilityNotification.Announcement(hint!).post()
@@ -322,6 +325,7 @@ struct TilePairsView: View {
         let free = current.freeTiles()
         let groups = Dictionary(grouping: free, by: \.symbol)
         if let pair = groups.first(where: { $0.value.count >= 2 })?.value.prefix(2) {
+            hintsUsed += 1
             highlighted = Set(pair.map(\.id))
             Feedback.play(.success)
             // Sighted players see the glow; VoiceOver hears which pair to look for.
@@ -344,7 +348,7 @@ struct TilePairsView: View {
             GameSession(
                 gameID: .tilePairs, score: pairs * 10,
                 rounds: max(1, pairs), durationSeconds: elapsed,
-                correct: final.correct, attempts: final.attempts,
+                correct: final.correct, attempts: TilePairsDeal.recordedAttempts(attempts: final.attempts, hints: hintsUsed),
                 difficulty: difficulty))
         finalDetail = AppLanguage.localized("game.celebration.table")
         showCelebration = true
