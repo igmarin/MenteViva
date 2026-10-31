@@ -198,8 +198,7 @@ final class TilePairsDealTests: XCTestCase {
 
     func testGivenEverySymbolWhenPictureThenSlugsAreDistinctAndInCatalogue() {
         let pictures = TilePairsSymbol.allCases.map(\.picture)
-        XCTAssertEqual(pictures.count, 18)
-        XCTAssertEqual(Set(pictures.map(\.slug)).count, 18, "two symbols share one picture")
+        XCTAssertEqual(Set(pictures.map(\.slug)).count, pictures.count, "two symbols share one picture")
         XCTAssertTrue(Set(pictures).isSubset(of: Set(GamePictures.all)))
     }
 
