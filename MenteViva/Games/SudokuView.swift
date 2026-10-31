@@ -35,8 +35,7 @@ struct SudokuView: View {
     var body: some View {
         VStack(spacing: 20) {
             LevelExplainBanner(
-                change: PlanStore.todaysChange(GameID.sudoku), game: GameID.sudoku,
-                hasStarted: attempts > 0 || !entries.isEmpty)
+                game: GameID.sudoku, hasStarted: attempts > 0 || !entries.isEmpty)
             Text(AppLanguage.localized("game.sudoku.instruction"))
                 .font(.title2)
                 .multilineTextAlignment(.center)

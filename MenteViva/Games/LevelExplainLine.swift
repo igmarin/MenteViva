@@ -66,9 +66,10 @@ nonisolated struct LevelExplainNote: Equatable {
 /// day for this game. The game view owns the dismiss by passing its progress.
 /// With `keepsSpace`, the line then fades out but keeps its height, for games
 /// whose board is sized by the space left over. The note is decided once per
-/// open, and once dismissed it stays dismissed (replay, undo, start over).
+/// open, and once dismissed it stays dismissed (replay, undo, start over). The
+/// banner reads today's change itself, from the memo's first render only: a
+/// caller that passed the change in would decode the cached plan on every body run.
 struct LevelExplainBanner: View {
-    let change: LevelChange?
     let game: GameID
     let hasStarted: Bool
     var keepsSpace = false
@@ -84,7 +85,7 @@ struct LevelExplainBanner: View {
 
     var body: some View {
         let memo = sharedMemo ?? ownMemo
-        let slot = memo.slot(change: change, game: game, hasStarted: hasStarted)
+        let slot = memo.slot(game: game, hasStarted: hasStarted, readChange: { PlanStore.todaysChange(game) })
         if let key = memo.note?.key, slot == .showing || (keepsSpace && slot.takesSpace) {
             LevelExplainLine(key: key)
                 .opacity(slot == .showing ? 1 : 0)
@@ -96,11 +97,12 @@ struct LevelExplainBanner: View {
     final class Memo {
         var note: LevelExplainNote?
 
-        func slot(change: LevelChange?, game: GameID, hasStarted: Bool) -> LevelExplainSlot {
+        /// `readChange` runs only while this open has no note yet, so the plan is decoded once per open.
+        func slot(game: GameID, hasStarted: Bool, readChange: () -> LevelChange?) -> LevelExplainSlot {
             var current =
                 note
                 ?? LevelExplainNote(
-                    change: change,
+                    change: readChange(),
                     seenToday: LevelOfferStore.hasSeenExplain(for: game, today: PlanStore.dayStamp()))
             let slot = current.slot(hasStarted: hasStarted)
             note = current
