@@ -51,9 +51,10 @@ nonisolated struct QuickEyesRun {
     /// Whether the picture waits for "Got it" instead of flashing (#46), until the player takes the faster round.
     var isPaced: Bool { QuickEyesDeal.isPaced(difficulty) && !wantsFaster }
 
-    /// A new picture is dealt: last round's faded picks are forgotten.
+    /// A new picture is dealt: last round's faded picks and pick are forgotten.
     mutating func startRound() {
         fadedPictures = []
+        lastPick = nil
     }
 
     /// Applies one pick. Paced levels never lose a round to a miss: the wrong picture fades and the

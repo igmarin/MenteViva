@@ -119,6 +119,16 @@ final class QuickEyesRunTests: XCTestCase {
         }
     }
 
+    func testGivenARoundEndedWithoutAPickWhenItEndsThenItDoesNotReuseLastRoundsPick() {
+        var run = pacedRun()
+        for _ in 0..<2 {
+            _ = run.pick(sunflower, target: sunflower, reactionSeconds: 0.5)
+            _ = run.roundEnded(lookSeconds: 0.4)
+        }
+        run.startRound()
+        XCTAssertFalse(run.roundEnded(lookSeconds: 0.4))
+    }
+
     func testGivenAFadedRoundWhenItEndsThenTheStreakStartsOver() {
         var run = pacedRun()
         for _ in 0..<2 {

@@ -7,7 +7,6 @@ import SwiftUI
 struct RepeatSequenceView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @Environment(\.scenePhase) private var scenePhase
 
     /// One tile: colour + shape + name, so colour alone never decides.
     private enum Tile: CaseIterable {
@@ -80,13 +79,7 @@ struct RepeatSequenceView: View {
     /// True during the short pause after a right round, so "That's it!" shows.
     @State private var showRight = false
     @State private var task: Task<Void, Never>?
-    /// The board's measured width, inside the screen padding; 0 until it is measured.
     @State private var boardWidth: Double = 0
-    /// The grid the sequences were dealt for (#415); a width change that fits a different one deals again.
-    @State private var layout = SequenceDeal.fittedLayout(
-        for: Difficulty.stored(.repeatSequence), width: Double(UIScreen.main.bounds.width))
-    /// A call or the app switcher cut the demo short (#415): show it again on return, uncounted.
-    @State private var demoInterrupted = false
     @State private var isTransitioning = false
 
     private var instruction: String {
@@ -122,75 +115,49 @@ struct RepeatSequenceView: View {
         .fitOrScroll()
         .gameHeader(.repeatSequence, instruction: AppLanguage.localized("game.sequence.instruction"))
         .onAppear { setup() }
-        .onChange(of: scenePhase) { _, newPhase in pauseOrResume(for: newPhase) }
         .onDisappear { task?.cancel() }
         .celebration(isPresented: $showCelebration, game: .repeatSequence, detail: finalDetail, onPlayAgain: setup)
     }
 
-    /// The screen-width value `SequenceDeal` expects: the board plus the padding around it.
-    private var screenWidth: Double {
-        boardWidth > 0 ? boardWidth + SequenceDeal.horizontalPadding : Double(UIScreen.main.bounds.width)
-    }
-
+    @ViewBuilder
     private var sequenceGrid: some View {
-        let allTiles = Array(Tile.allCases.prefix(layout.columns * layout.rows))
-        let columns = Array(repeating: GridItem(.flexible(), spacing: 16), count: layout.columns)
-        return LazyVGrid(columns: columns, spacing: 16) {
-            ForEach(Array(allTiles.enumerated()), id: \.offset) { idx, tile in
-                Button {
-                    tap(idx)
-                } label: {
-                    RoundedRectangle(cornerRadius: 16)
-                        .fill(tile.color.opacity(lit == idx ? 0.95 : 0.75))
-                        .frame(minHeight: 100)
-                        .overlay(RoundedRectangle(cornerRadius: 16).strokeBorder(Color.espresso, lineWidth: 3))
-                        .overlay {
-                            Image(systemName: tile.shape)
-                                .font(.system(size: 40, weight: .bold))
-                                .foregroundStyle(tile.symbolColor)
-                                .accessibilityHidden(true)
-                        }
-                        .scaleEffect(lit == idx && !reduceMotion ? 1.06 : 1)
-                        .animation(.easeInOut(duration: 0.2), value: lit)
+        GeometryReader { proxy in
+            let width = proxy.size.width
+            // Use a single width source for deal and grid; proxy is already inside .padding(),
+            // so convert to the screen-width value SequenceDeal expects.
+            let rules = SequenceDeal.rules(for: difficulty, width: width + 32)
+            let cols = rules.columns
+            let allTiles = Array(Tile.allCases.prefix(cols * rules.rows))
+            let columns = Array(repeating: GridItem(.flexible(), spacing: 16), count: cols)
+            LazyVGrid(columns: columns, spacing: 16) {
+                ForEach(Array(allTiles.enumerated()), id: \.offset) { idx, tile in
+                    Button {
+                        tap(idx)
+                    } label: {
+                        RoundedRectangle(cornerRadius: 16)
+                            .fill(tile.color.opacity(lit == idx ? 0.95 : 0.75))
+                            .frame(minHeight: 100)
+                            .overlay(RoundedRectangle(cornerRadius: 16).strokeBorder(Color.espresso, lineWidth: 3))
+                            .overlay {
+                                Image(systemName: tile.shape)
+                                    .font(.system(size: 40, weight: .bold))
+                                    .foregroundStyle(tile.symbolColor)
+                                    .accessibilityHidden(true)
+                            }
+                            .scaleEffect(lit == idx && !reduceMotion ? 1.06 : 1)
+                            .animation(.easeInOut(duration: 0.2), value: lit)
+                    }
+                    .buttonStyle(.plain)
+                    .disabled(showing || isTransitioning)
+                    .accessibilityLabel(tile.name)
+                    .accessibilityHint(AppLanguage.localized("game.sequence.a11y.hint"))
                 }
-                .buttonStyle(.plain)
-                .disabled(showing || isTransitioning)
-                .accessibilityLabel(tile.name)
-                .accessibilityHint(AppLanguage.localized("game.sequence.a11y.hint"))
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            .onAppear { boardWidth = width }
+            .onChange(of: width) { _, newValue in boardWidth = newValue }
         }
-        .onGeometryChange(for: CGFloat.self) {
-            $0.size.width
-        } action: { width in
-            guard width > 0 else { return }
-            boardWidth = Double(width)
-            fitLayoutToBoard()
-        }
-    }
-
-    /// A rotation or split view can make the board fit a different grid. Deal the sequences still
-    /// to play again for it, so no tile is stranded off the board, and show the new one (#415).
-    private func fitLayoutToBoard() {
-        let fitted = SequenceDeal.fittedLayout(for: difficulty, width: screenWidth)
-        guard fitted != layout, session?.current != nil else { return }
-        layout = fitted
-        var gen = SystemRandomNumberGenerator()
-        session?.redeal(level: difficulty, width: screenWidth, using: &gen)
-        showNext()
-    }
-
-    /// A call or the app switcher during the demo must not cost the round (#415): stop the demo,
-    /// and when the app is active again show it again. Taps cannot happen meanwhile (`showing`),
-    /// so no attempt is counted. The answer pauses are left alone: cancelling one would lock the board.
-    private func pauseOrResume(for newPhase: ScenePhase) {
-        if newPhase != .active {
-            guard showing, !demoInterrupted else { return }
-            task?.cancel()
-            demoInterrupted = true
-        } else if demoInterrupted {
-            demoInterrupted = false
-            showNext()
-        }
+        .frame(minHeight: 260)
     }
 
     private func setup() {
@@ -205,9 +172,9 @@ struct RepeatSequenceView: View {
         showRight = false
         startedAt = .now
         var gen = SystemRandomNumberGenerator()
-        layout = SequenceDeal.fittedLayout(for: difficulty, width: screenWidth)
+        let width = boardWidth > 0 ? boardWidth + 32 : Double(UIScreen.main.bounds.width)
         let sequences = (0..<Self.roundsPerSession).map { _ in
-            SequenceDeal.deal(level: difficulty, width: screenWidth, using: &gen)
+            SequenceDeal.deal(level: difficulty, width: width, using: &gen)
         }
         session = SequenceDeal.Session(sequences: sequences)
         showNext()
@@ -229,7 +196,8 @@ struct RepeatSequenceView: View {
         if !names.isEmpty {
             AccessibilityNotification.Announcement(names).post()
         }
-        let rules = SequenceDeal.rules(for: difficulty, width: screenWidth)
+        let width = boardWidth > 0 ? boardWidth + 32 : Double(UIScreen.main.bounds.width)
+        let rules = SequenceDeal.rules(for: difficulty, width: width)
         task?.cancel()
         task = Task { @MainActor in
             for idx in seq {
@@ -240,8 +208,6 @@ struct RepeatSequenceView: View {
                 lit = nil
                 try? await Task.sleep(for: .seconds(0.25))
             }
-            // A demo stopped by an interruption is shown again, so it must not unlock the board.
-            guard !Task.isCancelled else { return }
             showing = false
         }
     }

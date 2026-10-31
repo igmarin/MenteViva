@@ -82,18 +82,6 @@ nonisolated enum SequenceDeal {
             self.sequences = sequences
         }
 
-        /// The board changed size (rotation, split view) mid-session, so the sequences still to play
-        /// may name tiles that no longer exist (#415). Deals the current and later ones again for the
-        /// new width; rounds already played, the counts and the index stay, and no attempt is counted.
-        mutating func redeal(level: Difficulty, width: Double, using generator: inout some RandomNumberGenerator) {
-            guard index < sequences.count else { return }
-            let remaining = sequences.count - index
-            sequences.replaceSubrange(
-                index...,
-                with: (0..<remaining).map { _ in SequenceDeal.deal(level: level, width: width, using: &generator) })
-            needsReplay = false
-        }
-
         var current: [Int]? {
             guard index < sequences.count else { return nil }
             return sequences[index]
