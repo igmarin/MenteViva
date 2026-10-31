@@ -68,7 +68,7 @@ final class SayingsDeckTests: XCTestCase {
     }
 
     func testGivenOnlyFourUnseenWhenDealingThenSeenResetsAndEightAreDealt() {
-        defaults.set(Sayings.all.prefix(56).map(\.id), forKey: SayingsDeck.seenKey)
+        defaults.set(Sayings.all.dropLast(4).map(\.id), forKey: SayingsDeck.seenKey)
         let rounds = deal()
         XCTAssertEqual(Set(rounds.map(\.saying)).count, 8)
         XCTAssertEqual(defaults.array(forKey: SayingsDeck.seenKey) as? [Int], [])
@@ -117,8 +117,19 @@ final class SayingsDeckTests: XCTestCase {
         XCTAssertEqual(defaults.array(forKey: SayingsDeck.seenKey) as? [Int], [saying.id])
     }
 
-    func testGivenTheContentListThenSixtyUniqueIDsOneToSixty() {
-        XCTAssertEqual(Sayings.all.map(\.id), Array(1...60))
+    func testGivenAllSayingsWhenListingThenIdsAreUniqueAndEveryThemeHasAtLeastFifteen() {
+        // #414: the second pack fills 61-120, so ids run 1-120 with no gap or repeat.
+        XCTAssertEqual(Sayings.all.map(\.id), Array(1...120))
+        for theme in Saying.Theme.allCases {
+            XCTAssertGreaterThanOrEqual(Sayings.all.filter { $0.theme == theme }.count, 15, "\(theme)")
+        }
+    }
+
+    func testGivenAFreshPlayerWhenFifteenGamesArePlayedThenNoSayingRepeats() {
+        // #414: 15 games of 8 use all 120 sayings before any comes back.
+        let seen = (1...15).flatMap { play(seed: UInt64($0)).map(\.saying) }
+        XCTAssertEqual(seen.count, 120)
+        XCTAssertEqual(Set(seen).count, 120)
     }
 
     func testGivenEveryThemeThenAtLeastFourSlotsSoHardAlwaysHasThreeOfItsOwn() {

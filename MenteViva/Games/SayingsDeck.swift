@@ -8,7 +8,7 @@ nonisolated struct Saying: Hashable {
         case animals, money, time, food, work, weather, friends, home
     }
 
-    let id: Int  // 1...60
+    let id: Int  // 1...120
     let theme: Theme
 
     var startKey: String { String(format: "saying.%02d.start", id) }

@@ -351,10 +351,52 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `saying.09.start` | A penny saved | Poderoso caballero | — |  |
 | `saying.10.end` | grow on trees | sino el que menos necesita | — |  |
 | `saying.10.start` | Money doesn't | No es más rico el que más tiene | — |  |
+| `saying.100.end` | and goes out like a lamb | escampa | — |  |
+| `saying.100.start` | March comes in like a lion | Siempre que llueve | — |  |
+| `saying.101.end` | run deep | y ríase la gente | — |  |
+| `saying.101.start` | Still waters | Ande yo caliente | — |  |
+| `saying.102.end` | in a teacup | recoge tempestades | — |  |
+| `saying.102.start` | A storm | Quien siembra vientos | — |  |
+| `saying.103.end` | before the dawn | con un dedo | — |  |
+| `saying.103.start` | It's always darkest | No se puede tapar el sol | — |  |
+| `saying.104.end` | fine by eleven | ganancia de pescadores | — |  |
+| `saying.104.start` | Rain before seven | A río revuelto | — |  |
+| `saying.105.end` | lifts all boats | a su cauce | — |  |
+| `saying.105.start` | A rising tide | Las aguas siempre vuelven | — |  |
+| `saying.106.end` | is a problem halved | corazón que no siente | — |  |
+| `saying.106.start` | A problem shared | Ojos que no ven | — |  |
+| `saying.107.end` | to tango | lava la otra | — |  |
+| `saying.107.start` | It takes two | Una mano | — |  |
+| `saying.108.end` | divided we fall | hace la fuerza | — |  |
+| `saying.108.start` | United we stand | La unión | — |  |
+| `saying.109.end` | in numbers | pocas palabras bastan | — |  |
+| `saying.109.start` | There's safety | A buen entendedor | — |  |
 | `saying.11.end` | in one basket | siempre tiene | — |  |
 | `saying.11.start` | Don't put all your eggs | Quien guarda | — |  |
+| `saying.110.end` | than to receive | se entiende la gente | — |  |
+| `saying.110.start` | It's better to give | Hablando | — |  |
+| `saying.111.end` | think alike | ser agradecidos | — |  |
+| `saying.111.start` | Great minds | Es de bien nacidos | — |  |
+| `saying.112.end` | as yourself | y ellos se juntan | — |  |
+| `saying.112.start` | Love your neighbor | Dios los cría | — |  |
+| `saying.113.end` | make good neighbors | se lava en casa | — |  |
+| `saying.113.start` | Good fences | La ropa sucia | — |  |
+| `saying.114.end` | in public | es tu casa | — |  |
+| `saying.114.start` | Don't air your dirty laundry | Mi casa | — |  |
+| `saying.115.end` | home is best | honra merece | — |  |
+| `saying.115.start` | East or west | El que a los suyos se parece | — |  |
+| `saying.116.end` | cannot stand | oyen | — |  |
+| `saying.116.start` | A house divided against itself | Las paredes | — |  |
+| `saying.117.end` | next to godliness | caza ratón | — |  |
+| `saying.117.start` | Cleanliness is | Hijo de gato | — |  |
+| `saying.118.end` | and everything in its place | dónde le aprieta el zapato | — |  |
+| `saying.118.start` | A place for everything | Cada uno sabe | — |  |
+| `saying.119.end` | sweeps clean | pero no revueltos | — |  |
+| `saying.119.start` | A new broom | Juntos | — |  |
 | `saying.12.end` | what you pay for | sale caro | — |  |
 | `saying.12.start` | You get | Lo barato | — |  |
+| `saying.120.end` | like son | buena sombra le cobija | — |  |
+| `saying.120.start` | Like father | Al que a buen árbol se arrima | — |  |
 | `saying.13.end` | is not gold | la felicidad | — |  |
 | `saying.13.start` | All that glitters | El dinero no da | — |  |
 | `saying.14.end` | than sorry | que lamentar | — |  |
@@ -451,6 +493,84 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `saying.59.start` | A man's home | Cada casa | — |  |
 | `saying.60.end` | shouldn't throw stones | casa quiere | — |  |
 | `saying.60.start` | People who live in glass houses | Quien se casa | — |  |
+| `saying.61.end` | before they hatch | con ese hueso | — |  |
+| `saying.61.start` | Don't count your chickens | A otro perro | — |  |
+| `saying.62.end` | but you can't make it drink | que cola de león | — |  |
+| `saying.62.start` | You can lead a horse to water | Más vale ser cabeza de ratón | — |  |
+| `saying.63.end` | before the horse | a aullar se enseña | — |  |
+| `saying.63.start` | Don't put the cart | El que con lobos anda | — |  |
+| `saying.64.end` | has its day | con su pareja | — |  |
+| `saying.64.start` | Every dog | Cada oveja | — |  |
+| `saying.65.end` | change its spots | al gato | — |  |
+| `saying.65.start` | A leopard can't | No hay que buscarle tres pies | — |  |
+| `saying.66.end` | in the sea | todos los gatos son pardos | — |  |
+| `saying.66.start` | There are plenty more fish | De noche | — |  |
+| `saying.67.end` | that breaks the camel's back | señal que cabalgamos | — |  |
+| `saying.67.start` | It's the last straw | Ladran, Sancho | — |  |
+| `saying.68.end` | want not | dinero | — |  |
+| `saying.68.start` | Waste not | Dinero llama | — |  |
+| `saying.69.end` | easy go | se queda con la mejor parte | — |  |
+| `saying.69.start` | Easy come | Quien parte y reparte | — |  |
+| `saying.70.end` | happiness | manda | — |  |
+| `saying.70.start` | Money can't buy | El que paga | — |  |
+| `saying.71.end` | are free | baila el perro | — |  |
+| `saying.71.start` | The best things in life | Con dinero | — |  |
+| `saying.72.end` | in for a pound | llena la gallina el buche | — |  |
+| `saying.72.start` | In for a penny | De grano en grano | — |  |
+| `saying.73.end` | as a free lunch | rompe el saco | — |  |
+| `saying.73.start` | There's no such thing | La avaricia | — |  |
+| `saying.74.end` | according to your cloth | todo lo que reluce | — |  |
+| `saying.74.start` | Cut your coat | No es oro | — |  |
+| `saying.75.end` | the world go round | vale por dos | — |  |
+| `saying.75.start` | Money makes | Hombre prevenido | — |  |
+| `saying.76.end` | is a virtue | que tengo prisa | — |  |
+| `saying.76.start` | Patience | Vísteme despacio | — |  |
+| `saying.77.end` | to those who wait | ni deuda que no se pague | — |  |
+| `saying.77.start` | Good things come | No hay plazo que no se cumpla | — |  |
+| `saying.78.end` | never boils | que trote que canse | — |  |
+| `saying.78.start` | A watched pot | Más vale paso que dure | — |  |
+| `saying.79.end` | makes waste | no mueve molino | — |  |
+| `saying.79.start` | Haste | Agua pasada | — |  |
+| `saying.80.end` | another day | si la dicha es buena | — |  |
+| `saying.80.start` | Tomorrow is | Nunca es tarde | — |  |
+| `saying.81.end` | the iron is hot | cada cosa en su lugar | — |  |
+| `saying.81.start` | Strike while | El tiempo pone | — |  |
+| `saying.82.end` | will tell | pero sin pausa | — |  |
+| `saying.82.start` | Only time | Sin prisa | — |  |
+| `saying.83.end` | more than you can chew | buenas son tortas | — |  |
+| `saying.83.start` | Don't bite off | A falta de pan | — |  |
+| `saying.84.end` | that feeds you | le dan dos tazas | — |  |
+| `saying.84.start` | Don't bite the hand | Al que no quiere caldo | — |  |
+| `saying.85.end` | without breaking eggs | se cuecen habas | — |  |
+| `saying.85.start` | You can't make an omelette | En todas partes | — |  |
+| `saying.86.end` | by bread alone | son menos | — |  |
+| `saying.86.start` | Man does not live | Las penas con pan | — |  |
+| `saying.87.end` | make lemonade | hambre para mañana | — |  |
+| `saying.87.start` | When life gives you lemons | Pan para hoy | — |  |
+| `saying.88.end` | spoils the whole bunch | se cae la sopa | — |  |
+| `saying.88.start` | One bad apple | Del plato a la boca | — |  |
+| `saying.89.end` | the cookie crumbles | y pocas nueces | — |  |
+| `saying.89.start` | That's the way | Mucho ruido | — |  |
+| `saying.90.end` | of invention | hay mucho trecho | — |  |
+| `saying.90.start` | Necessity is the mother | Del dicho al hecho | — |  |
+| `saying.91.end` | blames his tools | poco aprieta | — |  |
+| `saying.91.start` | A bad workman | El que mucho abarca | — |  |
+| `saying.92.end` | it's worth doing well | que fuerza | — |  |
+| `saying.92.start` | If a job's worth doing | Más vale maña | — |  |
+| `saying.93.end` | cut once | no manda marinero | — |  |
+| `saying.93.start` | Measure twice | Donde manda capitán | — |  |
+| `saying.94.end` | gets the grease | hace al maestro | — |  |
+| `saying.94.start` | The squeaky wheel | La práctica | — |  |
+| `saying.95.end` | what you sow | bien acaba | — |  |
+| `saying.95.start` | You reap | Lo que bien empieza | — |  |
+| `saying.96.end` | is half done | y con el mazo dando | — |  |
+| `saying.96.start` | Well begun | A Dios rogando | — |  |
+| `saying.97.end` | nothing gained | se cosecha | — |  |
+| `saying.97.start` | Nothing ventured | Lo que se siembra | — |  |
+| `saying.98.end` | in a storm | agua lleva | — |  |
+| `saying.98.start` | Any port | Cuando el río suena | — |  |
+| `saying.99.end` | for a rainy day | sobre mojado | — |  |
+| `saying.99.start` | Save something | Llueve | — |  |
 | `settings.done` | Done | Listo | FamilyPhotoCaptionSheet, SettingsView |  |
 | `settings.guides` | Show the game guides again | Volver a ver las guías | SettingsView |  |
 | `settings.guides.done` | Done. You'll see them again. | Listo. Volverás a verlas. | SettingsView |  |
