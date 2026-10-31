@@ -68,6 +68,10 @@ struct SlidingBlocksView: View {
         // A block drag never scrolls the page, even in the scrolling layout (#470).
         .scrollDisabled(touch != nil)
         .gameHeader(.slidingBlocks, instruction: instruction)
+        .firstPlayGuide(
+            .slidingBlocks, line: AppLanguage.localized("game.slidingblocks.guide"),
+            example: AppLanguage.localized("guide.slidingblocks.example")
+        )
         .onAppear(perform: dealIfNeeded)
         .onDisappear { hintBuild?.cancel() }
         .celebration(isPresented: $showCelebration, game: .slidingBlocks, detail: finalDetail, onPlayAgain: deal)
@@ -82,11 +86,14 @@ struct SlidingBlocksView: View {
                 let boardWidth = cell * CGFloat(puzzle.width)
                 let boardHeight = cell * CGFloat(puzzle.height)
                 let legal = Self.directions(in: puzzle)
+                let guideIndex = FirstPlayGuideStore.shouldShow(.slidingBlocks) ? puzzle.guideBlock() : nil
                 ZStack(alignment: .topLeading) {
                     boardFrame(puzzle: puzzle, cell: cell)
                         .frame(width: boardWidth, height: boardHeight)
                     ForEach(puzzle.blocks.indices, id: \.self) { index in
-                        blockView(index, puzzle: puzzle, cell: cell, directions: legal[index] ?? [])
+                        blockView(
+                            index, puzzle: puzzle, cell: cell, directions: legal[index] ?? [],
+                            isGuideTarget: index == guideIndex)
                     }
                 }
                 .frame(width: boardWidth, height: boardHeight)
@@ -126,7 +133,8 @@ struct SlidingBlocksView: View {
     // MARK: - Blocks
 
     private func blockView(
-        _ index: Int, puzzle: SlidingBlocksPuzzle, cell: CGFloat, directions: [SlidingDirection]
+        _ index: Int, puzzle: SlidingBlocksPuzzle, cell: CGFloat, directions: [SlidingDirection],
+        isGuideTarget: Bool
     ) -> some View {
         let block = puzzle.blocks[index]
         let isBig = index == puzzle.bigIndex
@@ -157,6 +165,7 @@ struct SlidingBlocksView: View {
                 y: CGFloat(block.y) * cell + (dragOffset?.height ?? 0)
             )
             .zIndex(dragOffset != nil ? 2 : (isSelected ? 1 : 0))
+            .guideTarget(isGuideTarget)
             // The one place moves animate. Reduce Motion: moves land at once, with no slide (issue spec).
             .animation(reduceMotion ? nil : .easeInOut(duration: 0.25), value: puzzle)
             // High priority, so the block's drag wins over the page's ScrollView; the
