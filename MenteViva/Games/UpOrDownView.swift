@@ -76,13 +76,7 @@ struct UpOrDownView: View {
     @ViewBuilder
     private func note(for deal: UpOrDownDeal) -> some View {
         if showAlmost || isStuck(deal) {
-            Text(noteText(for: deal))
-                .font(.title2.weight(.semibold))
-                .foregroundStyle(Color.todaysPick)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal, 14)
-                .padding(.vertical, 10)
-                .background(Color.amber.opacity(0.24), in: .rect(cornerRadius: 14))
+            AlmostNote(text: noteText(for: deal))
         }
     }
 
