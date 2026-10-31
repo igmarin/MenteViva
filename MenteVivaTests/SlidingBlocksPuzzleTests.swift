@@ -123,6 +123,16 @@ final class SlidingBlocksPuzzleTests: XCTestCase {
             ])
     }
 
+    func testGivenLayoutKeyWhenDecodedThenSameBoardBigFirst() {
+        for layout in ["BB^/BBv/<>o/.o.", "BBoo/BB<>/<>^o/o^vo/.v.o", "o.^/.ov/^BB/vBB"] {
+            let rows = layout.split(separator: "/")
+            let p = SlidingBlocksPuzzle(width: rows[0].count, height: rows.count, layout: layout)
+            let decoded = SlidingBlocksPuzzle(width: p.width, height: p.height, layoutKey: p.layoutKey)
+            XCTAssertEqual(decoded.blocks, p.blocks, layout)
+            XCTAssertEqual(decoded.bigIndex, 0, layout)
+        }
+    }
+
     func testGivenIllegalMovesWhenApplyingThenRejected() {
         // Row 3 is "oo.": the corner cell is free, but the left 1×1 can't jump the middle one to reach it.
         let p = SlidingBlocksPuzzle(width: 3, height: 4, layout: "BB^/BBv/<>./oo.")
@@ -157,6 +167,21 @@ final class SlidingBlocksPuzzleTests: XCTestCase {
                 XCTAssertEqual(map.minMoves(from: p), left - 1, "level \(level)")
             }
         }
+    }
+
+    func testGivenEarlyLevelsWhenMapBuiltThenMinMovesMatchGenerator() {
+        for level in 1...4 {
+            for data in SlidingBlocksLevels.puzzles(for: level).prefix(3) {
+                XCTAssertEqual(SlidingBlocksMap(from: data.puzzle).minMoves(from: data.puzzle), data.minMoves, data.layout)
+            }
+        }
+    }
+
+    func testGivenBoardWithNoMoveWhenMapBuiltThenNoHint() {
+        let p = SlidingBlocksPuzzle(width: 3, height: 4, layout: "BBo/BBo/ooo/ooo")
+        let map = SlidingBlocksMap(from: p)
+        XCTAssertNil(map.minMoves(from: p))
+        XCTAssertNil(map.hint(from: p))
     }
 
     /// Structural, not a stopwatch: a wall-clock ceiling flaked on loaded runners.
