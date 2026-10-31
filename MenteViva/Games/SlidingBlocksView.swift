@@ -40,6 +40,7 @@ struct SlidingBlocksView: View {
     @State private var hintBuild: Task<SlidingBlocksMap, Never>?
     /// Guards the async hint-table build: a table is kept only for the deal that asked for it.
     @State private var dealID = 0
+    @State private var hintsUsed = 0
     @State private var startedAt = Date.now
     @State private var showCelebration = false
     @State private var finalDetail = ""
@@ -332,6 +333,7 @@ struct SlidingBlocksView: View {
     private func startOver() {
         guard var current = puzzle, current.movesMade > 0 else { return }
         current.reset(to: initialBlocks)
+        hintsUsed = 0
         puzzle = current
         lastSlide = nil
         selected = nil
@@ -339,9 +341,10 @@ struct SlidingBlocksView: View {
     }
 
     /// "Show me a move": the hint table's best next slide is played for the
-    /// player, so it teaches by moving, not by pointing.
+    /// player; each shown move adds one attempt and no correct move.
     private func showMove() {
         guard let current = puzzle, let map = hintMap, let move = map.hint(from: current) else { return }
+        hintsUsed += 1
         apply(move)
     }
 
@@ -363,6 +366,7 @@ struct SlidingBlocksView: View {
         let fresh = next.puzzle
         puzzle = fresh
         initialBlocks = fresh.blocks
+        hintsUsed = 0
         selected = nil
         dragLock = nil
         lastSlide = nil
@@ -400,12 +404,16 @@ struct SlidingBlocksView: View {
             GameSession(
                 gameID: .slidingBlocks, score: Self.score(minMoves: best, moves: solved.movesMade),
                 rounds: 1, durationSeconds: elapsed,
-                correct: best, attempts: solved.movesMade, difficulty: difficulty))
+                correct: best, attempts: Self.recordedAttempts(moves: solved.movesMade, hints: hintsUsed), difficulty: difficulty)
+        )
         finalDetail = AppLanguage.localized("game.sliding.out")
         if CaptionSpeaker.autoSpeaks() { CaptionSpeaker.speak(finalDetail) }
         AccessibilityNotification.Announcement(finalDetail).post()
         showCelebration = true
     }
+
+    /// A shown move counts in addition to the move it plays.
+    static func recordedAttempts(moves: Int, hints: Int) -> Int { moves + hints }
 
     /// Progress, never points (#45): a clean run is 100, each slide beyond the
     /// puzzle's fewest costs 5, floored at 10. Stored, never shown.

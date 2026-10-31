@@ -4,6 +4,16 @@ import XCTest
 
 /// #222: sliding blocks solver, generated puzzles and levels.
 final class SlidingBlocksPuzzleTests: XCTestCase {
+
+    func testGivenEveryMoveFromHintsWhenSolvedThenAccuracyIsHalf() {
+        let attempts = SlidingBlocksView.recordedAttempts(moves: 12, hints: 12)
+        XCTAssertEqual(Double(12) / Double(attempts), 0.5)
+        XCTAssertFalse(
+            LevelExplainPolicy.shouldOffer(
+                accuracy: Double(12) / Double(attempts), game: .slidingBlocks,
+                level: Difficulty(level: 4), isPinned: false, alreadyOfferedToday: false))
+    }
+
     private struct SeededRNG: RandomNumberGenerator {
         var state: UInt64
         mutating func next() -> UInt64 {

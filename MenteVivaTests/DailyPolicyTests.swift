@@ -170,6 +170,13 @@ final class DailyPolicyTests: XCTestCase {
         XCTAssertEqual(plan(hard).difficulty[.memoryMatch], Difficulty(level: 3))
     }
 
+    func testGivenSlidingBlocksAccuracyWhenPlanningThenItsOwnThresholdsApply() {
+        for (accuracy, expected) in [(0.71, 5), (0.50, 4), (0.40, 4), (0.33, 3)] {
+            let s = state([.slidingBlocks: stats(level: Difficulty(level: 4), recent: [accuracy])])
+            XCTAssertEqual(plan(s).difficulty[.slidingBlocks], Difficulty(level: expected))
+        }
+    }
+
     func testGivenChangeRecordedWhenPlanThenPreviousLevelKept() {
         let s = state([.stroop: stats(level: Difficulty(level: 6), recent: [0.95])])
         let p = plan(s)

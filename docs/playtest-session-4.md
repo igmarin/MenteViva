@@ -247,7 +247,7 @@ Quote worth keeping:
 |---|---|
 | Froze, blank screen or a layout that does not fit on iOS 17.7 | fix first; there is no iOS 17 simulator, so reproduce on the iPad |
 | Asked for help in onboarding, or stopped at one question | a new `design` issue for that step; small copy fixes the same day (onboarding epic #192) |
-| Levels climbed 3+ steps in a week, or he said "too hard" twice | tell me: the staircase thresholds (`DailyPolicy` thresholds, #198), how-it-works.md; pinning a level is the family-side workaround, not the fix |
+| Levels climbed 3+ steps in a week, or he said "too hard" twice | tell me: the staircase thresholds (including Sliding Blocks 0.70 / 0.40, #399; `DailyPolicy` thresholds, #198), how-it-works.md; pinning a level is the family-side workaround, not the fix |
 | Levels never moved, or he said "too easy" for three days | same: thresholds, or the next-level offer not showing (#207) |
 | A level-change line he didn't understand, or that felt like a grade | the line's wording (`level.explain.*`) in `Localizable.xcstrings`, EN + ES, warm copy only |
 | He took "Keep it as it is" every time, or "Yes" then went back | the offer's wording and timing (#207) |
