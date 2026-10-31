@@ -202,6 +202,48 @@ final class TangramPuzzleTests: XCTestCase {
         XCTAssertEqual(puzzle.fittingSlots(for: .large2).count, 1)
     }
 
+    func testGivenASmallTileAndAMinimumReachWhenDroppedJustOutsideShareReachThenItSnaps() {
+        // A board at 15pt per unit, and the 60pt target the view asks for: 30pt of reach (#396).
+        let (shape, slot, point) = drop(.small, twin: .small2, units: 29.0 / 15)
+        XCTAssertGreaterThan(29.0 / 15, TangramPuzzle.snapShare * TangramPiece.small.diagonal)
+        var puzzle = TangramPuzzle(shape: shape, rules: rules(level: 7))
+        let target = shape.placements[slot]
+        let result = puzzle.place(
+            .small, at: point, rotation: target.rotation, flipped: target.flipped, minimumReach: 30.0 / 15)
+        XCTAssertEqual(result, .snapped(slot: slot))
+    }
+
+    func testGivenNoMinimumReachWhenDroppedOutsideShareReachThenTryAnotherSpot() {
+        let (shape, slot, point) = drop(.small, twin: .small2, units: 29.0 / 15)
+        var puzzle = TangramPuzzle(shape: shape, rules: rules(level: 7))
+        let target = shape.placements[slot]
+        let result = puzzle.place(.small, at: point, rotation: target.rotation, flipped: target.flipped)
+        XCTAssertEqual(result, .tryAnotherSpot)
+        XCTAssertTrue(puzzle.filled.isEmpty)
+    }
+
+    func testGivenAMinimumReachWhenDroppedPastItThenTryAnotherSpot() {
+        // The 60pt target is a floor, not a magnet: 31pt off at 15pt per unit stays outside it.
+        let (shape, slot, point) = drop(.small, twin: .small2, units: 31.0 / 15)
+        var puzzle = TangramPuzzle(shape: shape, rules: rules(level: 7))
+        let target = shape.placements[slot]
+        let result = puzzle.place(
+            .small, at: point, rotation: target.rotation, flipped: target.flipped, minimumReach: 30.0 / 15)
+        XCTAssertEqual(result, .tryAnotherSpot)
+        XCTAssertTrue(puzzle.filled.isEmpty)
+    }
+
+    func testGivenALargeTileAndASmallerMinimumReachWhenDroppedWithinShareReachThenItStillSnaps() {
+        // On a big board (iPad) the share reach is already past 60pt, and it stays as it was.
+        let shareReach = TangramPuzzle.snapShare * TangramPiece.large.diagonal
+        let (shape, slot, point) = drop(.large, twin: .large2, units: shareReach * 0.9)
+        var puzzle = TangramPuzzle(shape: shape, rules: rules(level: 7))
+        let target = shape.placements[slot]
+        let result = puzzle.place(
+            .large, at: point, rotation: target.rotation, flipped: target.flipped, minimumReach: 1)
+        XCTAssertEqual(result, .snapped(slot: slot))
+    }
+
     func testGivenVoiceOverWhenATileIsPlacedInANamedSlotThenItGoesHomeAtAnyLevel() {
         let shape = TangramShapes.all[0]
         var puzzle = TangramPuzzle(shape: shape, rules: rules(level: 10))
@@ -295,6 +337,44 @@ final class TangramPuzzleTests: XCTestCase {
         }
     }
 
+    // MARK: - Tray (#396)
+
+    func testGivenTheThreeTrianglesAtOneTurnWhenDrawnInTheTrayThenTheirLegsKeepTheirRatio() {
+        for rotation in 0..<8 {
+            for flipped in [false, true] {
+                let legs = [TangramPiece.large, .medium, .small].map { piece in
+                    let points = TangramPuzzle.trayPoints(
+                        of: TangramPlacement(piece: piece, position: .zero, rotation: rotation, flipped: flipped))
+                    // Corner 0 is the right angle, corner 1 the end of a leg.
+                    return Double(hypot(points[1].x - points[0].x, points[1].y - points[0].y))
+                }
+                // 4 : 2√2 : 2, the same as on the board.
+                XCTAssertEqual(legs[0] / legs[2], 2, accuracy: 0.000_001, "turn \(rotation)")
+                XCTAssertEqual(legs[1] / legs[2], sqrt(2), accuracy: 0.000_001, "turn \(rotation)")
+            }
+        }
+    }
+
+    func testGivenAnyTileAtAnyOfEightTurnsWhenDrawnInTheTrayThenItFitsCentredInItsCell() {
+        for piece in TangramPiece.allCases {
+            for rotation in 0..<8 {
+                for flipped in [false, true] {
+                    let points = TangramPuzzle.trayPoints(
+                        of: TangramPlacement(piece: piece, position: .zero, rotation: rotation, flipped: flipped))
+                    let xs = points.map(\.x)
+                    let ys = points.map(\.y)
+                    let label = "\(piece) turn \(rotation) flipped \(flipped)"
+                    XCTAssertGreaterThanOrEqual(xs.min() ?? -1, 0, label)
+                    XCTAssertLessThanOrEqual(xs.max() ?? 101, 100, label)
+                    XCTAssertGreaterThanOrEqual(ys.min() ?? -1, 0, label)
+                    XCTAssertLessThanOrEqual(ys.max() ?? 101, 100, label)
+                    XCTAssertEqual(((xs.min() ?? 0) + (xs.max() ?? 0)) / 2, 50, accuracy: 0.000_001, label)
+                    XCTAssertEqual(((ys.min() ?? 0) + (ys.max() ?? 0)) / 2, 50, accuracy: 0.000_001, label)
+                }
+            }
+        }
+    }
+
     func testGivenEveryRegionWhenSlotInitThenAllNine() {
         let rows: [TangramSlot.Row] = [.top, .middle, .bottom]
         let columns: [TangramSlot.Column] = [.left, .middle, .right]
@@ -322,6 +402,21 @@ final class TangramPuzzleTests: XCTestCase {
 
     private func rules(level: Int) -> TangramRules {
         TangramPuzzle.rules(for: Difficulty(level: level))
+    }
+
+    /// The first shape's slot for `piece` and a point `units` from its middle, heading away from its
+    /// twin's slot, so no other slot the tile fits is nearer than its own.
+    private func drop(
+        _ piece: TangramPiece, twin: TangramPiece, units: Double
+    ) -> (shape: TangramShape, slot: Int, point: CGPoint) {
+        let shape = TangramShapes.all[0]
+        let slot = shape.placements.firstIndex { $0.piece == piece }!
+        let middle = TangramPuzzle.middle(of: shape.placements[slot])
+        let other = TangramPuzzle.middle(of: shape.placements[shape.placements.firstIndex { $0.piece == twin }!])
+        let away = hypot(middle.x - other.x, middle.y - other.y)
+        let point = CGPoint(
+            x: middle.x + (middle.x - other.x) / away * units, y: middle.y + (middle.y - other.y) / away * units)
+        return (shape, slot, point)
     }
 
     private func area(of poly: [CGPoint]) -> Double {
