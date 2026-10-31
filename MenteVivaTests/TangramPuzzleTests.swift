@@ -401,6 +401,13 @@ final class TangramPuzzleTests: XCTestCase {
         }
     }
 
+    /// #415: a grid tile dragged by its corner lands where the tile's middle is, not the finger.
+    func testGivenATrayCellDraggedByItsCornerWhenDroppedThenTheDropPointIsTheTilesMiddle() {
+        let cell = CGRect(x: 20, y: 500, width: 100, height: 100)
+        let point = TangramPuzzle.dropPoint(cell: cell, translation: CGSize(width: 30, height: -400))
+        XCTAssertEqual(point, CGPoint(x: 100, y: 150))
+    }
+
     // MARK: - Tray (#396)
 
     func testGivenTheThreeTrianglesAtOneTurnWhenDrawnInTheTrayThenTheirLegsKeepTheirRatio() {
