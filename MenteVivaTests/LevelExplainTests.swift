@@ -223,4 +223,32 @@ final class LevelExplainTests: XCTestCase {
         // First move, undo (or "Start over", or "Play again") back to 0 moves.
         XCTAssertEqual(LevelExplainSlot.slot(hasNote: true, hasStarted: false, dismissed: true), .reserved)
     }
+
+    // MARK: - Reading the change once per open (#416)
+
+    func testGivenManyBodyRunsWhenBannerReadsItsNoteThenTodaysChangeIsReadOnce() {
+        let memo = LevelExplainBanner.Memo()
+        var reads = 0
+        let read = { () -> LevelChange? in
+            reads += 1
+            return LevelChange(previous: Difficulty(level: 4), reason: .eased)
+        }
+        for moved in [false, false, false, true, false] {
+            _ = memo.slot(game: .stroop, hasStarted: moved, readChange: read)
+        }
+        XCTAssertEqual(reads, 1)
+    }
+
+    func testGivenSharedMemoWhenBannerIsRebuiltThenTodaysChangeIsNotReadAgain() {
+        // Tangram's parent keeps one memo across a rotation that rebuilds the banner (#481).
+        let shared = LevelExplainBanner.Memo()
+        var reads = 0
+        let read = { () -> LevelChange? in
+            reads += 1
+            return nil
+        }
+        _ = shared.slot(game: .tangram, hasStarted: false, readChange: read)
+        _ = shared.slot(game: .tangram, hasStarted: true, readChange: read)
+        XCTAssertEqual(reads, 1)
+    }
 }

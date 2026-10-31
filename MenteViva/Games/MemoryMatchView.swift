@@ -142,7 +142,7 @@ struct MemoryMatchView: View {
     var body: some View {
         VStack(spacing: 24) {
             LevelExplainBanner(
-                change: PlanStore.todaysChange(variant.game), game: variant.game, hasStarted: moves > 0,
+                game: variant.game, hasStarted: moves > 0,
                 keepsSpace: true)
             Text(AppLanguage.localized(variant.instructionKey))
                 .font(.title2)
