@@ -36,7 +36,8 @@ enum AppLanguage: String, CaseIterable, Identifiable {
 
     /// Strings come from the chosen language's own bundle: `locale:` alone only
     /// formats, and the main bundle's language is fixed at launch (#134).
-    private static func bundle(for language: AppLanguage) -> Bundle {
+    private static func bundle(in defaults: UserDefaults) -> Bundle {
+        let language = selected(in: defaults)
         guard language != .system,
             let path = Bundle.main.path(forResource: language.rawValue, ofType: "lproj"),
             let bundle = Bundle(path: path)
@@ -44,32 +45,14 @@ enum AppLanguage: String, CaseIterable, Identifiable {
         return bundle
     }
 
-    private static let lock = NSLock()
-    nonisolated(unsafe) private static var resolved: (language: AppLanguage, bundle: Bundle, locale: Locale)?
-
-    /// The bundle and locale for the stored choice, kept between lookups: a Sliding Blocks
-    /// drag redraws ~40 strings a frame and finding the bundle again was most of each
-    /// lookup (#417, docs/profiling.md). Rebuilt when the stored choice differs, so the
-    /// live switch (#134) still lands on the next lookup.
-    private static func lookup(in defaults: UserDefaults) -> (bundle: Bundle, locale: Locale) {
-        let language = selected(in: defaults)
-        lock.lock()
-        defer { lock.unlock() }
-        if let resolved, resolved.language == language { return (resolved.bundle, resolved.locale) }
-        // "Follow the device" keeps following it: a kept `.current` would miss a change in Settings.
-        let locale = language == .system ? Locale.autoupdatingCurrent : locale(for: language.rawValue)
-        let fresh = (language: language, bundle: bundle(for: language), locale: locale)
-        resolved = fresh
-        return (fresh.bundle, fresh.locale)
-    }
-
     static func localized(_ key: String, defaults: UserDefaults = .standard) -> String {
         localized(String.LocalizationValue(key), defaults: defaults)
     }
 
     static func localized(_ resource: String.LocalizationValue, defaults: UserDefaults = .standard) -> String {
-        let (bundle, locale) = lookup(in: defaults)
-        return String(localized: resource, bundle: bundle, locale: locale)
+        String(
+            localized: resource, bundle: bundle(in: defaults),
+            locale: locale(for: selected(in: defaults).rawValue))
     }
 
     /// Stores the choice; the views observe it through `@AppStorage`, so the

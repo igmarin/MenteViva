@@ -26,16 +26,6 @@ final class AppLanguageTests: XCTestCase {
         XCTAssertEqual(AppLanguage.localized("settings.language", defaults: defaults), "Language")
     }
 
-    /// #417: the lookup keeps the last bundle; a switch after a lookup must not reuse it.
-    func testGivenSpanishLookedUpWhenEnglishChosenThenEnglishAtOnce() {
-        AppLanguage.apply("es", to: defaults)
-        XCTAssertEqual(AppLanguage.localized("settings.language", defaults: defaults), "Idioma")
-        AppLanguage.apply("en", to: defaults)
-        XCTAssertEqual(AppLanguage.localized("settings.language", defaults: defaults), "Language")
-        AppLanguage.apply("es", to: defaults)
-        XCTAssertEqual(AppLanguage.localized("settings.language", defaults: defaults), "Idioma")
-    }
-
     func testGivenAChoiceWhenAppliedThenItIsStoredForTheViews() {
         AppLanguage.apply("es", to: defaults)
         XCTAssertEqual(defaults.string(forKey: AppLanguage.storageKey), "es")
