@@ -10,6 +10,16 @@ struct PictureView: View {
     let size: CGFloat
 
     var body: some View {
+        // A colour is drawn, not pictured: the circle is the same on every phone, where an emoji
+        // would borrow Apple's art (#418).
+        if let swatch = picture.swatch {
+            ColorSwatch(color: swatch, size: size)
+        } else {
+            pictureBody
+        }
+    }
+
+    @ViewBuilder private var pictureBody: some View {
         switch picture.look(hasAsset: Self.bundleHasAsset) {
         case .asset(let name):
             Image(name)
@@ -47,5 +57,40 @@ struct PictureView: View {
     /// far as its tile can hold it.
     static func fitted(_ size: CGFloat, columnWidth: CGFloat, margin: CGFloat) -> CGFloat {
         min(size, max(0, columnWidth - 2 * margin - 6))
+    }
+}
+
+extension GamePicture {
+    /// The fill of a `color.*` picture, or nil for every other slug (#418). Name the Herd's Colors
+    /// round shows these as plain circles; the VoiceOver name still comes from `nameKey`.
+    var swatch: Color? {
+        switch slug {
+        case "color.red": Color(UIColor(rgb: 0xC8372D))
+        case "color.blue": Color(UIColor(rgb: 0x2F62B5))
+        case "color.green": Color(UIColor(rgb: 0x2E7D4F))
+        case "color.yellow": Color(UIColor(rgb: 0xE7AC45))
+        case "color.orange": Color(UIColor(rgb: 0xE07B2A))
+        case "color.purple": Color(UIColor(rgb: 0x6B3FA0))
+        case "color.brown": Color(UIColor(rgb: 0x7A4B2A))
+        default: nil
+        }
+    }
+}
+
+/// A colour as a filled circle with a 3pt espresso outline and a 3pt paper ring, so the edge holds
+/// on a tile in light and dark mode (yellow on cream would otherwise melt away). Drawn at 0.8 of
+/// `size` to match the visual weight of the illustrations.
+private struct ColorSwatch: View {
+    let color: Color
+    let size: CGFloat
+
+    var body: some View {
+        Circle()
+            .fill(color)
+            .overlay { Circle().strokeBorder(Color.espresso, lineWidth: 3) }
+            .padding(3)
+            .background(Color.paper, in: .circle)
+            .frame(width: size * 0.8, height: size * 0.8)
+            .frame(width: size, height: size)
     }
 }

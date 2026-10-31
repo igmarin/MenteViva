@@ -144,6 +144,7 @@
 		C41E87AF625987A200000032 /* SudokuPuzzleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD3387532B6DCD100000002C; };
 		507BDE26F60C722300000033 /* TangramPuzzleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9F3AC793082C890000002D; };
 		75073BC363161AA600000033 /* TilePairsDealTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3531B453913EE440000002D; };
+		FA169D70BE04A96E00000036 /* TilePairsStringsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FE43A690A6AEFC00000030; };
 		854BEF814FB113CF0000002E /* TodayRunTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92F4CC37A2FE5BE500000028; };
 		2805D2CDDD156E3900000030 /* TodayShareTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C12EA368FEDF06F0000002A; };
 		BF3BF8B08BEED1310000002F /* ToneSynthTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B995186993817700000029; };
@@ -291,6 +292,7 @@
 		CD3387532B6DCD100000002C /* SudokuPuzzleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/SudokuPuzzleTests.swift; sourceTree = SOURCE_ROOT; };
 		7B9F3AC793082C890000002D /* TangramPuzzleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/TangramPuzzleTests.swift; sourceTree = SOURCE_ROOT; };
 		B3531B453913EE440000002D /* TilePairsDealTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/TilePairsDealTests.swift; sourceTree = SOURCE_ROOT; };
+		78FE43A690A6AEFC00000030 /* TilePairsStringsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/TilePairsStringsTests.swift; sourceTree = SOURCE_ROOT; };
 		92F4CC37A2FE5BE500000028 /* TodayRunTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/TodayRunTests.swift; sourceTree = SOURCE_ROOT; };
 		9C12EA368FEDF06F0000002A /* TodayShareTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/TodayShareTests.swift; sourceTree = SOURCE_ROOT; };
 		D4B995186993817700000029 /* ToneSynthTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/ToneSynthTests.swift; sourceTree = SOURCE_ROOT; };
@@ -478,6 +480,7 @@
 				CD3387532B6DCD100000002C /* SudokuPuzzleTests.swift */,
 				7B9F3AC793082C890000002D /* TangramPuzzleTests.swift */,
 				B3531B453913EE440000002D /* TilePairsDealTests.swift */,
+				78FE43A690A6AEFC00000030 /* TilePairsStringsTests.swift */,
 				92F4CC37A2FE5BE500000028 /* TodayRunTests.swift */,
 				9C12EA368FEDF06F0000002A /* TodayShareTests.swift */,
 				D4B995186993817700000029 /* ToneSynthTests.swift */,
@@ -698,6 +701,7 @@
 				C41E87AF625987A200000032 /* SudokuPuzzleTests.swift in Sources */,
 				507BDE26F60C722300000033 /* TangramPuzzleTests.swift in Sources */,
 				75073BC363161AA600000033 /* TilePairsDealTests.swift in Sources */,
+				FA169D70BE04A96E00000036 /* TilePairsStringsTests.swift in Sources */,
 				854BEF814FB113CF0000002E /* TodayRunTests.swift in Sources */,
 				2805D2CDDD156E3900000030 /* TodayShareTests.swift in Sources */,
 				BF3BF8B08BEED1310000002F /* ToneSynthTests.swift in Sources */,

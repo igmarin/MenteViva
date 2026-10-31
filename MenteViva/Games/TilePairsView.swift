@@ -130,8 +130,11 @@ struct TilePairsView: View {
                 .scaleEffect(isRemoving && !reduceMotion ? 1.06 : 1)
                 .animation(reduceMotion ? .easeOut(duration: 0.2) : .easeOut(duration: 0.35), value: isRemoving)
                 // Shake for covered tile
-                .offset(x: isShaking ? 6 : 0)
-                .animation(isShaking ? .easeInOut(duration: 0.08).repeatCount(3, autoreverses: true) : .default, value: shakeID)
+                .offset(x: isShaking && !reduceMotion ? 6 : 0)
+                .animation(
+                    isShaking && !reduceMotion
+                        ? .easeInOut(duration: 0.08).repeatCount(3, autoreverses: true) : .default, value: shakeID
+                )
                 // Miss cue for mismatch pair
                 .modifier(MissCue(active: Binding(get: { isMismatched }, set: { if !$0 { mismatched.remove(tile.id) } })))
         }
@@ -321,6 +324,12 @@ struct TilePairsView: View {
         if let pair = groups.first(where: { $0.value.count >= 2 })?.value.prefix(2) {
             highlighted = Set(pair.map(\.id))
             Feedback.play(.success)
+            // Sighted players see the glow; VoiceOver hears which pair to look for.
+            if let first = pair.first {
+                AccessibilityNotification.Announcement(
+                    String(format: AppLanguage.localized("game.tilepairs.hint %@"), symbolLabel(first.symbol))
+                ).post()
+            }
             Task { @MainActor in
                 try? await Task.sleep(for: .seconds(1.4))
                 highlighted = []
