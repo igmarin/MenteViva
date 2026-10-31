@@ -64,4 +64,41 @@ final class GamePicturesTests: XCTestCase {
         let dog = GamePictures.named("dog")
         XCTAssertEqual(dog.look(hasAsset: { $0 == "pic.dog" }), .asset("pic.dog"))
     }
+
+    // MARK: - Sizes (#413)
+
+    func testGivenAnIPad_WhenTheFlashTargetIsSized_ThenItReachesItsCeiling() {
+        XCTAssertEqual(PictureView.flashTarget(ceiling: 240, width: 744, isAccessibilitySize: false), 240)
+    }
+
+    func testGivenAnIPhoneSE_WhenTheFlashTargetIsSized_ThenItIsSixtyPercentOfTheWidth() {
+        XCTAssertEqual(PictureView.flashTarget(ceiling: 240, width: 375, isAccessibilitySize: false), 225, accuracy: 0.001)
+    }
+
+    func testGivenAccessibilityText_WhenTheFlashTargetIsSized_ThenItStopsAt120SoTheButtonStaysOnScreen() {
+        XCTAssertEqual(PictureView.flashTarget(ceiling: 600, width: 744, isAccessibilitySize: true), 120)
+        XCTAssertEqual(PictureView.flashTarget(ceiling: 600, width: 375, isAccessibilitySize: true), 120)
+    }
+
+    func testGivenAccessibilityText_WhenTheScreenIsNarrowerThanTheCap_ThenTheWidthRuleStillWins() {
+        XCTAssertEqual(PictureView.flashTarget(ceiling: 600, width: 150, isAccessibilitySize: true), 90, accuracy: 0.001)
+    }
+
+    func testGivenTheDefaultSizes_WhenTheHerdColumnIsSized_ThenTheTileStaysAt100() {
+        XCTAssertEqual(PictureView.columnMinimum(picture: 72, margin: 14), 100)
+    }
+
+    func testGivenLargerText_WhenTheHerdColumnIsSized_ThenItWidensWithThePicture() {
+        XCTAssertEqual(PictureView.columnMinimum(picture: 180, margin: 35), 250)
+    }
+
+    func testGivenAnIPhoneSE_WhenAChoiceIsSized_ThenItKeepsAll84() {
+        // 375 less 32pt of padding and the 8pt gap, halved: 167pt per tile.
+        XCTAssertEqual(PictureView.fitted(84, columnWidth: 167.5, margin: 13), 84)
+    }
+
+    func testGivenTheLargestText_WhenAChoiceIsSizedForAnSE_ThenItStopsAtWhatTheTileCarries() {
+        // At the largest text the picture scales to about 222pt and its margin to about 34pt, in a 167pt tile.
+        XCTAssertEqual(PictureView.fitted(222, columnWidth: 167.5, margin: 34.3), 92.9, accuracy: 0.001)
+    }
 }
