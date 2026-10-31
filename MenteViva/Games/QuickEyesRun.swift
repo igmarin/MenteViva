@@ -58,7 +58,7 @@ nonisolated struct QuickEyesRun {
     /// Applies one pick. Paced levels never lose a round to a miss: the wrong picture fades and the
     /// player looks again (#46). Flash levels shrink the flash on a right pick and relax one step on a miss
     /// so the next round feels kinder.
-    mutating func pick(_ picture: GamePicture, target: GamePicture, reactionSeconds: Double) -> Pick {
+    mutating func pick(_ picture: GamePicture, target: GamePicture) -> Pick {
         let result: Pick
         if isPaced, picture != target {
             fadedPictures.insert(picture)

@@ -46,7 +46,6 @@ struct QuickEyesView: View {
     /// Player-paced rounds (#46): when the picture appeared and how long the player looked.
     @State private var revealedAt = Date.now
     @State private var lookTime = 0.0
-    @State private var optionsShownAt = Date.now
     @State private var startedAt = Date.now
     @State private var revealTask: Task<Void, Never>?
     /// A call or the app switcher cut the flash short (#415): deal the round again on return, uncounted.
@@ -210,7 +209,6 @@ struct QuickEyesView: View {
         revealTask = Task { @MainActor in
             try? await Task.sleep(for: .seconds(hold))
             guard !Task.isCancelled, phase == .showing else { return }
-            optionsShownAt = .now
             phase = .choosing
         }
     }
@@ -232,7 +230,6 @@ struct QuickEyesView: View {
     private func gotIt() {
         guard phase == .showing else { return }
         lookTime = Date.now.timeIntervalSince(revealedAt)
-        optionsShownAt = .now
         phase = .choosing
     }
 
@@ -244,8 +241,7 @@ struct QuickEyesView: View {
     private func choose(_ picture: GamePicture) {
         guard phase == .choosing, beat == nil, !progress.isFinished else { return }
         // Paced levels never lose a round to a miss: the run fades the pick and the player looks again (#46).
-        let reaction = Date.now.timeIntervalSince(optionsShownAt)
-        let outcome = run.pick(picture, target: target, reactionSeconds: reaction)
+        let outcome = run.pick(picture, target: target)
         if outcome == .faded {
             Feedback.play(.miss)
             AccessibilityNotification.Announcement(AppLanguage.localized("game.quickeyes.lookagain")).post()

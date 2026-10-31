@@ -400,8 +400,7 @@ struct MemoryMatchView: View {
     /// (#415). The match was already announced to VoiceOver by `flip`, so nothing waits on it.
     private func finish() {
         let elapsed = Int(Date.now.timeIntervalSince(startedAt))
-        // Score stays in the model as a record of how the round went (#45); the
-        // player sees progress, not points.
+        // score is left at 0 (#416); the round is recorded by rounds/attempts/correct.
         modelContext.record(
             GameSession(
                 gameID: variant.game,

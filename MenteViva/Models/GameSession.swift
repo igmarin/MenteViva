@@ -60,6 +60,7 @@ nonisolated enum SchemaV1: VersionedSchema {
         /// The game this session belongs to; "memory" is Memory Lane's pre-#57 ID.
         var game: GameID? { GameID(rawValue: gameID) ?? (gameID == "memory" ? .memoryMatch : nil) }
 
+        /// Default only; no stored property changed, so the V1 hash is unchanged (#416).
         init(
             gameID: GameID, score: Int = 0, rounds: Int, durationSeconds: Int,
             correct: Int = 0, attempts: Int = 0, difficulty: Difficulty? = nil

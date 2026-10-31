@@ -66,7 +66,7 @@ score = value[game] × (0.5 + 0.5 × daysSinceLastPlayed / 7)     (days capped a
 ## Saved data
 
 - **One SwiftData model, `GameSession`.** No relationships and no unique constraints, and every field has a
-  default, so it would also work with CloudKit later. Fields: game ID, score (never shown), rounds, attempts,
+  default, so it would also work with CloudKit later. Fields: game ID, score (kept for old rows; new rows store 0, #416), rounds, attempts,
   correct, duration, played-at, level (-1 for old rows).
 - **Rounds / attempts / correct mean the same in every game** (#58): `rounds` is what the session was made of,
   `attempts` is the picks the player made, `correct` is how many were right. `accuracy` is `correct / attempts`,
