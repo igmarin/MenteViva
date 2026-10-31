@@ -39,14 +39,16 @@ struct SlidingBlocksView: View {
     @State private var startedAt = Date.now
     @State private var showCelebration = false
     @State private var finalDetail = ""
+    /// Today's level-change note, decided once when the screen opens and dropped
+    /// on a replay. Held here, not re-read from the store, so the note keeps its
+    /// place in the layout for the whole deal (`SlidingBoardLayout.NoteSlot`).
+    @State private var explainKey = Self.pendingExplainKey()
 
     private var instruction: String { AppLanguage.localized("game.sliding.instruction") }
 
     var body: some View {
         VStack(spacing: 16) {
-            LevelExplainBanner(
-                change: PlanStore.cachedPlan()?.changes[GameID.slidingBlocks], game: GameID.slidingBlocks,
-                hasStarted: (puzzle?.movesMade ?? 0) > 0)
+            explainNote
             Text(instruction)
                 .font(.title2)
                 .multilineTextAlignment(.center)
@@ -60,10 +62,39 @@ struct SlidingBlocksView: View {
         }
         .padding()
         .fitOrScroll()
+        // A block drag never scrolls the page, even in the scrolling layout (#470).
+        .scrollDisabled(dragged != nil)
         .gameHeader(.slidingBlocks, instruction: instruction)
         .onAppear(perform: dealIfNeeded)
         .onDisappear { hintBuild?.cancel() }
         .celebration(isPresented: $showCelebration, game: .slidingBlocks, detail: finalDetail, onPlayAgain: deal)
+    }
+
+    // MARK: - Level note
+
+    /// The key of today's level-change note if it should show on this open, else nil.
+    /// Same rule as `LevelExplainBanner`, read once instead of on every redraw.
+    private static func pendingExplainKey() -> String? {
+        let change = PlanStore.cachedPlan()?.changes[GameID.slidingBlocks]
+        let seen = LevelOfferStore.hasSeenExplain(for: GameID.slidingBlocks, today: PlanStore.dayStamp())
+        guard LevelExplainPolicy.shouldShow(change: change, alreadySeenToday: seen) else { return nil }
+        return LevelExplainPolicy.key(for: change)
+    }
+
+    /// The note, which fades out on the first move but keeps its height, so the
+    /// board does not grow under the player's finger (#470).
+    @ViewBuilder
+    private var explainNote: some View {
+        let slot = SlidingBoardLayout.NoteSlot.slot(
+            hasNote: explainKey != nil, hasStarted: (puzzle?.movesMade ?? 0) > 0)
+        if let explainKey, slot.takesSpace {
+            LevelExplainLine(key: explainKey)
+                .opacity(slot == .showing ? 1 : 0)
+                .accessibilityHidden(slot != .showing)
+                .onAppear {
+                    LevelOfferStore.markExplainSeen(for: GameID.slidingBlocks, today: PlanStore.dayStamp())
+                }
+        }
     }
 
     // MARK: - Board
@@ -71,7 +102,7 @@ struct SlidingBlocksView: View {
     private var board: some View {
         GeometryReader { proxy in
             if let puzzle {
-                let cell = cellSize(for: puzzle, in: proxy.size)
+                let cell = SlidingBoardLayout.cellSize(in: proxy.size, columns: puzzle.width, rows: puzzle.height)
                 let boardWidth = cell * CGFloat(puzzle.width)
                 let boardHeight = cell * CGFloat(puzzle.height)
                 let legal = Self.directions(in: puzzle)
@@ -87,13 +118,6 @@ struct SlidingBlocksView: View {
             }
         }
         .accessibilityElement(children: .contain)
-    }
-
-    /// Biggest cell that keeps the whole board inside `size`. Every shipped
-    /// board (≤4 wide, ≤5 tall) lands at 68pt or more on an iPhone, above the
-    /// 60pt floor (conventions §4).
-    private func cellSize(for puzzle: SlidingBlocksPuzzle, in size: CGSize) -> CGFloat {
-        min(size.width / CGFloat(puzzle.width), size.height / CGFloat(puzzle.height))
     }
 
     /// The board's edge with a gap where the big block leaves: the bottom edge
@@ -131,48 +155,48 @@ struct SlidingBlocksView: View {
         let block = puzzle.blocks[index]
         let isBig = index == puzzle.bigIndex
         let isSelected = selected == index
-        return Button {
-            tap(index)
-        } label: {
+        return
             RoundedRectangle(cornerRadius: 12)
-                .fill(isBig ? Color.amber : GameID.slidingBlocks.ink)
-                .overlay {
-                    // Stripes on the big block: it is the goal by shape, not by colour alone (WCAG 1.4.1).
-                    if isBig {
-                        StripeOverlay()
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
-                    }
-                }
-                .overlay {
-                    RoundedRectangle(cornerRadius: 12)
-                        .strokeBorder(
-                            isSelected ? Color.espresso : Color.paper.opacity(0.9),
-                            lineWidth: isSelected ? 6 : 2)
-                }
-                .shadow(color: .black.opacity(isSelected ? 0.35 : 0.18), radius: isSelected ? 8 : 3, y: 3)
-                .padding(3)
-        }
-        .buttonStyle(.plain)
-        .frame(width: CGFloat(block.w) * cell, height: CGFloat(block.h) * cell)
-        .offset(
-            x: CGFloat(block.x) * cell + (dragged == index ? dragOffset.width : 0),
-            y: CGFloat(block.y) * cell + (dragged == index ? dragOffset.height : 0)
-        )
-        .zIndex(dragged == index ? 2 : (isSelected ? 1 : 0))
-        // The one place moves animate. Reduce Motion: moves land at once, with no slide (issue spec).
-        .animation(reduceMotion ? nil : .easeInOut(duration: 0.25), value: puzzle)
-        .simultaneousGesture(drag(for: index, cell: cell, puzzle: puzzle))
-        .accessibilityLabel(blockLabel(index, puzzle: puzzle))
-        .accessibilityAddTraits(isSelected ? .isSelected : [])
-        // VoiceOver moves the block straight, one cell at a time, and hears only
-        // the directions that are legal right now (issue spec).
-        .accessibilityActions {
-            ForEach(directions, id: \.self) { direction in
-                Button(AppLanguage.localized("game.sliding.move.\(direction.rawValue)")) {
-                    slide(index, direction)
+            .fill(isBig ? Color.amber : GameID.slidingBlocks.ink)
+            .overlay {
+                // Stripes on the big block: it is the goal by shape, not by colour alone (WCAG 1.4.1).
+                if isBig {
+                    StripeOverlay()
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
                 }
             }
-        }
+            .overlay {
+                RoundedRectangle(cornerRadius: 12)
+                    .strokeBorder(
+                        isSelected ? Color.espresso : Color.paper.opacity(0.9),
+                        lineWidth: isSelected ? 6 : 2)
+            }
+            .shadow(color: .black.opacity(isSelected ? 0.35 : 0.18), radius: isSelected ? 8 : 3, y: 3)
+            .padding(3)
+            .contentShape(Rectangle())
+            .frame(width: CGFloat(block.w) * cell, height: CGFloat(block.h) * cell)
+            .offset(
+                x: CGFloat(block.x) * cell + (dragged == index ? dragOffset.width : 0),
+                y: CGFloat(block.y) * cell + (dragged == index ? dragOffset.height : 0)
+            )
+            .zIndex(dragged == index ? 2 : (isSelected ? 1 : 0))
+            // The one place moves animate. Reduce Motion: moves land at once, with no slide (issue spec).
+            .animation(reduceMotion ? nil : .easeInOut(duration: 0.25), value: puzzle)
+            // High priority, so the block's drag wins over the page's ScrollView; the
+            // gesture also reads the tap, since a Button would race it.
+            .highPriorityGesture(drag(for: index, cell: cell, puzzle: puzzle))
+            .accessibilityLabel(blockLabel(index, puzzle: puzzle))
+            .accessibilityAddTraits(isSelected ? [.isButton, .isSelected] : .isButton)
+            .accessibilityAction { tap(index) }
+            // VoiceOver moves the block straight, one cell at a time, and hears only
+            // the directions that are legal right now (issue spec).
+            .accessibilityActions {
+                ForEach(directions, id: \.self) { direction in
+                    Button(AppLanguage.localized("game.sliding.move.\(direction.rawValue)")) {
+                        slide(index, direction)
+                    }
+                }
+            }
     }
 
     /// One 100pt arrow tile per direction the selected block can slide; nothing
@@ -237,18 +261,27 @@ struct SlidingBlocksView: View {
         Feedback.play(.tap)
     }
 
-    /// A drag moves the block along one axis, clamped to the cells that are
-    /// actually clear; letting go snaps it to the nearest cell.
+    /// A touch on a block is a tap until it has gone clearly one way
+    /// (`SlidingDragRule`); then the block follows the finger along that axis,
+    /// clamped to the cells that are actually clear, and letting go snaps it to
+    /// the nearest cell. The minimum distance is 0 so this gesture owns the
+    /// touch from the start and the page's ScrollView never sees it.
     private func drag(for index: Int, cell: CGFloat, puzzle: SlidingBlocksPuzzle) -> some Gesture {
-        DragGesture(minimumDistance: 8)
+        DragGesture(minimumDistance: 0)
             .onChanged { value in
-                let limits = dragLimits ?? DragLimits(block: index, in: puzzle, translation: value.translation)
-                dragLimits = limits
+                if dragLimits == nil {
+                    guard let axis = SlidingDragRule.axis(for: value.translation) else { return }
+                    dragLimits = DragLimits(block: index, in: puzzle, axis: axis)
+                }
+                guard let limits = dragLimits else { return }
                 dragged = index
                 dragOffset = limits.clamped(value.translation, cell: cell)
             }
             .onEnded { value in
-                let limits = dragLimits ?? DragLimits(block: index, in: puzzle, translation: value.translation)
+                guard let limits = dragLimits else {
+                    if SlidingDragRule.isTap(value.translation) { tap(index) }
+                    return
+                }
                 let offset = limits.clamped(value.translation, cell: cell)
                 dragLimits = nil
                 dragged = nil
@@ -430,22 +463,19 @@ struct SlidingBlocksView: View {
 }
 
 /// A drag's axis and how far the block can go each way along it, in cells.
-/// The axis is picked once: the finger's main axis if the block can move
-/// along it, otherwise the axis it can move along.
+/// The axis is the one the finger led on when the drag started (`SlidingDragRule`),
+/// fixed for the whole drag; a block that cannot move that way stays put.
 private struct DragLimits {
     let horizontal: Bool
     let back: Int
     let forward: Int
 
-    init(block index: Int, in puzzle: SlidingBlocksPuzzle, translation: CGSize) {
+    init(block index: Int, in puzzle: SlidingBlocksPuzzle, axis: SlidingDragRule.Axis) {
         var reach: [SlidingDirection: Int] = [:]
         for move in puzzle.moves() where move.block == index {
             reach[move.direction] = max(reach[move.direction] ?? 0, move.steps)
         }
-        let canSide = reach[.left] != nil || reach[.right] != nil
-        let canUpDown = reach[.up] != nil || reach[.down] != nil
-        let prefersSide = abs(translation.width) >= abs(translation.height)
-        horizontal = canSide && (prefersSide || !canUpDown)
+        horizontal = axis == .horizontal
         back = reach[horizontal ? .left : .up] ?? 0
         forward = reach[horizontal ? .right : .down] ?? 0
     }
