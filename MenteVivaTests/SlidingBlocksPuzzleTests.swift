@@ -120,14 +120,18 @@ final class SlidingBlocksPuzzleTests: XCTestCase {
         }
     }
 
-    func testGivenDeepestLevelWhenMapBuiltThenHintsAreLookups() {
+    /// Structural, not a stopwatch: a wall-clock ceiling flaked on loaded runners.
+    /// A hint that is a pure lookup steps one move closer and never changes.
+    func testGivenSolvableBoardWhenHintThenMoveReducesMinMovesByOne() {
         let data = SlidingBlocksLevels.puzzles(for: 10)[0]
-        let p = data.puzzle
+        var p = data.puzzle
         let map = SlidingBlocksMap(from: p)
         XCTAssertEqual(map.minMoves(from: p), data.minMoves)
-        let start = Date()
-        let hint = map.hint(from: p)
-        XCTAssertLessThan(Date().timeIntervalSince(start), 0.05, "a hint is a lookup once the map exists")
-        XCTAssertNotNil(hint)
+        guard let hint = map.hint(from: p) else { return XCTFail("no hint") }
+        for _ in 0..<100 {
+            XCTAssertEqual(map.hint(from: p), hint, "the same board always gets the same hint")
+        }
+        XCTAssertTrue(p.apply(hint))
+        XCTAssertEqual(map.minMoves(from: p), data.minMoves - 1)
     }
 }
