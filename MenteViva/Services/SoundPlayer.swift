@@ -28,13 +28,37 @@ enum Feedback {
         haptic(for: .tap)
     }
 
+    /// Generators are created once and kept prepared, so the first tap of a
+    /// game does not wait for the Taptic Engine to spin up (#417).
+    private static let light = UIImpactFeedbackGenerator(style: .light)
+    private static let medium = UIImpactFeedbackGenerator(style: .medium)
+    private static let soft = UIImpactFeedbackGenerator(style: .soft)
+    private static let notification = UINotificationFeedbackGenerator()
+
+    /// Wakes the haptic generators ahead of the first tap. No-op when feedback is off.
+    static func warmUp() {
+        guard SoundPlayer.isEnabled else { return }
+        light.prepare()
+        medium.prepare()
+        soft.prepare()
+        notification.prepare()
+    }
+
     private static func haptic(for event: Event) {
         guard SoundPlayer.isEnabled else { return }
         switch event {
-        case .tap: UIImpactFeedbackGenerator(style: .light).impactOccurred()
-        case .success: UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-        case .complete: UINotificationFeedbackGenerator().notificationOccurred(.success)
-        case .miss: UIImpactFeedbackGenerator(style: .soft).impactOccurred()
+        case .tap:
+            light.impactOccurred()
+            light.prepare()
+        case .success:
+            medium.impactOccurred()
+            medium.prepare()
+        case .complete:
+            notification.notificationOccurred(.success)
+            notification.prepare()
+        case .miss:
+            soft.impactOccurred()
+            soft.prepare()
         }
     }
 }
@@ -51,6 +75,31 @@ enum SoundPlayer {
     /// Used only on `AudioSession`'s queue.
     nonisolated(unsafe) private static var engine: AVAudioEngine?
     nonisolated(unsafe) private static var playerNode: AVAudioPlayerNode?
+
+    /// How long the audio engine may sit unused before it is stopped, so a
+    /// finished game does not keep the audio hardware awake.
+    nonisolated static let idleStopDelay: TimeInterval = 4
+
+    /// Whether the engine has been quiet long enough to stop. Pure so the
+    /// timing rule is tested without an engine or a clock.
+    nonisolated static func shouldStopEngine(
+        lastToneAt: TimeInterval, now: TimeInterval, delay: TimeInterval = idleStopDelay
+    ) -> Bool {
+        now - lastToneAt >= delay
+    }
+
+    /// Time of the last scheduled tone. Used only on `AudioSession`'s queue.
+    nonisolated(unsafe) private static var lastToneAt: TimeInterval = 0
+
+    /// Prepares the haptics and renders the event tone buffers ahead of the
+    /// first tap. The audio engine itself still starts on the first tone. Called when a game opens; does nothing while feedback is off.
+    static func warmUp() {
+        guard isEnabled else { return }
+        Feedback.warmUp()
+        guard let format = AVAudioFormat(standardFormatWithSampleRate: ToneSynth.sampleRate, channels: 1)
+        else { return }
+        for event in Feedback.Event.allCases { _ = cachedBuffer(for: event, format: format) }
+    }
 
     /// Whether sound and haptics are currently allowed.
     ///
@@ -121,6 +170,17 @@ enum SoundPlayer {
             // without requiring graph mutation from the audio render thread.
             playerNode.scheduleBuffer(buffer, at: nil, options: .interrupts)
             playerNode.play()
+
+            lastToneAt = ProcessInfo.processInfo.systemUptime
+            // Each tone arms its own check; only the one after the last tone
+            // finds the engine idle. The next tone restarts the engine above.
+            AudioSession.run(after: idleStopDelay) {
+                guard let engine = SoundPlayer.engine, let playerNode = SoundPlayer.playerNode, engine.isRunning,
+                    shouldStopEngine(lastToneAt: lastToneAt, now: ProcessInfo.processInfo.systemUptime)
+                else { return }
+                playerNode.stop()
+                engine.stop()
+            }
         }
     }
 
@@ -189,6 +249,11 @@ nonisolated enum AudioSession {
             speech = nil
             try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
         }
+    }
+
+    /// Runs `work` on the session queue after `delay` seconds.
+    static func run(after delay: TimeInterval, _ work: @escaping @Sendable () -> Void) {
+        queue.asyncAfter(deadline: .now() + delay, execute: work)
     }
 
     /// Runs `play` under .ambient (respects the silent switch, mixes with other

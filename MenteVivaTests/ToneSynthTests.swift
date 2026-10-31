@@ -66,3 +66,19 @@ final class ToneSynthTests: XCTestCase {
         XCTAssertEqual(ToneSynth.tileNote(40).frequency, ToneSynth.tileNote(8).frequency)
     }
 }
+
+/// #417: the audio engine stops itself after a quiet spell.
+final class SoundPlayerIdleTests: XCTestCase {
+    func testGivenToneJustPlayedWhenCheckedThenEngineKeepsRunning() {
+        XCTAssertFalse(SoundPlayer.shouldStopEngine(lastToneAt: 10, now: 12))
+    }
+
+    func testGivenFourQuietSecondsWhenCheckedThenEngineStops() {
+        XCTAssertTrue(SoundPlayer.shouldStopEngine(lastToneAt: 10, now: 14))
+    }
+
+    func testGivenNewToneDuringTheWaitWhenCheckedThenEngineKeepsRunning() {
+        // The first tone's check fires at 14, but a tone at 13 moved the mark.
+        XCTAssertFalse(SoundPlayer.shouldStopEngine(lastToneAt: 13, now: 14))
+    }
+}

@@ -27,6 +27,7 @@ extension View {
                     .accessibilityHint(AppLanguage.localized("game.readaloud.hint"))
                 }
             }
+            .onAppear { SoundPlayer.warmUp() }
             .onDisappear { CaptionSpeaker.stop() }
     }
 }

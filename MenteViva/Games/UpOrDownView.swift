@@ -111,7 +111,7 @@ struct UpOrDownView: View {
                         RoundedRectangle(cornerRadius: 10)
                             .fill(GameID.upOrDown.ink.opacity(0.25))
                             .frame(width: width, height: width * 1.4)
-                            .offset(y: Double(depth) * 12)
+                            .offset(y: Double(depth) * UpOrDownDeal.cardEdge)
                     }
                     if let top = pile.last {
                         Button {
@@ -120,7 +120,7 @@ struct UpOrDownView: View {
                             face(top, width: width)
                         }
                         .buttonStyle(.plain)
-                        .offset(y: Double(pile.count - 1) * 12 - (lift && fits ? 14 : 0))
+                        .offset(y: Double(pile.count - 1) * UpOrDownDeal.cardEdge - (lift && fits ? 14 : 0))
                         .shadow(color: .black.opacity(lift && fits ? 0.25 : 0), radius: 6, y: 4)
                         .modifier(MissCue(active: missedPile == index ? $missed : .constant(false)))
                         .guideTarget(fits && index == deal.playablePiles.first)
@@ -133,7 +133,8 @@ struct UpOrDownView: View {
                             .accessibilityLabel(AppLanguage.localized("game.upordown.a11y.empty"))
                     }
                 }
-                .frame(height: width * 1.4 + 24, alignment: .top)
+                .frame(
+                    height: UpOrDownDeal.pileHeight(cardWidth: width, cardsPerPile: deal.cardsPerPile), alignment: .top)
             }
         }
         .animation(reduceMotion ? nil : .easeOut(duration: 0.2), value: deal)
