@@ -243,13 +243,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Automatic moves at most one step a week, based on how the games go. A level you choose stays until you switch back to Automatic, which then continues from it."
+            "value" : "Automatic changes the level between games, never during one: up after strong games, down after a hard one. A level you choose stays until you switch back to Automatic, which then continues from it."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La automática cambia como mucho un paso por semana, según cómo van los juegos. Un nivel que elijas se mantiene hasta que vuelvas a Automática, que sigue desde ese nivel."
+            "value" : "La automática cambia el nivel entre partidas, nunca durante una: sube tras partidas muy buenas y baja tras una difícil. Un nivel que elijas se mantiene hasta que vuelvas a Automática, que sigue desde ese nivel."
           }
         }
       }
