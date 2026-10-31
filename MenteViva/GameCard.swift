@@ -289,11 +289,19 @@ struct Emblem: View {
             context.fill(hills, with: ink)
             context.fill(circle(44, 22, 4.5), with: amber)
         case .sudoku:
-            // A 2×2 board, one square filled in amber.
-            for (index, origin) in [(10.0, 10.0), (34, 10), (10, 34), (34, 34)].enumerated() {
-                let square = Path(roundedRect: CGRect(x: origin.0, y: origin.1, width: 20, height: 20), cornerRadius: 4)
-                if index == 3 { context.fill(square, with: amber) } else { context.stroke(square, with: ink, style: line) }
+            // A 3×3 board with a heavy frame and thin dividers, one square filled in amber. Three
+            // columns, not Repeat the Sequence's two, so the pair differs in grayscale at 52pt.
+            var board = Path()
+            for step in [26.0, 38] {
+                board.move(to: CGPoint(x: step, y: 12))
+                board.addLine(to: CGPoint(x: step, y: 52))
+                board.move(to: CGPoint(x: 12, y: step))
+                board.addLine(to: CGPoint(x: 52, y: step))
             }
+            context.stroke(board, with: ink, style: StrokeStyle(lineWidth: 2.5, lineCap: .round))
+            context.stroke(
+                Path(roundedRect: CGRect(x: 12, y: 12, width: 40, height: 40), cornerRadius: 4), with: ink, style: line)
+            context.fill(Path(roundedRect: CGRect(x: 27.5, y: 27.5, width: 9, height: 9), cornerRadius: 2), with: amber)
         case .upOrDown:
             // Two fanned cards and an amber "one up" chevron.
             context.fill(card(x: 8, y: 16, angle: -10), with: .color(game.ink.opacity(0.35)))
@@ -382,18 +390,34 @@ struct Emblem: View {
 struct WeekBoard: View {
     let days: [(day: Date, games: [GameID])]
     var calendar = Calendar.current
+    /// True while today's slot should show that a card just landed on it (#421): a short swell, or,
+    /// under Reduce Motion, a steady stronger ring and wash. Nothing else changes.
+    var landed = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         HStack(spacing: 4) {
             ForEach(days, id: \.day) { entry in
                 VStack(spacing: 6) {
+                    let isToday = calendar.isDateInToday(entry.day)
                     slot(entry.games)
                         .frame(width: 38, height: 50)
                         .overlay {
-                            if calendar.isDateInToday(entry.day) {
-                                RoundedRectangle(cornerRadius: 12).strokeBorder(Color.amber, lineWidth: 3).padding(-5)
+                            if isToday {
+                                RoundedRectangle(cornerRadius: 12)
+                                    .strokeBorder(Color.amber, lineWidth: landed && reduceMotion ? 6 : 3)
+                                    .background(
+                                        Color.amber.opacity(landed && reduceMotion ? 0.3 : 0), in: .rect(cornerRadius: 12)
+                                    )
+                                    .padding(-5)
                             }
                         }
+                        // Where the finished card lands: only today's slot says where it is.
+                        .anchorPreference(key: LandingTargets.self, value: .bounds) {
+                            isToday ? LandingTargets(slot: $0) : LandingTargets()
+                        }
+                        .scaleEffect(isToday && landed && !reduceMotion ? CardLanding.pulse : 1)
+                        .animation(.spring(duration: 0.3, bounce: 0.5), value: landed)
                     Text(entry.day, format: .dateTime.weekday(.abbreviated))
                         .font(.subheadline.weight(.bold))
                         .lineLimit(1)
@@ -424,5 +448,25 @@ struct WeekBoard: View {
                 }
             }
         }
+    }
+}
+
+/// The two frames the celebration's landing needs, reported up as anchors so each is read in the
+/// same coordinate space: the finished card and today's slot on the week board (#421).
+struct LandingTargets: PreferenceKey {
+    var card: Anchor<CGRect>?
+    var slot: Anchor<CGRect>?
+
+    init(card: Anchor<CGRect>? = nil, slot: Anchor<CGRect>? = nil) {
+        self.card = card
+        self.slot = slot
+    }
+
+    static var defaultValue: LandingTargets { LandingTargets() }
+
+    static func reduce(value: inout LandingTargets, nextValue: () -> LandingTargets) {
+        let next = nextValue()
+        value.card = value.card ?? next.card
+        value.slot = value.slot ?? next.slot
     }
 }
