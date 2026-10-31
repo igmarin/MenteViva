@@ -102,13 +102,7 @@ struct SudokuView: View {
     @ViewBuilder
     private var almostNote: some View {
         if showAlmost {
-            Text(AppLanguage.localized("game.sudoku.miss"))
-                .font(.title2.weight(.semibold))
-                .foregroundStyle(Color.todaysPick)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal, 14)
-                .padding(.vertical, 10)
-                .background(Color.amber.opacity(0.24), in: .rect(cornerRadius: 14))
+            AlmostNote(text: AppLanguage.localized("game.sudoku.miss"))
         }
     }
 

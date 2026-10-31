@@ -91,13 +91,7 @@ struct TilePairsView: View {
     }
 
     private func hintBubble(_ line: String) -> some View {
-        Text(line)
-            .font(.title2.weight(.semibold))
-            .foregroundStyle(Color.todaysPick)
-            .multilineTextAlignment(.center)
-            .padding(.horizontal, 14)
-            .padding(.vertical, 10)
-            .background(Color.amber.opacity(0.24), in: .rect(cornerRadius: 14))
+        AlmostNote(text: line)
     }
 
     // MARK: - Board

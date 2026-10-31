@@ -116,23 +116,11 @@ struct QuickEyesView: View {
                         PictureView(picture: target, size: thumbnailSize)
                             .accessibilityLabel(
                                 String(format: AppLanguage.localized("game.quickeyes.a11y.flash %@"), name(of: target)))
-                        Text(AppLanguage.localized("game.quickeyes.lookagain"))
-                            .font(.title2.weight(.semibold))
-                            .foregroundStyle(Color.todaysPick)
-                            .multilineTextAlignment(.center)
-                            .padding(.horizontal, 14)
-                            .padding(.vertical, 10)
-                            .background(Color.amber.opacity(0.24), in: .rect(cornerRadius: 14))
+                        AlmostNote(text: AppLanguage.localized("game.quickeyes.lookagain"))
                     } else if run.missedLastRound {
                         // A soft amber note, not secondary grey: the kindest
                         // line on screen should also be easy to read.
-                        Text(AppLanguage.localized("game.quickeyes.almost"))
-                            .font(.title2.weight(.semibold))
-                            .foregroundStyle(Color.todaysPick)
-                            .multilineTextAlignment(.center)
-                            .padding(.horizontal, 14)
-                            .padding(.vertical, 10)
-                            .background(Color.amber.opacity(0.24), in: .rect(cornerRadius: 14))
+                        AlmostNote(text: AppLanguage.localized("game.quickeyes.almost"))
                     }
                     Text(AppLanguage.localized("game.quickeyes.prompt"))
                         .font(.title2)
