@@ -166,4 +166,40 @@ final class LevelExplainTests: XCTestCase {
         PlanStore.raiseByChoice(.stroop, today: today, defaults: defaults)
         XCTAssertEqual(Difficulty.stored(.stroop, defaults: defaults), Difficulty(level: 3))
     }
+
+    // MARK: - One open's note (#470)
+
+    func testGivenNoteShowingWhenGameStartsThenNoteIsDismissed() {
+        var note = LevelExplainNote(
+            change: LevelChange(previous: Difficulty(level: 4), reason: .eased), seenToday: false)
+        XCTAssertEqual(note.slot(hasStarted: false), .showing)
+        XCTAssertEqual(note.slot(hasStarted: true), .reserved)
+    }
+
+    func testGivenNoteDismissedWhenPlayAgainResetsProgressThenNoteNeverReturns() {
+        // "Play again", "Start over" or undo take the game's progress back to zero.
+        var note = LevelExplainNote(
+            change: LevelChange(previous: Difficulty(level: 4), reason: .raised(by: 1)), seenToday: false)
+        _ = note.slot(hasStarted: false)
+        _ = note.slot(hasStarted: true)
+        for _ in 0..<3 {
+            XCTAssertNotEqual(note.slot(hasStarted: false), .showing)
+            XCTAssertNotEqual(note.slot(hasStarted: true), .showing)
+        }
+    }
+
+    func testGivenGameAlreadyStartedWhenNoteFirstReadThenItNeverShows() {
+        // A game restored mid-play opens with progress already made.
+        var note = LevelExplainNote(
+            change: LevelChange(previous: Difficulty(level: 4), reason: .eased), seenToday: false)
+        XCTAssertEqual(note.slot(hasStarted: true), .reserved)
+        XCTAssertEqual(note.slot(hasStarted: false), .reserved)
+    }
+
+    func testGivenNoteSeenTodayWhenOpenThenNoNoteAndNothingHeldBack() {
+        var note = LevelExplainNote(
+            change: LevelChange(previous: Difficulty(level: 4), reason: .eased), seenToday: true)
+        XCTAssertNil(note.key)
+        XCTAssertEqual(note.slot(hasStarted: false), .none)
+    }
 }
