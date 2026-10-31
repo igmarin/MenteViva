@@ -173,7 +173,7 @@ struct ReminiscenceView: View {
     /// No accuracy: a look-and-remember round has no right or wrong, so it
     /// counts toward plays and days only (never toward levels or trends).
     static func makeSession(cards: Int, seconds: Int) -> GameSession {
-        GameSession(gameID: .reminiscence, score: 0, rounds: cards, durationSeconds: seconds)
+        GameSession(gameID: .reminiscence, rounds: cards, durationSeconds: seconds)
     }
 }
 

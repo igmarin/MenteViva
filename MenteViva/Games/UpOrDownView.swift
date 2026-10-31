@@ -254,7 +254,7 @@ struct UpOrDownView: View {
         guard let deal, deal.isCleared || deal.isStuck else { return }
         modelContext.record(
             GameSession(
-                gameID: .upOrDown, score: played * 10,
+                gameID: .upOrDown,
                 rounds: deal.tableCards, durationSeconds: Int(Date.now.timeIntervalSince(startedAt)),
                 correct: played, attempts: taps,
                 difficulty: difficulty))

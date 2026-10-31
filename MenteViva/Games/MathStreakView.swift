@@ -29,10 +29,6 @@ struct MathStreakView: View {
     @State private var beat: AnswerBeat<Int>?
     @State private var beatTask: Task<Void, Never>?
 
-    static func score(correct: Int, bestStreak: Int) -> Int {
-        correct * 10 + bestStreak * 2
-    }
-
     var body: some View {
         VStack(spacing: 32) {
             LevelExplainBanner(
@@ -129,10 +125,9 @@ struct MathStreakView: View {
 
     private func finish() {
         let elapsed = Int(Date.now.timeIntervalSince(startedAt))
-        let score = Self.score(correct: correct, bestStreak: bestStreak)
         modelContext.record(
             GameSession(
-                gameID: .mathStreaks, score: score,
+                gameID: .mathStreaks,
                 rounds: totalQuestions, durationSeconds: elapsed,
                 correct: correct, attempts: totalQuestions,
                 difficulty: difficulty))

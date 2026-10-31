@@ -468,7 +468,7 @@ struct TangramView: View {
         let elapsed = Int(Date.now.timeIntervalSince(startedAt))
         modelContext.record(
             GameSession(
-                gameID: .tangram, score: Self.score(misses: puzzle.attempts - puzzle.correct),
+                gameID: .tangram,
                 rounds: shape.placements.count, durationSeconds: elapsed,
                 correct: puzzle.correct, attempts: puzzle.attempts, difficulty: difficulty))
         finalDetail = AppLanguage.localized(shape.key)
@@ -476,11 +476,6 @@ struct TangramView: View {
         AccessibilityNotification.Announcement(finalDetail).post()
         finishTask?.cancel()
         finishTask = FinishBeat.after { showCelebration = true }
-    }
-
-    /// Progress, never points: a full round starts at 140 and each miss costs 5.
-    static func score(misses: Int) -> Int {
-        max(10, 140 - misses * 5)
     }
 }
 

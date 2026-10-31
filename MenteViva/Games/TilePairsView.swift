@@ -389,7 +389,7 @@ struct TilePairsView: View {
         let pairs = (final.correct > 0 ? final.correct : (deal?.correct ?? 0))
         modelContext.record(
             GameSession(
-                gameID: .tilePairs, score: pairs * 10,
+                gameID: .tilePairs,
                 rounds: max(1, pairs), durationSeconds: elapsed,
                 correct: final.correct, attempts: TilePairsDeal.recordedAttempts(attempts: final.attempts, hints: hintsUsed),
                 difficulty: difficulty))

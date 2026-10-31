@@ -283,7 +283,7 @@ struct SayingsView: View {
     private func finish() {
         modelContext.record(
             GameSession(
-                gameID: .sayings, score: correct * 10,
+                gameID: .sayings,
                 rounds: SayingsDeck.roundsPerGame, durationSeconds: Int(Date.now.timeIntervalSince(startedAt)),
                 correct: correct, attempts: taps,
                 difficulty: difficulty))
