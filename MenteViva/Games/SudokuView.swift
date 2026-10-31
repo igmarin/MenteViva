@@ -80,7 +80,7 @@ struct SudokuView: View {
             if let puzzle, puzzle.fits(width: area.width) { return }
             restart()
         }
-        .leaveGuard(inProgress: !entries.isEmpty, celebrating: showCelebration)
+        .leaveGuard(inProgress: attempts > 0, celebrating: showCelebration)
         .gameHeader(.sudoku, instruction: AppLanguage.localized("game.sudoku.instruction"))
         .firstPlayGuide(.sudoku, line: AppLanguage.localized("game.sudoku.guide"), example: guideExample)
         .celebration(isPresented: $showCelebration, game: .sudoku, detail: finalDetail, onPlayAgain: restart)

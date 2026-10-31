@@ -51,7 +51,7 @@ struct TangramView: View {
             } action: {
                 area = $0
             }
-            .leaveGuard(inProgress: puzzle.attempts > 0, celebrating: showCelebration)
+            .leaveGuard(inProgress: puzzle.attempts > 0 || !turns.isEmpty, celebrating: showCelebration)
             .gameHeader(.tangram, instruction: AppLanguage.localized("game.tangram.instruction"))
             .firstPlayGuide(
                 .tangram, line: AppLanguage.localized("game.tangram.guide"),

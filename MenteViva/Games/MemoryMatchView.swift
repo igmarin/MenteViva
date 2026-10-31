@@ -195,7 +195,7 @@ struct MemoryMatchView: View {
             }
         }
         .padding()
-        .leaveGuard(inProgress: moves > 0, celebrating: showCelebration)
+        .leaveGuard(inProgress: moves > 0 || !board.faceUp.isEmpty, celebrating: showCelebration)
         .gameHeader(variant.game, instruction: AppLanguage.localized(variant.instructionKey))
         .onDisappear {
             flipBackTask?.cancel()
