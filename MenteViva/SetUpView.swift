@@ -105,11 +105,14 @@ private struct FamilyPhotosSection: View {
                                     .font(.body)
                                     .lineLimit(2)
                                     .multilineTextAlignment(.center)
-                                    .frame(width: 104, height: 60)
+                                    .frame(minWidth: 104, minHeight: 60)
                             }
                             .buttonStyle(.bordered)
                             .accessibilityLabel(
-                                String(format: AppLanguage.localized("family.photos.caption.a11y %lld"), index + 1))
+                                String(format: AppLanguage.localized("family.photos.caption.a11y %lld"), index + 1)
+                            )
+                            // The label says which photo; the value says the name it has now.
+                            .accessibilityValue(captions[url] ?? "")
                         }
                     }
                 }

@@ -101,4 +101,20 @@ final class GamePicturesTests: XCTestCase {
         // At the largest text the picture scales to about 222pt and its margin to about 34pt, in a 167pt tile.
         XCTAssertEqual(PictureView.fitted(222, columnWidth: 167.5, margin: 34.3), 92.9, accuracy: 0.001)
     }
+
+    // MARK: - Colour swatches (#418)
+
+    func testGivenEveryColorSlugWhenSwatchThenNotNil() {
+        let colors = GamePictures.all.filter { $0.slug.hasPrefix("color.") }
+        XCTAssertEqual(colors.count, 7)
+        for picture in colors {
+            XCTAssertNotNil(picture.swatch, picture.slug)
+        }
+    }
+
+    func testGivenNonColorSlugWhenSwatchThenNil() {
+        for picture in GamePictures.all where !picture.slug.hasPrefix("color.") {
+            XCTAssertNil(picture.swatch, picture.slug)
+        }
+    }
 }
