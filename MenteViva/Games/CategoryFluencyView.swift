@@ -8,7 +8,7 @@ struct CategoryFluencyView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     /// The next step after a correct pick, kept pure so the completion beat is testable.
-    enum Completion: Equatable {
+    nonisolated enum Completion: Equatable {
         case keepPlaying
         case showBeatThenNextCategory
         case showBeatThenFinish
