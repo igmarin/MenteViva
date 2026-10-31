@@ -20,15 +20,15 @@ nonisolated struct PlayerProfile: Codable, Equatable {
     var startPace: StartPace?
 }
 
-extension PlayerProfile {
-    /// Older saved answers remain available when a profile is missing a field.
+nonisolated extension PlayerProfile {
+    /// One missing or unreadable answer falls back alone; the player's other answers stay.
     init(from decoder: Decoder) throws {
         let fields = try decoder.container(keyedBy: CodingKeys.self)
         self.init(
-            forWhom: try fields.decodeIfPresent(ForWhom.self, forKey: .forWhom),
-            focus: try fields.decodeIfPresent(Set<Focus>.self, forKey: .focus) ?? [],
-            minutesPerDay: try fields.decodeIfPresent(Int.self, forKey: .minutesPerDay),
-            startPace: try fields.decodeIfPresent(StartPace.self, forKey: .startPace))
+            forWhom: (try? fields.decodeIfPresent(ForWhom.self, forKey: .forWhom)) ?? nil,
+            focus: (try? fields.decodeIfPresent(Set<Focus>.self, forKey: .focus)) ?? [],
+            minutesPerDay: (try? fields.decodeIfPresent(Int.self, forKey: .minutesPerDay)) ?? nil,
+            startPace: (try? fields.decodeIfPresent(StartPace.self, forKey: .startPace)) ?? nil)
     }
 }
 
