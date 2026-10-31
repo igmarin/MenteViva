@@ -27,6 +27,11 @@ final class SayingsDeckTests: XCTestCase {
         return SayingsDeck.deal(difficulty: difficulty, from: pool, defaults: defaults, using: &generator)
     }
 
+    func testGivenSayingWhenOpeningThenItIsTheLocalizedStartWithAnEllipsis() {
+        let saying = Saying(id: 7, theme: .animals)
+        XCTAssertEqual(saying.opening(localize: { "<\($0)>" }), "<saying.07.start>…")
+    }
+
     func testGivenEachLevelWhenChoiceCountThenThreeFourFour() {
         XCTAssertEqual(SayingsDeck.choiceCount(for: Difficulty(level: 2)), 3)
         XCTAssertEqual(SayingsDeck.choiceCount(for: Difficulty(level: 4)), 4)

@@ -7,29 +7,18 @@ starts, not before — no fantasy deadlines.
 and any paid-developer-account work wait until the app feels right in dad's
 hands. Beta is a *distribution* step, not a QA step.
 
-## Now — v0.3 More games, more range, then v1.0 App Store (decided 2026-10-26)
+## Now — v1.0 App Store and the contest submission (decided 2026-10-26)
 
-Supersedes the order below: the owner pays the Apple Developer Program, and several agents build in
-parallel (AGENTS.md "Several agents at once"). Four epics, tracked as issues labelled `epic`:
+The v0.3 plan shipped (epics #190–#193): Jev left the app, levels 1–10, onboarding with goals and the
+warm-up, "Why these games", and four new games (Repeat the Sequence, Tangram, Tile Pairs, Sliding
+Blocks). The owner pays the Apple Developer Program, and Claude agents build the tickets in parallel
+(AGENTS.md "Several agents at once"). What is left, tracked as issues labelled `epic`:
 
-1. **Simpler core:** Jev leaves the app; nothing leaves the device.
-2. **Levels 1–10:** a staircase for every kind of player, explained to them, offered after a perfect game.
-3. **Onboarding with goals:** who, what to exercise, minutes a day, how to start; optional warm-up;
-   "Why these games".
-4. **Four new games:** Repeat the Sequence, Tangram, Tile Pairs, Sliding Blocks.
-
-Then **v1.0 App Store:** IP review, copy audit, price and purchase, TestFlight, playtests, listing.
-
-**Waves.** Everything in a wave can run in parallel; a wave starts when what it depends on is merged.
-Each issue names its own "Depends on".
-
-| Wave | Issues | Who |
-|---|---|---|
-| 0 — now, no code dependencies | #195 remove Jev · #196 ask Jev 020 · #224 Apple account · #225 name search · #227 copy audit · #228 price · #230 game-feel review · #210 "Why" text · #233 agent setup · review fixes #235–#243, #245 | Cline, Muse, owner, Claude |
-| 1 — after #195 | #197 level type · #215 register new games | Claude |
-| 2 — after #197 / #215 | #198 staircase · #199–#206 ten steps per game (8 in parallel) · #208 Set up picker · #216 #218 #220 #222 new-game logic (4 in parallel) · #229 TestFlight (after #224) | Muse, Cline, Claude |
-| 3 — after wave 2 | #207 level lines + offer · #211 profile · #217 #219 #221 #223 new-game screens (4 in parallel) · #209 remove bridge · #214 "Why" screen | Muse, Cline, Claude |
-| 4 — after wave 3 | #212 onboarding screens · #213 warm-up · #232 store listing · #226 lawyer · #231 playtest with dad · #244 seeded deals | Cline, Claude, Muse, owner |
+1. **Contest submission by Nov 4, 9 PM ET** (epic #422): the Meta Global AI Developer Hackathon build,
+   a public TestFlight link, the demo video and the write-up.
+2. **Audit fixes before v1.0** (epic #423): the p1 issues from the 2026-10-29 audit.
+3. **v1.0 on the App Store** (epic #194): IP review, copy audit, privacy and support URLs, native ES
+   review, a TestFlight round on a real iPhone and iPad, store listing, submit for review.
 
 ## Before — v0.2.0 Polish + Speed (G1b, G2)
 
@@ -42,16 +31,16 @@ progress instead of points (#45).
 2. **Built from the playtest, in order (one PR each):** finished games always saved (#106),
    weekly progression for dad and the family (#107), Family settings — manual difficulty and
    hide games (#108), adult Memory Lane (#109), Memory Lane with his own photos (#110).
-3. **Watch the daily picks** — decided on the device by `DailyPolicy` (#101); Jev is an
-   optional override. Re-tune the game weights once the family screen shows a few weeks.
+3. **Watch the daily picks** — decided on the device by `DailyPolicy` (#101). Re-tune the
+   game weights once the family screen shows a few weeks.
 4. **Done 2026-09-30:** VoiceOver and 100pt-target check on the iPad (#64),
    History/day-grouping tests and plumbing dedupe (#65, #57).
 
-Still open, waiting for evidence: Quick Eyes untimed redesign (#46).
+Quick Eyes became player-paced (#46, closed).
 
 **Three new games (decided 2026-10-19), shipped one PR each:** Sudoku (#179), Up or Down
-(#180), Finish the Saying (#181). Left: redeploy the Jev worker for nine games, a native ES
-review of the refranes, and a week with dad. Spec: `superpowers/specs/2026-10-19-three-new-games-design.md`.
+(#180), Finish the Saying (#181). Left: a native ES review of the refranes, and a week with dad.
+Spec: `superpowers/specs/2026-10-19-three-new-games-design.md`.
 
 Exit criteria: dad picks it up unprompted, twice in one week (docs/mvp.md G1b).
 
@@ -68,7 +57,6 @@ Exit criteria: dad picks it up unprompted, twice in one week (docs/mvp.md G1b).
 - Device installs: `swift tools/generate_project.swift` → Xcode → ⌘R (local-only is the default).
   Builds expire after 7 days; re-sign from Xcode to renew (#38 runbook).
 - Family + in-person testing on whatever devices we can lay hands on.
-- Jev proxy on Cloudflare's free tier → live daily mix/difficulty (deployed and verified 2026-09-30, #63).
 - Privacy policy + support page hosted free (#34).
 - Store listing copy and screenshots written now so publishing is a copy-paste
   later (#35).
@@ -90,6 +78,12 @@ postponed until the trigger in decisions.md 2026-09-20):**
 - [x] Business model: v1.0 is free; support links live outside the app (decisions.md 2026-10-27, #228).
 - [ ] ES/EN native review sign-off.
 - [ ] App Store screenshots + description in both languages.
+
+## Superseded
+
+- **Jev in the app (2026-10-26, #195):** the Jev proxy on Cloudflare (#63) and redeploying the Jev
+  worker for new games are gone; `DailyPolicy` decides on the device and `proxy/` is deleted.
+  History: `jev-integration.md`.
 
 ## Parking lot (deliberately not planned)
 

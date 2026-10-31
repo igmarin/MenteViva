@@ -87,13 +87,14 @@ nonisolated enum PlanStore {
         }
     }
 
-    /// Replaces today's plan with the warm-up's games (#213), each at `level`, and counts the
-    /// staircase from today so earlier sessions don't weigh in. Other games keep their levels.
-    static func beginWarmUp(games: [GameID], at level: Difficulty, today: String, defaults: UserDefaults = .standard) {
-        var levels = storedDifficulty(defaults: defaults)
+    /// Replaces today's plan with the warm-up's games (#213), each at the level it already has, and
+    /// counts the staircase from today so earlier sessions don't weigh in. Keeping the level means a
+    /// player who earned level 8 is not sent back to the start (#402); a game never dealt still starts
+    /// where the saved profile says (`storedDifficulty`), so the first-run warm-up is unchanged.
+    static func beginWarmUp(games: [GameID], today: String, defaults: UserDefaults = .standard) {
+        let levels = storedDifficulty(defaults: defaults)
         var changed = lastDifficultyChange(defaults: defaults)
         for game in games {
-            levels[game] = level
             changed[game] = today
         }
         save(levels: levels, defaults: defaults)

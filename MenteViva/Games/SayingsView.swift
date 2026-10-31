@@ -37,7 +37,7 @@ struct SayingsView: View {
                 .multilineTextAlignment(.center)
 
             if let round {
-                Text(solved ? whole(round.saying) : AppLanguage.localized(round.saying.startKey) + "…")
+                Text(solved ? whole(round.saying) : round.saying.opening(localize: { AppLanguage.localized($0) }))
                     .font(.system(size: sayingSize, weight: .semibold, design: .serif))
                     .multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
@@ -154,7 +154,13 @@ struct SayingsView: View {
         CaptionSpeaker.stop()
         if let round { SayingsDeck.markSeen(round.saying, defaults: .standard) }
         resetRound()
-        if progress.completeRound() { finish() }
+        if progress.completeRound() {
+            finish()
+        } else if let round {
+            // The Next button is replaced by the new answers, so VoiceOver focus jumps and the
+            // new start would not be read (#391).
+            AccessibilityNotification.Announcement(round.saying.opening(localize: { AppLanguage.localized($0) })).post()
+        }
     }
 
     private func finish() {

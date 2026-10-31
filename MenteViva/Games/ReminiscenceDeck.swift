@@ -14,6 +14,14 @@ nonisolated struct ReminiscenceCard: Equatable, Identifiable {
     /// Localization key of the question shown under the name once revealed;
     /// `dealSession` sets it, so a hand-built card has none.
     var question: String?
+
+    /// Localization key of the prompt shown before the name is revealed; the screen, the
+    /// header and the VoiceOver announcement of the next card all read this one key.
+    var promptKey: String {
+        guard caption != nil else { return "game.reminiscence.together" }
+        if case .photo = picture { return "game.reminiscence.prompt.photo" }
+        return "game.reminiscence.prompt.object"
+    }
 }
 
 /// Which cards a session shows: the family's photos first, in the order given

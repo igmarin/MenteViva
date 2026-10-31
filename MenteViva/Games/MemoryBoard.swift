@@ -7,7 +7,7 @@ import Foundation
 /// touching the UI.
 struct MemoryBoard {
     /// What one tap did, so the view knows what to animate and which cue to play.
-    enum Tap: Equatable {
+    nonisolated enum Tap: Equatable {
         /// The card was already face up or found; nothing changes.
         case ignored
         /// One card turned up; the next tap decides the pair.

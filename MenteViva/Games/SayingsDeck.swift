@@ -13,6 +13,11 @@ nonisolated struct Saying: Hashable {
 
     var startKey: String { String(format: "saying.%02d.start", id) }
     var endKey: String { String(format: "saying.%02d.end", id) }
+
+    /// What the screen shows and VoiceOver reads for the unfinished saying: its start and "…".
+    func opening(localize: (String) -> String) -> String {
+        localize(startKey) + "…"
+    }
 }
 
 /// One round: the saying to finish and the endings offered, his own among them once.

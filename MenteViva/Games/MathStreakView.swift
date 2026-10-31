@@ -93,6 +93,10 @@ struct MathStreakView: View {
         var generator = SystemRandomNumberGenerator()
         question = NumberTrailQuestion.make(difficulty: difficulty, streak: streak, using: &generator)
         options = NumberTrailQuestion.options(for: question.answer, using: &generator)
+        // The first deal is read with the screen; later ones replace the answers and move focus (#391).
+        if progress.completedRounds > 0 {
+            AccessibilityNotification.Announcement(question.spoken()).post()
+        }
     }
 
     /// Shows the answer for a beat (#235), ignoring taps meanwhile, then deals the next sum.
