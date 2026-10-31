@@ -78,6 +78,13 @@ final class SayingsDeckTests: XCTestCase {
         XCTAssertEqual(SayingsDeck.shown(round, count: 5).map(\.id), [1, 2, 4, 5, 3])
     }
 
+    /// `slot % count` is fair only when every count a phone can show divides the span the slot is drawn from.
+    func testGivenEveryCountThatCanShowWhenDividingTheSlotSpanThenNothingIsLeftOver() {
+        for count in 2...(SayingsDeck.choicesByLevel.max() ?? 2) {
+            XCTAssertEqual(SayingsDeck.slotSpan % count, 0, "\(count) shown")
+        }
+    }
+
     /// The review case: dealt last and shown two, it was always the bottom button.
     func testGivenTheRightEndingDealtLastWhenShowingTwoThenItsPlaceFollowsTheSlot() {
         XCTAssertEqual(SayingsDeck.shown(fiveEndings(saying: 5, slot: 0), count: 2).map(\.id), [5, 1])

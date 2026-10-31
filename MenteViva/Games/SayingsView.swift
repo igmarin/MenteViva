@@ -32,19 +32,17 @@ struct SayingsView: View {
     @State private var showCelebration = false
     @State private var finalDetail = ""
     /// Measured heights (#415): the play area outside the padding, then everything in it but the endings
-    /// (the banner with the instruction row, the saying, the round counter) and each ending button. None
-    /// of them depends on how many endings show, so trimming never feeds back into them.
+    /// (the banner with the instruction row, the saying, the round counter), each opening and each ending
+    /// button. None of them depends on how many endings show, so trimming never feeds back into them.
     @State private var areaHeight: CGFloat = 0
     @State private var topHeight: CGFloat = 0
     @State private var sayingHeight: CGFloat = 0
     @State private var counterHeight: CGFloat = 0
+    @State private var openingHeights: [Saying: Double] = [:]
     @State private var endingHeights: [Saying: Double] = [:]
     /// How many endings this round showed when he first tapped: kept until the next round, so a dimmed
     /// near miss never disappears and no button moves under his finger.
     @State private var frozenCount: Int?
-    /// How many the last round showed (#494): a new round starts there until its endings are measured,
-    /// so Next never lays out every ending, flips the page to scrolling and back a pass later.
-    @State private var previousCount: Int?
 
     private var round: SayingRound? {
         rounds.indices.contains(progress.completedRounds) ? rounds[progress.completedRounds] : nil
@@ -52,16 +50,16 @@ struct SayingsView: View {
 
     /// How many of the round's endings fit (#415): every one dealt on an iPad, where there is room, and
     /// on a phone as many as fit under the saying, so the last one is never below the fold. The amber
-    /// note takes the instruction's place (#494), so it costs no ending. Re-fitted until his first tap in
-    /// the round, then frozen.
+    /// note takes the instruction's place (#494), so it costs no ending. The next round's opening and
+    /// endings are measured before Next (#494), so a new round is fitted right on its first pass and the
+    /// page never flips to scrolling and back. Re-fitted until his first tap in the round, then frozen.
     private func fittedCount(_ round: SayingRound) -> Int {
         if let frozenCount { return frozenCount }
-        guard !GameColumn.usesPadLayout(sizeClass) else { return round.choices.count }
-        let measured = areaHeight > 0 && round.choices.allSatisfy { endingHeights[$0] != nil }
-        if !measured, let previousCount { return min(previousCount, round.choices.count) }
-        guard areaHeight > 0 else { return round.choices.count }
-        // The column's four blocks have three gaps between them.
-        let room = areaHeight - topHeight - sayingHeight - counterHeight - 3 * Self.blockGap
+        guard !GameColumn.usesPadLayout(sizeClass), areaHeight > 0 else { return round.choices.count }
+        // The column's four blocks have three gaps between them. A fresh deal's first pass has no
+        // opening measured yet and falls back on the last saying shown.
+        let opening = openingHeights[round.saying] ?? sayingHeight
+        let room = areaHeight - topHeight - opening - counterHeight - 3 * Self.blockGap
         return SayingsDeck.fittingCount(round, heights: endingHeights, gap: Self.endingGap, room: room)
     }
 
@@ -80,10 +78,7 @@ struct SayingsView: View {
             }
 
             if let round {
-                Text(solved ? whole(round.saying) : round.saying.opening(localize: { AppLanguage.localized($0) }))
-                    .font(.system(size: sayingSize, weight: .semibold, design: .serif))
-                    .multilineTextAlignment(.center)
-                    .fixedSize(horizontal: false, vertical: true)
+                sayingText(solved ? whole(round.saying) : opening(round))
                     .onGeometryChange(for: CGFloat.self) {
                         $0.size.height
                     } action: {
@@ -122,7 +117,6 @@ struct SayingsView: View {
                             .modifier(MissCue(active: missedChoice == choice ? $missed : .constant(false)))
                         }
                     }
-                    .background(alignment: .top) { measuringCopy(of: round) }
                 }
 
                 RoundCounter(progress: progress)
@@ -133,6 +127,7 @@ struct SayingsView: View {
                     }
             }
         }
+        .background(alignment: .top) { measuringCopy }
         .gameColumn()
         .padding(Self.edgePadding)
         .fitOrScroll()
@@ -152,6 +147,17 @@ struct SayingsView: View {
 
     private func whole(_ saying: Saying) -> String {
         AppLanguage.localized(saying.startKey) + " " + AppLanguage.localized(saying.endKey)
+    }
+
+    private func opening(_ round: SayingRound) -> String {
+        round.saying.opening(localize: { AppLanguage.localized($0) })
+    }
+
+    private func sayingText(_ text: String) -> some View {
+        Text(text)
+            .font(.system(size: sayingSize, weight: .semibold, design: .serif))
+            .multilineTextAlignment(.center)
+            .fixedSize(horizontal: false, vertical: true)
     }
 
     /// The instruction and the amber note share one row as tall as the taller of the two, as in Tile
@@ -188,21 +194,30 @@ struct SayingsView: View {
             .padding(.horizontal, 12)
     }
 
-    /// Every ending dealt, laid out unseen at the column's width (#415), so their real heights are known
-    /// before choosing how many show: a long Spanish ending or big text wraps a button past 100pt. A
-    /// copy, because a trimmed ending is not on screen to be measured.
-    private func measuringCopy(of round: SayingRound) -> some View {
+    /// This round's and the next one's opening and every ending dealt, laid out unseen at the column's
+    /// width (#415), so their real heights are known before choosing how many show: a long Spanish ending
+    /// or big text wraps a button past 100pt. A copy, because a trimmed ending is not on screen to be
+    /// measured, and the next round is measured while he reads the whole saying, before Next (#494).
+    private var measuringCopy: some View {
         VStack(spacing: Self.endingGap) {
-            ForEach(round.choices, id: \.self) { choice in
-                Button {
-                } label: {
-                    endingLabel(choice)
-                }
-                .buttonStyle(AnswerTileStyle(minHeight: 100))
-                .onGeometryChange(for: Double.self) {
-                    $0.size.height
-                } action: {
-                    endingHeights[choice] = $0
+            ForEach(rounds.dropFirst(progress.completedRounds).prefix(2), id: \.saying) { round in
+                sayingText(opening(round))
+                    .onGeometryChange(for: Double.self) {
+                        $0.size.height
+                    } action: {
+                        openingHeights[round.saying] = $0
+                    }
+                ForEach(round.choices, id: \.self) { choice in
+                    Button {
+                    } label: {
+                        endingLabel(choice)
+                    }
+                    .buttonStyle(AnswerTileStyle(minHeight: 100))
+                    .onGeometryChange(for: Double.self) {
+                        $0.size.height
+                    } action: {
+                        endingHeights[choice] = $0
+                    }
                 }
             }
         }
@@ -262,14 +277,13 @@ struct SayingsView: View {
     private func next() {
         CaptionSpeaker.stop()
         if let round { SayingsDeck.markSeen(round.saying, defaults: .standard) }
-        previousCount = frozenCount
         resetRound()
         if progress.completeRound() {
             finish()
         } else if let round {
             // The Next button is replaced by the new answers, so VoiceOver focus jumps and the
             // new start would not be read (#391).
-            AccessibilityNotification.Announcement(round.saying.opening(localize: { AppLanguage.localized($0) })).post()
+            AccessibilityNotification.Announcement(opening(round)).post()
         }
     }
 
