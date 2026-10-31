@@ -13054,6 +13054,22 @@
         }
       }
     },
+    "game.tilepairs.hint %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Look for the two %@ tiles"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Busca las dos fichas de %@"
+          }
+        }
+      }
+    },
     "game.tilepairs.instruction" : {
       "localizations" : {
         "en" : {
@@ -13075,13 +13091,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nice — a pair of %@!"
+            "value" : "Nice — you matched the %@!"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "¡Bien — una pareja de %@!"
+            "value" : "¡Bien — encontraste el par: %@!"
           }
         }
       }
