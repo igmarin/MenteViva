@@ -50,8 +50,7 @@ struct SlidingBlocksView: View {
     var body: some View {
         VStack(spacing: 16) {
             LevelExplainBanner(
-                change: PlanStore.todaysChange(GameID.slidingBlocks), game: GameID.slidingBlocks,
-                hasStarted: (puzzle?.movesMade ?? 0) > 0, keepsSpace: true)
+                game: GameID.slidingBlocks, hasStarted: (puzzle?.movesMade ?? 0) > 0, keepsSpace: true)
             Text(instruction)
                 .font(.title2)
                 .multilineTextAlignment(.center)

@@ -95,8 +95,7 @@ struct TangramView: View {
 
     private var banner: some View {
         LevelExplainBanner(
-            change: PlanStore.todaysChange(GameID.tangram), game: GameID.tangram,
-            hasStarted: puzzle.attempts > 0, keepsSpace: true, sharedMemo: noteMemo)
+            game: GameID.tangram, hasStarted: puzzle.attempts > 0, keepsSpace: true, sharedMemo: noteMemo)
     }
 
     private var instruction: some View {

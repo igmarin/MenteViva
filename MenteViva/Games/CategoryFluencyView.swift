@@ -97,8 +97,7 @@ struct CategoryFluencyView: View {
             // Everything above the grid, measured as one block so the grid knows how much room is left.
             VStack(spacing: 24) {
                 LevelExplainBanner(
-                    change: PlanStore.todaysChange(GameID.categoryFluency), game: GameID.categoryFluency,
-                    hasStarted: totalPicks > 0 || progress.completedRounds > 0)
+                    game: GameID.categoryFluency, hasStarted: totalPicks > 0 || progress.completedRounds > 0)
                 header(currentRound)
             }
             .frame(maxWidth: .infinity)

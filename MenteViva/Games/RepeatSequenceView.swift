@@ -106,8 +106,7 @@ struct RepeatSequenceView: View {
     var body: some View {
         VStack(spacing: 24) {
             LevelExplainBanner(
-                change: PlanStore.todaysChange(GameID.repeatSequence), game: GameID.repeatSequence,
-                hasStarted: progress.completedRounds > 0 || tapped.count > 0)
+                game: GameID.repeatSequence, hasStarted: progress.completedRounds > 0 || tapped.count > 0)
             Text(AppLanguage.localized("game.sequence.instruction"))
                 .font(.title2)
                 .multilineTextAlignment(.center)
