@@ -1,4 +1,5 @@
 import ImageIO
+import OSLog
 import UIKit
 
 /// Family photos for Memory Lane (#110). Picked with the system photo picker
@@ -85,10 +86,15 @@ nonisolated enum MemoryPhotos {
 
     /// Run at every launch (#419): a folder made by a version that set no flag, or restored without
     /// it, is kept out of backups even if no photo is ever added again. Never creates the folder;
-    /// a failure is retried next launch and never stops the app from opening.
+    /// a failure is logged, never shown, retried next launch and never stops the app from opening.
     static func excludeFromBackup(folder: URL = folder) {
         guard FileManager.default.fileExists(atPath: folder.path) else { return }
-        try? markExcludedFromBackup(folder)
+        do {
+            try markExcludedFromBackup(folder)
+        } catch {
+            Logger(subsystem: "com.igmarin.MenteViva", category: "photos")
+                .error("Photos folder not excluded from backup: \(String(describing: error), privacy: .public)")
+        }
     }
 
     private static func markExcludedFromBackup(_ folder: URL) throws {
