@@ -5,6 +5,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 ## [Unreleased]
 
 ### Fixed
+- **VoiceOver reads the next question (#391):** in Number Trail, Finish the Saying and Remember Together, moving on now reads the new sum, the start of the new saying, or the new "Who is this?" prompt, so nobody has to swipe around to find it. Nothing changes with VoiceOver off.
 - **Onboarding speaks each new question (#406):** with VoiceOver on, answering, skipping or going Back in the first-run screens moves focus to the new screen and reads its question. Nothing changes with VoiceOver off.
 - **Celebrations never show a hit count (#394):** Quick Eyes now says "You finished all 12 rounds!" instead of "You spotted 2 of 12!", and Number Trail always says "You answered all 10 questions!" instead of a best streak. Scores and levels work as before. EN + ES.
 - **Removing a family photo asks first (#403):** Remove in the name sheet now shows "Remove this photo and its name?" with the photo's name, and "Keep it" leaves the photo and its name as they were. EN + ES.

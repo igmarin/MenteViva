@@ -36,7 +36,7 @@ struct ReminiscenceView: View {
                     }
                     .multilineTextAlignment(.center)
                 } else {
-                    Text(AppLanguage.localized(prompt(for: card)))
+                    Text(AppLanguage.localized(card.promptKey))
                         .font(.title)
                         .multilineTextAlignment(.center)
                 }
@@ -45,7 +45,7 @@ struct ReminiscenceView: View {
         }
         .padding()
         .fitOrScroll()
-        .gameHeader(.reminiscence, instruction: card.map { AppLanguage.localized(prompt(for: $0)) } ?? "")
+        .gameHeader(.reminiscence, instruction: card.map { AppLanguage.localized($0.promptKey) } ?? "")
         .onAppear(perform: deal)
         .celebration(isPresented: $showCelebration, game: .reminiscence, detail: finalDetail, onPlayAgain: deal)
     }
@@ -79,12 +79,6 @@ struct ReminiscenceView: View {
                 .font(.system(size: 120))
                 .foregroundStyle(.secondary)
         }
-    }
-
-    private func prompt(for card: ReminiscenceCard) -> String {
-        guard card.caption != nil else { return "game.reminiscence.together" }
-        if case .photo = card.picture { return "game.reminiscence.prompt.photo" }
-        return "game.reminiscence.prompt.object"
     }
 
     @ViewBuilder
@@ -139,7 +133,13 @@ struct ReminiscenceView: View {
         CaptionSpeaker.stop()
         revealed = false
         Feedback.play(.tap)
-        if progress.completeRound() { finish() }
+        if progress.completeRound() {
+            finish()
+        } else if let card {
+            // The card and its buttons are replaced, so VoiceOver focus jumps and the new
+            // prompt would not be read (#391).
+            AccessibilityNotification.Announcement(AppLanguage.localized(card.promptKey)).post()
+        }
     }
 
     private func deal() {
