@@ -32,7 +32,7 @@ struct CelebrationView: View {
     /// so a tap never makes the question vanish without a word.
     @State private var offerAccepted = false
     /// Where the card must travel to reach today's slot on the week board; nil until both are
-    /// measured. Frozen once the flight starts, because the card's own anchor moves with it (#421).
+    /// measured. Frozen once the flight starts, so a layout change mid-flight cannot redirect the card (#421).
     @State private var landingOffset: CGSize?
     /// The card has started its flight to the slot (#421).
     @State private var flown = false
@@ -97,12 +97,7 @@ struct CelebrationView: View {
                     LevelOfferStore.markOffered(for: game, today: PlanStore.dayStamp())
                     Feedback.play(.success)
                 } label: {
-                    Text(AppLanguage.localized("level.offer.keep"))
-                        .font(.title2.weight(.semibold))
-                        .frame(maxWidth: .infinity, minHeight: 100)
-                        .background(Color.clear, in: .rect(cornerRadius: 20))
-                        .overlay { RoundedRectangle(cornerRadius: 20).strokeBorder(Color.espresso, lineWidth: 2) }
-                        .foregroundStyle(Color.fadedBlue)
+                    Text(AppLanguage.localized("level.offer.keep")).outlineButton()
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel(AppLanguage.localized("level.offer.keep"))
@@ -279,6 +274,11 @@ struct CelebrationView: View {
             .scaleEffect(arrived || reduceMotion ? 1 : 0.8)
             .opacity(arrived || reduceMotion ? 1 : 0)
             .accessibilityElement(children: .combine)
+            // Fixed, so the name is still spoken after the card fades out (opacity 0 drops its text).
+            .accessibilityLabel(
+                Text(
+                    AppLanguage.localized(game.title) + ", "
+                        + AppLanguage.localized("game.celebration.added")))
     }
 
     private func actions(next: GameID?) -> some View {
@@ -325,6 +325,7 @@ extension View {
             .foregroundStyle(Color.fadedBlue)
             .frame(maxWidth: .infinity, minHeight: 100)
             .overlay { RoundedRectangle(cornerRadius: 20).strokeBorder(Color.espresso, lineWidth: 2) }
+            .contentShape(Rectangle())
     }
 }
 

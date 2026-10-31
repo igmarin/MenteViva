@@ -251,10 +251,19 @@ struct OnboardingView: View {
                     Text(language.label)
                         .font(.title3.weight(language.rawValue == appLanguage ? .bold : .regular))
                         .frame(maxWidth: .infinity, minHeight: 100)
-                        .background(
-                            language.rawValue == appLanguage
-                                ? AnyShapeStyle(.tint.opacity(0.22)) : AnyShapeStyle(.gray.opacity(0.12)),
-                            in: .rect(cornerRadius: 16))
+                        .background {
+                            ZStack {
+                                Color.paper
+                                if language.rawValue == appLanguage { Color.brand.opacity(0.22) }
+                            }
+                            .clipShape(.rect(cornerRadius: 16))
+                        }
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 16)
+                                .strokeBorder(
+                                    language.rawValue == appLanguage ? Color.brand : Color.espresso,
+                                    lineWidth: language.rawValue == appLanguage ? 3 : 2)
+                        )
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel(language.label)

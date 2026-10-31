@@ -193,7 +193,6 @@ struct SettingsView: View {
     private func sectionHeader(_ key: String) -> some View {
         Text(AppLanguage.localized(key))
             .font(.title3.weight(.heavy))
-            .foregroundStyle(.primary)
             .textCase(nil)
             .accessibilityAddTraits(.isHeader)
     }
