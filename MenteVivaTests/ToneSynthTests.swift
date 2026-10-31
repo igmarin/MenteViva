@@ -50,6 +50,7 @@ final class ToneSynthTests: XCTestCase {
         XCTAssertEqual(frequencies.last, 784)
     }
 
+    /// #398: the second harmonic must not push a tile note into clipping.
     func testGivenTileNotesWhenRenderedThenPeakStaysUnderHeadroom() {
         for index in 0..<9 {
             let samples = ToneSynth.render([ToneSynth.tileNote(index)])
@@ -59,6 +60,7 @@ final class ToneSynthTests: XCTestCase {
         }
     }
 
+    /// #398: a stray index never crashes the board; it sounds the nearest tile.
     func testGivenAnIndexOffTheBoardWhenToneNoteThenItClampsToTheNearestTile() {
         XCTAssertEqual(ToneSynth.tileNote(-3).frequency, ToneSynth.tileNote(0).frequency)
         XCTAssertEqual(ToneSynth.tileNote(40).frequency, ToneSynth.tileNote(8).frequency)

@@ -12,19 +12,25 @@ struct RepeatSequenceView: View {
     private enum Tile: CaseIterable {
         case circle, star, square, triangle, heart, moon, drop, leaf, sun
 
+        /// The print palette (#398): the same in light and dark, each with an espresso edge.
         var color: Color {
             switch self {
-            case .circle: .red
-            case .star: .blue
-            case .square: .green
-            case .triangle: .orange
-            case .heart: .pink
-            case .moon: .purple
-            case .drop: Color(red: 0.0, green: 0.55, blue: 0.8)
-            case .leaf: Color(red: 0.2, green: 0.6, blue: 0.2)
-            case .sun: Color(red: 0.8, green: 0.55, blue: 0.0)
+            case .circle: Self.fixed(0x246456)
+            case .star: Self.fixed(0xAF3F32)
+            case .square: Self.fixed(0xE7AC45)
+            case .triangle: Self.fixed(0x35566D)
+            case .heart: Self.fixed(0x7A4B2A)
+            case .moon: Self.fixed(0x6B3FA0)
+            case .drop: Self.fixed(0x2E7D4F)
+            case .leaf: Self.fixed(0xC8372D)
+            case .sun: Self.fixed(0x1F5F7A)
             }
         }
+
+        /// White on every tile but the light mustard one, which takes espresso to stay readable.
+        var symbolColor: Color { self == .square ? Color.espresso : .white }
+
+        private static func fixed(_ rgb: UInt32) -> Color { Color(light: rgb, dark: rgb) }
 
         var shape: String {
             switch self {
@@ -129,11 +135,11 @@ struct RepeatSequenceView: View {
                         RoundedRectangle(cornerRadius: 16)
                             .fill(tile.color.opacity(lit == idx ? 0.95 : 0.75))
                             .frame(minHeight: 100)
+                            .overlay(RoundedRectangle(cornerRadius: 16).strokeBorder(Color.espresso, lineWidth: 3))
                             .overlay {
                                 Image(systemName: tile.shape)
                                     .font(.system(size: 40, weight: .bold))
-                                    .foregroundStyle(.white)
-                                    .shadow(color: .black.opacity(0.35), radius: 2, y: 1)
+                                    .foregroundStyle(tile.symbolColor)
                                     .accessibilityHidden(true)
                             }
                             .scaleEffect(lit == idx && !reduceMotion ? 1.06 : 1)
@@ -217,6 +223,7 @@ struct RepeatSequenceView: View {
         // prefix stays quiet until the sequence is complete.
         guard let result = session?.record(tapped: tapped), result != .keepGoing else { return }
         tapped = []
+        // The result tone below deliberately interrupts the last tile's note: the result wins.
         switch result {
         case .correct:
             showMiss = false
