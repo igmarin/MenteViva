@@ -21,6 +21,13 @@ enum Feedback {
         haptic(for: event)
     }
 
+    /// A Repeat the Sequence tile tapped by the player: its own note plus the
+    /// light tap haptic. Same toggle as every other feedback moment.
+    static func playTile(_ index: Int) {
+        SoundPlayer.playTile(index)
+        haptic(for: .tap)
+    }
+
     private static func haptic(for event: Event) {
         guard SoundPlayer.isEnabled else { return }
         switch event {
@@ -64,7 +71,23 @@ enum SoundPlayer {
             let format = AVAudioFormat(standardFormatWithSampleRate: ToneSynth.sampleRate, channels: 1),
             let buffer = cachedBuffer(for: event, format: format)
         else { return }
+        schedule(buffer, format: format)
+    }
 
+    /// Plays one Repeat the Sequence tile's own note (see `ToneSynth.tileNote`), so the
+    /// order can be heard as well as seen. Silent when feedback is off; the tile still lights.
+    ///
+    /// - Parameter index: The tile's position on the board (0...8).
+    static func playTile(_ index: Int) {
+        guard isEnabled,
+            let format = AVAudioFormat(standardFormatWithSampleRate: ToneSynth.sampleRate, channels: 1),
+            let buffer = cachedTileBuffer(index, format: format)
+        else { return }
+        schedule(buffer, format: format)
+    }
+
+    /// Hands a ready buffer to the shared engine, best effort.
+    private static func schedule(_ buffer: AVAudioPCMBuffer, format: AVAudioFormat) {
         // On the session queue: the category is set before the engine starts,
         // and starting it (which can block) stays off the main thread.
         AudioSession.playTone {
@@ -105,6 +128,16 @@ enum SoundPlayer {
     /// never pays for rendering sine waves.
     private static var buffers: [Feedback.Event: AVAudioPCMBuffer] = [:]
 
+    /// The nine tile notes, rendered once on first use like the event tones.
+    private static var tileBuffers: [Int: AVAudioPCMBuffer] = [:]
+
+    private static func cachedTileBuffer(_ index: Int, format: AVAudioFormat) -> AVAudioPCMBuffer? {
+        if let cached = tileBuffers[index] { return cached }
+        let rendered = makeBuffer(samples: ToneSynth.render([ToneSynth.tileNote(index)]), format: format)
+        tileBuffers[index] = rendered
+        return rendered
+    }
+
     private static func cachedBuffer(for event: Feedback.Event, format: AVAudioFormat) -> AVAudioPCMBuffer? {
         if let cached = buffers[event] { return cached }
         let rendered = buffer(for: event, format: format)
@@ -114,7 +147,10 @@ enum SoundPlayer {
 
     /// Copies the synthesized samples (see `ToneSynth`) into a playable buffer.
     private static func buffer(for event: Feedback.Event, format: AVAudioFormat) -> AVAudioPCMBuffer? {
-        let samples = ToneSynth.samples(for: event)
+        makeBuffer(samples: ToneSynth.samples(for: event), format: format)
+    }
+
+    private static func makeBuffer(samples: [Float], format: AVAudioFormat) -> AVAudioPCMBuffer? {
         let totalFrames = AVAudioFrameCount(samples.count)
         guard let buffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: totalFrames),
             let channel = buffer.floatChannelData?[0]
