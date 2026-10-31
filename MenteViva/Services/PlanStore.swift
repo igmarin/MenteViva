@@ -49,12 +49,16 @@ nonisolated enum PlanStore {
     /// plan saves a level for every game, so without this the answer would never be read again.
     /// Played games keep the level they earned and pinned games keep the family's choice. A game whose
     /// level ever moved is kept too: if the session store could not open this launch (#124), `played`
-    /// is empty, and the level must not be lost with it.
+    /// is empty, and the level must not be lost with it. That also keeps the first-run warm-up's
+    /// games (`beginWarmUp` marks them all), played or not: they keep the first day's start pace, an
+    /// accepted gap. `played` is read only when the starting level changes, and nil (a store
+    /// that can't be read) changes nothing.
     static func startPaceChanged(
-        from old: PlayerProfile, to new: PlayerProfile, played: Set<GameID>, defaults: UserDefaults = .standard
+        from old: PlayerProfile, to new: PlayerProfile, played: () -> Set<GameID>?,
+        defaults: UserDefaults = .standard
     ) {
         let start = DailyPolicy.startingLevel(for: new)
-        guard DailyPolicy.startingLevel(for: old) != start else { return }
+        guard DailyPolicy.startingLevel(for: old) != start, let played = played() else { return }
         let kept = played.union(FamilySettings.pinned(defaults: defaults).keys)
             .union(lastDifficultyChange(defaults: defaults).keys)
         restart(Set(GameID.allCases).subtracting(kept), at: start, defaults: defaults)

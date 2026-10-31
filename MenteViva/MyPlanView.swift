@@ -84,9 +84,7 @@ struct MyPlanView: View {
         let old = profile
         profile = OnboardingSteps.choosing(answer, in: profile)
         ProfileStore.save(profile)
-        if let played = modelContext.playedGames() {
-            PlanStore.startPaceChanged(from: old, to: profile, played: played)
-        }
+        PlanStore.startPaceChanged(from: old, to: profile, played: { modelContext.playedGames() })
     }
 }
 

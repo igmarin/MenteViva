@@ -11,7 +11,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 - **Bigger pictures in Name the Herd and Quick Eyes (#413):** Name the Herd pictures grow from 52 to 72, Quick Eyes choices from 56 to 84, the Quick Eyes picture from 120 to up to 240 (a little over half the screen width on a phone) and the look-again picture from 72 to 96. They grow with the text size too, and the tick in Name the Herd now sits on the tile's corner so it never covers a picture.
 
 ### Fixed
-- **Photos stay out of backups from the first launch (#419):** Mente Viva now keeps the family's photos and their names out of new device backups every time it opens, including photos added in an older version, and Settings and the photo-name screen say so plainly. EN + ES.
+- **Photos stay out of backups every time the app opens (#419):** Mente Viva now keeps the family's photos and their names out of new device backups, including photos added in an older version, and Settings and the photo-name screen say so plainly. EN + ES.
 - **A new start pace in My plan reaches unplayed games (#419):** choosing Calm, Normal or Challenge after the first day now moves the games you have never played to that starting level. Games you have played, and levels the family pinned, stay as they are.
 - **Games after midnight (#419):** with the app left open past midnight, Home now deals the new day's games, and a game opened before the new plan is made no longer explains yesterday's level change.
 - **Saved plan preferences (#419):** a saved plan profile with a missing or unreadable answer keeps the rest of its choices (hardening for future answers).

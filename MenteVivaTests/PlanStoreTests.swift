@@ -56,7 +56,7 @@ final class PlanStoreTests: XCTestCase {
         let defaults = try isolatedDefaults()
         saveFirstPlan(defaults: defaults)
 
-        PlanStore.startPaceChanged(from: normal, to: calm, played: [], defaults: defaults)
+        PlanStore.startPaceChanged(from: normal, to: calm, played: { [] }, defaults: defaults)
 
         let levels = PlanStore.storedDifficulty(defaults: defaults)
         XCTAssertEqual(levels[.sudoku], Difficulty(level: 2))
@@ -70,12 +70,22 @@ final class PlanStoreTests: XCTestCase {
         PlanStore.restart([.sudoku], at: Difficulty(level: 3), defaults: defaults)
         defaults.set(9, forKey: FamilySettings.pinKey(.sudoku))
 
-        PlanStore.startPaceChanged(from: normal, to: calm, played: [.memoryMatch], defaults: defaults)
+        PlanStore.startPaceChanged(from: normal, to: calm, played: { [.memoryMatch] }, defaults: defaults)
 
         let levels = PlanStore.storedDifficulty(defaults: defaults)
         XCTAssertEqual(levels[.memoryMatch], Difficulty(level: 7), "played")
         XCTAssertEqual(levels[.sudoku], Difficulty(level: 3), "pinned")
         XCTAssertEqual(levels[.tangram], Difficulty(level: 2), "never played, not pinned")
+    }
+
+    /// A store that can't be read at all gives no played set: nothing moves.
+    func testGivenAnUnreadableStoreWhenStartPaceChangesThenNoLevelMoves() throws {
+        let defaults = try isolatedDefaults()
+        saveFirstPlan(defaults: defaults)
+
+        PlanStore.startPaceChanged(from: normal, to: calm, played: { nil }, defaults: defaults)
+
+        XCTAssertEqual(PlanStore.storedDifficulty(defaults: defaults)[.tangram], Difficulty(level: 4))
     }
 
     /// An unreadable session store (#124) shows no game as played; a level that moved is still kept.
@@ -84,7 +94,7 @@ final class PlanStoreTests: XCTestCase {
         saveFirstPlan(defaults: defaults)
         PlanStore.move(.stroop, to: Difficulty(level: 6), reason: .chosen, today: "2026-10-20", defaults: defaults)
 
-        PlanStore.startPaceChanged(from: normal, to: calm, played: [], defaults: defaults)
+        PlanStore.startPaceChanged(from: normal, to: calm, played: { [] }, defaults: defaults)
 
         XCTAssertEqual(PlanStore.storedDifficulty(defaults: defaults)[.stroop], Difficulty(level: 6))
     }
@@ -96,7 +106,10 @@ final class PlanStoreTests: XCTestCase {
         // A family member with no pace answer already starts calm, so choosing calm changes nothing.
         PlanStore.startPaceChanged(
             from: PlayerProfile(forWhom: .familyMember), to: PlayerProfile(forWhom: .familyMember, startPace: .calm),
-            played: [], defaults: defaults)
+            played: {
+                XCTFail("the session store is read only when the starting level changes")
+                return []
+            }, defaults: defaults)
 
         XCTAssertEqual(PlanStore.storedDifficulty(defaults: defaults)[.tangram], Difficulty(level: 4))
     }

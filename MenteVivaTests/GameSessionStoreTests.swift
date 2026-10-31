@@ -43,6 +43,18 @@ final class GameSessionStoreTests: XCTestCase {
         XCTAssertEqual(week.compactMap(\.game), [.memoryMatch, .quickEyes], "last week's Saturday is left out")
     }
 
+    /// #419: a new start pace leaves every game with a saved session alone, so the played set must be exact.
+    func testGivenSessionsForTwoGamesWhenAskingPlayedGamesThenExactlyThoseTwo() throws {
+        let context = ModelContext(
+            try ModelContainer(
+                for: GameSession.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true)))
+        for game in [GameID.stroop, .sudoku, .stroop] {
+            context.insert(GameSession(gameID: game, score: 0, rounds: 1, durationSeconds: 1))
+        }
+
+        XCTAssertEqual(context.playedGames(), [.stroop, .sudoku])
+    }
+
     /// #124: a store that can't open (failed migration, damaged file) used to
     /// crash every launch. Play must go on with an in-memory store instead.
     func testGivenAStoreThatCannotOpenWhenMakingTheContainerThenPlayStillSaves() throws {
@@ -80,5 +92,7 @@ final class GameSessionStoreTests: XCTestCase {
             trying: [ModelConfiguration(schema: schema, url: url)], schema: schema)
 
         XCTAssertEqual(try ModelContext(container).fetchCount(FetchDescriptor<GameSession>()), 1)
+        // The model is nested in `SchemaV1`; stores saved by the top-level class match only by this name.
+        XCTAssertEqual(schema.entities.map(\.name), ["GameSession"])
     }
 }
