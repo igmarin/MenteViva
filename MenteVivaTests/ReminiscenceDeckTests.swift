@@ -9,6 +9,18 @@ final class ReminiscenceDeckTests: XCTestCase {
         (0..<count).map { URL(fileURLWithPath: "/\($0).jpg") }
     }
 
+    func testGivenCardsWhenAskingForThePromptThenItMatchesWhatTheScreenAsks() {
+        let url = URL(fileURLWithPath: "/0.jpg")
+        let object = EverydayObjects.all[0]
+        XCTAssertEqual(
+            ReminiscenceCard(id: 0, picture: .photo(url), caption: "Ana").promptKey, "game.reminiscence.prompt.photo")
+        XCTAssertEqual(
+            ReminiscenceCard(id: 0, picture: .object(object), caption: "Cup").promptKey,
+            "game.reminiscence.prompt.object")
+        XCTAssertEqual(
+            ReminiscenceCard(id: 0, picture: .photo(url), caption: nil).promptKey, "game.reminiscence.together")
+    }
+
     func testGivenSevenPhotosWhenDealtThenFiveInGivenOrder() {
         let urls = photos(7)
         let cards = ReminiscenceDeck.deal(photos: urls, captions: [:])

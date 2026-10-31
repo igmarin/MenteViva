@@ -5,6 +5,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 ## [Unreleased]
 
 ### Fixed
+- **VoiceOver reads the next question (#391):** in Number Trail, Finish the Saying and Remember Together, moving on now reads the new sum, the start of the new saying, or the new "Who is this?" prompt, so nobody has to swipe around to find it. Nothing changes with VoiceOver off.
 - **My Week names its days in the app's language (#407):** with Spanish picked on an English phone (or English on a Spanish one), earlier days now read "miércoles, 28 de octubre" instead of "Wednesday, October 28", and VoiceOver reads the same words. "Today" and "Yesterday" are unchanged.
 - **The warm-up in My plan keeps your levels (#402):** tapping "Let's play" in Settings → My plan now deals the three games at the levels you already reached, instead of sending them back to the starting level each time, and closes Settings so Home shows them straight away. The warm-up also skips Names and Faces until the family's photos are in. The first-run warm-up is unchanged.
 - **Onboarding speaks each new question (#406):** with VoiceOver on, answering, skipping or going Back in the first-run screens moves focus to the new screen and reads its question. Nothing changes with VoiceOver off.
