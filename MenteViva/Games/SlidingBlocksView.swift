@@ -67,6 +67,10 @@ struct SlidingBlocksView: View {
         // A block drag never scrolls the page, even in the scrolling layout (#470).
         .scrollDisabled(touch != nil)
         .gameHeader(.slidingBlocks, instruction: instruction)
+        .firstPlayGuide(
+            .slidingBlocks, line: AppLanguage.localized("game.slidingblocks.guide"),
+            example: AppLanguage.localized("guide.slidingblocks.example")
+        )
         .onAppear(perform: dealIfNeeded)
         .onDisappear { hintBuild?.cancel() }
         .celebration(isPresented: $showCelebration, game: .slidingBlocks, detail: finalDetail, onPlayAgain: deal)
@@ -156,6 +160,7 @@ struct SlidingBlocksView: View {
                 y: CGFloat(block.y) * cell + (dragOffset?.height ?? 0)
             )
             .zIndex(dragOffset != nil ? 2 : (isSelected ? 1 : 0))
+            .guideTarget(isBig)
             // The one place moves animate. Reduce Motion: moves land at once, with no slide (issue spec).
             .animation(reduceMotion ? nil : .easeInOut(duration: 0.25), value: puzzle)
             // High priority, so the block's drag wins over the page's ScrollView; the

@@ -65,6 +65,10 @@ struct TangramView: View {
         .coordinateSpace(.named(Self.space))
         .fitOrScroll()
         .gameHeader(.tangram, instruction: AppLanguage.localized("game.tangram.instruction"))
+        .firstPlayGuide(
+            .tangram, line: AppLanguage.localized("game.tangram.guide"),
+            example: AppLanguage.localized("guide.tangram.example")
+        )
         .onAppear(perform: deal)
         .onDisappear { CaptionSpeaker.stop() }
         .celebration(isPresented: $showCelebration, game: .tangram, detail: finalDetail, onPlayAgain: deal)
@@ -204,6 +208,7 @@ struct TangramView: View {
                 },
             including: sizeClass == .compact ? .subviews : .all
         )
+        .guideTarget(slot == puzzle.freeSlots.first)
         .accessibilityLabel(AppLanguage.localized(tile.piece.nameKey))
         .accessibilityAddTraits(isSelected ? .isSelected : [])
         .accessibilityActions {
