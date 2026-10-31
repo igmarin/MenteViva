@@ -100,7 +100,8 @@ struct SettingsView: View {
                     .accessibilityHint(AppLanguage.localized("progress.open.hint"))
 
                     NavigationLink {
-                        MyPlanView()
+                        // Closes the whole sheet, not just this push, so Home shows the warm-up (#402).
+                        MyPlanView(onWarmUpStarted: { dismiss() })
                     } label: {
                         Label(AppLanguage.localized("myplan.title"), systemImage: "checklist")
                             .font(.title3)
