@@ -69,12 +69,47 @@ final class WarmUpTests: XCTestCase {
         XCTAssertFalse(WarmUpStore.isCalibrating(.reminiscence, defaults: defaults))
     }
 
-    func testGivenAChosenPaceWhenStartedThenTheyStartAtThatLevel() {
+    /// First run (#402): onboarding saves each answer as it is given, so by the warm-up offer the saved
+    /// profile is the one passed in, and a game with no level yet starts where its pace says.
+    func testGivenFreshPlayerWhenWarmUpBeginsThenGamesStartAtProfileLevel() {
         let defaults = freshDefaults("WarmUpTests.pace")
+        let profile = PlayerProfile(startPace: .calm)
+        ProfileStore.save(profile, defaults: defaults)
 
-        let games = started(defaults, profile: PlayerProfile(startPace: .challenge))
+        let games = started(defaults, profile: profile)
 
-        XCTAssertEqual(PlanStore.storedDifficulty(defaults: defaults)[games[0]], Difficulty(level: 6))
+        XCTAssertEqual(games.count, 3)
+        for game in games {
+            XCTAssertEqual(PlanStore.storedDifficulty(defaults: defaults)[game], Difficulty(level: 2))
+            XCTAssertEqual(PlanStore.cachedPlan(defaults: defaults)?.difficulty[game], Difficulty(level: 2))
+        }
+    }
+
+    /// A player who climbed Memory Lane and taps "Let's play" in My plan keeps the level (#402); the
+    /// warm-up used to drop it back to the profile's start on every tap.
+    func testGivenEarnedLevelEightWhenWarmUpBeginsThenLevelEightIsKept() {
+        let defaults = freshDefaults("WarmUpTests.earned")
+        PlanStore.move(.memoryMatch, to: Difficulty(level: 8), reason: .raised(by: 2), today: "2026-10-20", defaults: defaults)
+
+        let games = started(defaults)
+
+        XCTAssertTrue(games.contains(.memoryMatch))
+        XCTAssertEqual(PlanStore.storedDifficulty(defaults: defaults)[.memoryMatch], Difficulty(level: 8))
+        XCTAssertEqual(PlanStore.cachedPlan(defaults: defaults)?.difficulty[.memoryMatch], Difficulty(level: 8))
+    }
+
+    /// Names and Faces has nothing to deal until the family adds captioned photos, so the warm-up skips
+    /// it like the daily plan does (#402). Repeat the Sequence is hidden too: it ties Names and Faces in
+    /// the memory area and wins on `GameID` order, so without it the rule would never be reached.
+    func testGivenNamesAndFacesUnavailableAndMemoryLaneHiddenWhenWarmUpStartsThenNamesAndFacesIsNotPicked() {
+        let defaults = freshDefaults("WarmUpTests.unavailable")
+        defaults.set(FamilySettings.csv([.memoryMatch, .repeatSequence]), forKey: FamilySettings.hiddenKey)
+
+        let games = WarmUpStore.start(
+            profile: PlayerProfile(), today: today, defaults: defaults, unavailable: [.photoCaptions])
+
+        XCTAssertEqual(games.count, 3)
+        XCTAssertFalse(games.contains(.photoCaptions))
     }
 
     // MARK: The staircase while calibrating
