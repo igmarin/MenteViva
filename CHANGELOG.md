@@ -4,6 +4,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 
 ## [Unreleased]
 
+### Changed
+- **Bigger pictures in Name the Herd and Quick Eyes (#413):** Name the Herd pictures grow from 52 to 72, Quick Eyes choices from 56 to 84, the Quick Eyes picture from 120 to up to 240 (a little over half the screen width on a phone) and the look-again picture from 72 to 96. They grow with the text size too, and the tick in Name the Herd now sits on the tile's corner so it never covers a picture.
+
 ### Fixed
 - **Tangram fits an iPhone screen (#396):** on iPhone the tiles still to place sit in one row that slides sideways, with the next tile peeking in at the edge, so the picture, buttons and tiles no longer push the page into scrolling; to drag a tile there, press and hold it first. The tiles now show their true sizes (a small triangle is half as long as a large one), and every place in the picture takes a tile dropped close to it, small ones too. iPad keeps its grid of tiles.
 - **Tile Pairs shows our illustrations (#411):** the tiles are now warm pictures (an apple, a teapot, a bee, a mountain and so on) instead of grey shapes and numbers, picked so no two side by side look alike, even on the biggest board. Every tile has the same dark printed edge as the other cards, and no tile depends on a system symbol any more, so none can show up blank. VoiceOver reads each picture's name in the app's language. Nothing about the deal or the levels changes.
@@ -30,6 +33,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 - **Every screen now sits on the cream paper background (#356):** Home, the first-run screens, Settings and its lists no longer open on plain white. In Dark Mode the same screens use the dark surround instead of black, following the phone's own appearance setting.
 
 ### Added
+- **Sixty more sayings (#414):** Finish the Saying now has 120 sayings in each language, English sayings and Spanish refranes chosen separately, at least 15 on every theme. A daily player sees all 120 (15 games) before any comes back. The game itself is unchanged.
 - **Your picture album in My Week (#377):** every picture you have turned over shows on a calm shelf, newest first, in colour with its name, under "Your picture album". No count, no empty places, nothing to lose; with no pictures yet the shelf is not there. VoiceOver reads each name. EN + ES.
 - **Home deals today's cards (#383):** the table is there as soon as Home opens, and today's cards rise into place one after another with a light tap, once per day. Coming back from a game does not deal again, but the amber tick on the game you just played pops in. With Reduce Motion on, the cards simply fade in and the tick fades too.
 - **A gentle question under each name in Remember Together (#379):** after "Show me", a short, warm question invites a story ("Where was this?", "What made you laugh that day?"), so two people looking side by side can talk. There is no right answer and it never asks who is in the photo. Everyday objects get their own questions. A session never repeats one. EN + ES.

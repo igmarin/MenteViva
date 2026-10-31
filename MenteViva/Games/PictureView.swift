@@ -26,4 +26,26 @@ struct PictureView: View {
     nonisolated static func bundleHasAsset(_ name: String) -> Bool {
         UIImage(named: name) != nil
     }
+
+    /// The flash target's size (#413): up to `ceiling` (240pt, scaled with Dynamic Type), but never
+    /// more than 60% of the screen width, so a narrow phone keeps room around it. At accessibility
+    /// text sizes it also stops at 120pt, its old size: the instruction takes many lines there, and a
+    /// bigger picture pushes the "Got it" tile below the fold.
+    static func flashTarget(ceiling: CGFloat, width: CGFloat, isAccessibilitySize: Bool) -> CGFloat {
+        min(ceiling, width * 0.6, isAccessibilitySize ? 120 : .infinity)
+    }
+
+    /// The narrowest grid column that gives a picture its margin (#413). It never drops under the
+    /// 100pt tile floor, and it widens with the picture so larger text means fewer, bigger tiles
+    /// instead of a picture spilling past its tile.
+    static func columnMinimum(picture: CGFloat, margin: CGFloat) -> CGFloat {
+        max(100, picture + 2 * margin)
+    }
+
+    /// A picture's size once it must fit a tile `columnWidth` wide (#413): the wanted size, or the
+    /// widest the margins and the tile's 3pt border leave. Dynamic Type grows the picture only as
+    /// far as its tile can hold it.
+    static func fitted(_ size: CGFloat, columnWidth: CGFloat, margin: CGFloat) -> CGFloat {
+        min(size, max(0, columnWidth - 2 * margin - 6))
+    }
 }
