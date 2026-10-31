@@ -371,6 +371,8 @@ nonisolated struct SlidingBlocksMap: Sendable {
                 firstNeighbour.append(Int32(neighbours.count))
                 head += 1
             }
+            // Stopped early: positions past `head` have no links yet, so the walk back would index past them.
+            guard head == keys.count else { return [:] }
             var moves = [Int32](repeating: -1, count: keys.count)
             for i in solved { moves[Int(i)] = 0 }
             var frontier = solved

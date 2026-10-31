@@ -177,6 +177,18 @@ final class SlidingBlocksPuzzleTests: XCTestCase {
         }
     }
 
+    func testGivenABuildStoppedMidSearchWhenMapBuiltThenItIsEmptyAndDoesNotCrash() {
+        // Solved at the start, so the walk back would begin at once; the stop answers true
+        // only once, as a closure that is not sticky could.
+        let p = SlidingBlocksPuzzle(width: 3, height: 4, layout: "o.^/..v/BBo/BBo")
+        var checks = 0
+        let map = SlidingBlocksMap(from: p) {
+            checks += 1
+            return checks == 2
+        }
+        XCTAssertNil(map.minMoves(from: p))
+    }
+
     func testGivenBoardWithNoMoveWhenMapBuiltThenNoHint() {
         let p = SlidingBlocksPuzzle(width: 3, height: 4, layout: "BBo/BBo/ooo/ooo")
         let map = SlidingBlocksMap(from: p)
