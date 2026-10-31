@@ -3,7 +3,7 @@ import Foundation
 /// Whether the app is away (a call, the app switcher) and a round owes a fresh start on return (#415).
 /// A view keeps this in `@State`: timer and beat closures hold a copy of the view struct made when
 /// they started, so only reference-backed state shows them that the app has since gone away.
-nonisolated struct InterruptionPause: Equatable {
+nonisolated struct InterruptionPause {
     private(set) var isAway = false
     private(set) var owesRestart = false
 
