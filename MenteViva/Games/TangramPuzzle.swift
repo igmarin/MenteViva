@@ -259,12 +259,13 @@ nonisolated struct TangramPuzzle: Sendable {
     }
 
     /// The view's 60pt target as a reach in authoring units (#396): `points` from a slot's middle
-    /// on a board drawn at `scale` points per unit. Never past a large tile's own share: before the
-    /// board has a size, `fitTransform` falls back to scale 1, and 30 units would pull a tile into
-    /// a slot from anywhere on the figure.
-    static func reachFloor(points: Double, scale: CGFloat) -> Double {
-        guard scale > 0 else { return 0 }
-        return min(points / Double(scale), snapShare * TangramPiece.large.diagonal)
+    /// on a board of `size` showing `shape`. No cap: on an iPhone SE the tall figures draw at under
+    /// 10pt per unit, where a large tile's own share is only about 27pt (#481). A board with no size
+    /// yet answers 0, since `fitTransform` would fall back to scale 1 and 30 units reaches anywhere.
+    static func reachFloor(points: Double, shape: TangramShape, in size: CGSize) -> Double {
+        guard size.width > 0, size.height > 0 else { return 0 }
+        let scale = fitTransform(box: boundingBox(of: shape), in: size).scale
+        return points / Double(scale)
     }
 
     /// Each tray tile fits a 76pt square in its 100pt cell, leaving room for the cell's edge.
@@ -356,8 +357,9 @@ nonisolated enum TangramSlot: Sendable {
 
 /// How the Tangram table is arranged in the space the game gets (#396). Chosen from the measured
 /// area, not the size class: an iPhone Pro Max on its side reports a regular width, and an iPad in
-/// Slide Over a compact one. The heights are at the default text size; at larger text the page
-/// still scrolls when it must (`fitOrScroll`).
+/// Slide Over a compact one. Slide Over gets the row until the window is tall enough for the
+/// grid's four rows of two (about 1120pt, a 13" iPad), then the grid. The heights are at the
+/// default text size; at larger text the page still scrolls when it must (`fitOrScroll`).
 nonisolated enum TangramLayout: Equatable, Sendable {
     /// Board on top, the tray's cells wrapping in a grid under the buttons: a full-screen iPad.
     case grid
@@ -392,6 +394,9 @@ nonisolated enum TangramLayout: Equatable, Sendable {
         // while the grid pushes the whole page into scrolling. A one-row grid is no taller.
         let note = rows > 1 ? 60 + partGap : 0
         if stackedText + board + grid + note <= area.height { return .grid }
+        // The row leaves out the level note, on purpose: an upright phone has no other layout than
+        // the row, so budgeting 76pt for a note that shows once a day per game would only change
+        // which landscape areas stack. Its day scrolls a little, steadily (`keepsSpace`).
         if stackedText + boardMinimum + cell <= area.height || area.height >= area.width { return .row }
         return .sideBySide
     }
