@@ -123,9 +123,11 @@ nonisolated struct TilePairsDeal {
         correct += 1
         return true
     }
-    /// Warm reshuffle keeps the multiset and deals a solvable board.
+    /// Warm reshuffle keeps the multiset and deals a solvable board. The ids left on the board stay the ids of
+    /// the new tiles, so an id that was removed (and may still be lifting away in the view) never names a tile again.
     mutating func reshuffle<G: RandomNumberGenerator>(using g: inout G) -> Bool {
         guard isStuck else { return false }
+        let ids = tiles.map(\.id).sorted()
         let syms = tiles.map(\.symbol)
         var counts: [TilePairsSymbol: Int] = [:]
         for s in syms { counts[s, default: 0] += 1 }
@@ -135,8 +137,8 @@ nonisolated struct TilePairsDeal {
         let pos = Self.positions(for: tiles.count, layers: layers)
         for _ in 0..<30 {
             if let built = Self.build(tiles: tiles.count, layers: layers, pairSymbols: pairSyms, positions: pos, using: &g) {
-                tiles = built.tiles
-                pairOrder = built.order
+                tiles = built.tiles.map { TilePairsTile(id: ids[$0.id], symbol: $0.symbol, x: $0.x, y: $0.y, layer: $0.layer) }
+                pairOrder = built.order.map { $0.map { ids[$0] } }
                 return true
             }
             pairSyms.shuffle(using: &g)
@@ -144,10 +146,10 @@ nonisolated struct TilePairsDeal {
         // Deterministic fallback keeps the multiset and guarantees free tiles (spaced line).
         let spaced: [(x: Int, y: Int, layer: Int)] = (0..<tiles.count).map { i in (x: i * 2, y: 0, layer: 0) }
         let fallbackTiles = spaced.enumerated().map { idx, p in
-            TilePairsTile(id: idx, symbol: pairSyms[idx / 2 % pairSyms.count], x: p.x, y: p.y, layer: p.layer)
+            TilePairsTile(id: ids[idx], symbol: pairSyms[idx / 2 % pairSyms.count], x: p.x, y: p.y, layer: p.layer)
         }
         let pairs = tiles.count / 2
-        let fallbackOrder = (0..<pairs).map { i in [i * 2, i * 2 + 1] }
+        let fallbackOrder = (0..<pairs).map { i in [ids[i * 2], ids[i * 2 + 1]] }
         tiles = fallbackTiles
         pairOrder = fallbackOrder
         return true

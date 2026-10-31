@@ -315,15 +315,16 @@ struct TilePairsView: View {
             hint = nil
             Feedback.play(.success)
             let label = symbolLabel(tile.symbol)
-            AccessibilityNotification.Announcement(
-                String(format: AppLanguage.localized("game.tilepairs.matched %@"), label)
-            ).post()
+            // One announcement when the pair leaves the board stuck, so the mix line cannot cut the match line off.
+            var spoken = String(format: AppLanguage.localized("game.tilepairs.matched %@"), label)
+            if mutable.isStuck { spoken += " " + AppLanguage.localized("game.tilepairs.stuck") }
+            AccessibilityNotification.Announcement(spoken).post()
             let delay = reduceMotion ? 0.22 : 0.38
             Task { @MainActor in
                 try? await Task.sleep(for: .seconds(delay))
                 // A pair taken in an unlucky order can leave no free match: mix now, not only on Show me.
                 var settled = mutable
-                let mixed = mixIfStuck(&settled)
+                let mixed = mixIfStuck(&settled, afterMatch: true)
                 withAnimation(mixed && !reduceMotion ? .easeInOut(duration: 0.3) : nil) {
                     deal = settled
                     removing = []
@@ -349,11 +350,14 @@ struct TilePairsView: View {
 
     /// Mixes a board with no free matching pair, with the warm "stuck" line; false when it was already playable.
     /// Called after every removed pair and by Show me, so a stuck board never waits for a button press.
-    private func mixIfStuck(_ board: inout TilePairsDeal) -> Bool {
+    /// `afterMatch`: the match already played its sound and spoke the stuck line, so the mix stays quiet.
+    private func mixIfStuck(_ board: inout TilePairsDeal, afterMatch: Bool = false) -> Bool {
         guard board.isStuck else { return false }
         hint = AppLanguage.localized("game.tilepairs.stuck")
-        AccessibilityNotification.Announcement(hint!).post()
-        Feedback.play(.success)
+        if !afterMatch {
+            AccessibilityNotification.Announcement(hint!).post()
+            Feedback.play(.success)
+        }
         var gen = SystemRandomNumberGenerator()
         return board.reshuffle(using: &gen)
     }

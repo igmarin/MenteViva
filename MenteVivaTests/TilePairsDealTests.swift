@@ -127,6 +127,21 @@ final class TilePairsDealTests: XCTestCase {
         XCTAssertEqual(deal.attempts, 1)
     }
 
+    func testGivenAMatchThatLeavesNoFreePairWhenMixedThenNoRemovedIdComesBack() {
+        // The view keeps the matched ids lifting while the mix is written; a removed id must not name a new tile.
+        let symbols: [TilePairsSymbol] = [.circle, .square, .diamond, .square, .diamond, .circle]
+        let tiles = symbols.enumerated().map { TilePairsTile(id: $0.offset, symbol: $0.element, x: $0.offset, y: 0, layer: 0) }
+        var deal = TilePairsDeal(tiles: tiles, layers: 1, pairOrder: [])
+        XCTAssertEqual(deal.pick(0, after: nil, lifting: false), .selected)
+        XCTAssertEqual(deal.pick(5, after: 0, lifting: false), .matched)
+        let before = Set(deal.tiles.map(\.id))
+        var g = Seeded(state: 9)
+        XCTAssertTrue(deal.reshuffle(using: &g))
+        XCTAssertEqual(Set(deal.tiles.map(\.id)), before)
+        XCTAssertTrue(deal.pairOrder.flatMap { $0 }.allSatisfy { before.contains($0) })
+        XCTAssertTrue(deal.clearsWithRecordedOrder())
+    }
+
     func testGivenMatchingFreePairWhenTriedThenCorrectIncrements() {
         var g = Seeded(state: 7)
         var deal = TilePairsDeal.make(difficulty: Difficulty(level: 1), width: wideW, height: wideH, using: &g)
