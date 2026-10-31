@@ -61,6 +61,10 @@ struct TilePairsView: View {
         .padding()
         .fitOrScroll()
         .gameHeader(.tilePairs, instruction: AppLanguage.localized("game.tilepairs.instruction"))
+        .firstPlayGuide(
+            .tilePairs, line: AppLanguage.localized("game.tilepairs.guide"),
+            example: AppLanguage.localized("guide.tilepairs.example")
+        )
         .onAppear { dealIfNeeded() }
         .celebration(isPresented: $showCelebration, game: .tilePairs, detail: finalDetail, onPlayAgain: restart)
     }
@@ -85,6 +89,7 @@ struct TilePairsView: View {
                 .overlay {
                     if let deal {
                         let tileSize = tileSize(for: deal, in: size)
+                        let guideTargetID = FirstPlayGuideStore.shouldShow(.tilePairs) ? deal.guidePair()?.first?.id : nil
                         let boardDims = boardDimensions(for: deal, tileSize: tileSize)
                         // A board that still doesn't fit at the smallest tile (a wide fallback
                         // line, a short screen after the first move) scrolls inside its space
@@ -94,7 +99,7 @@ struct TilePairsView: View {
                         ScrollView([.horizontal, .vertical]) {
                             ZStack(alignment: .topLeading) {
                                 ForEach(deal.tiles.sorted(by: { $0.layer < $1.layer }), id: \.id) { tile in
-                                    tileButton(tile, tileSize: tileSize)
+                                    tileButton(tile, tileSize: tileSize, guideTargetID: guideTargetID)
                                 }
                             }
                             // Top-leading: the tiles are placed by `.offset`, which does not size the ZStack,
@@ -110,7 +115,7 @@ struct TilePairsView: View {
         }
     }
 
-    private func tileButton(_ tile: TilePairsTile, tileSize: CGFloat) -> some View {
+    private func tileButton(_ tile: TilePairsTile, tileSize: CGFloat, guideTargetID: Int?) -> some View {
         let free = deal?.isFree(tile) ?? false
         let isSelected = selected == tile.id
         let isHighlighted = highlighted.contains(tile.id)
@@ -141,6 +146,7 @@ struct TilePairsView: View {
         }
         .buttonStyle(.plain)
         .offset(x: offset.x, y: offset.y)
+        .guideTarget(tile.id == guideTargetID)
         // VoiceOver: only free tiles are focusable; covered tiles keep the pattern + dim so it isn't colour-only.
         .accessibilityHidden(!free)
         .accessibilityLabel(symbolLabel(tile.symbol))
@@ -322,9 +328,7 @@ struct TilePairsView: View {
             }
             return
         }
-        let free = current.freeTiles()
-        let groups = Dictionary(grouping: free, by: \.symbol)
-        if let pair = groups.first(where: { $0.value.count >= 2 })?.value.prefix(2) {
+        if let pair = current.guidePair() {
             hintsUsed += 1
             highlighted = Set(pair.map(\.id))
             Feedback.play(.success)

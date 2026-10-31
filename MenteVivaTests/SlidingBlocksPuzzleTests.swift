@@ -26,6 +26,35 @@ final class SlidingBlocksPuzzleTests: XCTestCase {
         1...3, 3...5, 5...8, 8...12, 12...16, 16...22, 22...30, 30...40, 40...60, 60...Int.max,
     ]
 
+    // MARK: - First-play guide
+
+    func testGivenEveryDealtPuzzleWhenPickingGuideBlockThenItCanMove() {
+        for level in 1...10 {
+            for data in SlidingBlocksLevels.puzzles(for: level) {
+                guard let index = data.puzzle.guideBlock() else {
+                    XCTFail("level \(level) \(data.layout) has no guide block")
+                    continue
+                }
+                XCTAssertTrue(data.puzzle.moves().contains { $0.block == index }, "level \(level) \(data.layout)")
+            }
+        }
+    }
+
+    func testGivenBigBlockCanMoveWhenPickingGuideBlockThenItIsTheBigOne() {
+        let puzzle = SlidingBlocksPuzzle(width: 3, height: 4, layout: "BB./BB./ooo/ooo")
+        XCTAssertTrue(puzzle.moves().contains { $0.block == puzzle.bigIndex })
+        XCTAssertEqual(puzzle.guideBlock(), puzzle.bigIndex)
+    }
+
+    func testGivenBigBlockBoxedInWhenPickingGuideBlockThenItIsAnotherBlockThatCanMove() {
+        let puzzle = SlidingBlocksPuzzle(width: 3, height: 4, layout: "ooo/BBo/BB./.oo")
+        XCTAssertFalse(puzzle.moves().contains { $0.block == puzzle.bigIndex })
+        let index = puzzle.guideBlock()
+        XCTAssertNotNil(index)
+        XCTAssertNotEqual(index, puzzle.bigIndex)
+        XCTAssertTrue(puzzle.moves().contains { $0.block == index })
+    }
+
     // MARK: - Levels
 
     func testGivenLevelsWhenBoardSizesThenSpec() {

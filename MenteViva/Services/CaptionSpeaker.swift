@@ -22,7 +22,9 @@ enum CaptionSpeaker {
         }
     }
 
-    private static let synthesizer = AVSpeechSynthesizer()
+    private static var synthesizer: AVSpeechSynthesizer?
+    /// Exposes whether speech has needed the synthesizer, without creating it.
+    static var isCreated: Bool { synthesizer != nil }
     private static let sessionEnder = SessionEnder()
     /// The latest name asked for; a name set up after a newer one (or a stop) never plays.
     private static var requested: AVSpeechUtterance?
@@ -50,12 +52,14 @@ enum CaptionSpeaker {
     /// Cuts the voice off, so a name never carries over onto the next photo.
     static func stop() {
         requested = nil
-        synthesizer.stopSpeaking(at: .immediate)
+        synthesizer?.stopSpeaking(at: .immediate)
     }
 
     /// Speaks only once the session is .playback, so the first name is never
     /// muted by the silent switch.
     static func speak(_ text: String) {
+        if synthesizer == nil { synthesizer = AVSpeechSynthesizer() }
+        guard let synthesizer else { return }
         synthesizer.stopSpeaking(at: .immediate)
         let utterance = AVSpeechUtterance(string: text)
         // A language with no installed voice still speaks, in English, not silently.

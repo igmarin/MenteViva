@@ -2791,6 +2791,40 @@
         }
       }
     },
+    "game.slidingblocks.guide" : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap a block, then an arrow to slide it."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toca un bloque y luego una flecha para deslizarlo."
+          }
+        }
+      }
+    },
+    "game.tangram.guide" : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap a piece, then tap where it fits."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toca una pieza y luego toca dónde encaja."
+          }
+        }
+      }
+    },
     "game.tangram.title" : {
       "localizations" : {
         "en" : {
@@ -2803,6 +2837,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tangram"
+          }
+        }
+      }
+    },
+    "game.tilepairs.guide" : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap two matching tiles that are not covered."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toca dos fichas iguales que no estén tapadas."
           }
         }
       }
@@ -3427,6 +3478,57 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sube o baja"
+          }
+        }
+      }
+    },
+    "guide.slidingblocks.example" : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Try this block."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prueba este bloque."
+          }
+        }
+      }
+    },
+    "guide.tangram.example" : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start with this piece."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Empieza con esta pieza."
+          }
+        }
+      }
+    },
+    "guide.tilepairs.example" : {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This one has a twin that is not covered."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Esta tiene una gemela que no está tapada."
           }
         }
       }

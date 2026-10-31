@@ -45,6 +45,16 @@ nonisolated struct TilePairsDeal {
         return !groups.values.contains { $0.count >= 2 }
     }
     func freeTiles() -> [TilePairsTile] { tiles.filter { isFree($0) } }
+    /// The first free matching pair, shared by the guide and Show me.
+    func guidePair() -> [TilePairsTile]? {
+        let free = freeTiles()
+        for tile in free {
+            if let match = free.first(where: { $0.id != tile.id && $0.symbol == tile.symbol }) {
+                return [tile, match]
+            }
+        }
+        return nil
+    }
     func isFree(_ t: TilePairsTile) -> Bool {
         if tiles.contains(where: { $0.x == t.x && $0.y == t.y && $0.layer > t.layer }) { return false }
         let left = tiles.contains { $0.x == t.x - 1 && $0.y == t.y && $0.layer == t.layer }

@@ -39,6 +39,21 @@ final class TilePairsDealTests: XCTestCase {
         }
     }
 
+    func testGivenBoardWhenFindingGuidePairThenBothTilesAreFree() {
+        for level in 1...10 {
+            for seed in 1...20 {
+                var generator = Seeded(state: UInt64(seed))
+                let deal = TilePairsDeal.make(
+                    difficulty: Difficulty(level: level), width: wideW, height: wideH, using: &generator)
+                guard let pair = deal.guidePair() else { return XCTFail("Dealt board must have a free pair") }
+                XCTAssertEqual(pair.count, 2)
+                XCTAssertNotEqual(pair[0].id, pair[1].id)
+                XCTAssertEqual(pair[0].symbol, pair[1].symbol)
+                XCTAssertTrue(pair.allSatisfy { deal.isFree($0) })
+            }
+        }
+    }
+
     func testGivenTileUnderAnotherWhenFreeCheckedThenNotFree() {
         let bottom = TilePairsTile(id: 0, symbol: .circle, x: 0, y: 0, layer: 0)
         let top = TilePairsTile(id: 1, symbol: .circle, x: 0, y: 0, layer: 1)
@@ -85,6 +100,7 @@ final class TilePairsDealTests: XCTestCase {
         // Ends are circle vs diamond => no free pair matches, middle blocked.
         var deal = TilePairsDeal(tiles: tiles, layers: 1, pairOrder: [])
         XCTAssertTrue(deal.isStuck)
+        XCTAssertNil(deal.guidePair())
         let before = deal.tiles.map(\.symbol).sorted { $0.rawValue < $1.rawValue }
         var g = Seeded(state: 42)
         XCTAssertTrue(deal.reshuffle(using: &g))

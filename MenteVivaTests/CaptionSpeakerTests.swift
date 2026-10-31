@@ -24,6 +24,12 @@ final class CaptionSpeakerTests: XCTestCase {
     }
 
     @MainActor
+    func testGivenNoSpeechWhenStoppedThenSynthesizerIsNotCreated() {
+        CaptionSpeaker.stop()
+        XCTAssertFalse(CaptionSpeaker.isCreated)
+    }
+
+    @MainActor
     func testGivenSessionWhenConfiguredForSpeechThenItPlaysEvenOnSilent() throws {
         let session = AVAudioSession.sharedInstance()
         try CaptionSpeaker.configureSession(session)
