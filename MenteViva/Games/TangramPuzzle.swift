@@ -192,6 +192,28 @@ nonisolated struct TangramPuzzle: Sendable {
         return pool[Int.random(in: pool.indices, using: &generator)]
     }
 
+    /// UserDefaults key for the shapes already dealt: ids only, so the store stays tiny.
+    static let seenKey = "tangram.seen"
+
+    /// The next shape across openings (#416): `pick`, but with the seen ids kept in `defaults`, so a
+    /// week of short sessions does not repeat a figure. Ids that are no longer in `shapes` are
+    /// ignored and dropped, and the store is cleared the moment every shape has been seen.
+    static func nextShape<G: RandomNumberGenerator>(
+        from shapes: [TangramShape] = TangramShapes.all, defaults: UserDefaults,
+        using generator: inout G
+    ) -> TangramShape {
+        let known = Set(shapes.map(\.key))
+        var seen = Set(defaults.stringArray(forKey: seenKey) ?? []).intersection(known)
+        let next = pick(from: shapes, seen: seen, using: &generator)
+        seen.insert(next.key)
+        if seen.count >= known.count {
+            defaults.removeObject(forKey: seenKey)
+        } else {
+            defaults.set(seen.sorted(), forKey: seenKey)
+        }
+        return next
+    }
+
     private static func average(_ points: [CGPoint]) -> CGPoint {
         let count = CGFloat(max(points.count, 1))
         return CGPoint(

@@ -13,7 +13,8 @@ struct TangramView: View {
     private static let space = "tangram.table"
 
     @State private var difficulty = Difficulty.stored(.tangram)
-    @State private var seen: Set<String> = []
+    /// Whether the first shape was dealt: the seen ids live in UserDefaults now (#416).
+    @State private var dealt = false
     @State private var puzzle = TangramPuzzle(
         shape: TangramShapes.all[0], rules: TangramPuzzle.rules(for: Difficulty.stored(.tangram)))
     /// The turn and mirror the player gave each tray tile, keyed by the slot it was dealt for.
@@ -65,7 +66,7 @@ struct TangramView: View {
                 example: AppLanguage.localized("guide.tangram.example")
             )
             // Not when the celebration closes: Play again has dealt already (#415).
-            .onAppear { if seen.isEmpty { deal() } }
+            .onAppear { if !dealt { deal() } }
             .onDisappear {
                 CaptionSpeaker.stop()
                 finishTask?.cancel()
@@ -451,8 +452,8 @@ struct TangramView: View {
         finishTask = nil
         difficulty = Difficulty.stored(.tangram)
         var generator = SystemRandomNumberGenerator()
-        let next = TangramPuzzle.pick(from: TangramShapes.all, seen: seen, using: &generator)
-        seen.insert(next.key)
+        let next = TangramPuzzle.nextShape(defaults: .standard, using: &generator)
+        dealt = true
         puzzle = TangramPuzzle(shape: next, rules: TangramPuzzle.rules(for: difficulty))
         turns = [:]
         selected = nil
