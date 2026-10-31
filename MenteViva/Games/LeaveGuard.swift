@@ -46,6 +46,8 @@ private struct LeaveGuardModifier: ViewModifier {
                 }
             }
             .navigationBarBackButtonHidden(true)
+            // The bar's speaker would read the game's rules over the modal card, so the bar goes while it shows.
+            .toolbar(asking ? .hidden : .visible, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button {
@@ -91,7 +93,11 @@ private struct LeavePrompt: View {
         .accessibilityElement(children: .contain)
         .accessibilityAddTraits(.isModal)
         .accessibilityAction(.escape, keepPlaying)
-        .onAppear { titleFocused = true }
+        .task {
+            // The card is not in the accessibility tree on the first frame, so focus a beat later.
+            try? await Task.sleep(for: .milliseconds(100))
+            titleFocused = true
+        }
     }
 
     private var card: some View {
