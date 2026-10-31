@@ -403,7 +403,7 @@ struct SlidingBlocksView: View {
         let best = data?.minMoves ?? solved.movesMade
         modelContext.record(
             GameSession(
-                gameID: .slidingBlocks, score: Self.score(minMoves: best, moves: solved.movesMade),
+                gameID: .slidingBlocks,
                 rounds: 1, durationSeconds: elapsed,
                 correct: best, attempts: Self.recordedAttempts(moves: solved.movesMade, hints: hintsUsed), difficulty: difficulty)
         )
@@ -415,12 +415,6 @@ struct SlidingBlocksView: View {
 
     /// A shown move counts in addition to the move it plays.
     static func recordedAttempts(moves: Int, hints: Int) -> Int { moves + hints }
-
-    /// Progress, never points (#45): a clean run is 100, each slide beyond the
-    /// puzzle's fewest costs 5, floored at 10. Stored, never shown.
-    static func score(minMoves: Int, moves: Int) -> Int {
-        max(10, 100 - max(0, moves - minMoves) * 5)
-    }
 
     // MARK: - VoiceOver names
 

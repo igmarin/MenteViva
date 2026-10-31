@@ -45,10 +45,6 @@ struct CategoryFluencyView: View {
     /// Decoys the session was dealt with, nil until the board has been measured.
     @State private var dealtDecoys: Int?
 
-    static func score(totalCorrect: Int) -> Int {
-        totalCorrect * 10
-    }
-
     /// A finished category always gets a beat; its result decides where to go afterwards.
     static func completion(found: Int, total: Int, hasNextRound: Bool) -> Completion {
         guard found == total else { return .keepPlaying }
@@ -317,10 +313,9 @@ struct CategoryFluencyView: View {
 
     private func finish() {
         let elapsed = Int(Date.now.timeIntervalSince(startedAt))
-        let score = Self.score(totalCorrect: totalCorrect)
         modelContext.record(
             GameSession(
-                gameID: .categoryFluency, score: score,
+                gameID: .categoryFluency,
                 rounds: CategoryDeal.roundsPerSession, durationSeconds: elapsed,
                 correct: totalCorrect, attempts: totalPicks,
                 difficulty: difficulty))

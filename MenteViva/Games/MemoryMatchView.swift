@@ -135,10 +135,6 @@ struct MemoryMatchView: View {
         return (best.columns, best.card)
     }
 
-    static func score(pairCount: Int, moves: Int) -> Int {
-        max(10, pairCount * 20 - moves * 2)
-    }
-
     var body: some View {
         VStack(spacing: 24) {
             LevelExplainBanner(
@@ -404,12 +400,11 @@ struct MemoryMatchView: View {
     /// (#415). The match was already announced to VoiceOver by `flip`, so nothing waits on it.
     private func finish() {
         let elapsed = Int(Date.now.timeIntervalSince(startedAt))
-        let score = Self.score(pairCount: faces.count, moves: moves)
         // Score stays in the model as a record of how the round went (#45); the
         // player sees progress, not points.
         modelContext.record(
             GameSession(
-                gameID: variant.game, score: score,
+                gameID: variant.game,
                 rounds: faces.count, durationSeconds: elapsed,
                 correct: faces.count, attempts: moves,
                 difficulty: difficulty))

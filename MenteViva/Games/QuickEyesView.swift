@@ -57,10 +57,6 @@ struct QuickEyesView: View {
     @State private var showCelebration = false
     @State private var finalDetail = ""
 
-    static func score(correct: Int, speedBonus: Int) -> Int {
-        correct * 10 + speedBonus
-    }
-
     var body: some View {
         VStack(spacing: 24) {
             LevelExplainBanner(
@@ -276,10 +272,9 @@ struct QuickEyesView: View {
         revealTask?.cancel()
         revealTask = nil
         let elapsed = Int(Date.now.timeIntervalSince(startedAt))
-        let score = Self.score(correct: run.correct, speedBonus: run.speedBonus)
         modelContext.record(
             GameSession(
-                gameID: .quickEyes, score: score,
+                gameID: .quickEyes,
                 rounds: Self.totalRounds, durationSeconds: elapsed,
                 correct: run.correct, attempts: Self.totalRounds,
                 difficulty: run.difficulty))

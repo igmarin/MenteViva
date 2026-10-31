@@ -28,22 +28,12 @@ final class QuickEyesRunTests: XCTestCase {
         let outcome = run.pick(sunflower, target: sunflower, reactionSeconds: 1)
         XCTAssertEqual(outcome, .right(firstTry: false))
         XCTAssertEqual(run.correct, 0)
-        XCTAssertEqual(run.speedBonus, 0)
     }
 
-    func testGivenAPacedRoundWhenTheRightPickFirstThenCountedWithASpeedBonus() {
+    func testGivenAPacedRoundWhenTheRightPickFirstThenCounted() {
         var run = pacedRun()
         let outcome = run.pick(sunflower, target: sunflower, reactionSeconds: 1.2)
         XCTAssertEqual(outcome, .right(firstTry: true))
-        XCTAssertEqual(run.correct, 1)
-        // 1.2 s is two full half-seconds: 5 - 2.
-        XCTAssertEqual(run.speedBonus, 3)
-    }
-
-    func testGivenASlowPickWhenRightThenTheSpeedBonusStopsAtZero() {
-        var run = pacedRun()
-        _ = run.pick(sunflower, target: sunflower, reactionSeconds: 30)
-        XCTAssertEqual(run.speedBonus, 0)
         XCTAssertEqual(run.correct, 1)
     }
 

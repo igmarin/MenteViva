@@ -61,7 +61,7 @@ nonisolated enum SchemaV1: VersionedSchema {
         var game: GameID? { GameID(rawValue: gameID) ?? (gameID == "memory" ? .memoryMatch : nil) }
 
         init(
-            gameID: GameID, score: Int, rounds: Int, durationSeconds: Int,
+            gameID: GameID, score: Int = 0, rounds: Int, durationSeconds: Int,
             correct: Int = 0, attempts: Int = 0, difficulty: Difficulty? = nil
         ) {
             self.gameID = gameID.rawValue

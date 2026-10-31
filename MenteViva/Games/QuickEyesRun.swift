@@ -33,8 +33,6 @@ nonisolated struct QuickEyesRun {
     let difficulty: Difficulty
     /// Right first try only, as the level staircase reads it.
     private(set) var correct = 0
-    /// Hidden bonus for quick first-try picks; nothing shows it (#45).
-    private(set) var speedBonus = 0
     private(set) var missedLastRound = false
     /// Wrong pictures faded this round (paced levels).
     private(set) var fadedPictures: Set<GamePicture> = []
@@ -69,8 +67,6 @@ nonisolated struct QuickEyesRun {
             let firstTry = fadedPictures.isEmpty
             if firstTry {
                 correct += 1
-                // Up to 5 points, one less per half-second of reaction time.
-                speedBonus += max(0, 5 - Int(reactionSeconds / 0.5))
             }
             missedLastRound = false
             if !isPaced { displayTime = max(Self.displayTimes(for: difficulty).floor, displayTime * Self.shrinkFactor) }

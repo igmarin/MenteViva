@@ -89,33 +89,12 @@ final class CategoryCompletionTests: XCTestCase {
     }
 }
 
-/// Scoring tests keep the formulas independent from SwiftUI rendering and
-/// protect the values shown in the celebration screen.
-final class GameScoringTests: XCTestCase {
-
-    func testGivenMemoryMovesWhenScoredThenPenaltyIsAppliedWithMinimum() {
-        XCTAssertEqual(MemoryMatchView.score(pairCount: 8, moves: 10), 140)
-        XCTAssertEqual(MemoryMatchView.score(pairCount: 2, moves: 100), 10)
-    }
-
-    func testGivenCorrectAnswersWhenScoredThenColorClashUsesTenPointsEach() {
-        XCTAssertEqual(ColorClashView.score(correct: 7), 70)
-    }
-
-    func testGivenPickedItemsWhenScoredThenCategoryFluencyUsesTenPointsEach() {
-        XCTAssertEqual(CategoryFluencyView.score(totalCorrect: 21), 210)
-    }
-
-    func testGivenStreakWhenScoredThenMathAddsTheStreakBonus() {
-        XCTAssertEqual(MathStreakView.score(correct: 8, bestStreak: 5), 90)
-    }
-
-    func testGivenSpeedBonusWhenScoredThenQuickEyesAddsItToCorrectAnswers() {
-        XCTAssertEqual(QuickEyesView.score(correct: 9, speedBonus: 12), 102)
-    }
-}
-
 final class GameSessionAccuracyTests: XCTestCase {
+    func testGivenASessionMadeWithoutAScoreWhenReadThenTheStoredScoreIsZero() {
+        let s = GameSession(gameID: .memoryMatch, rounds: 8, durationSeconds: 5)
+        XCTAssertEqual(s.score, 0)
+    }
+
     func testGivenCorrectAndAttemptsWhenAccuracyThenRatio() {
         let s = GameSession(
             gameID: .stroop, score: 0, rounds: 10, durationSeconds: 5,

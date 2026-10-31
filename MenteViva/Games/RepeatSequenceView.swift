@@ -340,7 +340,7 @@ struct RepeatSequenceView: View {
         let sess = session
         modelContext.record(
             GameSession(
-                gameID: .repeatSequence, score: (sess?.correct ?? 0) * 10,
+                gameID: .repeatSequence,
                 rounds: Self.roundsPerSession, durationSeconds: elapsed,
                 correct: sess?.correct ?? 0, attempts: sess?.attempts ?? 0,
                 difficulty: difficulty))
