@@ -110,6 +110,7 @@ struct RepeatSequenceView: View {
             sequenceGrid
             RoundCounter(progress: progress)
         }
+        .gameColumn()
         .padding()
         .fitOrScroll()
         .gameHeader(.repeatSequence, instruction: AppLanguage.localized("game.sequence.instruction"))

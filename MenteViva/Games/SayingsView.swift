@@ -92,6 +92,7 @@ struct SayingsView: View {
                 RoundCounter(progress: progress)
             }
         }
+        .gameColumn()
         .padding()
         .fitOrScroll()
         .gameHeader(.sayings, instruction: AppLanguage.localized("game.sayings.instruction"))

@@ -35,15 +35,129 @@ nonisolated struct SudokuPuzzle: Equatable {
         ((9, 46), (6, 28)),
     ]
 
-    /// Board size and blanks for a level: the wanted board where its squares
-    /// keep 60pt, else its fallback, else a 4×4 that fits everywhere the app
-    /// runs (4×60 + 3×2 = 246pt, under the narrowest board). The last resort
-    /// keeps the table's hardest 4×4 blanks, never more cells than exist.
-    static func layout(for difficulty: Difficulty, width: Double) -> (size: Int, blanks: Int) {
+    /// Where the number pad sits next to the board (#400).
+    enum PadPlacement: Equatable {
+        /// Under the board in columns, as on every iPhone and for the 4×4 and 6×6 boards in portrait.
+        case stacked
+        /// One row of nine keys under a 9×9 board: portrait iPad.
+        case row
+        /// Three columns of keys beside the board: landscape iPad.
+        case beside
+    }
+
+    /// Space between the pad's keys, in points.
+    static let padSpacing = 8.0
+    /// Tallest and shortest a pad key is when the pad is one row (100pt where there is room).
+    private static let padKeyMax = 100.0
+    /// The "Show me one" button, in points; it keeps its 100pt height.
+    static let showMeHeight = 100.0
+    /// Spacing the screen puts between its stacked parts.
+    private static let stackSpacing = 20.0
+    /// Height kept for what sits above the board: the instruction (two lines at the default
+    /// text size) and its spacing. The "try another" note is not counted in portrait; see
+    /// `layout(for:width:height:)`.
+    private static let headerHeight = 80.0
+    /// The level banner (one title line and its spacing) shown on the first open after a level
+    /// change, which is the day 9×9 first appears. Kept free in landscape, where the board has no
+    /// spare height; portrait's note reserve covers it.
+    private static let bannerHeight = 48.0
+    /// Width the pad needs beside the board: three keys of up to 100pt and the gaps between them.
+    private static let padColumnsWidth = 3 * 100.0 + 2 * 12.0
+    /// The note shown after a miss, with its spacing, kept free in portrait so a wrong number
+    /// never tips the screen into scrolling.
+    private static let noteHeight = 72.0
+    /// The same note in the narrower column beside the board, where it can take two lines.
+    private static let besideNoteHeight = 76.0
+
+    /// Board size and blanks for a level on a screen whose play area (inside its padding) is
+    /// `width` by `height` points: the wanted board where `arrangement` keeps its squares at 60pt,
+    /// else its fallback, else a 4×4 (9×9 → 6×6 → 4×4). `height == nil` (a phone) asks the width
+    /// alone, and 4×4 fits every phone (4×60 + 3×2 = 246pt). Only when even 4×4 cannot fit is it
+    /// dealt anyway, and the screen scrolls. The last resort keeps the table's hardest 4×4 blanks,
+    /// never more cells than exist. The screen draws the board with `keptArrangement`.
+    static func layout(for difficulty: Difficulty, width: Double, height: Double? = nil) -> BoardSpec {
         let row = difficulty.values(layoutsPerLevel)
-        if squaresFit(row.wanted.size, in: width) { return row.wanted }
-        if let fallback = row.fallback, squaresFit(fallback.size, in: width) { return fallback }
-        return (4, min(row.fallback?.blanks ?? row.wanted.blanks, 12))
+        let smallest: BoardSpec = (4, min(row.fallback?.blanks ?? row.wanted.blanks, 12))
+        let boards = [row.wanted] + (row.fallback.map { [$0] } ?? []) + [smallest]
+        return boards.first { arrangement(size: $0.size, width: width, height: height) != nil } ?? smallest
+    }
+
+    /// Square side and pad placement for a board of `size`, or nil when its squares (or, in a
+    /// pad row, its keys) would drop under 60pt. With the screen's height known (an iPad) the side
+    /// is the smaller of what the width and the height allow; without it, the width alone.
+    static func arrangement(size: Int, width: Double, height: Double?) -> (side: Double, pad: PadPlacement)? {
+        let count = Double(size)
+        let gaps = gap * (count - 1)
+        let widthSide = min(100, (width - gaps) / count)
+        guard let height else {
+            return widthSide >= minTarget ? (widthSide, .stacked) : nil
+        }
+        if width > height {
+            // Landscape: board left, pad right. The pad keeps its three columns of keys, so the
+            // board takes the width that is left; the instruction and the banner sit above it.
+            // The column beside it (keys, Show me one and the miss note) must fit too; the note
+            // only shows once he has tried, when the banner has gone.
+            let beside = min(100, (width - stackSpacing - padColumnsWidth - gaps) / count)
+            let side = min(beside, (height - headerHeight - bannerHeight - gaps) / count)
+            let columnFits = besideColumnHeight(size: size) <= height - headerHeight
+            return side >= minTarget && columnFits ? (side, .beside) : nil
+        }
+        // Portrait: a 9×9 board's pad is one row of nine keys, as square as the width allows;
+        // the smaller boards keep their columns of 100pt keys (two rows for 6×6).
+        let padKey = padKeyHeight(width: width)
+        let padHeight = size == 9 ? padKey : Double(size == 6 ? 2 : 1) * 100 + (size == 6 ? 12 : 0)
+        let below = padHeight + showMeHeight + stackSpacing * 2
+        let side = min(widthSide, (height - headerHeight - noteHeight - below - gaps) / count)
+        let keysFit = size != 9 || padKey >= minTarget
+        return side >= minTarget && keysFit ? (side, size == 9 ? .row : .stacked) : nil
+    }
+
+    /// The arrangement for a board already dealt (#400). When it still fits, as `arrangement`; when
+    /// the screen has turned or a window shrunk so it no longer fits the height, the board is kept
+    /// (a half-filled board is never thrown away) with its squares at the 60pt floor, and the
+    /// screen scrolls. Without a height, or in the frame before a board that fails by width is
+    /// dealt again, it is drawn by width alone.
+    static func keptArrangement(size: Int, width: Double, height: Double?) -> (side: Double, pad: PadPlacement) {
+        if let fits = arrangement(size: size, width: width, height: height) { return fits }
+        let count = Double(size)
+        let widthSide = max(0, min(100, (width - gap * (count - 1)) / count))
+        guard let height else { return (widthSide, .stacked) }
+        let side = min(widthSide, minTarget)
+        if width > height {
+            let room = width - stackSpacing - padColumnsWidth
+            return (side, room >= side * count + gap * (count - 1) ? .beside : .stacked)
+        }
+        return (side, size == 9 && padKeyHeight(width: width) >= minTarget ? .row : .stacked)
+    }
+
+    /// Columns of keys in the number pad: nine in a row under a portrait iPad's 9×9; beside the
+    /// board three, or the 4×4's four keys in one row; stacked three for 6×6, else four.
+    static func padColumns(size: Int, pad: PadPlacement) -> Int {
+        switch pad {
+        case .row: 9
+        case .beside: size == 4 ? 4 : 3
+        case .stacked: size == 6 ? 3 : 4
+        }
+    }
+
+    /// Height of the column beside the board: rows of 100pt keys, Show me one and a two-line
+    /// miss note, with the spacing between them.
+    static func besideColumnHeight(size: Int) -> Double {
+        let columns = padColumns(size: size, pad: .beside)
+        let rows = Double((size + columns - 1) / columns)
+        return rows * 100 + (rows - 1) * 12 + stackSpacing + showMeHeight + stackSpacing + besideNoteHeight
+    }
+
+    /// Height (and width) of one key when the pad is a single row of nine, at most 100pt.
+    static func padKeyHeight(width: Double) -> Double {
+        min(padKeyMax, (width - padSpacing * 8) / 9)
+    }
+
+    /// Width of a pad row of nine under a board of `side`-point squares: the board's own width, but
+    /// never so narrow that its keys drop under 60pt, and never wider than the screen.
+    static func rowPadWidth(side: Double, width: Double) -> Double {
+        let board = side * 9 + gap * 8
+        return min(width, max(board, minTarget * 9 + padSpacing * 8))
     }
 
     /// Box shape per board size: 4×4 and 6×6 as before, 9×9 in 3×3 boxes.
@@ -59,6 +173,17 @@ nonisolated struct SudokuPuzzle: Equatable {
         difficulty: Difficulty, width: Double, using generator: inout G
     ) -> SudokuPuzzle {
         let (size, blanks) = layout(for: difficulty, width: width)
+        return make(size: size, blanks: blanks, using: &generator)
+    }
+
+    /// A board made for the screen's `layout`, which may have been budgeted by height too (#400).
+    static func make<G: RandomNumberGenerator>(layout: BoardSpec, using generator: inout G) -> SudokuPuzzle {
+        make(size: layout.size, blanks: layout.blanks, using: &generator)
+    }
+
+    private static func make<G: RandomNumberGenerator>(
+        size: Int, blanks: Int, using generator: inout G
+    ) -> SudokuPuzzle {
         let (boxRows, boxColumns) = boxes(for: size)
         var best: (puzzle: SudokuPuzzle, removed: Int)?
         for _ in 0..<attempts {
@@ -85,7 +210,8 @@ nonisolated struct SudokuPuzzle: Equatable {
     }
 
     /// Whether this board's squares keep 60pt at `width`. A 6×6 board dealt in landscape
-    /// on a small iPhone stops fitting when the phone turns to portrait.
+    /// on a small iPhone stops fitting when the phone turns to portrait. Height is not asked
+    /// (#400): a board that turns too short for its pad is kept and scrolls, never dealt again.
     func fits(width: Double) -> Bool { Self.squaresFit(size, in: width) }
 
     /// A finished row, column or box (#239). Indices are 0-based.
