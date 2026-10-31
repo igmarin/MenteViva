@@ -304,9 +304,9 @@ struct TilePairsView: View {
         }
     }
 
-    /// Highlighting a pair adds one attempt and no correct pair; reshuffling adds neither.
+    /// Highlighting adds one attempt and no correct pair; wait for a lift to avoid the stale board.
     private func showPair() {
-        guard var current = deal else { return }
+        guard removing.isEmpty, var current = deal else { return }
         if current.isStuck {
             hint = AppLanguage.localized("game.tilepairs.stuck")
             AccessibilityNotification.Announcement(hint!).post()
