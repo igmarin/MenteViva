@@ -91,8 +91,8 @@ enum SoundPlayer {
     /// Time of the last scheduled tone. Used only on `AudioSession`'s queue.
     nonisolated(unsafe) private static var lastToneAt: TimeInterval = 0
 
-    /// Prepares the haptics and builds the tone buffers and engine ahead of the
-    /// first tap. Called when a game opens; does nothing while feedback is off.
+    /// Prepares the haptics and renders the event tone buffers ahead of the
+    /// first tap. The audio engine itself still starts on the first tone. Called when a game opens; does nothing while feedback is off.
     static func warmUp() {
         guard isEnabled else { return }
         Feedback.warmUp()
