@@ -7,8 +7,11 @@ import SwiftUI
 /// One warm progress line per game played (#107): words and an icon, never a
 /// number and never a down arrow — the numbers live in the family screen.
 struct HistoryView: View {
-    @Query(sort: \GameSession.playedAt, order: .reverse)
-    private var sessions: [GameSession]
+    @Environment(\.modelContext) private var modelContext
+    /// The last 14 days (this week and the one before, which the progress lines compare), fetched
+    /// once when the screen opens. Nil until then, so the empty state never shows before the
+    /// fetch has said the week is empty (#417).
+    @State private var sessions: [GameSession]?
 
     /// The album's column minimum grows with the text, so a long name ("Helicóptero") never breaks mid-word.
     @ScaledMetric(relativeTo: .callout) private var albumCellMinimum: CGFloat = 100
@@ -39,15 +42,22 @@ struct HistoryView: View {
     }
 
     var body: some View {
-        let snapshot = Snapshot(sessions: sessions)
+        let snapshot = Snapshot(sessions: sessions ?? [])
         Group {
-            if snapshot.weekCount == 0 {
+            if sessions == nil {
+                Color.clear
+            } else if snapshot.weekCount == 0 {
                 if snapshot.album.isEmpty { emptyState } else { emptyStateWithAlbum(snapshot.album) }
             } else {
                 sessionList(snapshot)
             }
         }
         .pageBackground()
+        .task {
+            let today = Calendar.current.startOfDay(for: .now)
+            let start = Calendar.current.date(byAdding: .day, value: -14, to: today) ?? .distantPast
+            sessions = modelContext.sessions(since: start)
+        }
         .navigationTitle(AppLanguage.localized("history.title"))
         .toolbar {
             if snapshot.weekCount > 0 {

@@ -88,6 +88,39 @@ final class MemoryPhotosTests: XCTestCase {
         XCTAssertNotNil(result.note)
     }
 
+    func testGivenTwoResultsWhenCombiningThenEachCountAdds() {
+        var total = MemoryPhotos.AddResult(added: 1, unreadable: 0, overLimit: 0)
+        total += MemoryPhotos.AddResult(added: 2, unreadable: 1, overLimit: 3)
+        XCTAssertEqual(total, MemoryPhotos.AddResult(added: 3, unreadable: 1, overLimit: 3))
+    }
+
+    /// #417: the originals were all loaded before any was shrunk. Each photo must be on disk, small,
+    /// before the next one is asked for, so only one original is in memory at a time.
+    func testGivenSeveralPicksWhenImportingThenEachIsStoredBeforeTheNextIsLoaded() async throws {
+        let folder = try XCTUnwrap(folder)
+        var storedWhenLoading: [Int] = []
+
+        let imported = await FamilyPhotoImport.run(Array(0..<3), folder: folder) { _ in
+            storedWhenLoading.append(MemoryPhotos.all(in: folder).count)
+            return self.photoData(width: 10, height: 10)
+        }
+
+        XCTAssertEqual(storedWhenLoading, [0, 1, 2])
+        XCTAssertEqual(imported?.result, MemoryPhotos.AddResult(added: 3, unreadable: 0, overLimit: 0))
+        XCTAssertEqual(imported?.added.count, 3)
+    }
+
+    func testGivenAnUnreadablePickAndAFullAlbumWhenImportingThenTheCountsAddUp() async throws {
+        let folder = try XCTUnwrap(folder)
+        _ = MemoryPhotos.add(Array(repeating: photoData(width: 10, height: 10), count: 23), to: folder)
+        let data: [Data?] = [nil, photoData(width: 10, height: 10), photoData(width: 10, height: 10)]
+
+        let imported = await FamilyPhotoImport.run(data, folder: folder) { $0 }
+
+        XCTAssertEqual(imported?.result, MemoryPhotos.AddResult(added: 1, unreadable: 1, overLimit: 1))
+        XCTAssertEqual(MemoryPhotos.all(in: folder).count, 24)
+    }
+
     func testGivenNothingHappenedWhenSummarizingThenThereIsNoNote() {
         XCTAssertNil(MemoryPhotos.AddResult().note)
         XCTAssertNotNil(MemoryPhotos.AddResult(added: 0, unreadable: 1, overLimit: 0).note)

@@ -40,6 +40,29 @@ final class PlanStoreTests: XCTestCase {
         XCTAssertEqual(PlanStore.todaysChange(.stroop, now: now, defaults: defaults), raised)
     }
 
+    // MARK: Planned today (#417)
+
+    func testGivenTodaysPlanWhenAskingPlannedTodayThenItsGames() throws {
+        let defaults = try isolatedDefaults()
+        savePlan(madeOn: now, defaults: defaults)
+
+        XCTAssertEqual(PlanStore.plannedToday(now: now, defaults: defaults), [.stroop])
+    }
+
+    func testGivenYesterdaysPlanWhenAskingPlannedTodayThenNil() throws {
+        let defaults = try isolatedDefaults()
+        savePlan(madeOn: now.addingTimeInterval(-86_400), defaults: defaults)
+
+        XCTAssertNil(PlanStore.plannedToday(now: now, defaults: defaults))
+    }
+
+    func testGivenNoPlanWhenAskingPlannedTodayThenNilAndNothingIsSaved() throws {
+        let defaults = try isolatedDefaults()
+
+        XCTAssertNil(PlanStore.plannedToday(now: now, defaults: defaults))
+        XCTAssertNil(PlanStore.cachedPlan(defaults: defaults))
+    }
+
     // MARK: Start pace (#212)
 
     /// Day one: the first plan saves every game at the starting level (4 without a profile), so the

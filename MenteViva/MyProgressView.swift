@@ -7,13 +7,17 @@ import SwiftUI
 /// words with an icon, and an easier week never gets a down arrow. Sharing is
 /// the player's choice: the share button, nothing automatic.
 struct MyProgressView: View {
-    /// Every play, unfiltered: `ProgressRates.week` keeps the days it needs.
-    /// No date predicate here: on iOS 17, a `Query(filter:)` built in `init`
-    /// for a view pushed from Settings re-rendered forever and froze the app
-    /// (found on the iPad, 2026-10-13).
-    @Query private var sessions: [GameSession]
+    @Environment(\.modelContext) private var modelContext
+    /// The sessions `ProgressRates.week` can use (`ProgressRates.since()` on), fetched once when the
+    /// screen opens, so My progress never loads all of history. Nil until then, so "nothing yet"
+    /// is not shown before the fetch has said so (#417). A one-shot fetch also leaves out the
+    /// live `@Query(filter:)` that re-rendered forever from Settings on iOS 17 (iPad, 2026-10-13).
+    @State private var sessions: [GameSession]?
 
-    private var rates: [ProgressRates] { HotPath.measure("progress.rates") { ProgressRates.week(sessions) } }
+    private var rates: [ProgressRates] {
+        guard let sessions else { return [] }
+        return HotPath.measure("progress.rates") { ProgressRates.week(sessions) }
+    }
 
     var body: some View {
         let rates = rates
@@ -23,7 +27,9 @@ struct MyProgressView: View {
                     .font(.title3)
             }
 
-            if rates.isEmpty {
+            if sessions == nil {
+                EmptyView()
+            } else if rates.isEmpty {
                 Text(AppLanguage.localized("progress.empty"))
                     .font(.title3)
             } else {
@@ -47,6 +53,7 @@ struct MyProgressView: View {
             }
         }
         .listPageBackground()
+        .task { sessions = modelContext.sessions(since: ProgressRates.since()) }
         .navigationTitle(AppLanguage.localized("progress.title"))
         .toolbar {
             if !rates.isEmpty {

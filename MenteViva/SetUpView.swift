@@ -41,22 +41,28 @@ struct CaptionTarget: Identifiable {
 /// (#374), so both import, shrink and count photos the same way and `MemoryPhotos.add` has a
 /// single caller.
 enum FamilyPhotoImport {
-    /// Loads what the picker handed over and adds it off the main actor. Returns what happened
+    /// Loads each photo the picker handed over and shrinks it before asking for the next, so only
+    /// one original is in memory at a time (#417), all off the main actor. Returns what happened
     /// and the new photos, oldest first, so the first run can ask for each one's name in the
-    /// order they were picked; nil when the task was cancelled mid-pick.
-    static func run(_ items: [PhotosPickerItem]) async -> (result: MemoryPhotos.AddResult, added: [URL])? {
-        var loaded: [Data?] = []
+    /// order they were picked; nil when the task was cancelled mid-pick. `load` is a parameter so
+    /// a test can stand in for the picker.
+    static func run<Item>(
+        _ items: [Item], folder: URL = MemoryPhotos.folder, load: (Item) async -> Data?
+    ) async -> (result: MemoryPhotos.AddResult, added: [URL])? {
+        let before = Set(MemoryPhotos.all(in: folder))
+        var result = MemoryPhotos.AddResult()
         for item in items {
-            loaded.append(try? await item.loadTransferable(type: Data.self))
+            let data = await load(item)
+            guard !Task.isCancelled else { return nil }
+            // Decoding, shrinking and writing one photo stays off the main actor.
+            result += await Task.detached { MemoryPhotos.add([data], to: folder) }.value
         }
-        guard !Task.isCancelled else { return nil }
-        // Decoding, shrinking and writing up to 24 photos stays off the main actor.
-        let batch = loaded
-        return await Task.detached {
-            let before = Set(MemoryPhotos.all())
-            let result = MemoryPhotos.add(batch)
-            return (result, MemoryPhotos.all().filter { !before.contains($0) })
-        }.value
+        return (result, MemoryPhotos.all(in: folder).filter { !before.contains($0) })
+    }
+
+    /// The picker's own items, loaded as raw data.
+    static func run(_ items: [PhotosPickerItem]) async -> (result: MemoryPhotos.AddResult, added: [URL])? {
+        await run(items) { try? await $0.loadTransferable(type: Data.self) }
     }
 }
 

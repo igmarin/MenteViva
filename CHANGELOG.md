@@ -5,6 +5,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 ## [Unreleased]
 
 ### Changed
+- **Lighter Home, My Week, My progress and photo picking (#417):** Home no longer re-reads two weeks of play to rebuild a plan it already saved, My Week and My progress read only the days they show, and adding several photos shrinks each as it arrives. They look the same; they use less memory and open a little quicker.
 - **Quicker first sound and haptic (#417):** a game's first tap now answers with its haptic straight away and its sound a little quicker, and the audio stops by itself a few seconds after the last tone. The sound switch in Settings still silences everything.
 - **Calmer Home, Settings, buttons and celebration (#421):** "All games" on Home is four shelves (Memory, Attention, Numbers, Words) instead of one long grid. Settings has three headed groups: For you, For the family, About. When a game finishes, its card rests a moment, then shrinks onto today's slot of the week board (with Reduce Motion it fades and the slot is highlighted). Start, Next, Play again and "Yes, let's try" share one button look, the first-run answer tiles are printed like Home's cards, and the Sudoku picture is a 3×3 board so it no longer looks like Repeat the Sequence.
 - **First-play guides (#405):** Tangram, Sliding Blocks and Tile Pairs now show a guided example the first time each game opens. Settings can show the guides again.

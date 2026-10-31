@@ -22,6 +22,13 @@ nonisolated enum MemoryPhotos {
         var added = 0
         var unreadable = 0
         var overLimit = 0
+
+        /// Adds another batch's counts to this one, so photos imported one at a time report as one.
+        static func += (total: inout AddResult, other: AddResult) {
+            total.added += other.added
+            total.unreadable += other.unreadable
+            total.overLimit += other.overLimit
+        }
     }
 
     static var folder: URL {
