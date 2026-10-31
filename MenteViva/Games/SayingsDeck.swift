@@ -51,13 +51,33 @@ enum SayingsDeck {
         difficulty.values(choicesByLevel)
     }
 
+    /// Height of one ending button (100pt) and the gap under it, in points: what each ending costs on screen.
+    private static let choiceHeight = 100.0
+    private static let choiceGap = 12.0
+
+    /// Endings for a level on a screen with `height` points for them (#415): the table's count, or
+    /// fewer where the last button would sit below the fold, but never under 2 (one is no choice).
+    /// Room never adds endings, so a tall screen or an iPad keeps the table.
+    static func choiceCount(for difficulty: Difficulty, fittingHeight height: Double) -> Int {
+        // Clamped first: `Int(.infinity)` would trap, and no table asks for more than ten.
+        let room = Int((min(max(height, 0), 1_000) + choiceGap) / (choiceHeight + choiceGap))
+        return min(choiceCount(for: difficulty), max(2, room))
+    }
+
+    /// Whether the screen should deal now (#415): at once if nothing is dealt, never once the player has
+    /// started (a saying in play stays), and otherwise only when the screen changes how many endings fit.
+    static func shouldDeal(hasRounds: Bool, started: Bool, dealt: Int?, fitted: Int) -> Bool {
+        guard hasRounds else { return true }
+        return !started && dealt != fitted
+    }
+
     /// Whether this level prefers same-theme distractors first.
     static func prefersSameTheme(for difficulty: Difficulty) -> Bool {
         difficulty.values(sameThemeByLevel)
     }
 
     static func deal<G: RandomNumberGenerator>(
-        difficulty: Difficulty, from pool: [Saying] = Sayings.all, defaults: UserDefaults,
+        difficulty: Difficulty, from pool: [Saying] = Sayings.all, choices: Int? = nil, defaults: UserDefaults,
         using generator: inout G
     ) -> [SayingRound] {
         var seen = Set(defaults.array(forKey: seenKey) as? [Int] ?? [])
@@ -67,7 +87,7 @@ enum SayingsDeck {
         }
         let picked = pool.filter { !seen.contains($0.id) }.shuffled(using: &generator).prefix(roundsPerGame)
 
-        let others = choiceCount(for: difficulty) - 1
+        let others = (choices ?? choiceCount(for: difficulty)) - 1
         return picked.map { saying in
             let rest = pool.filter { $0 != saying }.shuffled(using: &generator)
             let distractors =

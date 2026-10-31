@@ -21,10 +21,12 @@ final class SayingsDeckTests: XCTestCase {
     }
 
     private func deal(
-        _ difficulty: Difficulty = Difficulty(level: 4), pool: [Saying] = Sayings.all, seed: UInt64 = 1
+        _ difficulty: Difficulty = Difficulty(level: 4), pool: [Saying] = Sayings.all, seed: UInt64 = 1,
+        choices: Int? = nil
     ) -> [SayingRound] {
         var generator = SeededGenerator(state: seed)
-        return SayingsDeck.deal(difficulty: difficulty, from: pool, defaults: defaults, using: &generator)
+        return SayingsDeck.deal(
+            difficulty: difficulty, from: pool, choices: choices, defaults: defaults, using: &generator)
     }
 
     func testGivenSayingWhenOpeningThenItIsTheLocalizedStartWithAnEllipsis() {
@@ -36,6 +38,64 @@ final class SayingsDeckTests: XCTestCase {
         XCTAssertEqual(SayingsDeck.choiceCount(for: Difficulty(level: 2)), 3)
         XCTAssertEqual(SayingsDeck.choiceCount(for: Difficulty(level: 4)), 4)
         XCTAssertEqual(SayingsDeck.choiceCount(for: Difficulty(level: 6)), 4)
+    }
+
+    // MARK: - Fit the screen (#415)
+
+    /// Five 100pt endings and the 12pt gaps between them need 548pt; each 112pt step buys one ending.
+    func testGivenTheHeightForFiveEndingsWhenLevelTenThenFiveFit() {
+        let ten = Difficulty(level: 10)
+        XCTAssertEqual(SayingsDeck.choiceCount(for: ten, fittingHeight: 548), 5)
+        XCTAssertEqual(SayingsDeck.choiceCount(for: ten, fittingHeight: 547), 4)
+        XCTAssertEqual(SayingsDeck.choiceCount(for: ten, fittingHeight: 436), 4)
+        XCTAssertEqual(SayingsDeck.choiceCount(for: ten, fittingHeight: 435), 3)
+        XCTAssertEqual(SayingsDeck.choiceCount(for: ten, fittingHeight: 324), 3)
+        XCTAssertEqual(SayingsDeck.choiceCount(for: ten, fittingHeight: 323), 2)
+    }
+
+    func testGivenALowBoardWhenFittingThenNeverFewerThanTwoEndings() {
+        XCTAssertEqual(SayingsDeck.choiceCount(for: Difficulty(level: 10), fittingHeight: 40), 2)
+        XCTAssertEqual(SayingsDeck.choiceCount(for: Difficulty(level: 10), fittingHeight: 0), 2)
+        XCTAssertEqual(SayingsDeck.choiceCount(for: Difficulty(level: 10), fittingHeight: -50), 2)
+    }
+
+    /// Room never adds endings: the level's table is the ceiling (iPad and tall boards are unchanged).
+    func testGivenMoreRoomThanTheTableWantsWhenFittingThenTheTableCount() {
+        for level in 1...10 {
+            let difficulty = Difficulty(level: level)
+            XCTAssertEqual(
+                SayingsDeck.choiceCount(for: difficulty, fittingHeight: 5000), SayingsDeck.choiceCount(for: difficulty))
+            XCTAssertEqual(
+                SayingsDeck.choiceCount(for: difficulty, fittingHeight: .greatestFiniteMagnitude),
+                SayingsDeck.choiceCount(for: difficulty))
+        }
+    }
+
+    // MARK: - When to deal (#415)
+
+    func testGivenNoRoundsWhenShouldDealThenDeal() {
+        XCTAssertTrue(SayingsDeck.shouldDeal(hasRounds: false, started: false, dealt: nil, fitted: 4))
+    }
+
+    func testGivenAStartedGameWhenTheFitChangesThenNeverDeal() {
+        XCTAssertFalse(SayingsDeck.shouldDeal(hasRounds: true, started: true, dealt: 4, fitted: 2))
+    }
+
+    func testGivenTheSameFitWhenNothingStartedThenDoNotDealAgain() {
+        XCTAssertFalse(SayingsDeck.shouldDeal(hasRounds: true, started: false, dealt: 4, fitted: 4))
+    }
+
+    func testGivenAChangedFitWhenNothingStartedThenDealAgain() {
+        XCTAssertTrue(SayingsDeck.shouldDeal(hasRounds: true, started: false, dealt: 4, fitted: 2))
+        XCTAssertTrue(SayingsDeck.shouldDeal(hasRounds: true, started: false, dealt: nil, fitted: 2))
+    }
+
+    func testGivenFewerEndingsAskedWhenDealtThenEachRoundHoldsItsSayingOnceAmongThatMany() {
+        for round in deal(Difficulty(level: 10), choices: 3) {
+            XCTAssertEqual(round.choices.count, 3)
+            XCTAssertEqual(Set(round.choices).count, 3)
+            XCTAssertEqual(round.choices.filter { $0 == round.saying }.count, 1)
+        }
     }
 
     func testGivenADealThenEightRoundsWithEightDifferentSayings() {

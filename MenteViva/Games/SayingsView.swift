@@ -7,7 +7,16 @@ import SwiftUI
 struct SayingsView: View {
     @Environment(\.modelContext) private var modelContext
 
+    @Environment(\.horizontalSizeClass) private var sizeClass
+
+    /// The screen's edge padding, named so the height measured outside it can take it off (#415).
+    private static let edgePadding: CGFloat = 16
+
     @ScaledMetric(relativeTo: .largeTitle) private var sayingSize: CGFloat = 34
+    /// What the screen keeps free besides the endings (#415): the amber note after a near miss and the
+    /// round counter. Both scale with the text; the saying itself is counted at two lines.
+    @ScaledMetric(relativeTo: .title2) private var noteHeight: CGFloat = 52
+    @ScaledMetric(relativeTo: .body) private var counterHeight: CGFloat = 52
 
     @State private var difficulty = Difficulty.stored(.sayings)
     @State private var rounds: [SayingRound] = []
@@ -22,19 +31,44 @@ struct SayingsView: View {
     @State private var showAlmost = false
     @State private var showCelebration = false
     @State private var finalDetail = ""
+    /// The play area's height, measured outside the padding, and the banner with the instruction above
+    /// the saying. What is left under them is the room for the endings.
+    @State private var areaHeight: CGFloat = 0
+    @State private var topHeight: CGFloat = 0
+    /// Endings per round the session was dealt with, nil until dealt.
+    @State private var dealtChoices: Int?
 
     private var round: SayingRound? {
         rounds.indices.contains(progress.completedRounds) ? rounds[progress.completedRounds] : nil
     }
 
+    /// How many endings to deal (#415): the level's table on an iPad, where there is room, and on a
+    /// phone as many as fit under the saying without pushing the last one below the fold. Nil until
+    /// the phone's screen has been measured.
+    private var choices: Int? {
+        if GameColumn.usesPadLayout(sizeClass) { return SayingsDeck.choiceCount(for: difficulty) }
+        guard areaHeight > 0, topHeight > 0 else { return nil }
+        // Saying at two lines, then the gaps between the five blocks of the column (24pt each).
+        let fixed = topHeight + 2 * sayingSize * 1.25 + noteHeight + counterHeight + 4 * 24
+        return SayingsDeck.choiceCount(for: difficulty, fittingHeight: Double(areaHeight - fixed))
+    }
+
     var body: some View {
         VStack(spacing: 24) {
-            LevelExplainBanner(
-                change: PlanStore.cachedPlan()?.changes[GameID.sayings], game: GameID.sayings,
-                hasStarted: taps > 0 || progress.completedRounds > 0)
-            Text(AppLanguage.localized("game.sayings.instruction"))
-                .font(.title2)
-                .multilineTextAlignment(.center)
+            VStack(spacing: 24) {
+                LevelExplainBanner(
+                    change: PlanStore.cachedPlan()?.changes[GameID.sayings], game: GameID.sayings,
+                    hasStarted: taps > 0 || progress.completedRounds > 0)
+                Text(AppLanguage.localized("game.sayings.instruction"))
+                    .font(.title2)
+                    .multilineTextAlignment(.center)
+            }
+            .onGeometryChange(for: CGFloat.self) {
+                $0.size.height
+            } action: { height in
+                topHeight = height
+                dealForScreen()
+            }
 
             if let round {
                 Text(solved ? whole(round.saying) : round.saying.opening(localize: { AppLanguage.localized($0) }))
@@ -93,10 +127,19 @@ struct SayingsView: View {
             }
         }
         .gameColumn()
-        .padding()
+        .padding(Self.edgePadding)
         .fitOrScroll()
+        // Measured outside the padding and the fit-or-scroll, so it is the room the screen offers
+        // and not the height of what is in it (as Sudoku does).
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .onGeometryChange(for: CGFloat.self) {
+            $0.size.height - 2 * Self.edgePadding
+        } action: { height in
+            areaHeight = height
+            dealForScreen()
+        }
         .gameHeader(.sayings, instruction: AppLanguage.localized("game.sayings.instruction"))
-        .onAppear { if rounds.isEmpty { deal() } }
+        .onAppear(perform: dealForScreen)
         .onDisappear { CaptionSpeaker.stop() }
         .celebration(isPresented: $showCelebration, game: .sayings, detail: finalDetail, onPlayAgain: restart)
     }
@@ -105,9 +148,23 @@ struct SayingsView: View {
         AppLanguage.localized(saying.startKey) + " " + AppLanguage.localized(saying.endKey)
     }
 
+    /// Deals once the endings that fit are known, and again while nothing has been tapped if the screen
+    /// changes that number (the level note goes away, the phone turns). A saying he has started stays.
+    private func dealForScreen() {
+        guard let choices else { return }
+        guard
+            SayingsDeck.shouldDeal(
+                hasRounds: !rounds.isEmpty, started: taps > 0 || progress.completedRounds > 0,
+                dealt: dealtChoices, fitted: choices)
+        else { return }
+        deal()
+    }
+
     private func deal() {
+        guard let choices else { return }
+        dealtChoices = choices
         var generator = SystemRandomNumberGenerator()
-        rounds = SayingsDeck.deal(difficulty: difficulty, defaults: .standard, using: &generator)
+        rounds = SayingsDeck.deal(difficulty: difficulty, choices: choices, defaults: .standard, using: &generator)
     }
 
     private func restart() {
