@@ -5,6 +5,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 ## [Unreleased]
 
 ### Fixed
+- **Tangram fits an iPhone screen (#396):** on iPhone the tiles still to place sit in one row that slides sideways, with the next tile peeking in at the edge, so the picture, buttons and tiles no longer push the page into scrolling. The tiles now show their true sizes (a small triangle is half as long as a large one), and every place in the picture takes a tile dropped close to it, small ones too. iPad keeps its grid of tiles.
 - **Celebrations never show a hit count (#394):** Quick Eyes now says "You finished all 12 rounds!" instead of "You spotted 2 of 12!", and Number Trail always says "You answered all 10 questions!" instead of a best streak. Scores and levels work as before. EN + ES.
 - **Removing a family photo asks first (#403):** Remove in the name sheet now shows "Remove this photo and its name?" with the photo's name, and "Keep it" leaves the photo and its name as they were. EN + ES.
 - **Tangram tiles never sit on top of each other (#395):** seven pictures (Cat, Armchair, Frog, Butterfly, Mushroom, Owl and Crab) had a tile overlapping another, so at level 1 one outline could hide inside another. Those seven are gone; the other 23 pictures stay as they were, and the test now catches any overlap.
