@@ -29,6 +29,7 @@
 		4886BCC1D06920BA00000022 /* PhotoCaptionDeal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81C292C7FFAD74580000001C; };
 		F2E513BC326D993F0000001D /* PictureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D76316028DAED7B500000017; };
 		17BB594169B12A7F0000001F /* QuickEyesDeal.swift in Sources */ = {isa = PBXBuildFile; fileRef = E685D4510ACEA17500000019; };
+		93F6F9D4D5F22DDC0000001E /* QuickEyesRun.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60795C9EAC3D205A00000018; };
 		06316652C0C975F40000001F /* QuickEyesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D757F5352AE1A200000019; };
 		AD020DC30561DD5000000022 /* ReminiscenceDeck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A9D512184D7D07E0000001C; };
 		A87005C5B52DA39800000022 /* ReminiscenceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11EA4E85E31685D60000001C; };
@@ -65,6 +66,7 @@
 		83C5727F27BD566A0000001A /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7B3B616009A42E800000014; };
 		CF167B18375C83D400000020 /* AppLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 935C3DAA5B7FC9820000001A; };
 		B88EA6D0C0FF38D200000023 /* CaptionSpeaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4EDFB62CC1B10200000001D; };
+		A5AB3B5A5FBDCEE000000020 /* CardLanding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8614B7F8AD8626E0000001A; };
 		74E2DCC89787792D00000028 /* CelebrationHeadline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83F77BE44B5C133300000022; };
 		232C8B200714AB2700000028 /* ConversationPrompts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C33EF89F55448D00000022; };
 		2BD8CCC3FFF7229C00000021 /* DailyPicture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14C7FC3CF253999A0000001B; };
@@ -75,6 +77,7 @@
 		D04651F1B7BE937800000021 /* GamePictures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 403EDBB59A6CD1360000001B; };
 		696F8DB6545ED68A0000001F /* HandLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92B36BF3E878DD8800000019; };
 		D5418EFA361BB48C0000001D /* HomeDeal.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1110EE59EBF3A6A00000017; };
+		159345E52FC0C23000000020 /* HomeShelves.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E5830CBF89FAB5E0000001A; };
 		EB1D5656AAE8FB090000001C /* HotPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66F53A1E32AAD85F00000016; };
 		B655A39EA9B5D68F00000023 /* LevelMigration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA5E65A5CDB56250000001D; };
 		2EAE227B2A482B2400000024 /* LevelOfferStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E124490D58C484320000001E; };
@@ -100,6 +103,7 @@
 		F506C5A65F14390000000031 /* AppLanguageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE643EB3378B20E0000002B; };
 		4534EC198FDAD8AC00000034 /* CaptionSpeakerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD28529EBCF4FB0A0000002E; };
 		67F61994F2F1071500000034 /* CaptionStringsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDA8FA1BF6ABDB2B0000002E; };
+		AA42FEFC943F8BF800000031 /* CardLandingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAA2E07200D98DB60000002B; };
 		DC6D01BBB9BFE1DE0000002D /* CatalogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E833E1EE239C484C00000027; };
 		68D5916C1521743B00000032 /* CategoryDealTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37487EBC4F766E910000002C; };
 		1D053A717B1241EC0000003B /* CelebrationDetailKeysTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6896781568989CA00000035; };
@@ -120,6 +124,7 @@
 		1C320C298D4269F400000036 /* GameSessionStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE35901B6A0B75A200000030; };
 		6A2DA899F7F887B000000030 /* HandLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45283B3ED2219CDE0000002A; };
 		FEABA1C9F3D55C5A0000002E /* HomeDealTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3594F9427F21EF800000028; };
+		F7E224CE305ECE5000000031 /* HomeShelvesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DCEB89EB84497E0000002B; };
 		EE07AD69390E5FDA00000032 /* LevelExplainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65152AEC3FEF3E780000002C; };
 		578160CE8C24557000000031 /* MemoryBoardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2EEF523201AB21E0000002B; };
 		6B009816AE0FE1DA00000030 /* MemoryDealTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D55FC27F498CD0780000002A; };
@@ -136,6 +141,7 @@
 		F1B9DD4724F699CC00000035 /* PrivacyManifestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0213C9A169FD5A2A0000002F; };
 		B881D90E62998BE900000033 /* ProgressRatesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7420A39CEC074ABF0000002D; };
 		9C33891BEB57002A00000033 /* QuickEyesDealTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2EDDDF03A4E9280000002D; };
+		D05B673434600BCF00000032 /* QuickEyesRunTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 715CB74CE2E513E50000002C; };
 		8014E3CE95A477CB00000036 /* ReminiscenceDeckTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AC3CFEA0009500100000030; };
 		F54A8747C07E0F3800000039 /* ReminiscenceSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE180630A87047600000033; };
 		F3781E2CF00E20FA00000033 /* RoundProgressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690FA2BE3DFB9D180000002D; };
@@ -180,6 +186,7 @@
 		81C292C7FFAD74580000001C /* PhotoCaptionDeal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/PhotoCaptionDeal.swift; sourceTree = "<group>"; };
 		D76316028DAED7B500000017 /* PictureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/PictureView.swift; sourceTree = "<group>"; };
 		E685D4510ACEA17500000019 /* QuickEyesDeal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/QuickEyesDeal.swift; sourceTree = "<group>"; };
+		60795C9EAC3D205A00000018 /* QuickEyesRun.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/QuickEyesRun.swift; sourceTree = "<group>"; };
 		B4D757F5352AE1A200000019 /* QuickEyesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/QuickEyesView.swift; sourceTree = "<group>"; };
 		7A9D512184D7D07E0000001C /* ReminiscenceDeck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/ReminiscenceDeck.swift; sourceTree = "<group>"; };
 		11EA4E85E31685D60000001C /* ReminiscenceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/ReminiscenceView.swift; sourceTree = "<group>"; };
@@ -216,6 +223,7 @@
 		D7B3B616009A42E800000014 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		935C3DAA5B7FC9820000001A /* AppLanguage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/AppLanguage.swift; sourceTree = "<group>"; };
 		A4EDFB62CC1B10200000001D /* CaptionSpeaker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/CaptionSpeaker.swift; sourceTree = "<group>"; };
+		C8614B7F8AD8626E0000001A /* CardLanding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/CardLanding.swift; sourceTree = "<group>"; };
 		83F77BE44B5C133300000022 /* CelebrationHeadline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/CelebrationHeadline.swift; sourceTree = "<group>"; };
 		63C33EF89F55448D00000022 /* ConversationPrompts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/ConversationPrompts.swift; sourceTree = "<group>"; };
 		14C7FC3CF253999A0000001B /* DailyPicture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/DailyPicture.swift; sourceTree = "<group>"; };
@@ -226,6 +234,7 @@
 		403EDBB59A6CD1360000001B /* GamePictures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/GamePictures.swift; sourceTree = "<group>"; };
 		92B36BF3E878DD8800000019 /* HandLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/HandLayout.swift; sourceTree = "<group>"; };
 		C1110EE59EBF3A6A00000017 /* HomeDeal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/HomeDeal.swift; sourceTree = "<group>"; };
+		3E5830CBF89FAB5E0000001A /* HomeShelves.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/HomeShelves.swift; sourceTree = "<group>"; };
 		66F53A1E32AAD85F00000016 /* HotPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/HotPath.swift; sourceTree = "<group>"; };
 		0EA5E65A5CDB56250000001D /* LevelMigration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/LevelMigration.swift; sourceTree = "<group>"; };
 		E124490D58C484320000001E /* LevelOfferStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/LevelOfferStore.swift; sourceTree = "<group>"; };
@@ -251,6 +260,7 @@
 		6BE643EB3378B20E0000002B /* AppLanguageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/AppLanguageTests.swift; sourceTree = SOURCE_ROOT; };
 		DD28529EBCF4FB0A0000002E /* CaptionSpeakerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/CaptionSpeakerTests.swift; sourceTree = SOURCE_ROOT; };
 		DDA8FA1BF6ABDB2B0000002E /* CaptionStringsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/CaptionStringsTests.swift; sourceTree = SOURCE_ROOT; };
+		AAA2E07200D98DB60000002B /* CardLandingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/CardLandingTests.swift; sourceTree = SOURCE_ROOT; };
 		E833E1EE239C484C00000027 /* CatalogTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/CatalogTests.swift; sourceTree = SOURCE_ROOT; };
 		37487EBC4F766E910000002C /* CategoryDealTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/CategoryDealTests.swift; sourceTree = SOURCE_ROOT; };
 		F6896781568989CA00000035 /* CelebrationDetailKeysTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/CelebrationDetailKeysTests.swift; sourceTree = SOURCE_ROOT; };
@@ -271,6 +281,7 @@
 		DE35901B6A0B75A200000030 /* GameSessionStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/GameSessionStoreTests.swift; sourceTree = SOURCE_ROOT; };
 		45283B3ED2219CDE0000002A /* HandLayoutTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/HandLayoutTests.swift; sourceTree = SOURCE_ROOT; };
 		B3594F9427F21EF800000028 /* HomeDealTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/HomeDealTests.swift; sourceTree = SOURCE_ROOT; };
+		D7DCEB89EB84497E0000002B /* HomeShelvesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/HomeShelvesTests.swift; sourceTree = SOURCE_ROOT; };
 		65152AEC3FEF3E780000002C /* LevelExplainTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/LevelExplainTests.swift; sourceTree = SOURCE_ROOT; };
 		A2EEF523201AB21E0000002B /* MemoryBoardTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/MemoryBoardTests.swift; sourceTree = SOURCE_ROOT; };
 		D55FC27F498CD0780000002A /* MemoryDealTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/MemoryDealTests.swift; sourceTree = SOURCE_ROOT; };
@@ -287,6 +298,7 @@
 		0213C9A169FD5A2A0000002F /* PrivacyManifestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/PrivacyManifestTests.swift; sourceTree = SOURCE_ROOT; };
 		7420A39CEC074ABF0000002D /* ProgressRatesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/ProgressRatesTests.swift; sourceTree = SOURCE_ROOT; };
 		EA2EDDDF03A4E9280000002D /* QuickEyesDealTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/QuickEyesDealTests.swift; sourceTree = SOURCE_ROOT; };
+		715CB74CE2E513E50000002C /* QuickEyesRunTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/QuickEyesRunTests.swift; sourceTree = SOURCE_ROOT; };
 		6AC3CFEA0009500100000030 /* ReminiscenceDeckTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/ReminiscenceDeckTests.swift; sourceTree = SOURCE_ROOT; };
 		4BE180630A87047600000033 /* ReminiscenceSessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/ReminiscenceSessionTests.swift; sourceTree = SOURCE_ROOT; };
 		690FA2BE3DFB9D180000002D /* RoundProgressTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/RoundProgressTests.swift; sourceTree = SOURCE_ROOT; };
@@ -359,6 +371,7 @@
 				81C292C7FFAD74580000001C /* PhotoCaptionDeal.swift */,
 				D76316028DAED7B500000017 /* PictureView.swift */,
 				E685D4510ACEA17500000019 /* QuickEyesDeal.swift */,
+				60795C9EAC3D205A00000018 /* QuickEyesRun.swift */,
 				B4D757F5352AE1A200000019 /* QuickEyesView.swift */,
 				7A9D512184D7D07E0000001C /* ReminiscenceDeck.swift */,
 				11EA4E85E31685D60000001C /* ReminiscenceView.swift */,
@@ -395,6 +408,7 @@
 				D7B3B616009A42E800000014 /* OnboardingView.swift */,
 				935C3DAA5B7FC9820000001A /* AppLanguage.swift */,
 				A4EDFB62CC1B10200000001D /* CaptionSpeaker.swift */,
+				C8614B7F8AD8626E0000001A /* CardLanding.swift */,
 				83F77BE44B5C133300000022 /* CelebrationHeadline.swift */,
 				63C33EF89F55448D00000022 /* ConversationPrompts.swift */,
 				14C7FC3CF253999A0000001B /* DailyPicture.swift */,
@@ -405,6 +419,7 @@
 				403EDBB59A6CD1360000001B /* GamePictures.swift */,
 				92B36BF3E878DD8800000019 /* HandLayout.swift */,
 				C1110EE59EBF3A6A00000017 /* HomeDeal.swift */,
+				3E5830CBF89FAB5E0000001A /* HomeShelves.swift */,
 				66F53A1E32AAD85F00000016 /* HotPath.swift */,
 				0EA5E65A5CDB56250000001D /* LevelMigration.swift */,
 				E124490D58C484320000001E /* LevelOfferStore.swift */,
@@ -442,6 +457,7 @@
 				6BE643EB3378B20E0000002B /* AppLanguageTests.swift */,
 				DD28529EBCF4FB0A0000002E /* CaptionSpeakerTests.swift */,
 				DDA8FA1BF6ABDB2B0000002E /* CaptionStringsTests.swift */,
+				AAA2E07200D98DB60000002B /* CardLandingTests.swift */,
 				E833E1EE239C484C00000027 /* CatalogTests.swift */,
 				37487EBC4F766E910000002C /* CategoryDealTests.swift */,
 				F6896781568989CA00000035 /* CelebrationDetailKeysTests.swift */,
@@ -462,6 +478,7 @@
 				DE35901B6A0B75A200000030 /* GameSessionStoreTests.swift */,
 				45283B3ED2219CDE0000002A /* HandLayoutTests.swift */,
 				B3594F9427F21EF800000028 /* HomeDealTests.swift */,
+				D7DCEB89EB84497E0000002B /* HomeShelvesTests.swift */,
 				65152AEC3FEF3E780000002C /* LevelExplainTests.swift */,
 				A2EEF523201AB21E0000002B /* MemoryBoardTests.swift */,
 				D55FC27F498CD0780000002A /* MemoryDealTests.swift */,
@@ -478,6 +495,7 @@
 				0213C9A169FD5A2A0000002F /* PrivacyManifestTests.swift */,
 				7420A39CEC074ABF0000002D /* ProgressRatesTests.swift */,
 				EA2EDDDF03A4E9280000002D /* QuickEyesDealTests.swift */,
+				715CB74CE2E513E50000002C /* QuickEyesRunTests.swift */,
 				6AC3CFEA0009500100000030 /* ReminiscenceDeckTests.swift */,
 				4BE180630A87047600000033 /* ReminiscenceSessionTests.swift */,
 				690FA2BE3DFB9D180000002D /* RoundProgressTests.swift */,
@@ -587,6 +605,7 @@
 				4886BCC1D06920BA00000022 /* PhotoCaptionDeal.swift in Sources */,
 				F2E513BC326D993F0000001D /* PictureView.swift in Sources */,
 				17BB594169B12A7F0000001F /* QuickEyesDeal.swift in Sources */,
+				93F6F9D4D5F22DDC0000001E /* QuickEyesRun.swift in Sources */,
 				06316652C0C975F40000001F /* QuickEyesView.swift in Sources */,
 				AD020DC30561DD5000000022 /* ReminiscenceDeck.swift in Sources */,
 				A87005C5B52DA39800000022 /* ReminiscenceView.swift in Sources */,
@@ -623,6 +642,7 @@
 				83C5727F27BD566A0000001A /* OnboardingView.swift in Sources */,
 				CF167B18375C83D400000020 /* AppLanguage.swift in Sources */,
 				B88EA6D0C0FF38D200000023 /* CaptionSpeaker.swift in Sources */,
+				A5AB3B5A5FBDCEE000000020 /* CardLanding.swift in Sources */,
 				74E2DCC89787792D00000028 /* CelebrationHeadline.swift in Sources */,
 				232C8B200714AB2700000028 /* ConversationPrompts.swift in Sources */,
 				2BD8CCC3FFF7229C00000021 /* DailyPicture.swift in Sources */,
@@ -633,6 +653,7 @@
 				D04651F1B7BE937800000021 /* GamePictures.swift in Sources */,
 				696F8DB6545ED68A0000001F /* HandLayout.swift in Sources */,
 				D5418EFA361BB48C0000001D /* HomeDeal.swift in Sources */,
+				159345E52FC0C23000000020 /* HomeShelves.swift in Sources */,
 				EB1D5656AAE8FB090000001C /* HotPath.swift in Sources */,
 				B655A39EA9B5D68F00000023 /* LevelMigration.swift in Sources */,
 				2EAE227B2A482B2400000024 /* LevelOfferStore.swift in Sources */,
@@ -666,6 +687,7 @@
 				F506C5A65F14390000000031 /* AppLanguageTests.swift in Sources */,
 				4534EC198FDAD8AC00000034 /* CaptionSpeakerTests.swift in Sources */,
 				67F61994F2F1071500000034 /* CaptionStringsTests.swift in Sources */,
+				AA42FEFC943F8BF800000031 /* CardLandingTests.swift in Sources */,
 				DC6D01BBB9BFE1DE0000002D /* CatalogTests.swift in Sources */,
 				68D5916C1521743B00000032 /* CategoryDealTests.swift in Sources */,
 				1D053A717B1241EC0000003B /* CelebrationDetailKeysTests.swift in Sources */,
@@ -686,6 +708,7 @@
 				1C320C298D4269F400000036 /* GameSessionStoreTests.swift in Sources */,
 				6A2DA899F7F887B000000030 /* HandLayoutTests.swift in Sources */,
 				FEABA1C9F3D55C5A0000002E /* HomeDealTests.swift in Sources */,
+				F7E224CE305ECE5000000031 /* HomeShelvesTests.swift in Sources */,
 				EE07AD69390E5FDA00000032 /* LevelExplainTests.swift in Sources */,
 				578160CE8C24557000000031 /* MemoryBoardTests.swift in Sources */,
 				6B009816AE0FE1DA00000030 /* MemoryDealTests.swift in Sources */,
@@ -702,6 +725,7 @@
 				F1B9DD4724F699CC00000035 /* PrivacyManifestTests.swift in Sources */,
 				B881D90E62998BE900000033 /* ProgressRatesTests.swift in Sources */,
 				9C33891BEB57002A00000033 /* QuickEyesDealTests.swift in Sources */,
+				D05B673434600BCF00000032 /* QuickEyesRunTests.swift in Sources */,
 				8014E3CE95A477CB00000036 /* ReminiscenceDeckTests.swift in Sources */,
 				F54A8747C07E0F3800000039 /* ReminiscenceSessionTests.swift in Sources */,
 				F3781E2CF00E20FA00000033 /* RoundProgressTests.swift in Sources */,

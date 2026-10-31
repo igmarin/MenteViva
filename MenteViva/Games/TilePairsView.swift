@@ -31,20 +31,7 @@ struct TilePairsView: View {
             LevelExplainBanner(
                 change: PlanStore.todaysChange(GameID.tilePairs), game: GameID.tilePairs,
                 hasStarted: (deal?.attempts ?? 0) > 0, keepsSpace: true)
-            Text(AppLanguage.localized("game.tilepairs.instruction"))
-                .font(.title2)
-                .multilineTextAlignment(.center)
-
-            if let hint {
-                Text(hint)
-                    .font(.title2.weight(.semibold))
-                    .foregroundStyle(Color.todaysPick)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 14)
-                    .padding(.vertical, 10)
-                    .background(Color.amber.opacity(0.24), in: .rect(cornerRadius: 14))
-                    .accessibilityAddTraits(.isHeader)
-            }
+            instructionRow
 
             board
                 .frame(minHeight: 320)
@@ -67,6 +54,47 @@ struct TilePairsView: View {
         )
         .onAppear { dealIfNeeded() }
         .celebration(isPresented: $showCelebration, game: .tilePairs, detail: finalDetail, onPlayAgain: restart)
+    }
+
+    // MARK: - Instruction and hint
+
+    /// Every line the hint can show. The row is as tall as the tallest one (or
+    /// the same line at a bigger text size), hidden, with the live line on top,
+    /// so a hint appearing never takes height from the board: `tileSize` would
+    /// step down and every tile shrink mid-deal (#482).
+    private var hintLines: [String] {
+        ["game.tilepairs.covered", "game.tilepairs.mismatch", "game.tilepairs.stuck"].map { AppLanguage.localized($0) }
+    }
+
+    /// The instruction and the hint share one row, so the reserved height costs
+    /// the short iPhone screens as little as possible: while a hint shows, it
+    /// stands where the instruction was, and the instruction returns with the
+    /// next pick.
+    private var instructionRow: some View {
+        ZStack {
+            Text(AppLanguage.localized("game.tilepairs.instruction"))
+                .font(.title2)
+                .multilineTextAlignment(.center)
+                .opacity(hint == nil ? 1 : 0)
+                .accessibilityHidden(hint != nil)
+            ForEach(hintLines, id: \.self) { line in
+                hintBubble(line).hidden()
+            }
+            if let hint {
+                hintBubble(hint)
+                    .accessibilityAddTraits(.isHeader)
+            }
+        }
+    }
+
+    private func hintBubble(_ line: String) -> some View {
+        Text(line)
+            .font(.title2.weight(.semibold))
+            .foregroundStyle(Color.todaysPick)
+            .multilineTextAlignment(.center)
+            .padding(.horizontal, 14)
+            .padding(.vertical, 10)
+            .background(Color.amber.opacity(0.24), in: .rect(cornerRadius: 14))
     }
 
     // MARK: - Board

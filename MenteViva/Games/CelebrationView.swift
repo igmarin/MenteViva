@@ -31,6 +31,15 @@ struct CelebrationView: View {
     /// Whether the answer was Yes (#418): the offer is replaced by a line saying the level went up,
     /// so a tap never makes the question vanish without a word.
     @State private var offerAccepted = false
+    /// Where the card must travel to reach today's slot on the week board; nil until both are
+    /// measured. Frozen once the flight starts, so a layout change mid-flight cannot redirect the card (#421).
+    @State private var landingOffset: CGSize?
+    /// The card has started its flight to the slot (#421).
+    @State private var flown = false
+    /// The card has faded out, on the slot (or, under Reduce Motion, in place).
+    @State private var faded = false
+    /// The slot is showing that the card arrived: a short swell, or a steady highlight under Reduce Motion.
+    @State private var landed = false
 
     /// Today's games from the plan saved for today; nil before there is one.
     private var today: TodayRun? {
@@ -80,24 +89,15 @@ struct CelebrationView: View {
                     AccessibilityNotification.Announcement(AppLanguage.localized("level.explain.raised1")).post()
                 } label: {
                     Text(AppLanguage.localized("level.offer.yes"))
-                        .font(.title2.weight(.semibold))
-                        .frame(maxWidth: .infinity, minHeight: 100)
-                        .background(Color.brand, in: .rect(cornerRadius: 20))
-                        .foregroundStyle(Color.paper)
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(RetroButtonStyle())
                 .accessibilityLabel(AppLanguage.localized("level.offer.yes"))
                 Button {
                     offerAnswered = true
                     LevelOfferStore.markOffered(for: game, today: PlanStore.dayStamp())
                     Feedback.play(.success)
                 } label: {
-                    Text(AppLanguage.localized("level.offer.keep"))
-                        .font(.title2.weight(.semibold))
-                        .frame(maxWidth: .infinity, minHeight: 100)
-                        .background(Color.clear, in: .rect(cornerRadius: 20))
-                        .overlay { RoundedRectangle(cornerRadius: 20).strokeBorder(Color.espresso, lineWidth: 2) }
-                        .foregroundStyle(Color.fadedBlue)
+                    Text(AppLanguage.localized("level.offer.keep")).outlineButton()
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel(AppLanguage.localized("level.offer.keep"))
@@ -141,6 +141,8 @@ struct CelebrationView: View {
             // Room for the stamp, which hangs about 42pt below the card; a little less on the day's
             // first game, so its picture still leaves the main action on a 6.1" iPhone screen.
             .padding(.bottom, dailyPicture == nil ? 60 : 44)
+            // Above the paper sheet below, so the card flies over it to the week board instead of behind it.
+            .zIndex(1)
 
             Spacer(minLength: 0)
 
@@ -167,7 +169,8 @@ struct CelebrationView: View {
                 WeekBoard(
                     days: DayGrouping.thisWeek(sessions, date: \.playedAt).map {
                         (day: $0.day, games: $0.items.compactMap(\.game))
-                    }
+                    },
+                    landed: landed
                 )
                 .padding(.vertical, 6)
                 actions(next: today?.next(after: game))
@@ -187,6 +190,18 @@ struct CelebrationView: View {
             Color.paper.frame(height: 200).ignoresSafeArea(edges: .bottom)
         }
         .background(.table)
+        // Reads the card's and today's slot's frames in one space, so the flight is one vector.
+        .overlayPreferenceValue(LandingTargets.self) { targets in
+            GeometryReader { proxy in
+                let offset = offsetToSlot(targets, in: proxy)
+                Color.clear
+                    .onChange(of: offset, initial: true) { _, new in
+                        if !flown { landingOffset = new }
+                    }
+            }
+            .allowsHitTesting(false)
+        }
+        .task { await landOnTheWeek() }
         .onAppear {
             if headline == nil {
                 var generator = SystemRandomNumberGenerator()
@@ -204,10 +219,45 @@ struct CelebrationView: View {
         }
     }
 
+    /// How far the card must move to sit on today's slot, or nil when either is not on screen.
+    private func offsetToSlot(_ targets: LandingTargets, in proxy: GeometryProxy) -> CGSize? {
+        guard let card = targets.card, let slot = targets.slot else { return nil }
+        return CardLanding.offset(from: proxy[card], to: proxy[slot], tiltedBy: Self.cardTilt)
+    }
+
+    /// The card rests, then shrinks onto today's slot and the slot answers (#421). After the arrival
+    /// spring and a hold so the caption can be read. Under Reduce Motion the card cross-fades out
+    /// where it is and the slot is highlighted. The caption stays; VoiceOver is not involved.
+    private func landOnTheWeek() async {
+        let arrival = reduceMotion ? 0 : 0.65
+        try? await Task.sleep(for: .seconds(arrival + CardLanding.hold))
+        guard !Task.isCancelled, landingOffset != nil else { return }
+        if reduceMotion {
+            withAnimation(.easeOut(duration: 0.3)) { faded = true }
+            landed = true
+            return
+        }
+        withAnimation(.easeInOut(duration: CardLanding.flight)) { flown = true }
+        // Fades only over the last part of the flight, so the card is seen arriving.
+        withAnimation(.easeIn(duration: 0.25).delay(CardLanding.flight * 0.7)) { faded = true }
+        try? await Task.sleep(for: .seconds(CardLanding.flight))
+        guard !Task.isCancelled else { return }
+        landed = true
+        try? await Task.sleep(for: .seconds(0.4))
+        landed = false
+    }
+
+    private static let cardTilt = -4.0
+
     /// The finished game's card, stamped and tilted as it lands on the table.
     private var card: some View {
         GameCard(game: game)
             .frame(width: 190)
+            // Measured before the flight moves it, so the vector starts from where it rests.
+            .anchorPreference(key: LandingTargets.self, value: .bounds) { LandingTargets(card: $0) }
+            .scaleEffect(flown && !reduceMotion ? CardLanding.shrink : 1)
+            .offset(flown && !reduceMotion ? (landingOffset ?? .zero) : .zero)
+            .opacity(faded ? 0 : 1)
             .overlay(alignment: .bottom) {
                 Text(AppLanguage.localized("game.celebration.added"))
                     .font(.headline.weight(.heavy))
@@ -220,10 +270,15 @@ struct CelebrationView: View {
                     // Below the name band, never over it: the name says which game.
                     .offset(y: 40)
             }
-            .rotationEffect(.degrees(-4))
+            .rotationEffect(.degrees(Self.cardTilt))
             .scaleEffect(arrived || reduceMotion ? 1 : 0.8)
             .opacity(arrived || reduceMotion ? 1 : 0)
             .accessibilityElement(children: .combine)
+            // Fixed, so the name is still spoken after the card fades out (opacity 0 drops its text).
+            .accessibilityLabel(
+                Text(
+                    AppLanguage.localized(game.title) + ", "
+                        + AppLanguage.localized("game.celebration.added")))
     }
 
     private func actions(next: GameID?) -> some View {
@@ -239,17 +294,16 @@ struct CelebrationView: View {
                         systemImage: "arrow.forward"
                     )
                     .labelStyle(.titleAndIcon)
-                    .bigButton(filled: true)
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(RetroButtonStyle())
             } else {
                 Button(action: onPlayAgain) {
-                    Text(AppLanguage.localized("game.celebration.playagain")).bigButton(filled: true)
+                    Text(AppLanguage.localized("game.celebration.playagain"))
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(RetroButtonStyle())
             }
             Button(action: onHome) {
-                Text(AppLanguage.localized("game.celebration.home")).bigButton(filled: false)
+                Text(AppLanguage.localized("game.celebration.home")).outlineButton()
             }
             .buttonStyle(.plain)
         }
@@ -265,15 +319,13 @@ extension View {
         modifier(CelebrationCover(isPresented: isPresented, game: game, detail: detail, onPlayAgain: onPlayAgain))
     }
 
-    /// A 100pt action: jade fill with paper-coloured text, or an espresso outline with a blue label.
-    fileprivate func bigButton(filled: Bool) -> some View {
+    /// The quieter 100pt action beside a `RetroButtonStyle` one: an espresso outline with a blue label.
+    fileprivate func outlineButton() -> some View {
         font(.title2.weight(.semibold))
-            .foregroundStyle(filled ? Color.paper : Color.fadedBlue)
+            .foregroundStyle(Color.fadedBlue)
             .frame(maxWidth: .infinity, minHeight: 100)
-            .background(filled ? Color.brand : Color.clear, in: .rect(cornerRadius: 20))
-            .overlay {
-                if !filled { RoundedRectangle(cornerRadius: 20).strokeBorder(Color.espresso, lineWidth: 2) }
-            }
+            .overlay { RoundedRectangle(cornerRadius: 20).strokeBorder(Color.espresso, lineWidth: 2) }
+            .contentShape(Rectangle())
     }
 }
 
