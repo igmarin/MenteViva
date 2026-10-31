@@ -63,6 +63,20 @@ extension GameSession {
         let start = calendar.dateInterval(of: .weekOfYear, for: now)?.start ?? calendar.startOfDay(for: now)
         return FetchDescriptor(predicate: #Predicate { $0.playedAt >= start }, sortBy: [SortDescriptor(\.playedAt)])
     }
+
+    /// Sessions played at or after `start`, newest first: what My Week (14 days) and My progress
+    /// (`ProgressRates.since()`) read once, instead of a live query over all of history (#417).
+    static func since(_ start: Date) -> FetchDescriptor<GameSession> {
+        FetchDescriptor(predicate: #Predicate { $0.playedAt >= start }, sortBy: [SortDescriptor(\.playedAt, order: .reverse)])
+    }
+}
+
+extension ModelContext {
+    /// `GameSession.since(start)` fetched once, inside the `history.fetch` signpost. A store that
+    /// can't be read gives none, as the live query did.
+    func sessions(since start: Date) -> [GameSession] {
+        HotPath.measure("history.fetch") { (try? fetch(GameSession.since(start))) ?? [] }
+    }
 }
 
 extension DayGrouping {

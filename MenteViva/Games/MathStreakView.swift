@@ -73,7 +73,8 @@ struct MathStreakView: View {
         .padding()
         .fitOrScroll()
         .gameHeader(.mathStreaks, instruction: AppLanguage.localized("game.math.instruction") + " " + question.spoken())
-        .onAppear(perform: deal)
+        // Not when the celebration closes: Play again has dealt already (#415).
+        .onAppear { if options.isEmpty { deal() } }
         .onDisappear {
             // A beat cut short must not leave taps locked if this state comes back.
             beatTask?.cancel()
