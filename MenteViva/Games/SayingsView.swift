@@ -177,13 +177,7 @@ struct SayingsView: View {
 
     /// The soft amber note after a near miss, the same as Quick Eyes: kind and easy to read.
     private var almostNote: some View {
-        Text(AppLanguage.localized("game.sayings.miss"))
-            .font(.title2.weight(.semibold))
-            .foregroundStyle(Color.todaysPick)
-            .multilineTextAlignment(.center)
-            .padding(.horizontal, 14)
-            .padding(.vertical, 10)
-            .background(Color.amber.opacity(0.24), in: .rect(cornerRadius: 14))
+        AlmostNote(text: AppLanguage.localized("game.sayings.miss"))
     }
 
     private func endingLabel(_ choice: Saying) -> some View {

@@ -11,6 +11,7 @@
 		27FC9D3E2B699DE60000001A /* FirstPlayGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2709843BA5CB20400000014; };
 		82CA8D7C6E784B6200000014 /* GameCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86B5E610ECF1EC500000000E; };
 		3FF1DA3530DADEF500000016 /* GameHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87A1ECDA07DDDD0B00000010; };
+		73BAA80CFD8CB11C0000001C /* AlmostNote.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09DB9DB6CCA99C1A00000016; };
 		4A60D6FD0D8845180000001C /* AnswerBeat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D692C5E9BB2335600000016; };
 		B645E9FD0A4B45280000001E /* CategoryDeal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92460BFA86F86A0600000018; };
 		2526D29DE5FE6C8300000025 /* CategoryFluencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 915FB304D5C7D9690000001F; };
@@ -175,6 +176,7 @@
 		A2709843BA5CB20400000014 /* FirstPlayGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstPlayGuide.swift; sourceTree = "<group>"; };
 		86B5E610ECF1EC500000000E /* GameCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCard.swift; sourceTree = "<group>"; };
 		87A1ECDA07DDDD0B00000010 /* GameHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameHeader.swift; sourceTree = "<group>"; };
+		09DB9DB6CCA99C1A00000016 /* AlmostNote.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/AlmostNote.swift; sourceTree = "<group>"; };
 		8D692C5E9BB2335600000016 /* AnswerBeat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/AnswerBeat.swift; sourceTree = "<group>"; };
 		92460BFA86F86A0600000018 /* CategoryDeal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/CategoryDeal.swift; sourceTree = "<group>"; };
 		915FB304D5C7D9690000001F /* CategoryFluencyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games/CategoryFluencyView.swift; sourceTree = "<group>"; };
@@ -367,6 +369,7 @@
 				A2709843BA5CB20400000014 /* FirstPlayGuide.swift */,
 				86B5E610ECF1EC500000000E /* GameCard.swift */,
 				87A1ECDA07DDDD0B00000010 /* GameHeader.swift */,
+				09DB9DB6CCA99C1A00000016 /* AlmostNote.swift */,
 				8D692C5E9BB2335600000016 /* AnswerBeat.swift */,
 				92460BFA86F86A0600000018 /* CategoryDeal.swift */,
 				915FB304D5C7D9690000001F /* CategoryFluencyView.swift */,
@@ -608,6 +611,7 @@
 				27FC9D3E2B699DE60000001A /* FirstPlayGuide.swift in Sources */,
 				82CA8D7C6E784B6200000014 /* GameCard.swift in Sources */,
 				3FF1DA3530DADEF500000016 /* GameHeader.swift in Sources */,
+				73BAA80CFD8CB11C0000001C /* AlmostNote.swift in Sources */,
 				4A60D6FD0D8845180000001C /* AnswerBeat.swift in Sources */,
 				B645E9FD0A4B45280000001E /* CategoryDeal.swift in Sources */,
 				2526D29DE5FE6C8300000025 /* CategoryFluencyView.swift in Sources */,
