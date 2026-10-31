@@ -28,6 +28,9 @@ struct CelebrationView: View {
     /// this triggers a re-render so the offer disappears even though
     /// `LevelOfferStore` (UserDefaults) is not observed by SwiftUI.
     @State private var offerAnswered = false
+    /// Whether the answer was Yes (#418): the offer is replaced by a line saying the level went up,
+    /// so a tap never makes the question vanish without a word.
+    @State private var offerAccepted = false
 
     /// Today's games from the plan saved for today; nil before there is one.
     private var today: TodayRun? {
@@ -50,6 +53,14 @@ struct CelebrationView: View {
             alreadyOfferedToday: LevelOfferStore.hasOfferedToday(for: game, today: PlanStore.dayStamp()))
     }
 
+    /// What replaces the offer after Yes: the same words the level explanation uses for a raise.
+    private var raisedLine: some View {
+        Text(AppLanguage.localized("level.explain.raised1"))
+            .font(.title2)
+            .multilineTextAlignment(.center)
+            .padding(.vertical, 8)
+    }
+
     private var offerSection: some View {
         VStack(spacing: 12) {
             Text(AppLanguage.localized("level.offer.prompt"))
@@ -61,10 +72,12 @@ struct CelebrationView: View {
                     // A double tap reaches here twice; `applyChosen` itself allows one raise a day.
                     guard !offerAnswered else { return }
                     offerAnswered = true
+                    offerAccepted = true
                     let today = PlanStore.dayStamp()
                     LevelOfferStore.applyChosen(for: game, today: today)
                     LevelOfferStore.markOffered(for: game, today: today)
                     Feedback.play(.success)
+                    AccessibilityNotification.Announcement(AppLanguage.localized("level.explain.raised1")).post()
                 } label: {
                     Text(AppLanguage.localized("level.offer.yes"))
                         .font(.title2.weight(.semibold))
@@ -146,7 +159,9 @@ struct CelebrationView: View {
                 Text(detail)
                     .font(.title2.weight(.semibold))
                     .multilineTextAlignment(.center)
-                if shouldShowOffer {
+                if offerAccepted {
+                    raisedLine
+                } else if shouldShowOffer {
                     offerSection
                 }
                 WeekBoard(

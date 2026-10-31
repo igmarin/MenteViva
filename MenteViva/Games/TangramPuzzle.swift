@@ -94,12 +94,14 @@ nonisolated struct TangramPuzzle: Sendable {
     /// A tile dropped with its middle at `point` (authoring units), turned and
     /// mirrored as the player left it. It goes into the nearest free slot of
     /// its kind within reach, turning itself when the level allows; a slot it
-    /// fits wins over a nearer one it would need turning for.
+    /// fits wins over a nearer one it would need turning for. `minimumReach`
+    /// (authoring units) is a floor under the share-based reach: on a small
+    /// board a small tile's share is under a finger's width (#396).
     mutating func place(
-        _ piece: TangramPiece, at point: CGPoint, rotation: Int, flipped: Bool
+        _ piece: TangramPiece, at point: CGPoint, rotation: Int, flipped: Bool, minimumReach: Double = 0
     ) -> TangramPlaceResult {
         attempts += 1
-        let reach = Self.snapShare * piece.diagonal
+        let reach = max(Self.snapShare * piece.diagonal, minimumReach)
         let near = fittingSlots(for: piece)
             .map { (slot: $0, distance: Self.distance(point, Self.middle(of: shape.placements[$0]))) }
             .filter { $0.distance <= reach }
@@ -253,6 +255,25 @@ nonisolated struct TangramPuzzle: Sendable {
         _ point: CGPoint, scale: CGFloat, origin: CGPoint
     ) -> CGPoint {
         CGPoint(x: (point.x - origin.x) / scale, y: (origin.y - point.y) / scale)
+    }
+
+    /// Points per authoring unit in the tray, one for all seven tiles (#396). Fitting each tile
+    /// to its cell drew the large, medium and small triangles the same size. 8 units, the large
+    /// tile's long side, is the widest any tile gets at any turn, so each fits a 76pt square.
+    static let trayScale = 76.0 / 8.0
+
+    /// A tray tile's corners in its 100pt cell, in points with y down: turned and mirrored as the
+    /// player left it, drawn at `trayScale` and centred on the cell's middle.
+    static func trayPoints(of tile: TangramPlacement) -> [CGPoint] {
+        let corners = TangramPiece.placedCorners(
+            tile.piece, position: .zero, rotation: tile.rotation, flipped: tile.flipped)
+        let xs = corners.map(\.x)
+        let ys = corners.map(\.y)
+        let midX = ((xs.min() ?? 0) + (xs.max() ?? 0)) / 2
+        let midY = ((ys.min() ?? 0) + (ys.max() ?? 0)) / 2
+        return corners.map {
+            CGPoint(x: 50 + ($0.x - midX) * trayScale, y: 50 - ($0.y - midY) * trayScale)
+        }
     }
 
     /// Where a tile's target sits in the figure, for VoiceOver slot actions:
