@@ -128,7 +128,8 @@ struct RepeatSequenceView: View {
         .onAppear {
             // Dealt on the first measured width (the geometry action below): the screen is wider than
             // a Slide Over or Split View window, and a deal for it would be dealt again at once.
-            if boardWidth > 0 { setup() }
+            // Not when the celebration closes: Play again has dealt already (#415).
+            if boardWidth > 0, session == nil { setup() }
         }
         .onChange(of: scenePhase) { _, newPhase in pauseOrResume(for: newPhase) }
         .onDisappear { task?.cancel() }

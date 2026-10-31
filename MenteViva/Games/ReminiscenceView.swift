@@ -47,7 +47,8 @@ struct ReminiscenceView: View {
         .padding()
         .fitOrScroll()
         .gameHeader(.reminiscence, instruction: card.map { AppLanguage.localized($0.promptKey) } ?? "")
-        .onAppear(perform: deal)
+        // Not when the celebration closes: Play again has dealt already (#415).
+        .onAppear { if cards.isEmpty { deal() } }
         .celebration(isPresented: $showCelebration, game: .reminiscence, detail: finalDetail, onPlayAgain: deal)
     }
 
