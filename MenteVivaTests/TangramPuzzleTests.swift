@@ -398,10 +398,13 @@ final class TangramPuzzleTests: XCTestCase {
     func testGivenStoredIdsThatNoLongerExistWhenNextShapeThenTheyAreIgnoredAndDropped() {
         let defaults = freshDefaults()
         let keys = TangramShapes.all.map(\.key)
-        defaults.set(["gone-1", "gone-2"] + keys.dropLast(), forKey: TangramPuzzle.seenKey)
+        defaults.set(["gone-1", "gone-2"] + keys.dropLast(2), forKey: TangramPuzzle.seenKey)
         var generator = SeededGenerator(state: 2)
+        let next = TangramPuzzle.nextShape(defaults: defaults, using: &generator)
+        XCTAssertTrue(keys.suffix(2).contains(next.key))
         XCTAssertEqual(
-            TangramPuzzle.nextShape(defaults: defaults, using: &generator).key, keys.last)
+            defaults.stringArray(forKey: TangramPuzzle.seenKey),
+            (keys.dropLast(2) + [next.key]).sorted())
     }
 
     // MARK: - Table helpers (#219)
