@@ -40,6 +40,7 @@ struct SlidingBlocksView: View {
     @State private var hintBuild: Task<SlidingBlocksMap, Never>?
     /// Guards the async hint-table build: a table is kept only for the deal that asked for it.
     @State private var dealID = 0
+    @State private var hintsUsed = 0
     @State private var startedAt = Date.now
     @State private var showCelebration = false
     @State private var finalDetail = ""
@@ -85,11 +86,14 @@ struct SlidingBlocksView: View {
                 let boardWidth = cell * CGFloat(puzzle.width)
                 let boardHeight = cell * CGFloat(puzzle.height)
                 let legal = Self.directions(in: puzzle)
+                let guideIndex = FirstPlayGuideStore.shouldShow(.slidingBlocks) ? puzzle.guideBlock() : nil
                 ZStack(alignment: .topLeading) {
                     boardFrame(puzzle: puzzle, cell: cell)
                         .frame(width: boardWidth, height: boardHeight)
                     ForEach(puzzle.blocks.indices, id: \.self) { index in
-                        blockView(index, puzzle: puzzle, cell: cell, directions: legal[index] ?? [])
+                        blockView(
+                            index, puzzle: puzzle, cell: cell, directions: legal[index] ?? [],
+                            isGuideTarget: index == guideIndex)
                     }
                 }
                 .frame(width: boardWidth, height: boardHeight)
@@ -129,7 +133,8 @@ struct SlidingBlocksView: View {
     // MARK: - Blocks
 
     private func blockView(
-        _ index: Int, puzzle: SlidingBlocksPuzzle, cell: CGFloat, directions: [SlidingDirection]
+        _ index: Int, puzzle: SlidingBlocksPuzzle, cell: CGFloat, directions: [SlidingDirection],
+        isGuideTarget: Bool
     ) -> some View {
         let block = puzzle.blocks[index]
         let isBig = index == puzzle.bigIndex
@@ -160,7 +165,7 @@ struct SlidingBlocksView: View {
                 y: CGFloat(block.y) * cell + (dragOffset?.height ?? 0)
             )
             .zIndex(dragOffset != nil ? 2 : (isSelected ? 1 : 0))
-            .guideTarget(isBig)
+            .guideTarget(isGuideTarget)
             // The one place moves animate. Reduce Motion: moves land at once, with no slide (issue spec).
             .animation(reduceMotion ? nil : .easeInOut(duration: 0.25), value: puzzle)
             // High priority, so the block's drag wins over the page's ScrollView; the
@@ -337,6 +342,7 @@ struct SlidingBlocksView: View {
     private func startOver() {
         guard var current = puzzle, current.movesMade > 0 else { return }
         current.reset(to: initialBlocks)
+        hintsUsed = 0
         puzzle = current
         lastSlide = nil
         selected = nil
@@ -344,9 +350,10 @@ struct SlidingBlocksView: View {
     }
 
     /// "Show me a move": the hint table's best next slide is played for the
-    /// player, so it teaches by moving, not by pointing.
+    /// player; each shown move adds one attempt and no correct move.
     private func showMove() {
         guard let current = puzzle, let map = hintMap, let move = map.hint(from: current) else { return }
+        hintsUsed += 1
         apply(move)
     }
 
@@ -368,6 +375,7 @@ struct SlidingBlocksView: View {
         let fresh = next.puzzle
         puzzle = fresh
         initialBlocks = fresh.blocks
+        hintsUsed = 0
         selected = nil
         dragLock = nil
         lastSlide = nil
@@ -405,12 +413,16 @@ struct SlidingBlocksView: View {
             GameSession(
                 gameID: .slidingBlocks, score: Self.score(minMoves: best, moves: solved.movesMade),
                 rounds: 1, durationSeconds: elapsed,
-                correct: best, attempts: solved.movesMade, difficulty: difficulty))
+                correct: best, attempts: Self.recordedAttempts(moves: solved.movesMade, hints: hintsUsed), difficulty: difficulty)
+        )
         finalDetail = AppLanguage.localized("game.sliding.out")
         if CaptionSpeaker.autoSpeaks() { CaptionSpeaker.speak(finalDetail) }
         AccessibilityNotification.Announcement(finalDetail).post()
         showCelebration = true
     }
+
+    /// A shown move counts in addition to the move it plays.
+    static func recordedAttempts(moves: Int, hints: Int) -> Int { moves + hints }
 
     /// Progress, never points (#45): a clean run is 100, each slide beyond the
     /// puzzle's fewest costs 5, floored at 10. Stored, never shown.

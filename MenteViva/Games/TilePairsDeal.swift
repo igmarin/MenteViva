@@ -28,6 +28,8 @@ nonisolated struct TilePairsDeal {
     static let tilesPerLevel = [8, 12, 16, 20, 24, 28, 36, 44, 56, 72]
     static let layersPerLevel = [1, 1, 1, 2, 2, 2, 2, 3, 3, 3]
     static let lookAlikePerLevel = [false, false, false, false, true, true, true, true, true, true]
+    /// A shown pair adds an attempt without adding a correct pair.
+    static func recordedAttempts(attempts: Int, hints: Int) -> Int { attempts + hints }
     static let minTarget = 60.0
     static let gap = 6.0
     private(set) var tiles: [TilePairsTile]

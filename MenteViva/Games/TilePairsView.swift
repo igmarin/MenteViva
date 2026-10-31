@@ -17,6 +17,7 @@ struct TilePairsView: View {
     @State private var mismatched: Set<Int> = []
     @State private var shakeID: Int?
     @State private var hint: String?
+    @State private var hintsUsed = 0
     @State private var startedAt = Date.now
     @State private var showCelebration = false
     @State private var finalDetail = ""
@@ -88,7 +89,7 @@ struct TilePairsView: View {
                 .overlay {
                     if let deal {
                         let tileSize = tileSize(for: deal, in: size)
-                        let guideTargetID = deal.guidePair()?.first?.id
+                        let guideTargetID = FirstPlayGuideStore.shouldShow(.tilePairs) ? deal.guidePair()?.first?.id : nil
                         let boardDims = boardDimensions(for: deal, tileSize: tileSize)
                         // A board that still doesn't fit at the smallest tile (a wide fallback
                         // line, a short screen after the first move) scrolls inside its space
@@ -240,6 +241,7 @@ struct TilePairsView: View {
         mismatched = []
         shakeID = nil
         hint = nil
+        hintsUsed = 0
         startedAt = .now
     }
 
@@ -308,8 +310,9 @@ struct TilePairsView: View {
         }
     }
 
+    /// Highlighting adds one attempt and no correct pair; wait for a lift to avoid the stale board.
     private func showPair() {
-        guard var current = deal else { return }
+        guard removing.isEmpty, var current = deal else { return }
         if current.isStuck {
             hint = AppLanguage.localized("game.tilepairs.stuck")
             AccessibilityNotification.Announcement(hint!).post()
@@ -326,6 +329,7 @@ struct TilePairsView: View {
             return
         }
         if let pair = current.guidePair() {
+            hintsUsed += 1
             highlighted = Set(pair.map(\.id))
             Feedback.play(.success)
             // Sighted players see the glow; VoiceOver hears which pair to look for.
@@ -348,7 +352,7 @@ struct TilePairsView: View {
             GameSession(
                 gameID: .tilePairs, score: pairs * 10,
                 rounds: max(1, pairs), durationSeconds: elapsed,
-                correct: final.correct, attempts: final.attempts,
+                correct: final.correct, attempts: TilePairsDeal.recordedAttempts(attempts: final.attempts, hints: hintsUsed),
                 difficulty: difficulty))
         finalDetail = AppLanguage.localized("game.celebration.table")
         showCelebration = true

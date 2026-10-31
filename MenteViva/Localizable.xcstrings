@@ -3488,13 +3488,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Try the big striped block."
+            "value": "Try this block."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Prueba el bloque grande de rayas."
+            "value": "Prueba este bloque."
           }
         }
       }
@@ -3522,13 +3522,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "These two match."
+            "value": "This one has a twin that is not covered."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Estas dos son iguales."
+            "value": "Esta tiene una gemela que no está tapada."
           }
         }
       }

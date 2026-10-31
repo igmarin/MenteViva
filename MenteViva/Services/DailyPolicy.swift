@@ -128,8 +128,8 @@ nonisolated enum DailyPolicy {
         let weak: Double
     }
 
-    /// Per-game strong/weak accuracy. Defaults are 0.90 / 0.65; only Memory
-    /// Lane differs (see its comment). Each entry has a /// so the choice is
+    /// Per-game strong/weak accuracy. Defaults are 0.90 / 0.65; Memory Lane,
+    /// Names and Faces, and Sliding Blocks differ. Each entry has a /// so the choice is
     /// auditable without opening another file.
     static let thresholds: [GameID: Threshold] = [
         /// Memory Lane counts moves as attempts and pairs as correct
@@ -154,6 +154,8 @@ nonisolated enum DailyPolicy {
         .upOrDown: Threshold(strong: 0.90, weak: 0.65),
         /// Finish the Saying: the familiar ending picked. Accuracy is correct / attempts.
         .sayings: Threshold(strong: 0.90, weak: 0.65),
+        /// At roughly 1.4 times the fewest moves (0.70) it climbs; above 2.5 times (below 0.40) it eases.
+        .slidingBlocks: Threshold(strong: 0.70, weak: 0.40),
         /// Names and Faces counts moves as attempts and pairs as correct, like Memory Lane, so it
         /// takes Memory Lane's thresholds.
         .photoCaptions: Threshold(strong: 0.65, weak: 0.45),

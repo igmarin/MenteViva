@@ -4,6 +4,11 @@ import XCTest
 
 /// #220: Tile Pairs logic — every deal solvable, never a loss, fits on screen.
 final class TilePairsDealTests: XCTestCase {
+
+    func testGivenAShownPairWhenTilePairsFinishesThenAttemptsIncludeTheHint() {
+        XCTAssertEqual(TilePairsDeal.recordedAttempts(attempts: 4, hints: 3), 7)
+    }
+
     private struct Seeded: RandomNumberGenerator {
         var state: UInt64
         mutating func next() -> UInt64 {

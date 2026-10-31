@@ -106,6 +106,14 @@ nonisolated struct SlidingBlocksPuzzle: Hashable, Sendable {
     /// Legal slides from the current board.
     func moves() -> [SlidingMove] { Self.legalMoves(width: width, height: height, blocks: blocks) }
 
+    /// The block the first-play guide points at: the big one when it can move now, otherwise the
+    /// first block that can, so the example move always leads to an arrow (nil on a board with no move).
+    func guideBlock() -> Int? {
+        let legal = moves()
+        if legal.contains(where: { $0.block == bigIndex }) { return bigIndex }
+        return legal.first?.block
+    }
+
     /// Board occupancy for move checks: cell -> block index or nil.
     static func occupancy(width: Int, height: Int, blocks: [SlidingBlock]) -> [Int?] {
         var grid = [Int?](repeating: nil, count: width * height)
