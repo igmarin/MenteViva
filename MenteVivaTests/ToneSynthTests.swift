@@ -40,4 +40,27 @@ final class ToneSynthTests: XCTestCase {
         let tail = samples[(samples.count * 3 / 4)...].map { abs($0) }.max() ?? 0
         XCTAssertGreaterThan(tail, 0)
     }
+
+    /// #398: every Repeat the Sequence tile has its own pitch, rising across the board.
+    func testGivenEveryTileIndexWhenToneNoteThenFrequenciesAreDistinctAndAscending() {
+        let frequencies = (0..<9).map { ToneSynth.tileNote($0).frequency }
+        XCTAssertEqual(Set(frequencies).count, 9)
+        XCTAssertEqual(frequencies, frequencies.sorted())
+        XCTAssertEqual(frequencies.first, 262)
+        XCTAssertEqual(frequencies.last, 784)
+    }
+
+    func testGivenTileNotesWhenRenderedThenPeakStaysUnderHeadroom() {
+        for index in 0..<9 {
+            let samples = ToneSynth.render([ToneSynth.tileNote(index)])
+            let peak = samples.map { abs($0) }.max() ?? 0
+            XCTAssertFalse(samples.isEmpty, "tile \(index) rendered nothing")
+            XCTAssertLessThan(peak, ToneSynth.headroom, "tile \(index) peaks at \(peak)")
+        }
+    }
+
+    func testGivenAnIndexOffTheBoardWhenToneNoteThenItClampsToTheNearestTile() {
+        XCTAssertEqual(ToneSynth.tileNote(-3).frequency, ToneSynth.tileNote(0).frequency)
+        XCTAssertEqual(ToneSynth.tileNote(40).frequency, ToneSynth.tileNote(8).frequency)
+    }
 }

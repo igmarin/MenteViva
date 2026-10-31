@@ -5,6 +5,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 ## [Unreleased]
 
 ### Changed
+- **Repeat the Sequence says "That's it!" and gives every tile its own note (#398):** a right round now shows and announces "That's it!" with the warm success tone and a haptic, and a miss announces "Almost — watch again" with the soft miss tone and haptic. Each of the nine tiles sounds its own gentle note when it lights or is tapped (with a light haptic on taps), so the order can be heard as well as seen. The sound switch in Settings silences all of it.
 - **Bigger pictures in Name the Herd and Quick Eyes (#413):** Name the Herd pictures grow from 52 to 72, Quick Eyes choices from 56 to 84, the Quick Eyes picture from 120 to up to 240 (a little over half the screen width on a phone) and the look-again picture from 72 to 96. They grow with the text size too, and the tick in Name the Herd now sits on the tile's corner so it never covers a picture.
 
 ### Fixed

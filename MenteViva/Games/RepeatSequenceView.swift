@@ -69,6 +69,8 @@ struct RepeatSequenceView: View {
     @State private var showCelebration = false
     @State private var finalDetail = ""
     @State private var showMiss = false
+    /// True during the short pause after a right round, so "That's it!" shows.
+    @State private var showRight = false
     @State private var task: Task<Void, Never>?
     @State private var boardWidth: Double = 0
     @State private var isTransitioning = false
@@ -79,6 +81,9 @@ struct RepeatSequenceView: View {
         }
         if showMiss {
             return AppLanguage.localized("game.sequence.almost")
+        }
+        if showRight {
+            return AppLanguage.localized("game.answer.right")
         }
         return AppLanguage.localized("game.sequence.turn")
     }
@@ -156,6 +161,7 @@ struct RepeatSequenceView: View {
         showing = true
         isTransitioning = false
         showMiss = false
+        showRight = false
         startedAt = .now
         var gen = SystemRandomNumberGenerator()
         let width = boardWidth > 0 ? boardWidth + 32 : Double(UIScreen.main.bounds.width)
@@ -172,6 +178,7 @@ struct RepeatSequenceView: View {
             return
         }
         showing = true
+        showRight = false
         isTransitioning = false
         tapped = []
         // VoiceOver: speak the sequence names.
@@ -188,7 +195,7 @@ struct RepeatSequenceView: View {
             for idx in seq {
                 guard !Task.isCancelled else { return }
                 lit = idx
-                SoundPlayer.play(.success)
+                SoundPlayer.playTile(idx)
                 try? await Task.sleep(for: .seconds(rules.light))
                 lit = nil
                 try? await Task.sleep(for: .seconds(0.25))
@@ -200,7 +207,7 @@ struct RepeatSequenceView: View {
     private func tap(_ idx: Int) {
         guard !showing, !isTransitioning, session?.current != nil else { return }
         tapped.append(idx)
-        SoundPlayer.play(.success)
+        Feedback.playTile(idx)
         lit = idx
         Task { @MainActor in
             try? await Task.sleep(for: .seconds(0.15))
@@ -213,6 +220,10 @@ struct RepeatSequenceView: View {
         switch result {
         case .correct:
             showMiss = false
+            showRight = true
+            Feedback.play(.success)
+            // Short on purpose: showNext() announces the next names ~0.6 s later.
+            AccessibilityNotification.Announcement(AppLanguage.localized("game.answer.right")).post()
             _ = progress.completeRound()
             if progress.isFinished {
                 finish()
@@ -229,7 +240,8 @@ struct RepeatSequenceView: View {
         case .almost:
             // First miss: warm cue then replay same sequence once.
             showMiss = true
-            SoundPlayer.play(.miss)
+            Feedback.play(.miss)
+            AccessibilityNotification.Announcement(AppLanguage.localized("game.sequence.almost")).post()
             // If we already consumed replay, session moved on.
             let wasReplay = session?.needsReplay == true
             if wasReplay {
