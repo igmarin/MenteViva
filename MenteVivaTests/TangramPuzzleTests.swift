@@ -356,6 +356,57 @@ final class TangramPuzzleTests: XCTestCase {
         XCTAssertEqual(Set(keys).count, TangramShapes.all.count)
     }
 
+    // MARK: - Seen shapes persist (#416)
+
+    private func freshDefaults(_ name: String = #function) -> UserDefaults {
+        let suite = "TangramSeenTests.\(name)"
+        let defaults = UserDefaults(suiteName: suite)!
+        defaults.removePersistentDomain(forName: suite)
+        addTeardownBlock { defaults.removePersistentDomain(forName: suite) }
+        return defaults
+    }
+
+    func testGivenSeenShapesStoredWhenNextShapeThenAnUnseenOneIsPicked() {
+        let defaults = freshDefaults()
+        let keys = TangramShapes.all.map(\.key)
+        defaults.set(Array(keys.dropLast()), forKey: TangramPuzzle.seenKey)
+        var generator = SeededGenerator(state: 3)
+        XCTAssertEqual(
+            TangramPuzzle.nextShape(defaults: defaults, using: &generator).key, keys.last)
+    }
+
+    func testGivenNextShapeWhenPickedThenItsIdIsStoredForTheNextOpen() {
+        let defaults = freshDefaults()
+        var generator = SeededGenerator(state: 5)
+        let first = TangramPuzzle.nextShape(defaults: defaults, using: &generator)
+        XCTAssertEqual(defaults.stringArray(forKey: TangramPuzzle.seenKey), [first.key])
+        let second = TangramPuzzle.nextShape(defaults: defaults, using: &generator)
+        XCTAssertNotEqual(first.key, second.key)
+    }
+
+    func testGivenEveryShapeSeenWhenTheLastIsPickedThenTheStoreIsCleared() {
+        let defaults = freshDefaults()
+        var generator = SeededGenerator(state: 9)
+        var keys: [String] = []
+        for _ in TangramShapes.all.indices {
+            keys.append(TangramPuzzle.nextShape(defaults: defaults, using: &generator).key)
+        }
+        XCTAssertEqual(Set(keys).count, TangramShapes.all.count)
+        XCTAssertNil(defaults.object(forKey: TangramPuzzle.seenKey))
+    }
+
+    func testGivenStoredIdsThatNoLongerExistWhenNextShapeThenTheyAreIgnoredAndDropped() {
+        let defaults = freshDefaults()
+        let keys = TangramShapes.all.map(\.key)
+        defaults.set(["gone-1", "gone-2"] + keys.dropLast(2), forKey: TangramPuzzle.seenKey)
+        var generator = SeededGenerator(state: 2)
+        let next = TangramPuzzle.nextShape(defaults: defaults, using: &generator)
+        XCTAssertTrue(keys.suffix(2).contains(next.key))
+        XCTAssertEqual(
+            defaults.stringArray(forKey: TangramPuzzle.seenKey),
+            (keys.dropLast(2) + [next.key]).sorted())
+    }
+
     // MARK: - Table helpers (#219)
 
     func testGivenTurnWhenAppliedEightTimesThenBackToStart() {
