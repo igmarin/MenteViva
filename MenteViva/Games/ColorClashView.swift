@@ -51,7 +51,11 @@ struct ColorClashView: View {
             // the shape is also drawn so colour-blind players can match it (#64).
             HStack(spacing: 16) {
                 Text(word.word)
-                    .font(.system(size: wordSize * GameColumn.textScale(isRegularWidth: sizeClass == .regular), weight: .bold))
+                    .font(
+                        .system(
+                            size: wordSize * GameColumn.textScale(isRegularWidth: GameColumn.usesPadLayout(sizeClass)),
+                            weight: .bold)
+                    )
                     .lineLimit(1)
                     .minimumScaleFactor(0.5)
                     .foregroundStyle(ink.color)

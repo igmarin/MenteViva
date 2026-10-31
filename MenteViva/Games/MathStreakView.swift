@@ -43,7 +43,10 @@ struct MathStreakView: View {
                 .multilineTextAlignment(.center)
 
             Text(verbatim: question.text)
-                .font(.system(size: sumSize * GameColumn.textScale(isRegularWidth: sizeClass == .regular), weight: .bold))
+                .font(
+                    .system(
+                        size: sumSize * GameColumn.textScale(isRegularWidth: GameColumn.usesPadLayout(sizeClass)), weight: .bold)
+                )
                 .lineLimit(1)
                 .minimumScaleFactor(0.5)
                 .accessibilityLabel(question.spoken())

@@ -9,8 +9,6 @@ import UIKit
 struct SudokuView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-    @Environment(\.verticalSizeClass) private var verticalSizeClass
 
     @ScaledMetric(relativeTo: .largeTitle) private var digitSize: CGFloat = 36
 
@@ -89,10 +87,10 @@ struct SudokuView: View {
 
     // MARK: - Board
 
-    /// The height to budget a board by: only an iPad (regular in both directions) counts it; a
-    /// phone, or an iPad in Split View, is laid out by width as before (#400).
+    /// The height to budget a board by: every iPad window counts it, Split View included, so a
+    /// narrow window walks down to a board that fits; a phone is laid out by width as before (#400).
     private var budgetHeight: Double? {
-        horizontalSizeClass == .regular && verticalSizeClass == .regular ? playArea.height : nil
+        GameColumn.isPad ? playArea.height : nil
     }
 
     /// Square side and pad placement for the dealt board.
