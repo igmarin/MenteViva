@@ -1,6 +1,6 @@
 import Foundation
 
-/// 18 symbols drawn in code: shapes, numbers 1-9 and nature. No copied art (#220).
+/// 18 symbols for the deal logic. The case names are only ids; what each one looks like is `TilePairsPicture.swift` (#411).
 nonisolated enum TilePairsSymbol: Int, CaseIterable, Hashable {
     case circle, square, triangle, diamond, star, heart,
         number1, number2, number3, number4, number5, number6, number7, number8, number9,
