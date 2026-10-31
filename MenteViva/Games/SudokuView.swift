@@ -51,14 +51,14 @@ struct SudokuView: View {
                         board(puzzle, side: arrangement.side)
                         VStack(spacing: 20) {
                             almostNote
-                            numberPad(puzzle, pad: arrangement.pad)
+                            numberPad(puzzle, arrangement)
                             showMeButton
                         }
                     }
                 } else {
                     almostNote
                     board(puzzle, side: arrangement.side)
-                    numberPad(puzzle, pad: arrangement.pad)
+                    numberPad(puzzle, arrangement)
                     showMeButton
                 }
             } else {
@@ -76,10 +76,10 @@ struct SudokuView: View {
         } action: { area in
             guard area.width > 0, area.height > 0 else { return }
             playArea = area
-            // A board that no longer fits (a 6×6 turned to portrait on a small iPhone, a 9×9
-            // turned to a short landscape on an iPad) is dealt again at a size that does: the
-            // squares never drop under 60pt.
-            if let puzzle, puzzle.fits(width: area.width, height: budgetHeight) { return }
+            // A board that no longer fits by width (a 6×6 turned to portrait on a small iPhone)
+            // is dealt again at a size that does: the squares never drop under 60pt. One that is
+            // only too tall (a 9×9 turned to a short landscape) is kept, with its progress, and scrolls.
+            if let puzzle, puzzle.fits(width: area.width) { return }
             restart()
         }
         .gameHeader(.sudoku, instruction: AppLanguage.localized("game.sudoku.instruction"))
@@ -95,14 +95,9 @@ struct SudokuView: View {
         horizontalSizeClass == .regular && verticalSizeClass == .regular ? playArea.height : nil
     }
 
-    /// Square side and pad placement for the dealt board. A board that is about to be dealt
-    /// again (it no longer fits) is drawn by width alone for that one frame.
+    /// Square side and pad placement for the dealt board.
     private func arrangement(for puzzle: SudokuPuzzle) -> (side: Double, pad: SudokuPuzzle.PadPlacement) {
-        if let fits = SudokuPuzzle.arrangement(size: puzzle.size, width: playArea.width, height: budgetHeight) {
-            return fits
-        }
-        let n = Double(puzzle.size)
-        return (max(0, min(100, (playArea.width - SudokuPuzzle.gap * (n - 1)) / n)), .stacked)
+        SudokuPuzzle.keptArrangement(size: puzzle.size, width: playArea.width, height: budgetHeight)
     }
 
     /// The same soft amber note as Quick Eyes: kind and easy to read.
@@ -186,10 +181,15 @@ struct SudokuView: View {
 
     /// Four columns on a phone (three for 6×6), one row of nine under a portrait iPad's 9×9 board,
     /// three columns beside a landscape iPad's (#400).
-    private func numberPad(_ puzzle: SudokuPuzzle, pad: SudokuPuzzle.PadPlacement) -> some View {
+    /// The row is as wide as the board above it, so the keys line up with the squares.
+    private func numberPad(
+        _ puzzle: SudokuPuzzle, _ arrangement: (side: Double, pad: SudokuPuzzle.PadPlacement)
+    ) -> some View {
+        let pad = arrangement.pad
         let count = pad == .row ? 9 : (pad == .beside || puzzle.size == 6 ? 3 : 4)
         let spacing = pad == .row ? SudokuPuzzle.padSpacing : 12
-        let keyHeight = pad == .row ? SudokuPuzzle.padKeyHeight(width: playArea.width) : 100
+        let rowWidth = SudokuPuzzle.rowPadWidth(side: arrangement.side, width: playArea.width)
+        let keyHeight = pad == .row ? SudokuPuzzle.padKeyHeight(width: rowWidth) : 100
         let columns = Array(repeating: GridItem(.flexible(), spacing: spacing), count: count)
         return LazyVGrid(columns: columns, spacing: spacing) {
             ForEach(1...puzzle.size, id: \.self) { digit in
@@ -205,6 +205,7 @@ struct SudokuView: View {
                 .guideTarget(digit == guideDigit)
             }
         }
+        .frame(maxWidth: pad == .row ? rowWidth : .infinity)
     }
 
     // MARK: - Play

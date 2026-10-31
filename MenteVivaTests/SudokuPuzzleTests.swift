@@ -236,21 +236,49 @@ final class SudokuPuzzleTests: XCTestCase {
     }
 
     func testGivenAWideShortScreenWhenLaidOutThenBoardSideComesFromHeight() {
-        // Landscape: 1,100pt wide would allow 100pt squares; 640pt of height allows (640 - 80 - 16) / 9.
-        let layout = SudokuPuzzle.layout(for: Difficulty(level: 10), width: 1100, height: 640)
+        // Landscape: 1,100pt wide would allow 76pt squares beside the pad; 700pt of height allows
+        // (700 - 128 - 16) / 9, with the level banner's room counted in the 128.
+        let layout = SudokuPuzzle.layout(for: Difficulty(level: 10), width: 1100, height: 700)
         XCTAssertEqual(layout.size, 9)
         XCTAssertEqual(layout.pad, .beside)
-        XCTAssertEqual(layout.side, (640.0 - 80 - 16) / 9, accuracy: 0.001)
+        XCTAssertEqual(layout.side, (700.0 - 128 - 16) / 9, accuracy: 0.001)
     }
 
     func testGivenAShortLandscapeWhenLevelTenIsLaidOutThenSixBySixFitsTheHeightWithItsPadBeside() {
         // iPad mini landscape: about 1,101 × 608pt of play area. Nine squares cannot keep 60pt
-        // there, but six can, and they are sized by the height so they never scroll.
+        // there once the banner has its room, but six can, and they never scroll.
         let layout = SudokuPuzzle.layout(for: Difficulty(level: 10), width: 1101, height: 608)
         XCTAssertEqual(layout.size, 6)
         XCTAssertEqual(layout.pad, .beside)
         XCTAssertGreaterThanOrEqual(layout.side, SudokuPuzzle.minTarget)
-        XCTAssertLessThanOrEqual(layout.side * 6 + SudokuPuzzle.gap * 5 + 80, 608)
+        XCTAssertLessThanOrEqual(layout.side * 6 + SudokuPuzzle.gap * 5 + 128, 608)
+    }
+
+    func testGivenANearlySquareWideWindowWhenLaidOutThenThePadKeepsSixtyPointKeys() {
+        // Stage Manager window, play area 968 × 868: the height alone would allow 80pt squares,
+        // a 720pt board, which leaves the three key columns only 228pt.
+        let layout = SudokuPuzzle.layout(for: Difficulty(level: 9), width: 968, height: 868)
+        XCTAssertEqual(layout.size, 9)
+        XCTAssertEqual(layout.pad, .beside)
+        let board = layout.side * 9 + SudokuPuzzle.gap * 8
+        let key = (968 - 20 - board - 12 * 2) / 3
+        XCTAssertGreaterThanOrEqual(key, SudokuPuzzle.minTarget)
+        XCTAssertGreaterThanOrEqual(layout.side, SudokuPuzzle.minTarget)
+    }
+
+    func testGivenAWindowTooNarrowForNineSquaresAndThreeKeyColumnsWhenLaidOutThenSixBySix() {
+        // 800 × 700: nine 60pt squares (556pt) plus the 324pt pad would need 900pt.
+        let layout = SudokuPuzzle.layout(for: Difficulty(level: 9), width: 800, height: 700)
+        XCTAssertEqual(layout.size, 6)
+    }
+
+    func testGivenAPortraitPadRowWhenTheBoardIsNarrowerThanTheWidthThenKeysStillKeepSixtyPoints() {
+        // The row of keys follows the board's width, but never narrows below nine 60pt keys.
+        let wide = SudokuPuzzle.rowPadWidth(side: 75, width: 788)
+        XCTAssertEqual(wide, 75 * 9 + SudokuPuzzle.gap * 8, accuracy: 0.001)
+        let narrow = SudokuPuzzle.rowPadWidth(side: 60, width: 788)
+        XCTAssertGreaterThanOrEqual(SudokuPuzzle.padKeyHeight(width: narrow), SudokuPuzzle.minTarget)
+        XCTAssertLessThanOrEqual(SudokuPuzzle.rowPadWidth(side: 100, width: 788), 788)
     }
 
     func testGivenNoKnownHeightWhenLaidOutThenItIsTheWidthOnlyLayoutWithAStackedPad() {
@@ -263,11 +291,16 @@ final class SudokuPuzzleTests: XCTestCase {
         }
     }
 
-    func testGivenANineByNineBoardDealtInPortraitWhenTheScreenTurnsToAShortLandscapeThenItNoLongerFits() {
+    func testGivenANineByNineBoardDealtInPortraitWhenTheScreenTurnsToAShortLandscapeThenItIsKeptAndScrolls() {
         var generator = SeededGenerator(state: 7)
         let layout = SudokuPuzzle.layout(for: Difficulty(level: 9), width: 788, height: 1018)
         let board = SudokuPuzzle.make(layout: layout, using: &generator)
-        XCTAssertTrue(board.fits(width: 788, height: 1018))
-        XCTAssertFalse(board.fits(width: 1100, height: 560))
+        // Only the width decides a dealt board's fate, so half-filled progress is never thrown away.
+        XCTAssertTrue(board.fits(width: 1100))
+        // Too short for the height budget, so it keeps its squares at the 60pt floor, the pad beside it.
+        XCTAssertNil(SudokuPuzzle.arrangement(size: 9, width: 1100, height: 560))
+        let kept = SudokuPuzzle.keptArrangement(size: 9, width: 1100, height: 560)
+        XCTAssertEqual(kept.side, SudokuPuzzle.minTarget)
+        XCTAssertEqual(kept.pad, .beside)
     }
 }

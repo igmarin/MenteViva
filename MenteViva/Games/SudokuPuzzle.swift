@@ -77,6 +77,12 @@ nonisolated struct SudokuPuzzle: Equatable {
     /// text size) and its spacing. The "try another" note is not counted in portrait; see
     /// `layout(for:width:height:)`.
     private static let headerHeight = 80.0
+    /// The level banner (one title line and its spacing) shown on the first open after a level
+    /// change, which is the day 9×9 first appears. Kept free in landscape, where the board has no
+    /// spare height; portrait's note reserve covers it.
+    private static let bannerHeight = 48.0
+    /// Width the pad needs beside the board: three keys of up to 100pt and the gaps between them.
+    private static let padColumnsWidth = 3 * 100.0 + 2 * 12.0
     /// The note shown after a miss, with its spacing, kept free in portrait so a wrong number
     /// never tips the screen into scrolling.
     private static let noteHeight = 72.0
@@ -104,14 +110,16 @@ nonisolated struct SudokuPuzzle: Equatable {
     /// is the smaller of what the width and the height allow; without it, the width alone.
     static func arrangement(size: Int, width: Double, height: Double?) -> (side: Double, pad: PadPlacement)? {
         let count = Double(size)
-        let widthSide = min(100, (width - gap * (count - 1)) / count)
+        let gaps = gap * (count - 1)
+        let widthSide = min(100, (width - gaps) / count)
         guard let height else {
             return widthSide >= minTarget ? (widthSide, .stacked) : nil
         }
-        let gaps = gap * (count - 1)
         if width > height {
-            // Landscape: board left, pad right, so only the instruction sits above the board.
-            let side = min(widthSide, (height - headerHeight - gaps) / count)
+            // Landscape: board left, pad right. The pad keeps its three columns of keys, so the
+            // board takes the width that is left; the instruction and the banner sit above it.
+            let beside = min(100, (width - stackSpacing - padColumnsWidth - gaps) / count)
+            let side = min(beside, (height - headerHeight - bannerHeight - gaps) / count)
             return side >= minTarget ? (side, .beside) : nil
         }
         // Portrait: a 9×9 board's pad is one row of nine keys, as square as the width allows;
@@ -124,9 +132,34 @@ nonisolated struct SudokuPuzzle: Equatable {
         return side >= minTarget && keysFit ? (side, size == 9 ? .row : .stacked) : nil
     }
 
+    /// The arrangement for a board already dealt (#400). When it still fits, as `arrangement`; when
+    /// the screen has turned or a window shrunk so it no longer fits the height, the board is kept
+    /// (a half-filled board is never thrown away) with its squares at the 60pt floor, and the
+    /// screen scrolls. Without a height, or in the frame before a board that fails by width is
+    /// dealt again, it is drawn by width alone.
+    static func keptArrangement(size: Int, width: Double, height: Double?) -> (side: Double, pad: PadPlacement) {
+        if let fits = arrangement(size: size, width: width, height: height) { return fits }
+        let count = Double(size)
+        let widthSide = max(0, min(100, (width - gap * (count - 1)) / count))
+        guard let height else { return (widthSide, .stacked) }
+        let side = min(widthSide, minTarget)
+        if width > height {
+            let room = width - stackSpacing - padColumnsWidth
+            return (side, room >= side * count + gap * (count - 1) ? .beside : .stacked)
+        }
+        return (side, size == 9 && padKeyHeight(width: width) >= minTarget ? .row : .stacked)
+    }
+
     /// Height (and width) of one key when the pad is a single row of nine, at most 100pt.
     static func padKeyHeight(width: Double) -> Double {
         min(padKeyMax, (width - padSpacing * 8) / 9)
+    }
+
+    /// Width of a pad row of nine under a board of `side`-point squares: the board's own width, but
+    /// never so narrow that its keys drop under 60pt, and never wider than the screen.
+    static func rowPadWidth(side: Double, width: Double) -> Double {
+        let board = side * 9 + gap * 8
+        return min(width, max(board, minTarget * 9 + padSpacing * 8))
     }
 
     /// Box shape per board size: 4×4 and 6×6 as before, 9×9 in 3×3 boxes.
@@ -178,12 +211,10 @@ nonisolated struct SudokuPuzzle: Equatable {
         return best!.puzzle
     }
 
-    /// Whether this board's squares keep 60pt at `width`, and at `height` when the screen's is
-    /// known (#400). A 6×6 board dealt in landscape on a small iPhone stops fitting when the phone
-    /// turns to portrait; a 9×9 board dealt in portrait on an iPad can stop fitting in landscape.
-    func fits(width: Double, height: Double? = nil) -> Bool {
-        Self.arrangement(size: size, width: width, height: height) != nil
-    }
+    /// Whether this board's squares keep 60pt at `width`. A 6×6 board dealt in landscape
+    /// on a small iPhone stops fitting when the phone turns to portrait. Height is not asked
+    /// (#400): a board that turns too short for its pad is kept and scrolls, never dealt again.
+    func fits(width: Double) -> Bool { Self.squaresFit(size, in: width) }
 
     /// A finished row, column or box (#239). Indices are 0-based.
     enum Unit: Equatable {
