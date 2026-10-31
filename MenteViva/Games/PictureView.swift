@@ -28,9 +28,11 @@ struct PictureView: View {
     }
 
     /// The flash target's size (#413): up to `ceiling` (240pt, scaled with Dynamic Type), but never
-    /// more than 60% of the screen width, so a narrow phone keeps room around it.
-    static func flashTarget(ceiling: CGFloat, width: CGFloat) -> CGFloat {
-        min(ceiling, width * 0.6)
+    /// more than 60% of the screen width, so a narrow phone keeps room around it. At accessibility
+    /// text sizes it also stops at 120pt, its old size: the instruction takes many lines there, and a
+    /// bigger picture pushes the "Got it" tile below the fold.
+    static func flashTarget(ceiling: CGFloat, width: CGFloat, isAccessibilitySize: Bool) -> CGFloat {
+        min(ceiling, width * 0.6, isAccessibilitySize ? 120 : .infinity)
     }
 
     /// The narrowest grid column that gives a picture its margin (#413). It never drops under the

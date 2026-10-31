@@ -29,7 +29,13 @@ struct QuickEyesView: View {
     private var minDisplayTime: Double { Self.displayTimes(for: difficulty).floor }
     private static let voiceOverHold = 2.5
     private let shrinkFactor = 0.92
-    private let columns = [GridItem(.flexible()), GridItem(.flexible())]
+    /// The choice grid's gap and the screen's edge padding, named so the tile-width fit below
+    /// does not lean on SwiftUI defaults (#413).
+    private let gridGap: CGFloat = 8
+    private let edgePadding: CGFloat = 16
+    private var columns: [GridItem] {
+        [GridItem(.flexible(), spacing: gridGap), GridItem(.flexible(), spacing: gridGap)]
+    }
     /// Picture sizes and the choice tile's margin (#413), scaled with Dynamic Type
     /// (title2, like the tick). Choices are 84 in a 110pt tile, the flash target up to 240, the look-again
     /// thumbnail 96.
@@ -91,7 +97,9 @@ struct QuickEyesView: View {
             case .showing:
                 VStack(spacing: 24) {
                     PictureView(
-                        picture: target, size: PictureView.flashTarget(ceiling: flashCeiling, width: viewWidth)
+                        picture: target,
+                        size: PictureView.flashTarget(
+                            ceiling: flashCeiling, width: viewWidth, isAccessibilitySize: typeSize.isAccessibilitySize)
                     )
                     .accessibilityLabel(
                         String(format: AppLanguage.localized("game.quickeyes.a11y.flash %@"), name(of: target)))
@@ -169,7 +177,7 @@ struct QuickEyesView: View {
 
             RoundCounter(progress: progress)
         }
-        .padding()
+        .padding(edgePadding)
         .frame(maxWidth: .infinity)
         .onGeometryChange(for: CGFloat.self) {
             $0.size.width
@@ -195,9 +203,10 @@ struct QuickEyesView: View {
     }
 
     /// The choice picture at its scaled size, held to what a two-column tile can carry (#413):
-    /// the screen less its 16pt padding and the 8pt gap, halved.
+    /// the screen less its edge padding and the gap, halved.
     private var fittedChoiceSize: CGFloat {
-        PictureView.fitted(choiceSize, columnWidth: (viewWidth - 40) / 2, margin: choiceMargin)
+        PictureView.fitted(
+            choiceSize, columnWidth: (viewWidth - 2 * edgePadding - gridGap) / 2, margin: choiceMargin)
     }
 
     private func restart() {

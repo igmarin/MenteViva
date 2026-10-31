@@ -68,11 +68,20 @@ final class GamePicturesTests: XCTestCase {
     // MARK: - Sizes (#413)
 
     func testGivenAnIPad_WhenTheFlashTargetIsSized_ThenItReachesItsCeiling() {
-        XCTAssertEqual(PictureView.flashTarget(ceiling: 240, width: 744), 240)
+        XCTAssertEqual(PictureView.flashTarget(ceiling: 240, width: 744, isAccessibilitySize: false), 240)
     }
 
     func testGivenAnIPhoneSE_WhenTheFlashTargetIsSized_ThenItIsSixtyPercentOfTheWidth() {
-        XCTAssertEqual(PictureView.flashTarget(ceiling: 240, width: 375), 225, accuracy: 0.001)
+        XCTAssertEqual(PictureView.flashTarget(ceiling: 240, width: 375, isAccessibilitySize: false), 225, accuracy: 0.001)
+    }
+
+    func testGivenAccessibilityText_WhenTheFlashTargetIsSized_ThenItStopsAt120SoTheButtonStaysOnScreen() {
+        XCTAssertEqual(PictureView.flashTarget(ceiling: 600, width: 744, isAccessibilitySize: true), 120)
+        XCTAssertEqual(PictureView.flashTarget(ceiling: 600, width: 375, isAccessibilitySize: true), 120)
+    }
+
+    func testGivenAccessibilityText_WhenTheScreenIsNarrowerThanTheCap_ThenTheWidthRuleStillWins() {
+        XCTAssertEqual(PictureView.flashTarget(ceiling: 600, width: 150, isAccessibilitySize: true), 90, accuracy: 0.001)
     }
 
     func testGivenTheDefaultSizes_WhenTheHerdColumnIsSized_ThenTheTileStaysAt100() {
@@ -89,7 +98,7 @@ final class GamePicturesTests: XCTestCase {
     }
 
     func testGivenTheLargestText_WhenAChoiceIsSizedForAnSE_ThenItStopsAtWhatTheTileCarries() {
-        // 84 scaled by about 2.5 would be 210pt in a 167pt tile.
-        XCTAssertEqual(PictureView.fitted(210, columnWidth: 167.5, margin: 13), 135.5, accuracy: 0.001)
+        // At the largest text the picture scales to about 222pt and its margin to about 34pt, in a 167pt tile.
+        XCTAssertEqual(PictureView.fitted(222, columnWidth: 167.5, margin: 34.3), 92.9, accuracy: 0.001)
     }
 }
