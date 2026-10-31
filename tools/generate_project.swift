@@ -304,7 +304,7 @@ let appSettings =
         // vanished and the app enabled CloudKit against its own entitlements —
         // trapping inside CloudKit's mirroring setup on device (uncaught, EXC_BREAKPOINT).
         ("SWIFT_ACTIVE_COMPILATION_CONDITIONS", localOnly ? "\"$(inherited) LOCAL_ONLY\"" : "\"$(inherited)\""),
-        ("CURRENT_PROJECT_VERSION", "2"),
+        ("CURRENT_PROJECT_VERSION", "3"),
         ("GENERATE_INFOPLIST_FILE", "YES"),
         ("INFOPLIST_KEY_CFBundleDisplayName", "\"MenteViva\""),
         // No network and no custom crypto (AGENTS.md), so App Store Connect never asks the
