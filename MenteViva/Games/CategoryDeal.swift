@@ -60,6 +60,16 @@ nonisolated enum CategoryDeal {
         }
     }
 
+    /// What one tap on a tile does (#415). Pure, so "a tried decoy counts once" is tested, not trusted.
+    nonisolated enum TapOutcome: Equatable {
+        /// A fresh item of the category: it is picked.
+        case found
+        /// A fresh decoy: one attempt, a soft cue, and the tile is marked tried.
+        case miss
+        /// A tile already picked or already tried: nothing happens, no attempt, no sound.
+        case ignored
+    }
+
     /// One tile on the board: a picture and whether it belongs to the category.
     nonisolated struct Tile: Equatable {
         let picture: GamePicture
@@ -77,7 +87,7 @@ nonisolated enum CategoryDeal {
 
     /// Decoys per level: one more each step so progress is felt, but never
     /// mid-game. Levels 2/4/6 are 3/5/7 to match the old easy/medium/hard so
-    /// migrated players see no change; the fit cap keeps 100pt targets on SE.
+    /// migrated players see no change; the board-fit cap keeps every row above the fold.
     static let decoysByLevel: [Int] = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
     /// Pictures that share a name with an item of another category; never dealt as that category's decoy.
     /// Keyed by `GamePicture.slug`. Without it a fair tap on "Orange" would count as a miss (#371).
@@ -85,7 +95,8 @@ nonisolated enum CategoryDeal {
     /// Smallest tile that stays tappable (conventions §4).
     static let tileMin: Double = 100
     static let tileGap: Double = 16
-    static let horizontalPadding: Double = 32
+    /// Items a player has to find in every category; the rest of the board is decoys.
+    static let itemsPerCategory = 7
 
     /// The pictures that may be a decoy when `category` is asked: every other
     /// category except the ones it overlaps with, minus same-name pictures.
@@ -112,38 +123,54 @@ nonisolated enum CategoryDeal {
         min(difficulty.values(decoysByLevel), poolSize)
     }
 
-    /// Decoys capped to both the pool and the width so every tile keeps
-    /// 100pt. Width is the full screen width; padding and gaps are removed
-    /// before measuring.
-    static func fittedDecoyCount(for difficulty: Difficulty, width: Double) -> Int {
-        fittedDecoyCount(for: difficulty, width: width, poolSize: smallestPoolSize)
+    /// What a tap does: a picked item or a tried decoy is never counted again.
+    static func tapOutcome(belongs: Bool, isPicked: Bool, isTried: Bool) -> TapOutcome {
+        guard !isPicked, !isTried else { return .ignored }
+        return belongs ? .found : .miss
+    }
+
+    /// Decoys capped to both the pool and the measured board (#415), so every row stays above the
+    /// fold. `size` is the space under the header, not the screen: a tall phone and an SE differ by
+    /// rows as much as by columns. `tile` is the column minimum (it grows with the text size) and
+    /// never drops under 100pt. A board that holds fewer tiles than the seven items gets no decoys:
+    /// the screen scrolls then, which beats hiding an item.
+    static func fittedDecoyCount(for difficulty: Difficulty, size: CGSize, tile: Double = tileMin) -> Int {
+        fittedDecoyCount(for: difficulty, size: size, poolSize: smallestPoolSize, tile: tile)
     }
 
     /// As above, for a pool of the given size (a round's real decoy pool).
-    static func fittedDecoyCount(for difficulty: Difficulty, width: Double, poolSize: Int) -> Int {
-        let poolCapped = decoyCount(for: difficulty, poolSize: poolSize)
-        let gridWidth = max(0, width - horizontalPadding)
-        // Columns that keep a tile >= 100pt.
-        let maxColumns = max(1, Int((gridWidth + tileGap) / (tileMin + tileGap)))
-        // If even a single column doesn't fit, no decoy can rescue it.
-        guard gridWidth >= tileMin else { return 0 }
-        // When the board needs more columns than fit, the tile would shrink
-        // below 100pt. Cap decoys so total tiles don't force that.
-        // Approximation: total tiles displayed in maxColumns columns.
-        let maxTotalTiles = maxColumns * 6  // enough rows before scrolling, keeps 100pt
-        let maxDecoysForWidth = max(0, maxTotalTiles - 7)
-        return min(poolCapped, maxDecoysForWidth)
+    static func fittedDecoyCount(
+        for difficulty: Difficulty, size: CGSize, poolSize: Int, tile: Double = tileMin
+    ) -> Int {
+        let side = max(tile, tileMin)
+        guard size.width >= side, size.height >= side else { return 0 }
+        let columns = Int((Double(size.width) + tileGap) / (side + tileGap))
+        let rows = Int((Double(size.height) + tileGap) / (side + tileGap))
+        let room = max(0, columns * rows - itemsPerCategory)
+        return min(decoyCount(for: difficulty, poolSize: poolSize), room)
+    }
+
+    /// Whether the screen should deal now (#415): at once if nothing is dealt, never once a tile has
+    /// been tapped (a game in play stays), and otherwise only when the board changes how many decoys fit.
+    static func shouldDeal(hasSession: Bool, picks: Int, dealt: Int?, fitted: Int) -> Bool {
+        guard hasSession else { return true }
+        return picks == 0 && dealt != fitted
     }
 
     /// Deals a whole session: `roundsPerSession` different categories, each
-    /// with its items and its decoys shuffled onto one board.
-    static func deal(difficulty: Difficulty, width: Double, using generator: inout some RandomNumberGenerator) -> [Round] {
-        return Category.allCases.shuffled(using: &generator).prefix(roundsPerSession).map { category in
+    /// with its items and its decoys shuffled onto one board. `categories` keeps a session's
+    /// categories when it is dealt again for a new fit, so only the boards change (#415).
+    static func deal(
+        difficulty: Difficulty, size: CGSize, tile: Double = tileMin, categories: [Category]? = nil,
+        using generator: inout some RandomNumberGenerator
+    ) -> [Round] {
+        let chosen = categories ?? Array(Category.allCases.shuffled(using: &generator).prefix(roundsPerSession))
+        return chosen.map { category in
             // Decoys come from the other categories only, minus the ones this
             // category overlaps with, so the board never asks for something
             // that does not belong, nor shows two tiles with the same name.
             let pool = decoyPool(for: category)
-            let decoys = fittedDecoyCount(for: difficulty, width: width, poolSize: pool.count)
+            let decoys = fittedDecoyCount(for: difficulty, size: size, poolSize: pool.count, tile: tile)
             let from = pool.shuffled(using: &generator).prefix(decoys)
             let tiles =
                 category.items.map { Tile(picture: $0, belongs: true) }
