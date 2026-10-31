@@ -51,24 +51,29 @@ enum SayingsDeck {
         difficulty.values(choicesByLevel)
     }
 
-    /// Height of one ending button (100pt) and the gap under it, in points: what each ending costs on screen.
-    private static let choiceHeight = 100.0
-    private static let choiceGap = 12.0
-
-    /// Endings for a level on a screen with `height` points for them (#415): the table's count, or
-    /// fewer where the last button would sit below the fold, but never under 2 (one is no choice).
-    /// Room never adds endings, so a tall screen or an iPad keeps the table.
-    static func choiceCount(for difficulty: Difficulty, fittingHeight height: Double) -> Int {
-        // Clamped first: `Int(.infinity)` would trap, and no table asks for more than ten.
-        let room = Int((min(max(height, 0), 1_000) + choiceGap) / (choiceHeight + choiceGap))
-        return min(choiceCount(for: difficulty), max(2, room))
+    /// The endings a round shows on a phone with room for only `count` (#415): his own ending and the
+    /// first `count - 1` others, in the order dealt, so trimming never moves a button. Never fewer than
+    /// two (one is no choice), never more than were dealt.
+    static func shown(_ round: SayingRound, count: Int) -> [Saying] {
+        var others = max(count, 2) - 1
+        return round.choices.filter { choice in
+            if choice == round.saying { return true }
+            others -= 1
+            return others >= 0
+        }
     }
 
-    /// Whether the screen should deal now (#415): at once if nothing is dealt, never once the player has
-    /// started (a saying in play stays), and otherwise only when the screen changes how many endings fit.
-    static func shouldDeal(hasRounds: Bool, started: Bool, dealt: Int?, fitted: Int) -> Bool {
-        guard hasRounds else { return true }
-        return !started && dealt != fitted
+    /// How many of a round's endings fit in `room` points (#415), from each ending button's measured
+    /// height (a long or localized ending, or big text, wraps to more than 100pt) and the `gap` between
+    /// buttons: the most whose buttons, as `shown` picks them, stack within the room, never under 2. An
+    /// ending not measured yet counts as 0, so the first layout shows them all until it is.
+    static func fittingCount(_ round: SayingRound, heights: [Saying: Double], gap: Double, room: Double) -> Int {
+        for count in stride(from: round.choices.count, to: 2, by: -1) {
+            let endings = shown(round, count: count)
+            let needed = endings.reduce(0) { $0 + (heights[$1] ?? 0) } + gap * Double(endings.count - 1)
+            if needed <= room { return count }
+        }
+        return 2
     }
 
     /// Whether this level prefers same-theme distractors first.
@@ -77,7 +82,7 @@ enum SayingsDeck {
     }
 
     static func deal<G: RandomNumberGenerator>(
-        difficulty: Difficulty, from pool: [Saying] = Sayings.all, choices: Int? = nil, defaults: UserDefaults,
+        difficulty: Difficulty, from pool: [Saying] = Sayings.all, defaults: UserDefaults,
         using generator: inout G
     ) -> [SayingRound] {
         var seen = Set(defaults.array(forKey: seenKey) as? [Int] ?? [])
@@ -87,7 +92,7 @@ enum SayingsDeck {
         }
         let picked = pool.filter { !seen.contains($0.id) }.shuffled(using: &generator).prefix(roundsPerGame)
 
-        let others = (choices ?? choiceCount(for: difficulty)) - 1
+        let others = choiceCount(for: difficulty) - 1
         return picked.map { saying in
             let rest = pool.filter { $0 != saying }.shuffled(using: &generator)
             let distractors =
