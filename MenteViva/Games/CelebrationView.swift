@@ -337,12 +337,7 @@ private struct CelebrationCover: ViewModifier {
     let game: GameID
     let detail: String
     let onPlayAgain: () -> Void
-    /// The game chosen with "Next", opened only once the cover is gone: changing
-    /// the path mid-dismissal would remove this view while it still presents.
-    @State private var pendingNext: GameID?
-    /// "Play again" deals the next round only once the cover is gone, so a timed or announced
-    /// round never starts under the closing cover (#415).
-    @State private var pendingPlayAgain = false
+    @State private var exit = CelebrationExit()
 
     func body(content: Content) -> some View {
         content.fullScreenCover(isPresented: $isPresented, onDismiss: runPending) {
@@ -350,11 +345,11 @@ private struct CelebrationCover: ViewModifier {
                 game: game,
                 detail: detail,
                 onPlayAgain: {
-                    pendingPlayAgain = true
+                    exit.choose(.playAgain)
                     isPresented = false
                 },
                 onNext: { next in
-                    pendingNext = next
+                    exit.choose(.next(next))
                     isPresented = false
                 },
                 onHome: {
@@ -365,13 +360,34 @@ private struct CelebrationCover: ViewModifier {
     }
 
     private func runPending() {
-        if pendingPlayAgain {
-            pendingPlayAgain = false
-            onPlayAgain()
+        switch exit.coverClosed() {
+        case .playAgain: onPlayAgain()
+        case .next(let next): path?.games = [next]
+        case nil: break
         }
-        guard let next = pendingNext else { return }
-        pendingNext = nil
-        path?.games = [next]
+    }
+}
+
+/// What the celebration's buttons asked for, carried out only once the cover is gone (#415).
+/// "Play again" dealing under the closing cover started a timed or announced round there, and
+/// the game's `.onAppear`, which fires again as the cover leaves, then dealt a second one.
+/// "Next" changing the path mid-dismissal would remove the game while it still presents.
+nonisolated struct CelebrationExit: Equatable {
+    enum Action: Equatable {
+        case playAgain
+        case next(GameID)
+    }
+
+    private(set) var pending: Action?
+
+    mutating func choose(_ action: Action) {
+        pending = action
+    }
+
+    /// The chosen action, once: a later dismissal (Home, a swipe) finds nothing to run.
+    mutating func coverClosed() -> Action? {
+        defer { pending = nil }
+        return pending
     }
 }
 
