@@ -101,6 +101,27 @@ nonisolated struct SlidingBlocksPuzzle: Hashable, Sendable {
         self.init(width: width, height: height, blocks: [big] + others, bigIndex: 0)
     }
 
+    /// A board from its `layoutKey`, laid out as `init(width:height:layout:)` would: the big block
+    /// first, the rest in reading order. The hint search keeps only keys, not boards (#417).
+    init(width: Int, height: Int, layoutKey: UInt64) {
+        var big: SlidingBlock?
+        var others: [SlidingBlock] = []
+        for index in 0..<width * height {
+            let x = index % width
+            let y = index / width
+            // The codes `layoutKey` writes; 4 and 6 are the second cell of a block already added.
+            switch (layoutKey >> UInt64(3 * index)) & 7 {
+            case 1 where big == nil: big = SlidingBlock(x: x, y: y, w: 2, h: 2)
+            case 2: others.append(SlidingBlock(x: x, y: y, w: 1, h: 1))
+            case 3: others.append(SlidingBlock(x: x, y: y, w: 2, h: 1))
+            case 5: others.append(SlidingBlock(x: x, y: y, w: 1, h: 2))
+            default: break
+            }
+        }
+        guard let big else { preconditionFailure("layout key \(layoutKey) has no big block") }
+        self.init(width: width, height: height, blocks: [big] + others, bigIndex: 0)
+    }
+
     // MARK: - Moves
 
     /// Legal slides from the current board.
@@ -311,63 +332,71 @@ nonisolated struct SlidingBlocksPuzzle: Hashable, Sendable {
 // MARK: - Hints
 
 /// Fewest moves to solve from every position a puzzle can reach. Built once
-/// when the puzzle starts (about 0.3 s on a Mac for a 4×5 board, so build it off
-/// the main thread) so each "Show me a move" is a lookup, not a search.
+/// when the puzzle starts, off the main thread, so each "Show me a move" is a
+/// lookup, not a search. The search keeps each position as its 8-byte layout key
+/// and the links between them in one flat `Int32` list: holding every board
+/// instead peaked near 100 MB on the largest level (#417, docs/profiling.md).
 nonisolated struct SlidingBlocksMap: Sendable {
-    private let movesToSolve: [UInt64: Int]
+    /// Moves left per layout key; -1 for a position that can't reach solved.
+    private let movesToSolve: [UInt64: Int32]
 
     /// `isCancelled` lets a background build stop early: the table is then
     /// partial and must be discarded. The default never stops (tests, tools).
     init(from puzzle: SlidingBlocksPuzzle, isCancelled: () -> Bool = { false }) {
         // Every reachable position, then breadth-first back from all solved ones.
         // Signposted: up to ~175k positions, so a trace shows the real cost (#417).
-        let table: [UInt64: Int] = HotPath.measure("sliding.hints") {
-            var index: [UInt64: Int] = [puzzle.layoutKey: 0]
+        movesToSolve = HotPath.measure("sliding.hints") {
+            let (width, height) = (puzzle.width, puzzle.height)
+            var index: [UInt64: Int32] = [puzzle.layoutKey: 0]
             var keys = [puzzle.layoutKey]
-            var neighbours: [[Int]] = []
-            var solved: [Int] = []
-            var queue = [puzzle]
+            // Position i links to neighbours[firstNeighbour[i]..<firstNeighbour[i + 1]].
+            var neighbours: [Int32] = []
+            var firstNeighbour: [Int32] = [0]
+            var solved: [Int32] = []
             var head = 0
-            while head < queue.count, !isCancelled() {
-                let current = queue[head]
-                if current.isSolved { solved.append(head) }
-                var next: [Int] = []
+            while head < keys.count, !isCancelled() {
+                let current = SlidingBlocksPuzzle(width: width, height: height, layoutKey: keys[head])
+                if current.isSolved { solved.append(Int32(head)) }
                 for move in current.moves() {
-                    let board = current.moved(move)
-                    let key = board.layoutKey
+                    let key = current.moved(move).layoutKey
                     if let known = index[key] {
-                        next.append(known)
+                        neighbours.append(known)
                     } else {
-                        index[key] = keys.count
-                        next.append(keys.count)
+                        let added = Int32(keys.count)
+                        index[key] = added
+                        neighbours.append(added)
                         keys.append(key)
-                        queue.append(board)
                     }
                 }
-                neighbours.append(next)
+                firstNeighbour.append(Int32(neighbours.count))
                 head += 1
             }
-            var moves = [Int](repeating: -1, count: keys.count)
-            for i in solved { moves[i] = 0 }
+            // Stopped early: positions past `head` have no links yet, so the walk back would index past them.
+            guard head == keys.count else { return [:] }
+            var moves = [Int32](repeating: -1, count: keys.count)
+            for i in solved { moves[Int(i)] = 0 }
             var frontier = solved
             head = 0
             while head < frontier.count, !isCancelled() {
-                let current = frontier[head]
+                let current = Int(frontier[head])
                 head += 1
-                for n in neighbours[current] where moves[n] == -1 {
-                    moves[n] = moves[current] + 1
+                for n in neighbours[Int(firstNeighbour[current])..<Int(firstNeighbour[current + 1])]
+                where moves[Int(n)] == -1 {
+                    moves[Int(n)] = moves[current] + 1
                     frontier.append(n)
                 }
             }
-            var table: [UInt64: Int] = [:]
-            for (i, key) in keys.enumerated() where moves[i] >= 0 { table[key] = moves[i] }
-            return table
+            // Reuse the index's storage for the answer instead of building a second table.
+            for (i, key) in keys.enumerated() { index[key] = moves[i] }
+            return index
         }
-        movesToSolve = table
     }
 
     /// Fewest moves to solve `puzzle`, or nil if it can't be solved from there.
-    func minMoves(from puzzle: SlidingBlocksPuzzle) -> Int? { movesToSolve[puzzle.layoutKey] }
+    func minMoves(from puzzle: SlidingBlocksPuzzle) -> Int? {
+        guard let left = movesToSolve[puzzle.layoutKey], left >= 0 else { return nil }
+        return Int(left)
+    }
 
     /// A legal move one step closer to solved, or nil when solved or unsolvable.
     func hint(from puzzle: SlidingBlocksPuzzle) -> SlidingMove? {
