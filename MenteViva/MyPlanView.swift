@@ -9,7 +9,10 @@ struct MyPlanView: View {
     /// The saved answers. Loaded once when the screen is made; this screen is the only writer
     /// while it is open.
     @State private var profile = ProfileStore.load()
-    @Environment(\.dismiss) private var dismiss
+    /// Called once the warm-up has replaced today's plan. This screen is pushed inside Settings'
+    /// own navigation stack, so its `dismiss` would only go back to Settings; the caller closes
+    /// the whole Settings sheet instead, and Home re-reads the plan when it closes (#402).
+    let onWarmUpStarted: () -> Void
 
     var body: some View {
         ScrollView {
@@ -62,7 +65,7 @@ struct MyPlanView: View {
                 .accessibilityAddTraits(.isHeader)
             Button {
                 WarmUpStore.start(profile: profile, today: PlanStore.dayStamp())
-                dismiss()
+                onWarmUpStarted()
             } label: {
                 ProfileAnswerTile(text: AppLanguage.localized("warmup.accept"), chosen: false)
             }
@@ -82,6 +85,6 @@ struct MyPlanView: View {
 
 #Preview {
     NavigationStack {
-        MyPlanView()
+        MyPlanView(onWarmUpStarted: {})
     }
 }

@@ -92,4 +92,26 @@ enum DayGrouping {
         let grouped = Dictionary(grouping: items) { calendar.startOfDay(for: date($0)) }
         return grouped.keys.sorted(by: >).map { (day: $0, items: grouped[$0] ?? []) }
     }
+
+    /// What My Week calls a day (#407): "Today", "Yesterday", else the weekday, day and month in
+    /// the app's own language. `Date.formatted` alone follows the device's language, so a player
+    /// who picked Spanish on an English phone read "Wednesday, October 28" under a Spanish "Hoy".
+    /// `defaults` is where the app's language is read, so tests control it.
+    static func dayTitle(
+        _ day: Date, now: Date = .now, calendar: Calendar = .current,
+        locale: Locale, defaults: UserDefaults = .standard
+    ) -> String {
+        if calendar.isDate(day, inSameDayAs: now) {
+            return AppLanguage.localized("history.today", defaults: defaults)
+        }
+        if let yesterday = calendar.date(byAdding: .day, value: -1, to: now),
+            calendar.isDate(day, inSameDayAs: yesterday)
+        {
+            return AppLanguage.localized("history.yesterday", defaults: defaults)
+        }
+        // The style carries the locale (the wording), and the calendar and its time zone, so the day
+        // named is the day the calendar grouped, whatever zone the device is in.
+        return Date.FormatStyle(locale: locale, calendar: calendar, timeZone: calendar.timeZone)
+            .weekday(.wide).day().month(.wide).format(day)
+    }
 }

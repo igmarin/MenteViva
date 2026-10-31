@@ -25,7 +25,7 @@ launch
 | Home | `HomeView.swift`, `GameCard.swift`, `Theme.swift` | Deals today's three as framed cards; each game has its own colour and an emblem drawn in SwiftUI shapes. |
 | Games | `Games/` | One file per game, plus the shared celebration, miss cue and `fitOrScroll`. |
 | Game list | `Models/GameID.swift` | The single list of games: stable ID, emoji, title key, whether it has levels. |
-| Levels | `Models/Difficulty.swift` | Levels 1–10 (#197). A game turns its level into its own knobs with `values(_:)`, a ten-row table; games still on the old three steps use the `pick(easy, medium, hard)` bridge (levels 1–3 / 4–5 / 6–10) until their ticket lands. |
+| Levels | `Models/Difficulty.swift` | Levels 1–10 (#197). A game turns its level into its own knobs with `values(_:)`, a ten-row table. |
 | Saved play | `Models/GameSession.swift` | One row per finished game: rounds, attempts, correct, duration, level. No scores on screen. |
 | Daily plan | `Services/DailyPolicy.swift` | Pure rules: which three games, and each game's level. No network. |
 | Plan cache | `Services/PlanStore.swift` | The plan is saved for the day, with each game's level and when it last changed. |
@@ -87,7 +87,7 @@ The player never sees numbers. The family does.
 | Home week ring / board | player | Seven day slots; each finished game adds a small card in its colour. An empty day is a dashed outline, never a red mark. | `WeeklySummary`, `DayGrouping` |
 | My Week | player | Per day, which cards were played. No scores. | `GameSession` rows |
 | My progress | family | Per game, last 7 days: days played out of 7, mean accuracy per play, level reached, share of the week's plays. | `ProgressRates.week` |
-| Set up | family | Hide a game, pin a level (Auto / Easy / Medium / Hard), Memory Lane photos and their names. | `FamilySettings`, `MemoryPhotos` |
+| Set up | family | Hide a game, pin a level (Auto, or a 1–10 stepper), Memory Lane photos and their names. | `FamilySettings`, `MemoryPhotos` |
 | History share | family | A plain-text card: days played and games played this week. Sent only when the player taps share. | `WeeklySummary.text` |
 
 How the numbers are kept honest:

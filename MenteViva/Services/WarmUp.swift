@@ -54,15 +54,20 @@ nonisolated enum WarmUp {
 nonisolated enum WarmUpStore {
     private static let key = "warmup.remaining"
 
-    /// Starts the warm-up: deals today's three at the player's start level and marks them
-    /// calibrating. Returns the games dealt.
+    /// Starts the warm-up: deals today's three, each at the level it already has, and marks them
+    /// calibrating. A game never dealt starts where the saved profile says, so callers save the
+    /// profile first (onboarding and My plan save every answer as it is given). Games that cannot
+    /// be played yet (`unavailable`, a parameter so tests control it) are left out like hidden ones,
+    /// as the daily plan does (#402). Returns the games dealt.
     @discardableResult
-    static func start(profile: PlayerProfile, today: String, defaults: UserDefaults = .standard) -> [GameID] {
+    static func start(
+        profile: PlayerProfile, today: String, defaults: UserDefaults = .standard,
+        unavailable: Set<GameID> = GameAvailability.unavailable()
+    ) -> [GameID] {
         let games = WarmUp.picks(
-            profile: profile, hidden: FamilySettings.hidden(defaults: defaults),
+            profile: profile, hidden: FamilySettings.hidden(defaults: defaults).union(unavailable),
             pinned: FamilySettings.pinned(defaults: defaults))
-        PlanStore.beginWarmUp(
-            games: games, at: DailyPolicy.startingLevel(for: profile), today: today, defaults: defaults)
+        PlanStore.beginWarmUp(games: games, today: today, defaults: defaults)
         save(Dictionary(uniqueKeysWithValues: games.map { ($0, WarmUp.sessions) }), defaults: defaults)
         return games
     }
