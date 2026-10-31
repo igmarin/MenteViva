@@ -47,6 +47,7 @@ struct TilePairsView: View {
         }
         .padding()
         .fitOrScroll()
+        .leaveGuard(inProgress: (deal?.attempts ?? 0) > 0, celebrating: showCelebration)
         .gameHeader(.tilePairs, instruction: AppLanguage.localized("game.tilepairs.instruction"))
         .firstPlayGuide(
             .tilePairs, line: AppLanguage.localized("game.tilepairs.guide"),

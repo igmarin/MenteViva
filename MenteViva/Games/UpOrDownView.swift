@@ -58,6 +58,7 @@ struct UpOrDownView: View {
         }
         .padding()
         .fitOrScroll()
+        .leaveGuard(inProgress: taps > 0, celebrating: showCelebration)
         .gameHeader(.upOrDown, instruction: AppLanguage.localized("game.upordown.instruction"))
         .firstPlayGuide(.upOrDown, line: AppLanguage.localized("game.upordown.guide"), example: guideExample)
         .celebration(isPresented: $showCelebration, game: .upOrDown, detail: finalDetail, onPlayAgain: restart)

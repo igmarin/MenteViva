@@ -1670,6 +1670,74 @@
         }
       }
     },
+    "game.leave.go" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leave"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Salir"
+          }
+        }
+      }
+    },
+    "game.leave.note" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "It won't be saved, but you can start a new one any time."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se guardará, pero puedes empezar otro cuando quieras."
+          }
+        }
+      }
+    },
+    "game.leave.stay" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keep playing"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seguir jugando"
+          }
+        }
+      }
+    },
+    "game.leave.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leave this game?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Salir de este juego?"
+          }
+        }
+      }
+    },
     "game.math.instruction" : {
       "extractionState" : "stale",
       "localizations" : {

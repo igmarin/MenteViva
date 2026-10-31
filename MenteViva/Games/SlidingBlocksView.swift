@@ -67,6 +67,7 @@ struct SlidingBlocksView: View {
         .fitOrScroll()
         // A block drag never scrolls the page, even in the scrolling layout (#470).
         .scrollDisabled(touch != nil)
+        .leaveGuard(inProgress: (puzzle?.movesMade ?? 0) > 0, celebrating: showCelebration)
         .gameHeader(.slidingBlocks, instruction: instruction)
         .firstPlayGuide(
             .slidingBlocks, line: AppLanguage.localized("game.slidingblocks.guide"),
