@@ -140,7 +140,8 @@ struct MemoryMatchView: View {
     var body: some View {
         VStack(spacing: 24) {
             LevelExplainBanner(
-                change: PlanStore.cachedPlan()?.changes[variant.game], game: variant.game, hasStarted: moves > 0)
+                change: PlanStore.cachedPlan()?.changes[variant.game], game: variant.game, hasStarted: moves > 0,
+                keepsSpace: true)
             Text(AppLanguage.localized(variant.instructionKey))
                 .font(.title2)
                 .multilineTextAlignment(.center)

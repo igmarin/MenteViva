@@ -19,11 +19,15 @@ struct SlidingBlocksView: View {
     /// The dealt layout, kept so "Start over" can restore it.
     @State private var initialBlocks: [SlidingBlock] = []
     @State private var selected: Int?
-    @State private var dragged: Int?
-    @State private var dragOffset = CGSize.zero
-    /// The running drag's axis and reach, fixed on its first tick so a curved
-    /// drag never flips between a horizontal and a vertical preview.
-    @State private var dragLimits: DragLimits?
+    /// The finger on a block right now. SwiftUI clears it when the finger lifts
+    /// or the touch is cancelled, so a lost touch never leaves a block off its
+    /// cell or the page unable to scroll (#470).
+    @GestureState private var touch: BlockTouch?
+    /// The running drag's axis and reach, fixed when the finger first leads one
+    /// way so a curved drag never flips between a horizontal and a vertical
+    /// preview. Tied to the touch that set it, so a cancelled touch's lock is
+    /// never reused.
+    @State private var dragLock: DragLock?
     /// The last slide, so a repeated one-cell arrow in the same direction
     /// extends it: a straight slide is one move however it is entered, the way
     /// `minMoves` counts it. Cleared by anything else that changes the board.
@@ -61,7 +65,7 @@ struct SlidingBlocksView: View {
         .padding()
         .fitOrScroll()
         // A block drag never scrolls the page, even in the scrolling layout (#470).
-        .scrollDisabled(dragged != nil)
+        .scrollDisabled(touch != nil)
         .gameHeader(.slidingBlocks, instruction: instruction)
         .onAppear(perform: dealIfNeeded)
         .onDisappear { hintBuild?.cancel() }
@@ -126,6 +130,7 @@ struct SlidingBlocksView: View {
         let block = puzzle.blocks[index]
         let isBig = index == puzzle.bigIndex
         let isSelected = selected == index
+        let dragOffset = liveOffset(of: index, cell: cell)
         return
             RoundedRectangle(cornerRadius: 12)
             .fill(isBig ? Color.amber : GameID.slidingBlocks.ink)
@@ -147,10 +152,10 @@ struct SlidingBlocksView: View {
             .contentShape(Rectangle())
             .frame(width: CGFloat(block.w) * cell, height: CGFloat(block.h) * cell)
             .offset(
-                x: CGFloat(block.x) * cell + (dragged == index ? dragOffset.width : 0),
-                y: CGFloat(block.y) * cell + (dragged == index ? dragOffset.height : 0)
+                x: CGFloat(block.x) * cell + (dragOffset?.width ?? 0),
+                y: CGFloat(block.y) * cell + (dragOffset?.height ?? 0)
             )
-            .zIndex(dragged == index ? 2 : (isSelected ? 1 : 0))
+            .zIndex(dragOffset != nil ? 2 : (isSelected ? 1 : 0))
             // The one place moves animate. Reduce Motion: moves land at once, with no slide (issue spec).
             .animation(reduceMotion ? nil : .easeInOut(duration: 0.25), value: puzzle)
             // High priority, so the block's drag wins over the page's ScrollView; the
@@ -235,28 +240,39 @@ struct SlidingBlocksView: View {
     /// A touch on a block is a tap until it has gone clearly one way
     /// (`SlidingDragRule`); then the block follows the finger along that axis,
     /// clamped to the cells that are actually clear, and letting go snaps it to
-    /// the nearest cell. The minimum distance is 0 so this gesture owns the
-    /// touch from the start and the page's ScrollView never sees it.
+    /// the nearest cell. A touch that never locked is settled on lift
+    /// (`SlidingDragRule.onLift`), so it always taps or moves. The minimum
+    /// distance is 0 so this gesture owns the touch from the start and the
+    /// page's ScrollView never sees it.
     private func drag(for index: Int, cell: CGFloat, puzzle: SlidingBlocksPuzzle) -> some Gesture {
         DragGesture(minimumDistance: 0)
+            .updating($touch) { value, state, _ in
+                state = BlockTouch(block: index, start: value.startLocation, translation: value.translation)
+            }
             .onChanged { value in
-                if dragLimits == nil {
-                    guard let axis = SlidingDragRule.axis(for: value.translation) else { return }
-                    dragLimits = DragLimits(block: index, in: puzzle, axis: axis)
+                guard dragLock?.isFor(index, start: value.startLocation) != true else { return }
+                dragLock = SlidingDragRule.axis(for: value.translation).map { finger in
+                    DragLock(
+                        block: index, start: value.startLocation,
+                        limits: DragLimits(block: index, in: puzzle, finger: finger))
                 }
-                guard let limits = dragLimits else { return }
-                dragged = index
-                dragOffset = limits.clamped(value.translation, cell: cell)
             }
             .onEnded { value in
-                guard let limits = dragLimits else {
-                    if SlidingDragRule.isTap(value.translation) { tap(index) }
-                    return
+                let lock = dragLock?.isFor(index, start: value.startLocation) == true ? dragLock : nil
+                dragLock = nil
+                let limits: DragLimits
+                if let lock {
+                    limits = lock.limits
+                } else {
+                    switch SlidingDragRule.onLift(value.translation) {
+                    case .tap:
+                        tap(index)
+                        return
+                    case .drag(let finger):
+                        limits = DragLimits(block: index, in: puzzle, finger: finger)
+                    }
                 }
                 let offset = limits.clamped(value.translation, cell: cell)
-                dragLimits = nil
-                dragged = nil
-                dragOffset = .zero
                 let distance = limits.horizontal ? offset.width : offset.height
                 let steps = Int((abs(distance) / cell).rounded())
                 guard steps > 0 else { return }
@@ -264,6 +280,15 @@ struct SlidingBlocksView: View {
                     limits.horizontal ? (distance > 0 ? .right : .left) : (distance > 0 ? .down : .up)
                 apply(SlidingMove(block: index, direction: direction, steps: steps))
             }
+    }
+
+    /// Where the finger has dragged block `index` so far, or nil when it is not
+    /// being dragged.
+    private func liveOffset(of index: Int, cell: CGFloat) -> CGSize? {
+        guard let touch, touch.block == index, let dragLock, dragLock.isFor(index, start: touch.start) else {
+            return nil
+        }
+        return dragLock.limits.clamped(touch.translation, cell: cell)
     }
 
     /// One cell toward `direction` (arrows and VoiceOver). Right after a slide
@@ -339,9 +364,7 @@ struct SlidingBlocksView: View {
         puzzle = fresh
         initialBlocks = fresh.blocks
         selected = nil
-        dragged = nil
-        dragOffset = .zero
-        dragLimits = nil
+        dragLock = nil
         lastSlide = nil
         startedAt = .now
         buildHints(from: fresh)
@@ -433,19 +456,41 @@ struct SlidingBlocksView: View {
     }
 }
 
+/// A finger on a block: where it went down and how far it has gone.
+private struct BlockTouch {
+    let block: Int
+    let start: CGPoint
+    let translation: CGSize
+}
+
+/// The axis and reach a touch locked onto, with the touch it belongs to.
+private struct DragLock {
+    let block: Int
+    let start: CGPoint
+    let limits: DragLimits
+
+    func isFor(_ index: Int, start point: CGPoint) -> Bool {
+        block == index && start == point
+    }
+}
+
 /// A drag's axis and how far the block can go each way along it, in cells.
-/// The axis is the one the finger led on when the drag started (`SlidingDragRule`),
-/// fixed for the whole drag; a block that cannot move that way stays put.
+/// The axis is the finger's when the block can move that way, otherwise the
+/// one it can move on (`SlidingDragRule.blockAxis`), fixed for the whole drag.
 private struct DragLimits {
     let horizontal: Bool
     let back: Int
     let forward: Int
 
-    init(block index: Int, in puzzle: SlidingBlocksPuzzle, axis: SlidingDragRule.Axis) {
+    init(block index: Int, in puzzle: SlidingBlocksPuzzle, finger: SlidingDragRule.Axis) {
         var reach: [SlidingDirection: Int] = [:]
         for move in puzzle.moves() where move.block == index {
             reach[move.direction] = max(reach[move.direction] ?? 0, move.steps)
         }
+        let axis = SlidingDragRule.blockAxis(
+            finger: finger,
+            canSide: reach[.left] != nil || reach[.right] != nil,
+            canUpDown: reach[.up] != nil || reach[.down] != nil)
         horizontal = axis == .horizontal
         back = reach[horizontal ? .left : .up] ?? 0
         forward = reach[horizontal ? .right : .down] ?? 0

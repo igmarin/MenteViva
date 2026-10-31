@@ -68,22 +68,53 @@ final class SlidingBlocksBoardRulesTests: XCTestCase {
         XCTAssertEqual(SlidingDragRule.axis(for: CGSize(width: 5, height: -30)), .vertical)
     }
 
-    func testGivenWobbleBelowThresholdWhenFingerLiftsThenItIsATap() {
-        XCTAssertTrue(SlidingDragRule.isTap(.zero))
-        XCTAssertTrue(SlidingDragRule.isTap(CGSize(width: 12, height: 12)))
-        XCTAssertFalse(SlidingDragRule.isTap(CGSize(width: 20, height: 0)))
-        // A diagonal wobble under the threshold on both axes is still a tap, not a lost touch.
-        XCTAssertTrue(SlidingDragRule.isTap(CGSize(width: 15, height: 15)))
-        XCTAssertFalse(SlidingDragRule.isTap(CGSize(width: 25, height: 25)))
+    func testGivenWobbleOrUnclearDiagonalWhenFingerLiftsThenItIsATap() {
+        XCTAssertEqual(SlidingDragRule.onLift(.zero), .tap)
+        XCTAssertEqual(SlidingDragRule.onLift(CGSize(width: 15, height: 15)), .tap)
+        // At least 20pt, but leading on neither axis: picked, not lost.
+        XCTAssertEqual(SlidingDragRule.onLift(CGSize(width: 25, height: 25)), .tap)
+        XCTAssertEqual(SlidingDragRule.onLift(CGSize(width: -40, height: 30)), .tap)
     }
 
-    func testGivenAnyTouchWhenFingerLiftsThenItIsATapOrADragNeverNeither() {
-        for x in stride(from: -40.0, through: 40.0, by: 5) {
-            for y in stride(from: -40.0, through: 40.0, by: 5) {
+    func testGivenClearLeadWhenFingerLiftsBeforeAnyLockThenItDrags() {
+        XCTAssertEqual(SlidingDragRule.onLift(CGSize(width: 45, height: 4)), .drag(.horizontal))
+        XCTAssertEqual(SlidingDragRule.onLift(CGSize(width: 20, height: 31)), .drag(.vertical))
+    }
+
+    func testGivenAnyTouchWhenFingerLiftsThenItTapsOrDragsTheWayTheFingerLed() {
+        // Every touch that did not lock while moving ends here, so none may be dropped:
+        // it drags on the axis the finger clearly led on, and only otherwise is a tap.
+        for x in stride(from: -60.0, through: 60.0, by: 2.5) {
+            for y in stride(from: -60.0, through: 60.0, by: 2.5) {
                 let move = CGSize(width: x, height: y)
-                let isDragOrDiagonal = max(abs(x), abs(y)) >= SlidingDragRule.startDistance
-                XCTAssertNotEqual(SlidingDragRule.isTap(move), isDragOrDiagonal, "\(move)")
+                switch (SlidingDragRule.onLift(move), SlidingDragRule.axis(for: move)) {
+                case (.tap, nil): break
+                case (.drag(let dragged), let led?) where dragged == led: break
+                case (let touch, let led): XCTFail("\(move): \(touch) but the finger led \(String(describing: led))")
+                }
             }
         }
+    }
+
+    // MARK: - Drag axis
+
+    func testGivenBlockThatMovesOnlySidewaysWhenFingerLeadsDownThenItSlidesSideways() {
+        let finger = SlidingDragRule.axis(for: CGSize(width: 20, height: 31))
+        XCTAssertEqual(finger, .vertical)
+        XCTAssertEqual(SlidingDragRule.blockAxis(finger: .vertical, canSide: true, canUpDown: false), .horizontal)
+    }
+
+    func testGivenBlockThatMovesOnlyUpDownWhenFingerLeadsSidewaysThenItSlidesUpDown() {
+        XCTAssertEqual(SlidingDragRule.blockAxis(finger: .horizontal, canSide: false, canUpDown: true), .vertical)
+    }
+
+    func testGivenBlockThatMovesBothWaysWhenDraggedThenItFollowsTheFinger() {
+        XCTAssertEqual(SlidingDragRule.blockAxis(finger: .horizontal, canSide: true, canUpDown: true), .horizontal)
+        XCTAssertEqual(SlidingDragRule.blockAxis(finger: .vertical, canSide: true, canUpDown: true), .vertical)
+    }
+
+    func testGivenBlockThatCannotMoveWhenDraggedThenItKeepsTheFingersAxis() {
+        XCTAssertEqual(SlidingDragRule.blockAxis(finger: .vertical, canSide: false, canUpDown: false), .vertical)
+        XCTAssertEqual(SlidingDragRule.blockAxis(finger: .horizontal, canSide: false, canUpDown: false), .horizontal)
     }
 }

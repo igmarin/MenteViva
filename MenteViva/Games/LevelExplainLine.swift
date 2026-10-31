@@ -40,39 +40,66 @@ nonisolated enum LevelExplainSlot: Equatable {
     var takesSpace: Bool { self != .none }
 }
 
+/// One open's level note (#470): which line, decided once, and whether play has
+/// dismissed it. Once the game has started, the note stays dismissed for the
+/// rest of the open, whatever the game's progress does next (undo, "Start
+/// over", "Play again").
+nonisolated struct LevelExplainNote: Equatable {
+    /// The line to show, or nil when this open has no note.
+    let key: String?
+    private(set) var dismissed = false
+
+    init(change: LevelChange?, seenToday: Bool) {
+        key =
+            LevelExplainPolicy.shouldShow(change: change, alreadySeenToday: seenToday)
+            ? LevelExplainPolicy.key(for: change) : nil
+    }
+
+    /// Where the note stands now that the game reports `hasStarted`.
+    mutating func slot(hasStarted: Bool) -> LevelExplainSlot {
+        if hasStarted { dismissed = true }
+        return LevelExplainSlot.slot(hasNote: key != nil, hasStarted: hasStarted, dismissed: dismissed)
+    }
+}
+
 /// Show the line until `hasStarted` is true, only on the first open of the
 /// day for this game. The game view owns the dismiss by passing its progress.
 /// With `keepsSpace`, the line then fades out but keeps its height, for games
 /// whose board is sized by the space left over. The note is decided once per
 /// open, and once dismissed it stays dismissed (replay, undo, start over).
 struct LevelExplainBanner: View {
+    let change: LevelChange?
     let game: GameID
     let hasStarted: Bool
-    let keepsSpace: Bool
-    @State private var key: String?
-    @State private var dismissed = false
-
-    init(change: LevelChange?, game: GameID, hasStarted: Bool, keepsSpace: Bool = false) {
-        self.game = game
-        self.hasStarted = hasStarted
-        self.keepsSpace = keepsSpace
-        let seen = LevelOfferStore.hasSeenExplain(for: game, today: PlanStore.dayStamp())
-        let show = LevelExplainPolicy.shouldShow(change: change, alreadySeenToday: seen)
-        _key = State(initialValue: show ? LevelExplainPolicy.key(for: change) : nil)
-    }
+    var keepsSpace = false
+    /// Holds this open's note. A reference, so the store is read on the first
+    /// render only (not on every drag frame of the parent), and the dismissal
+    /// is latched while the body reads `hasStarted`, with no `onChange` that a
+    /// removed line could take with it.
+    @State private var memo = Memo()
 
     var body: some View {
-        let slot = LevelExplainSlot.slot(hasNote: key != nil, hasStarted: hasStarted, dismissed: dismissed)
-        Group {
-            if let key, slot == .showing || (keepsSpace && slot.takesSpace) {
-                LevelExplainLine(key: key)
-                    .opacity(slot == .showing ? 1 : 0)
-                    .accessibilityHidden(slot != .showing)
-                    .onAppear { LevelOfferStore.markExplainSeen(for: game, today: PlanStore.dayStamp()) }
-            }
+        let slot = memo.slot(change: change, game: game, hasStarted: hasStarted)
+        if let key = memo.note?.key, slot == .showing || (keepsSpace && slot.takesSpace) {
+            LevelExplainLine(key: key)
+                .opacity(slot == .showing ? 1 : 0)
+                .accessibilityHidden(slot != .showing)
+                .onAppear { LevelOfferStore.markExplainSeen(for: game, today: PlanStore.dayStamp()) }
         }
-        .onChange(of: hasStarted, initial: true) { _, started in
-            if started { dismissed = true }
+    }
+
+    private final class Memo {
+        var note: LevelExplainNote?
+
+        func slot(change: LevelChange?, game: GameID, hasStarted: Bool) -> LevelExplainSlot {
+            var current =
+                note
+                ?? LevelExplainNote(
+                    change: change,
+                    seenToday: LevelOfferStore.hasSeenExplain(for: game, today: PlanStore.dayStamp()))
+            let slot = current.slot(hasStarted: hasStarted)
+            note = current
+            return slot
         }
     }
 }

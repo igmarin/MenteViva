@@ -36,9 +36,29 @@ nonisolated enum SlidingDragRule {
         return nil
     }
 
-    /// A finger that lifts after wobbling less than `startDistance` is a tap. Measured the same
-    /// way as `axis(for:)`, so every touch is either a tap or a drag, never neither.
-    static func isTap(_ translation: CGSize) -> Bool {
-        max(abs(translation.width), abs(translation.height)) < startDistance
+    /// What a touch on a block is once the finger lifts.
+    enum Touch: Equatable {
+        /// Picks the block (or lets it go), so its arrows show.
+        case tap
+        /// Slides the block along this axis of the finger.
+        case drag(Axis)
+    }
+
+    /// A touch that never locked an axis while it moved, decided as the finger
+    /// lifts. A clear lead by then still drags (a quick flick); anything else,
+    /// a small wobble or a diagonal that led on neither axis, is a tap: the
+    /// block is picked and its arrows show the ways it can go. No touch is lost.
+    static func onLift(_ translation: CGSize) -> Touch {
+        axis(for: translation).map(Touch.drag) ?? .tap
+    }
+
+    /// The axis the block moves on for a finger leading on `finger`: that one
+    /// when the block can go that way, otherwise the one it can go on, so a
+    /// block that only slides sideways still follows a finger that drifts down.
+    static func blockAxis(finger: Axis, canSide: Bool, canUpDown: Bool) -> Axis {
+        switch finger {
+        case .horizontal: canSide || !canUpDown ? .horizontal : .vertical
+        case .vertical: canUpDown || !canSide ? .vertical : .horizontal
+        }
     }
 }
