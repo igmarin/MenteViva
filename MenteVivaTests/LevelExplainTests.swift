@@ -188,6 +188,14 @@ final class LevelExplainTests: XCTestCase {
         }
     }
 
+    func testGivenGameAlreadyStartedWhenNoteFirstReadThenItNeverShows() {
+        // A game restored mid-play opens with progress already made.
+        var note = LevelExplainNote(
+            change: LevelChange(previous: Difficulty(level: 4), reason: .eased), seenToday: false)
+        XCTAssertEqual(note.slot(hasStarted: true), .reserved)
+        XCTAssertEqual(note.slot(hasStarted: false), .reserved)
+    }
+
     func testGivenNoteSeenTodayWhenOpenThenNoNoteAndNothingHeldBack() {
         var note = LevelExplainNote(
             change: LevelChange(previous: Difficulty(level: 4), reason: .eased), seenToday: true)
