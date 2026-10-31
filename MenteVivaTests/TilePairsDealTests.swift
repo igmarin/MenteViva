@@ -110,6 +110,23 @@ final class TilePairsDealTests: XCTestCase {
         XCTAssertTrue(deal.clearsWithRecordedOrder())
     }
 
+    func testGivenAMatchThatLeavesNoFreePairWhenMixedThenItIsPlayableAndKeepsItsCount() {
+        // Six tiles side by side: only the two ends are free. Taking the circle ends leaves square and diamond free.
+        let symbols: [TilePairsSymbol] = [.circle, .square, .diamond, .square, .diamond, .circle]
+        let tiles = symbols.enumerated().map { TilePairsTile(id: $0.offset, symbol: $0.element, x: $0.offset, y: 0, layer: 0) }
+        var deal = TilePairsDeal(tiles: tiles, layers: 1, pairOrder: [])
+        XCTAssertFalse(deal.isStuck)
+        XCTAssertEqual(deal.pick(0, after: nil, lifting: false), .selected)
+        XCTAssertEqual(deal.pick(5, after: 0, lifting: false), .matched)
+        XCTAssertTrue(deal.isStuck, "the board is stuck right after the match")
+        var g = Seeded(state: 9)
+        XCTAssertTrue(deal.reshuffle(using: &g))
+        XCTAssertFalse(deal.isStuck)
+        XCTAssertEqual(deal.tiles.count, 4)
+        XCTAssertEqual(deal.correct, 1)
+        XCTAssertEqual(deal.attempts, 1)
+    }
+
     func testGivenMatchingFreePairWhenTriedThenCorrectIncrements() {
         var g = Seeded(state: 7)
         var deal = TilePairsDeal.make(difficulty: Difficulty(level: 1), width: wideW, height: wideH, using: &g)

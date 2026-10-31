@@ -321,9 +321,14 @@ struct TilePairsView: View {
             let delay = reduceMotion ? 0.22 : 0.38
             Task { @MainActor in
                 try? await Task.sleep(for: .seconds(delay))
-                deal = mutable
-                removing = []
-                selected = nil
+                // A pair taken in an unlucky order can leave no free match: mix now, not only on Show me.
+                var settled = mutable
+                let mixed = mixIfStuck(&settled)
+                withAnimation(mixed && !reduceMotion ? .easeInOut(duration: 0.3) : nil) {
+                    deal = settled
+                    removing = []
+                    selected = nil
+                }
                 if mutable.isCleared { finish(with: mutable) }
             }
         case .mismatch:
@@ -342,21 +347,26 @@ struct TilePairsView: View {
         }
     }
 
+    /// Mixes a board with no free matching pair, with the warm "stuck" line; false when it was already playable.
+    /// Called after every removed pair and by Show me, so a stuck board never waits for a button press.
+    private func mixIfStuck(_ board: inout TilePairsDeal) -> Bool {
+        guard board.isStuck else { return false }
+        hint = AppLanguage.localized("game.tilepairs.stuck")
+        AccessibilityNotification.Announcement(hint!).post()
+        Feedback.play(.success)
+        var gen = SystemRandomNumberGenerator()
+        return board.reshuffle(using: &gen)
+    }
+
     /// Highlighting adds one attempt and no correct pair; wait for a lift to avoid the stale board.
     private func showPair() {
         guard removing.isEmpty, var current = deal else { return }
-        if current.isStuck {
-            hint = AppLanguage.localized("game.tilepairs.stuck")
-            AccessibilityNotification.Announcement(hint!).post()
-            Feedback.play(.success)
-            var gen = SystemRandomNumberGenerator()
-            if current.reshuffle(using: &gen) {
-                withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.3)) {
-                    deal = current
-                    selected = nil
-                    highlighted = []
-                    removing = []
-                }
+        if mixIfStuck(&current) {
+            withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.3)) {
+                deal = current
+                selected = nil
+                highlighted = []
+                removing = []
             }
             return
         }
