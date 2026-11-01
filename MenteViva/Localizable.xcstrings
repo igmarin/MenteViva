@@ -4755,6 +4755,22 @@
         }
       }
     },
+    "onboarding.next.hint" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keeps what you picked and goes on."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Guarda lo que elegiste y sigue."
+          }
+        }
+      }
+    },
     "onboarding.pace.calm" : {
       "localizations" : {
         "en" : {
@@ -10935,13 +10951,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Device"
+            "value" : "Same as my phone"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sistema"
+            "value" : "Igual que el teléfono"
           }
         }
       }

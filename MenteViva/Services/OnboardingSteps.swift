@@ -66,6 +66,32 @@ nonisolated enum OnboardingOffer: Equatable {
     case warmUp
 }
 
+/// What the one forward button on a question says (#529). Skip and Next used to be two
+/// buttons that both called the same function, which cost a 100pt row on the question that
+/// takes several answers; now there is one, and its word says what it will do.
+nonisolated enum OnboardingForwardButton: Equatable {
+    /// Nothing picked here: moving on leaves the question unanswered.
+    case skip
+    /// Something picked: moving on keeps it.
+    case next
+
+    /// The button's word, in the player's language.
+    var labelKey: String {
+        switch self {
+        case .skip: "onboarding.skip"
+        case .next: "onboarding.next"
+        }
+    }
+
+    /// What VoiceOver adds after the word, so each one says what it does to the answers.
+    var hintKey: String {
+        switch self {
+        case .skip: "onboarding.skip.hint"
+        case .next: "onboarding.next.hint"
+        }
+    }
+}
+
 /// The questions in order and what each one offers (#212). Pure: no view, no store, so the
 /// order rule below is a thing tests can hold on to.
 nonisolated enum OnboardingSteps {
@@ -86,6 +112,13 @@ nonisolated enum OnboardingSteps {
     /// can already deal from them, then the warm-up when it applies (#213). Empty means Home.
     static func afterQuestions(albumCount: Int, profile: PlayerProfile) -> [OnboardingOffer] {
         (offersPhotos(albumCount: albumCount) ? [.photos] : []) + (WarmUp.isOffered(to: profile) ? [.warmUp] : [])
+    }
+
+    /// The word on the forward button. Every question that moves on at its first tap keeps
+    /// Skip; the multi-select question reads "Skip" until something is picked and "Next" after
+    /// it, so it needs one button instead of two (#529).
+    static func forwardButton(for question: OnboardingQuestion, profile: PlayerProfile) -> OnboardingForwardButton {
+        question.allowsMultiple && !profile.focus.isEmpty ? .next : .skip
     }
 
     /// The answers to offer, in the order to show them. With "a family member" the gentlest

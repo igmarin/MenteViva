@@ -51,27 +51,49 @@ struct OnboardingView: View {
     }
 
     var body: some View {
-        VStack(spacing: 24) {
-            if let offer {
-                switch offer {
-                case .photos: photosOffer
-                case .warmUp: warmUpOffer
-                }
-            } else if let question {
+        screen
+            .padding(24)
+            .background(Color.paper.ignoresSafeArea())
+            // The screen is one view whose content swaps in place, so VoiceOver would stay on an
+            // element that vanished. Next, Back, Skip and every offer all change `step`, so one
+            // screen-change notice covers them: focus moves to the new screen's first element, which is
+            // its question or offer heading (#406).
+            .onChange(of: step) { _, _ in AccessibilityNotification.ScreenChanged(nil).post() }
+    }
+
+    /// The step on screen. The questions keep Back and Skip outside the scroll, so they stay on
+    /// screen however tall the answers get (#529); the welcome and the offers scroll as one. At
+    /// accessibility sizes the footer is too tall to pin: it would leave the answers a sliver of
+    /// screen, so there everything scrolls together.
+    @ViewBuilder
+    private var screen: some View {
+        if offer == nil, let question, typeSize.isAccessibilitySize {
+            VStack(spacing: 16) {
                 questionStep(question)
-            } else {
-                welcome
+                footer(for: question)
             }
+            .fitOrScroll()
+        } else if offer == nil, let question {
+            VStack(spacing: 16) {
+                questionStep(question)
+                    // Only a tall answer list scrolls; the footer below never does.
+                    .fitOrScroll()
+                footer(for: question)
+            }
+        } else {
+            VStack(spacing: 24) {
+                if let offer {
+                    switch offer {
+                    case .photos: photosOffer
+                    case .warmUp: warmUpOffer
+                    }
+                } else {
+                    welcome
+                }
+            }
+            // At the largest text sizes the screens scroll, so the answers and buttons stay reachable.
+            .fitOrScroll()
         }
-        // At the largest text sizes the screens scroll, so the answers and Skip stay reachable.
-        .fitOrScroll()
-        .padding(24)
-        .background(Color.paper.ignoresSafeArea())
-        // The screen is one view whose content swaps in place, so VoiceOver would stay on an
-        // element that vanished. Next, Back, Skip and every offer all change `step`, so one
-        // screen-change notice covers them: focus moves to the new screen's first element, which is
-        // its question or offer heading (#406).
-        .onChange(of: step) { _, _ in AccessibilityNotification.ScreenChanged(nil).post() }
     }
 
     // MARK: Step 1 - the welcome screen, kept as it was
@@ -133,7 +155,7 @@ struct OnboardingView: View {
                 // the question itself (#406).
                 .accessibilitySortPriority(1)
 
-            // Five answers one per row would push Next and Skip off an everyday screen, so the
+            // Five answers one per row would push the footer off an everyday screen, so the
             // multi-select question lays its tiles out two by two; every other question shows one
             // per row, and at bigger text sizes every question does, because the words need the
             // whole width. Each tile keeps its 100pt height either way (conventions §4).
@@ -147,20 +169,7 @@ struct OnboardingView: View {
                 }
             }
 
-            // The focus question takes more than one answer, so it is the only one that waits
-            // for "Next" instead of moving on at the first tap.
-            if question.allowsMultiple {
-                Button {
-                    next()
-                } label: {
-                    Text(AppLanguage.localized("onboarding.next"))
-                }
-                .buttonStyle(RetroButtonStyle())
-            }
-
             Spacer(minLength: 0)
-
-            footer
         }
         // The sort priority above only reorders within a container.
         .accessibilityElement(children: .contain)
@@ -210,10 +219,13 @@ struct OnboardingView: View {
         }
     }
 
-    /// Back and Skip, both 100pt and always on screen: leaving a question unanswered is as
-    /// easy as answering it (#212).
-    private var footer: some View {
-        HStack(spacing: 12) {
+    /// Back and one forward button, both 100pt and always on screen: leaving a question
+    /// unanswered is as easy as answering it (#212). On the question that takes several answers
+    /// the forward button says "Skip" until something is picked and then "Next", so one button
+    /// does both jobs and the screen keeps a 100pt row (#529).
+    private func footer(for question: OnboardingQuestion) -> some View {
+        let forward = OnboardingSteps.forwardButton(for: question, profile: profile)
+        return HStack(spacing: 12) {
             Button {
                 back()
             } label: {
@@ -223,14 +235,25 @@ struct OnboardingView: View {
             .buttonStyle(AnswerTileStyle(strength: 0.10))
             .accessibilityHint(AppLanguage.localized("onboarding.back.hint"))
 
-            Button {
-                next()
-            } label: {
-                Text(AppLanguage.localized("onboarding.skip"))
-                    .font(.title2)
+            // Filled once there is something to keep, quiet while it only skips.
+            if forward == .next {
+                Button {
+                    next()
+                } label: {
+                    Text(AppLanguage.localized(forward.labelKey))
+                }
+                .buttonStyle(RetroButtonStyle())
+                .accessibilityHint(AppLanguage.localized(forward.hintKey))
+            } else {
+                Button {
+                    next()
+                } label: {
+                    Text(AppLanguage.localized(forward.labelKey))
+                        .font(.title2)
+                }
+                .buttonStyle(AnswerTileStyle(strength: 0.10))
+                .accessibilityHint(AppLanguage.localized(forward.hintKey))
             }
-            .buttonStyle(AnswerTileStyle(strength: 0.10))
-            .accessibilityHint(AppLanguage.localized("onboarding.skip.hint"))
         }
     }
 
@@ -250,6 +273,10 @@ struct OnboardingView: View {
                 } label: {
                     Text(language.label)
                         .font(.title3.weight(language.rawValue == appLanguage ? .bold : .regular))
+                        // "Igual que el teléfono" wraps in its third of an iPhone SE: keep it off the edge.
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 6)
+                        .minimumScaleFactor(0.85)
                         .frame(maxWidth: .infinity, minHeight: 100)
                         .background {
                             ZStack {
@@ -300,12 +327,10 @@ struct OnboardingView: View {
             if picked.isEmpty {
                 PhotosPicker(selection: $picked, maxSelectionCount: MemoryPhotos.maxCount, matching: .images) {
                     Label(AppLanguage.localized("family.photos.add"), systemImage: "photo.on.rectangle.angled")
-                        .font(.title2.weight(.semibold))
-                        .frame(maxWidth: .infinity, minHeight: 100)
-                        .foregroundStyle(Color.paper)
-                        .background(Color.brand, in: .rect(cornerRadius: 20))
                 }
-                .buttonStyle(.plain)
+                // The same edged, shadowed button as Start and Next, so the main choice looks
+                // at least as pressable as "Later" (#529).
+                .buttonStyle(RetroButtonStyle())
                 .accessibilityLabel(AppLanguage.localized("family.photos.add"))
                 .accessibilityHint(AppLanguage.localized("onboarding.photos.add.hint"))
             } else {
@@ -385,12 +410,8 @@ struct OnboardingView: View {
                 hasSeenOnboarding = true
             } label: {
                 Text(AppLanguage.localized("warmup.accept"))
-                    .font(.title2.weight(.semibold))
-                    .frame(maxWidth: .infinity, minHeight: 100)
-                    .foregroundStyle(Color.paper)
-                    .background(Color.brand, in: .rect(cornerRadius: 20))
             }
-            .buttonStyle(.plain)
+            .buttonStyle(RetroButtonStyle())
             .accessibilityHint(AppLanguage.localized("warmup.accept.hint"))
 
             Button {
