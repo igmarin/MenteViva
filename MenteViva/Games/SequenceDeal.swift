@@ -32,6 +32,12 @@ nonisolated enum SequenceDeal {
         return (cols, rows)
     }
 
+    /// How strongly a tile shows (#509). While the demo plays every tile but the lit one steps back to
+    /// 0.4, so the lit one stands out; in the player's turn nothing dims, so a tap flashes alone.
+    static func tileOpacity(isLit: Bool, demoPlaying: Bool) -> Double {
+        demoPlaying && !isLit ? 0.4 : 1
+    }
+
     /// Rules for a level and width (fit-capped).
     static func rules(for difficulty: Difficulty, width: Double) -> (columns: Int, rows: Int, length: Int, light: Double) {
         let (cols, rows) = fittedLayout(for: difficulty, width: width)
