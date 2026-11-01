@@ -77,7 +77,7 @@ struct SudokuView: View {
                 almostNote
             }
         }
-        .frame(maxWidth: .infinity)
+        .gameColumn(maxWidth: columnWidth)
         .padding()
         .fitOrScroll()
         // Measured outside the padding and the fit-or-scroll, so it is the space the screen offers
@@ -108,6 +108,17 @@ struct SudokuView: View {
     /// narrow window walks down to a board that fits; a phone is laid out by width as before (#400).
     private var budgetHeight: Double? {
         GameColumn.isPad ? playArea.height : nil
+    }
+
+    /// How wide the column is on an iPad (#531): the keys stop at the game column instead of stretching
+    /// under the board; a phone is unaffected (`gameColumn` ignores the width off an iPad).
+    private var columnWidth: CGFloat {
+        guard let puzzle else { return GameColumn.maxWidth }
+        let arrangement = arrangement(for: puzzle)
+        return CGFloat(
+            SudokuPuzzle.columnWidth(
+                size: puzzle.size, side: arrangement.side, pad: arrangement.pad,
+                column: GameColumn.maxWidth))
     }
 
     /// Square side and pad placement for the dealt board.

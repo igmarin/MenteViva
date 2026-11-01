@@ -131,6 +131,7 @@
 		6A2DA899F7F887B000000030 /* HandLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45283B3ED2219CDE0000002A; };
 		FEABA1C9F3D55C5A0000002E /* HomeDealTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3594F9427F21EF800000028; };
 		F7E224CE305ECE5000000031 /* HomeShelvesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DCEB89EB84497E0000002B; };
+		79F834750E51429400000036 /* InstructionLinesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1694AB0D6AA62CC200000030; };
 		629698CA737DD94600000037 /* InterruptionPauseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C465978B30833E400000031; };
 		CE284B5303E4A61900000030 /* LeaveGuardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92E4C780E979D4F0000002A; };
 		EE07AD69390E5FDA00000032 /* LevelExplainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65152AEC3FEF3E780000002C; };
@@ -296,6 +297,7 @@
 		45283B3ED2219CDE0000002A /* HandLayoutTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/HandLayoutTests.swift; sourceTree = SOURCE_ROOT; };
 		B3594F9427F21EF800000028 /* HomeDealTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/HomeDealTests.swift; sourceTree = SOURCE_ROOT; };
 		D7DCEB89EB84497E0000002B /* HomeShelvesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/HomeShelvesTests.swift; sourceTree = SOURCE_ROOT; };
+		1694AB0D6AA62CC200000030 /* InstructionLinesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/InstructionLinesTests.swift; sourceTree = SOURCE_ROOT; };
 		9C465978B30833E400000031 /* InterruptionPauseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/InterruptionPauseTests.swift; sourceTree = SOURCE_ROOT; };
 		C92E4C780E979D4F0000002A /* LeaveGuardTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/LeaveGuardTests.swift; sourceTree = SOURCE_ROOT; };
 		65152AEC3FEF3E780000002C /* LevelExplainTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenteVivaTests/LevelExplainTests.swift; sourceTree = SOURCE_ROOT; };
@@ -501,6 +503,7 @@
 				45283B3ED2219CDE0000002A /* HandLayoutTests.swift */,
 				B3594F9427F21EF800000028 /* HomeDealTests.swift */,
 				D7DCEB89EB84497E0000002B /* HomeShelvesTests.swift */,
+				1694AB0D6AA62CC200000030 /* InstructionLinesTests.swift */,
 				9C465978B30833E400000031 /* InterruptionPauseTests.swift */,
 				C92E4C780E979D4F0000002A /* LeaveGuardTests.swift */,
 				65152AEC3FEF3E780000002C /* LevelExplainTests.swift */,
@@ -739,6 +742,7 @@
 				6A2DA899F7F887B000000030 /* HandLayoutTests.swift in Sources */,
 				FEABA1C9F3D55C5A0000002E /* HomeDealTests.swift in Sources */,
 				F7E224CE305ECE5000000031 /* HomeShelvesTests.swift in Sources */,
+				79F834750E51429400000036 /* InstructionLinesTests.swift in Sources */,
 				629698CA737DD94600000037 /* InterruptionPauseTests.swift in Sources */,
 				CE284B5303E4A61900000030 /* LeaveGuardTests.swift in Sources */,
 				EE07AD69390E5FDA00000032 /* LevelExplainTests.swift in Sources */,

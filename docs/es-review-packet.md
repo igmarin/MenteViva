@@ -28,7 +28,7 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `about.build` | The app was built with the help of AI coding assistants, including Meta's Muse Code. | La app se creó con ayuda de asistentes de programación con IA, entre ellos Muse Code de Meta. | AboutView |  |
 | `about.offline` | Nothing in the app uses AI while you play. Your games and photos stay on this device. | Nada en la app usa IA mientras juegas. Tus partidas y fotos se quedan en este dispositivo. | AboutView |  |
 | `about.pictures` | The pictures in this app were made with AI image tools, including Meta's Muse Image, and checked by a person. | Las imágenes de esta app se hicieron con herramientas de IA, entre ellas Muse Image de Meta, y las revisó una persona. | AboutView |  |
-| `about.row` | About | Acerca de | AboutView, SettingsView |  |
+| `about.row` | About | Acerca de | SettingsView |  |
 | `about.row.hint` | How the pictures and the app were made. | Cómo se hicieron las imágenes y la app. | SettingsView |  |
 | `about.title` | About MenteViva | Acerca de MenteViva | AboutView |  |
 | `album.title` | Your picture album | Tu álbum de imágenes | HistoryView |  |
@@ -86,7 +86,7 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `game.category.found %lld %lld` | %1$lld of %2$lld found | %1$lld de %2$lld encontrados | CategoryFluencyView |  |
 | `game.category.fruits` | Fruits | Frutas | CategoryDeal |  |
 | `game.category.home` | Around the house | Cosas de la casa | CategoryDeal |  |
-| `game.category.instruction` | Tap every picture for: | Toca cada imagen de: | CategoryFluencyView |  |
+| `game.category.instruction` | Tap every picture in this category. | Toca cada imagen de esta categoría. | CategoryFluencyView |  |
 | `game.category.kitchen` | In the kitchen | En la cocina | CategoryDeal |  |
 | `game.category.miss` | Not in this group, try another | Ese no es de este grupo, prueba otro | CategoryFluencyView |  |
 | `game.category.plants` | Plants and flowers | Plantas y flores | CategoryDeal |  |
@@ -120,7 +120,7 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `game.colorclash.color.purple` | Purple | Morado | — |  |
 | `game.colorclash.color.red` | Red | Rojo | — |  |
 | `game.colorclash.color.yellow` | Yellow | Amarillo | — |  |
-| `game.colorclash.instruction` | Tap the color of the ink, not the word | Toca el color de la tinta, no la palabra | ColorClashView |  |
+| `game.colorclash.instruction` | Tap the color of the ink, not the word. | Toca el color de la tinta, no la palabra. | ColorClashView |  |
 | `game.colorclash.shape.circle` | Circle | Círculo | ColorClashDeal |  |
 | `game.colorclash.shape.diamond` | Diamond | Rombo | ColorClashDeal |  |
 | `game.colorclash.shape.hexagon` | Hexagon | Hexágono | ColorClashDeal |  |
@@ -138,7 +138,7 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `game.leave.note` | It won't be saved, but you can start a new one any time. | No se guardará, pero puedes empezar otro cuando quieras. | LeaveGuard |  |
 | `game.leave.stay` | Keep playing | Seguir jugando | LeaveGuard |  |
 | `game.leave.title` | Leave this game? | ¿Salir de este juego? | LeaveGuard |  |
-| `game.math.instruction` | Tap the correct answer | Toca la respuesta correcta | MathStreakView |  |
+| `game.math.instruction` | Tap the correct answer. | Toca la respuesta correcta. | MathStreakView |  |
 | `game.math.operator.dividedBy` | divided by | entre | NumberTrailQuestion |  |
 | `game.math.operator.minus` | minus | menos | NumberTrailQuestion |  |
 | `game.math.operator.plus` | plus | más | NumberTrailQuestion |  |
@@ -147,17 +147,17 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `game.memory.a11y.matched` | Pair found | Pareja encontrada | MemoryBoard, MemoryMatchView |  |
 | `game.memory.a11y.position %lld %lld` | Card %lld of %lld | Carta %lld de %lld | MemoryMatchView |  |
 | `game.memory.card.hidden` | Hidden card | Carta oculta | MemoryMatchView |  |
-| `game.memory.instruction` | Find the matching pairs | Encuentra las parejas | MemoryMatchView |  |
+| `game.memory.instruction` | Find the matching pairs. | Encuentra las parejas. | MemoryMatchView |  |
 | `game.memory.miss` | Almost — %1$@ and %2$@ are different | Casi — %1$@ y %2$@ no son pareja | MemoryBoard |  |
 | `game.memory.photo %lld` | Photo %lld | Foto %lld | MemoryMatchView |  |
 | `game.memory.title` | Memory Lane | Camino de Memoria | GameID |  |
-| `game.photocaptions.instruction` | Turn over a photo and a name. Find the name that goes with each photo | Voltea una foto y un nombre. Encuentra el nombre que va con cada foto | MemoryMatchView |  |
+| `game.photocaptions.instruction` | Flip cards to match photos with names. | Voltea cartas para unir cada foto con su nombre. | MemoryMatchView |  |
 | `game.photocaptions.title` | Names and Faces | Nombres y Caras | GameID |  |
 | `game.quickeyes.a11y.flash %@` | Picture shown: %@ | Imagen mostrada: %@ | QuickEyesView |  |
 | `game.quickeyes.almost` | Almost — let's slow down a touch | Casi — vamos un poquito más despacio | QuickEyesView |  |
 | `game.quickeyes.gotit` | Got it | Listo | QuickEyesView |  |
-| `game.quickeyes.instruction` | A picture flashes on screen. Look closely, then tap the one you saw | Aparecerá una imagen por un instante. Mírala bien y luego tócala | QuickEyesView |  |
-| `game.quickeyes.instruction.paced` | A picture appears. Look as long as you like, tap “Got it”, then tap the one you saw | Aparecerá una imagen. Mírala el tiempo que quieras, toca «Listo» y luego toca la que viste | QuickEyesView |  |
+| `game.quickeyes.instruction` | Watch the quick picture, then find it. | Mira la imagen rápida y luego búscala. | QuickEyesView |  |
+| `game.quickeyes.instruction.paced` | Take your time, tap “Got it”, then find it. | Mira con calma, toca «Listo» y luego búscala. | QuickEyesView |  |
 | `game.quickeyes.invite.no` | No, this is fine | No, así está bien | QuickEyesView |  |
 | `game.quickeyes.invite.title` | Want a faster one? | ¿Quieres una más rápida? | QuickEyesView |  |
 | `game.quickeyes.invite.yes` | Yes, a faster one | Sí, más rápida | QuickEyesView |  |
@@ -173,11 +173,11 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `game.reminiscence.prompt.object` | What is this? | ¿Qué es esto? | ReminiscenceDeck |  |
 | `game.reminiscence.prompt.photo` | Who is this? | ¿Quién es? | OnboardingView |  |
 | `game.reminiscence.prompt.story` | Tell a story about this photo | Cuéntame una historia de esta foto | ReminiscenceDeck |  |
-| `game.reminiscence.show` | Show me | Muéstrame | ReminiscenceView |  |
+| `game.reminiscence.show` | Show the name | Ver el nombre | ReminiscenceView |  |
 | `game.reminiscence.title` | Photo Stories | Historias en fotos | GameID |  |
 | `game.round.a11y %lld %lld` | Round %1$lld of %2$lld | Ronda %1$lld de %2$lld | RoundCounter |  |
 | `game.sayings.a11y.listen` | Hear the saying | Escuchar el refrán | SayingsView |  |
-| `game.sayings.instruction` | How does this saying end? | ¿Cómo termina este refrán? | SayingsView |  |
+| `game.sayings.instruction` | Tap the right ending for the saying. | Toca el final correcto del refrán. | SayingsView |  |
 | `game.sayings.miss` | Almost — try again. | Casi — inténtalo de nuevo. | SayingsView |  |
 | `game.sayings.next` | Next | Siguiente | SayingsView |  |
 | `game.sayings.title` | Finish the Saying | Termina el refrán | GameID |  |

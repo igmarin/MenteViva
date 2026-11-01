@@ -410,6 +410,14 @@ final class SudokuPuzzleTests: XCTestCase {
         XCTAssertLessThanOrEqual(SudokuPuzzle.rowPadWidth(side: 100, width: 788), 788)
     }
 
+    /// #531: on an iPad the stacked keys stop at the 640pt game column instead of stretching to the
+    /// window, but a board wider than the column is never squeezed, and beside the board nothing is capped.
+    func testGivenAPadWhenTheColumnIsSizedThenKeysStayInTheColumnAndNeverNarrowerThanTheBoard() {
+        XCTAssertEqual(SudokuPuzzle.columnWidth(size: 4, side: 100, pad: .stacked, column: 640), 640)
+        XCTAssertEqual(SudokuPuzzle.columnWidth(size: 9, side: 100, pad: .row, column: 640), 9 * 100 + SudokuPuzzle.gap * 8)
+        XCTAssertEqual(SudokuPuzzle.columnWidth(size: 9, side: 100, pad: .beside, column: 640), .infinity)
+    }
+
     func testGivenNoKnownHeightWhenLaidOutThenThePhoneBoardsKeepAStackedPad() {
         for level in [2, 6, 9, 10] {
             let layout = drawn(level: level, width: 700, height: nil)

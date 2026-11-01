@@ -62,7 +62,7 @@ private struct FirstPlayGuide: ViewModifier {
         return ZStack {
             Color.black.opacity(0.3).ignoresSafeArea()
             if let target {
-                GuideRing(frame: target, reduceMotion: reduceMotion).id(replay)
+                GuideRing(frame: target, container: size, reduceMotion: reduceMotion).id(replay)
             }
             VStack {
                 if !cardAtTop { Spacer() }
@@ -90,9 +90,9 @@ private struct FirstPlayGuide: ViewModifier {
                 CaptionSpeaker.stop()
                 showing = false
             } label: {
-                Text(AppLanguage.localized("guide.gotit")).font(.title2.weight(.semibold))
+                Text(AppLanguage.localized("guide.gotit"))
             }
-            .buttonStyle(AnswerTileStyle(minHeight: 100))
+            .buttonStyle(RetroButtonStyle())
             Button {
                 replay += 1
                 read()
@@ -113,29 +113,57 @@ private struct FirstPlayGuide: ViewModifier {
 }
 
 /// The ring and arrow over the example. The arrow is decoration (the example is also
-/// written out in words), and the ring is never the only cue.
+/// written out in words), and the ring is never the only cue. Near the top of the screen
+/// (`GuideArrow`) the arrow stands beside the ring, pointing at it, so it never
+/// covers the instruction above the board (#531).
 private struct GuideRing: View {
     let frame: CGRect
+    let container: CGSize
     let reduceMotion: Bool
     @State private var pulse = false
 
     var body: some View {
-        let below = frame.minY < 70
+        let placement = GuideArrow.placement(frame: frame, container: container)
         ZStack {
             RoundedRectangle(cornerRadius: 14)
                 .strokeBorder(Color.amber, lineWidth: 6)
                 .frame(width: frame.width + 12, height: frame.height + 12)
                 .scaleEffect(pulse && !reduceMotion ? 1.08 : 1)
                 .position(x: frame.midX, y: frame.midY)
-            Image(systemName: below ? "arrow.up" : "arrow.down")
-                .font(.system(size: 40, weight: .bold))
+            Image(systemName: placement.symbol)
+                .font(.system(size: placement.size, weight: .bold))
                 .foregroundStyle(Color.amber)
-                .position(x: frame.midX, y: below ? frame.maxY + 40 : frame.minY - 40)
+                .position(placement.center)
         }
         .accessibilityHidden(true)
         .onAppear {
             guard !reduceMotion else { return }
             withAnimation(.easeInOut(duration: 0.8).repeatForever(autoreverses: true)) { pulse = true }
         }
+    }
+}
+
+/// Where the guide's arrow stands for a target, as plain values so it can be tested (#531).
+enum GuideArrow {
+    /// Distance from the ring to the arrow's centre above it.
+    private static let gap: CGFloat = 40
+    /// The ring's stroke reaches 6pt past the target; the side arrow starts right at that edge, so
+    /// it never reaches the next square's digit.
+    private static let ringEdge: CGFloat = 6
+    private static let sideSize: CGFloat = 24
+
+    /// The arrow's SF Symbol, point size and centre. A target in the upper half of the screen is
+    /// a board's top rows, with the instruction line right above it, so the arrow stands beside the
+    /// ring on the roomier side. A target lower down gets the arrow above, pointing down.
+    static func placement(frame: CGRect, container: CGSize) -> (symbol: String, size: CGFloat, center: CGPoint) {
+        if frame.midY < container.height / 2 {
+            let onRight = frame.midX < container.width / 2
+            let offset = ringEdge + sideSize / 2
+            return (
+                onRight ? "arrow.left" : "arrow.right", sideSize,
+                CGPoint(x: onRight ? frame.maxX + offset : frame.minX - offset, y: frame.midY)
+            )
+        }
+        return ("arrow.down", 40, CGPoint(x: frame.midX, y: frame.minY - gap))
     }
 }
