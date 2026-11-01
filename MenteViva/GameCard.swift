@@ -293,7 +293,7 @@ struct Emblem: View {
             }
             context.stroke(flash, with: amber, style: line)
         case .reminiscence:
-            // Remember Together: a framed photo (hills, amber sun) and a speech bubble telling its story.
+            // Photo Stories: a framed photo (hills, amber sun) and a speech bubble telling its story.
             context.stroke(
                 Path(roundedRect: CGRect(x: 6, y: 22, width: 40, height: 34), cornerRadius: 5), with: ink, style: line)
             var hills = Path()
@@ -347,20 +347,18 @@ struct Emblem: View {
                 if index == 1 { context.fill(square, with: amber) } else { context.stroke(square, with: ink, style: line) }
             }
         case .tangram:
-            // Tangram: three pieces making a house, an amber roof over two triangles, with paper seams.
-            var roof = Path()
-            roof.addLines([CGPoint(x: 6, y: 32), CGPoint(x: 32, y: 6), CGPoint(x: 58, y: 32)])
-            roof.closeSubpath()
-            var left = Path()
-            left.addLines([CGPoint(x: 15, y: 32), CGPoint(x: 49, y: 32), CGPoint(x: 15, y: 60)])
-            left.closeSubpath()
-            var right = Path()
-            right.addLines([CGPoint(x: 49, y: 32), CGPoint(x: 49, y: 60), CGPoint(x: 15, y: 60)])
-            right.closeSubpath()
-            context.fill(roof, with: amber)
-            context.fill(left, with: ink)
-            context.fill(right, with: .color(game.ink.opacity(0.55)))
-            for piece in [roof, left, right] {
+            // Tangram: the classic seven pieces in their square (two large triangles, a medium one,
+            // two small ones, the square and the parallelogram), the square in amber, paper seams.
+            let pieces: [[(Double, Double)]] = [
+                [(0, 0), (4, 0), (2, 2)], [(0, 0), (2, 2), (0, 4)], [(4, 2), (4, 4), (2, 4)],
+                [(4, 0), (4, 2), (3, 1)], [(2, 2), (3, 3), (1, 3)], [(0, 4), (1, 3), (3, 3), (2, 4)],
+                [(3, 1), (4, 2), (3, 3), (2, 2)],
+            ]
+            for (index, corners) in pieces.enumerated() {
+                var piece = Path()
+                piece.addLines(corners.map { CGPoint(x: 8 + $0.0 * 12, y: 8 + $0.1 * 12) })
+                piece.closeSubpath()
+                context.fill(piece, with: index == 6 ? amber : ink)
                 context.stroke(piece, with: .color(.paper), style: StrokeStyle(lineWidth: 2.5, lineJoin: .round))
             }
         case .tilePairs:
@@ -370,18 +368,18 @@ struct Emblem: View {
                 Path(roundedRect: CGRect(x: 12, y: 34, width: 40, height: 24), cornerRadius: 6), with: ink, style: line)
             context.fill(circle(32, 46, 5), with: amber)
         case .slidingBlocks:
-            // Sliding Blocks: a board with an exit on the right, the long amber block facing it and
-            // three small blocks around it.
+            // Sliding Blocks: a board with an exit in the middle of the bottom wall, the big amber
+            // block above it with a chevron pointing out, and three small blocks around it.
             var frame = Path()
-            frame.addLines([CGPoint(x: 56, y: 25), CGPoint(x: 56, y: 8), CGPoint(x: 8, y: 8), CGPoint(x: 8, y: 56)])
-            frame.addLines([CGPoint(x: 8, y: 56), CGPoint(x: 56, y: 56), CGPoint(x: 56, y: 39)])
+            frame.addLines([CGPoint(x: 22, y: 56), CGPoint(x: 8, y: 56), CGPoint(x: 8, y: 8), CGPoint(x: 56, y: 8)])
+            frame.addLines([CGPoint(x: 56, y: 8), CGPoint(x: 56, y: 56), CGPoint(x: 42, y: 56)])
             context.stroke(frame, with: ink, style: line)
-            for (x, y) in [(13.0, 13.0), (41, 13), (27, 41)] {
+            for (x, y) in [(12.0, 12.0), (42, 12), (43, 36)] {
                 context.fill(Path(roundedRect: CGRect(x: x, y: y, width: 10, height: 10), cornerRadius: 2.5), with: ink)
             }
-            context.fill(Path(roundedRect: CGRect(x: 13, y: 27, width: 24, height: 10), cornerRadius: 2.5), with: amber)
+            context.fill(Path(roundedRect: CGRect(x: 22, y: 23, width: 20, height: 20), cornerRadius: 3), with: amber)
             var arrow = Path()
-            arrow.addLines([CGPoint(x: 43, y: 27), CGPoint(x: 48, y: 32), CGPoint(x: 43, y: 37)])
+            arrow.addLines([CGPoint(x: 27, y: 47), CGPoint(x: 32, y: 52), CGPoint(x: 37, y: 47)])
             context.stroke(arrow, with: amber, style: line)
         case .photoCaptions:
             // A photo frame over a name line, with an amber sun in the frame.

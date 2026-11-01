@@ -40,11 +40,13 @@ final class GameIDTests: XCTestCase {
             XCTAssertTrue(slugs.contains(slug), "\(game) hero slug \(slug)")
         }
         // Colour Clash, Sudoku, Up or Down and Tile Pairs keep their emblem; Tangram, Sliding
-        // Blocks, Number Trail, Quick Eyes and Remember Together show a drawn mini board (#512).
+        // Blocks, Number Trail, Quick Eyes and the photo game (.reminiscence) show a drawn mini board (#512).
         let emblemOnly = GameID.allCases.filter { $0.heroSlug == nil }
         XCTAssertEqual(
             Set(emblemOnly),
             [.stroop, .sudoku, .upOrDown, .tilePairs, .tangram, .slidingBlocks, .mathStreaks, .quickEyes, .reminiscence])
+        // Home draws Emblem.boards at picture size, so it must be exactly the drawn games minus the four plain emblems.
+        XCTAssertEqual(Set(emblemOnly), Emblem.boards.union([.stroop, .sudoku, .upOrDown, .tilePairs]))
     }
 
     func testGivenGamesWithHeroThenPicturesAreDistinct() {
