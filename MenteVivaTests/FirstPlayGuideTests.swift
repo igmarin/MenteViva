@@ -40,4 +40,28 @@ final class FirstPlayGuideTests: XCTestCase {
             XCTAssertTrue(FirstPlayGuideStore.shouldShow(game, defaults: defaults))
         }
     }
+
+    // MARK: Arrow (#531)
+
+    func testGivenATargetHighOnTheScreenWhenTheArrowIsPlacedThenItStandsBesideTheRing() {
+        let frame = CGRect(x: 20, y: 100, width: 80, height: 80)
+        let arrow = GuideArrow.placement(frame: frame, containerWidth: 400)
+        XCTAssertEqual(arrow.symbol, "arrow.left")
+        XCTAssertGreaterThan(arrow.center.x, frame.maxX)
+        XCTAssertEqual(arrow.center.y, frame.midY)
+    }
+
+    func testGivenAHighTargetOnTheRightWhenTheArrowIsPlacedThenItStandsOnTheLeftPointingRight() {
+        let frame = CGRect(x: 300, y: 100, width: 80, height: 80)
+        let arrow = GuideArrow.placement(frame: frame, containerWidth: 400)
+        XCTAssertEqual(arrow.symbol, "arrow.right")
+        XCTAssertLessThan(arrow.center.x, frame.minX)
+    }
+
+    func testGivenATargetLowerDownWhenTheArrowIsPlacedThenItPointsDownFromAbove() {
+        let frame = CGRect(x: 100, y: 400, width: 80, height: 80)
+        let arrow = GuideArrow.placement(frame: frame, containerWidth: 400)
+        XCTAssertEqual(arrow.symbol, "arrow.down")
+        XCTAssertLessThan(arrow.center.y, frame.minY)
+    }
 }

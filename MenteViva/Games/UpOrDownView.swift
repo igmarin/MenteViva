@@ -184,7 +184,7 @@ struct UpOrDownView: View {
                     .font(.title3.weight(.semibold))
                     .multilineTextAlignment(.center)
                     // Its own width, wider than the card if need be: never cut to "Otra c…".
-.fixedSize(horizontal: false, vertical: true)
+                    .fixedSize(horizontal: false, vertical: true)
             }
             .opacity(deal.deck.isEmpty ? 0.3 : 1)
         }

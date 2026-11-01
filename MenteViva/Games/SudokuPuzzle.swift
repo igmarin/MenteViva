@@ -161,6 +161,14 @@ nonisolated struct SudokuPuzzle: Equatable {
         return min(width, max(board, minTarget * 9 + padSpacing * 8))
     }
 
+    /// Widest the game column gets for a board (#531): `column` (the 640pt game column), or the board's own width
+    /// when that is wider, so keys never stretch to the window but a board is never squeezed. Beside
+    /// the board (landscape) the two share the whole width.
+    static func columnWidth(size: Int, side: Double, pad: PadPlacement, column: Double) -> Double {
+        guard pad != .beside else { return .infinity }
+        return max(column, side * Double(size) + gap * Double(size - 1))
+    }
+
     /// Box shape per board size: 4×4 and 6×6 as before, 9×9 in 3×3 boxes.
     static func boxes(for size: Int) -> (rows: Int, columns: Int) {
         switch size {
