@@ -442,6 +442,14 @@ nonisolated enum TangramLayout: Equatable, Sendable {
         return min(board.width / figure.width, board.height / figure.height, (tray - trayInset) / trayReach)
     }
 
+    /// The most points per unit the board may draw its figure at. Stacked, the tray's: a tile is
+    /// the size of its slot. Side by side, none: the tray keeps its 100pt cell there, and holding
+    /// the figure to it drew an 8x8 figure 76pt across on a phone on its side, so the figure fills
+    /// its half and the tray's tiles are smaller than their slots.
+    func boardCap(tray: CGFloat) -> CGFloat {
+        self == .sideBySide ? .infinity : (tray - Self.trayInset) / Self.trayReach
+    }
+
     /// How tall the grid tray stands with `tiles` cells `side` points across in `width`.
     static func gridHeight(side: CGFloat, width: CGFloat, tiles: Int) -> CGFloat {
         let columns = max(1, Int((width + cellGap) / (side + cellGap)))
@@ -453,8 +461,8 @@ nonisolated enum TangramLayout: Equatable, Sendable {
     /// the board and the tray share one height; this splits it so the figure and the tiles get the
     /// largest scale they can share (the grid also tries each count of rows, at most as wide as the
     /// board). The share doesn't depend on the split, so a second pass returns the same side. Beside
-    /// the board the tray keeps its 100pt cell: an iPhone on its side has no height to spare, so the
-    /// figure is drawn at the tray's scale there. Never under 100pt, the touch target.
+    /// the board the tray keeps its 100pt cell: an iPhone on its side has no height to spare, so
+    /// there the figure is drawn larger than the tiles (`boardCap`). Never under 100pt, the touch target.
     func traySide(board: CGSize, tray: CGFloat, figure: CGSize, tiles: Int) -> CGFloat {
         let cell = Self.cell
         guard self != .sideBySide, tiles > 0, figure.width > 0, figure.height > 0, board.width > 0 else { return cell }
@@ -469,8 +477,11 @@ nonisolated enum TangramLayout: Equatable, Sendable {
             // The scale at which the figure and these rows of cells fill the shared height exactly.
             let filling = (shared - CGFloat(rows) * Self.trayInset - gaps) / (figure.height + CGFloat(rows) * Self.trayReach)
             let fitting = min(width / figure.width, filling, (widest - Self.trayInset) / Self.trayReach)
-            // Whole points: a side a hair over the column's share would drop a column from the grid.
-            let side = max(cell, (fitting * Self.trayReach + Self.trayInset).rounded(.down))
+            // No taller than leaves the board its minimum: under it the page scrolls, the board is
+            // measured taller and the side creeps up pass by pass. Whole points: a side a hair over
+            // the column's share would drop a column from the grid.
+            let room = (shared - gaps - Self.boardMinimum) / CGFloat(rows)
+            let side = max(cell, min(room, fitting * Self.trayReach + Self.trayInset).rounded(.down))
             let board = CGSize(width: width, height: shared - CGFloat(rows) * side - gaps)
             let scale = Self.pieceScale(board: board, tray: side, figure: figure)
             if scale > best.scale { best = (scale, side) }

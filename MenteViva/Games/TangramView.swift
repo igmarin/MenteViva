@@ -48,7 +48,7 @@ struct TangramView: View {
     private var figure: CGSize { TangramPuzzle.boundingBox(of: shape).size }
     /// The tiles dealt to the tray this round: the grid keeps room for all of them as they go home.
     private var dealtTiles: Int { shape.placements.count - rules.prefill }
-    /// Points per unit for figure and tray alike, so a tile is the size of its slot (#511).
+    /// Points per unit for the tray, and for the figure too when stacked: a tile is the size of its slot (#511).
     private var pieceScale: CGFloat {
         TangramLayout.pieceScale(board: boardFrame.size, tray: traySide, figure: figure)
     }
@@ -64,6 +64,8 @@ struct TangramView: View {
                 $0.size
             } action: {
                 area = $0
+                // The board may report before the new area does; settle again for the new layout.
+                settleTray()
             }
             // A whole figure is recorded already, so leaving in the beat before the cover never asks.
             .leaveGuard(
@@ -128,6 +130,8 @@ struct TangramView: View {
 
     /// The hint's two lines are kept even while it is empty, so a miss never makes the page taller:
     /// on a small iPhone that pushed the page into scrolling and sent the tray back to its first tile.
+    /// Never squeezed to one line either: the board's measured height sizes the tray (#511), and a
+    /// squeezed hint let the tray grow by a line that the page then had to scroll for.
     private var hintLine: some View {
         ZStack {
             Text(verbatim: " \n ").hidden()
@@ -135,6 +139,7 @@ struct TangramView: View {
         }
         .font(.title2)
         .multilineTextAlignment(.center)
+        .fixedSize(horizontal: false, vertical: true)
         .frame(maxWidth: .infinity)
     }
 
@@ -162,10 +167,10 @@ struct TangramView: View {
         if abs(side - traySide) >= 1 { traySide = side }
     }
 
-    /// The board's transform, held to the tray's scale so a placed tile matches its tray tile.
+    /// The board's transform, held to the tray's scale when stacked so a placed tile matches its tray tile.
     private func boardFit(_ size: CGSize) -> (scale: CGFloat, origin: CGPoint) {
-        let cap = (traySide - TangramLayout.trayInset) / TangramLayout.trayReach
-        return TangramPuzzle.fitTransform(box: TangramPuzzle.boundingBox(of: shape), in: size, maxScale: cap)
+        TangramPuzzle.fitTransform(
+            box: TangramPuzzle.boundingBox(of: shape), in: size, maxScale: layout.boardCap(tray: traySide))
     }
 
     /// The silhouette and the slots already home. A free slot shows its own outline while the
@@ -436,7 +441,7 @@ struct TangramView: View {
             tile.piece, at: point, rotation: tile.rotation, flipped: tile.flipped,
             minimumReach: TangramPuzzle.reachFloor(
                 points: 30, shape: shape, in: boardSize,
-                maxScale: (traySide - TangramLayout.trayInset) / TangramLayout.trayReach))
+                maxScale: layout.boardCap(tray: traySide)))
         respond(to: result, from: slot)
         return result
     }

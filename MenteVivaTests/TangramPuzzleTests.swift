@@ -520,6 +520,8 @@ final class TangramPuzzleTests: XCTestCase {
         let first = CGSize(width: width, height: shared - tray(TangramLayout.cell))
         let side = layout.traySide(board: first, tray: TangramLayout.cell, figure: figure, tiles: tiles)
         let board = CGSize(width: width, height: shared - tray(side))
+        // The board keeps its minimum: below it the page scrolls and the side creeps up pass by pass.
+        XCTAssertGreaterThanOrEqual(board.height, TangramLayout.boardMinimum, "\(width)x\(shared) \(figure)")
         // A second pass asks for the same side, so the table never flickers between two.
         XCTAssertEqual(layout.traySide(board: board, tray: side, figure: figure, tiles: tiles), side)
         return (side, TangramLayout.pieceScale(board: board, tray: side, figure: figure), board)
@@ -579,7 +581,7 @@ final class TangramPuzzleTests: XCTestCase {
         }
     }
 
-    func testGivenAPhoneOnItsSideWhenTheTraySettlesThenItKeepsItsCellAndTheFigureTakesItsScale() {
+    func testGivenAPhoneOnItsSideWhenTheTraySettlesThenItKeepsItsCellAndItsTilesTheirScale() {
         let board = CGSize(width: 300, height: 300)
         let figure = CGSize(width: 8, height: 8)
         let side = TangramLayout.sideBySide.traySide(board: board, tray: 100, figure: figure, tiles: 7)
@@ -587,6 +589,15 @@ final class TangramPuzzleTests: XCTestCase {
         XCTAssertEqual(
             TangramLayout.pieceScale(board: board, tray: side, figure: figure),
             (TangramLayout.cell - TangramLayout.trayInset) / TangramLayout.trayReach, accuracy: 0.000_001)
+    }
+
+    func testGivenAPhoneOnItsSideWhenTheBoardIsCappedThenOnlyTheStackedLayoutsHoldItToTheTray() {
+        // Side by side the tray stays 100pt for want of height; holding the figure to it drew an
+        // 8x8 figure 76pt across on an iPhone on its side, so there the board fills its half.
+        XCTAssertEqual(TangramLayout.sideBySide.boardCap(tray: TangramLayout.cell), .infinity)
+        for layout in [TangramLayout.row, .grid] {
+            XCTAssertEqual(layout.boardCap(tray: 140), (140 - TangramLayout.trayInset) / TangramLayout.trayReach)
+        }
     }
 
     func testGivenAShapeOnABoardWhenFittedWithTheTraysCapThenItsScaleIsThePieceScale() {
