@@ -14,7 +14,7 @@ struct WeeklySummary: Equatable {
         daysPlayed = Set(week.map { calendar.startOfDay(for: $0) }).count
     }
 
-    /// Warm, plain-text card used on screen and as the share payload.
+    /// Warm, plain-text card sent by the share button (#530: not shown on screen).
     var text: String {
         [
             AppLanguage.localized("history.share.title"),

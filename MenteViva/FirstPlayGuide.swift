@@ -81,7 +81,7 @@ private struct FirstPlayGuide: ViewModifier {
                     .font(.title2.weight(.semibold))
                 Text(example)
                     .font(.title3)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Color.inkSoft)
             }
             .multilineTextAlignment(.center)
             .accessibilityElement(children: .combine)

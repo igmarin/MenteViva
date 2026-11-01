@@ -46,7 +46,7 @@ struct SettingsView: View {
                     }
                     Text(AppLanguage.localized("settings.language.restart"))
                         .font(.footnote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Color.inkSoft)
 
                     Toggle(AppLanguage.localized("settings.sound"), isOn: $soundEnabled)
                         .font(.title3)
@@ -151,7 +151,7 @@ struct SettingsView: View {
                     privacyLine(AppLanguage.localized("settings.privacy.photos"), systemImage: "photo.on.rectangle")
                     Text(String(format: AppLanguage.localized("settings.privacy.backup %@"), device))
                         .font(.body)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Color.inkSoft)
                     if let policy = URL(string: AppLanguage.localized("settings.privacy.policy.url")) {
                         Link(destination: policy) {
                             Label(AppLanguage.localized("settings.privacy.policy"), systemImage: "hand.raised")
@@ -193,6 +193,7 @@ struct SettingsView: View {
     private func sectionHeader(_ key: String) -> some View {
         Text(AppLanguage.localized(key))
             .font(.title3.weight(.heavy))
+            .foregroundStyle(Color.inkSoft)
             .textCase(nil)
             .accessibilityAddTraits(.isHeader)
     }
