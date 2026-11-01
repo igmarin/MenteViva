@@ -2975,6 +2975,22 @@
         }
       }
     },
+    "game.sudoku.a11y.allplaced" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All placed"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todos puestos"
+          }
+        }
+      }
+    },
     "game.sudoku.a11y.cell %lld %lld %lld" : {
       "localizations" : {
         "en" : {
@@ -3131,6 +3147,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Muéstrame uno"
+          }
+        }
+      }
+    },
+    "game.sudoku.tapfirst" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tap a square first"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Primero toca un cuadro"
           }
         }
       }
@@ -12241,13 +12273,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The framed square is chosen. The number %lld fits there."
+            "value" : "For example, the number %lld fits the ringed square."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "El cuadro con marco está elegido. Ahí encaja el número %lld."
+            "value" : "Por ejemplo, en el cuadro marcado encaja el número %lld."
           }
         }
       }

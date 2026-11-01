@@ -232,6 +232,65 @@ final class SudokuPuzzleTests: XCTestCase {
         }
     }
 
+    // MARK: - #510: complete numbers leave the pad, nothing is selected until the player picks
+
+    /// A 4×4 board with 4 given at squares 3 and 5; the 4s still open are squares 10 and 12.
+    private func tinyPuzzleWithFoursGiven() -> SudokuPuzzle {
+        SudokuPuzzle(size: 4, boxRows: 2, boxColumns: 2, solution: Self.tinySolution, givens: [3, 5])
+    }
+
+    func testGivenEveryCopyOfANumberOnTheBoardWhenCheckingThenItIsComplete() {
+        let puzzle = tinyPuzzleWithFoursGiven()
+        XCTAssertEqual(puzzle.completedNumbers(entries: [10: 4, 12: 4]), [4])
+    }
+
+    func testGivenACopyOfANumberStillOpenWhenCheckingThenItIsNotComplete() {
+        let puzzle = tinyPuzzleWithFoursGiven()
+        XCTAssertEqual(puzzle.completedNumbers(entries: [10: 4]), [])
+        XCTAssertEqual(puzzle.completedNumbers(entries: [:]), [])
+    }
+
+    func testGivenAFullBoardWhenCheckingThenEveryNumberIsCompleteAtBothBoardSizes() {
+        for level in [1, 10] {
+            var generator = SeededGenerator(state: UInt64(level))
+            let layout = SudokuPuzzle.layout(for: Difficulty(level: level), width: Self.wide)
+            let puzzle = SudokuPuzzle.make(layout: layout, using: &generator)
+            let entries = Dictionary(
+                uniqueKeysWithValues: puzzle.solution.indices.filter { !puzzle.givens.contains($0) }
+                    .map { ($0, puzzle.solution[$0]) })
+            // A digit is complete at `size` copies, so the board's size sets the count.
+            XCTAssertEqual(puzzle.completedNumbers(entries: entries), Set(1...puzzle.size))
+            XCTAssertEqual(puzzle.size, level == 1 ? 4 : 9)
+        }
+    }
+
+    func testGivenEveryCopyOfANumberIsAGivenWhenNothingIsPlacedThenOnlyThatNumberIsComplete() {
+        // Squares 3, 5, 10 and 12 hold the four 4s.
+        let puzzle = SudokuPuzzle(
+            size: 4, boxRows: 2, boxColumns: 2, solution: Self.tinySolution, givens: [3, 5, 10, 12])
+        XCTAssertEqual(puzzle.completedNumbers(entries: [:]), [4])
+    }
+
+    func testGivenNoSquareSelectedWhenTappingANumberThenThePlayerIsAskedToChooseOne() {
+        XCTAssertEqual(SudokuPuzzle.padTap(selected: nil), .chooseSquareFirst)
+    }
+
+    func testGivenASquareSelectedWhenTappingANumberThenItIsPlacedThere() {
+        XCTAssertEqual(SudokuPuzzle.padTap(selected: 6), .place(6))
+    }
+
+    func testGivenTheNewStringsWhenCatalogReadThenEveryKeyHasEnglishAndSpanish() throws {
+        let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
+        let data = try Data(contentsOf: root.appendingPathComponent("MenteViva/Localizable.xcstrings"))
+        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
+        let strings = try XCTUnwrap(json["strings"] as? [String: Any])
+        for key in ["game.sudoku.tapfirst", "game.sudoku.a11y.allplaced"] {
+            let localizations = (strings[key] as? [String: Any])?["localizations"] as? [String: Any]
+            XCTAssertNotNil(localizations?["en"], "\(key) has no English")
+            XCTAssertNotNil(localizations?["es"], "\(key) has no Spanish")
+        }
+    }
+
     // MARK: - iPad layout (#400)
 
     /// What the screen draws for a level: the board it deals and the arrangement it lays it out
