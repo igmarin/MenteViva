@@ -3313,6 +3313,23 @@
         }
       }
     },
+    "game.upordown.deck.caption" : {
+      "comment" : "Caption under Up or Down's face-down deck, so the player sees it can be tapped (#528).",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New card"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otra carta"
+          }
+        }
+      }
+    },
     "game.upordown.instruction" : {
       "localizations" : {
         "en" : {

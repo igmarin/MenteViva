@@ -1,30 +1,30 @@
 import SwiftUI
 
 /// The one rule behind the leave prompt (#404), kept out of the view so a test can reach it: a
-/// game asks before closing only when the player has moved and the game is not already over.
+/// puzzle game asks before closing only when the player has moved and the game is not already over.
 enum LeaveGuard {
+    /// The games whose half-played board is worth a question (#404). Round games lose a few
+    /// one-tap rounds at most, so they close at once even with rounds played (#528).
+    private static let asksFirst: Set<GameID> = [
+        .sudoku, .tangram, .slidingBlocks, .tilePairs, .upOrDown, .memoryMatch, .photoCaptions,
+    ]
+
     /// `inProgress` is each game's own "has moved" (a placed digit, a move, a tap). Once the
     /// celebration is up the session is recorded, so nothing is lost by leaving, even though the
     /// counters are still above zero.
-    static func needsConfirmation(inProgress: Bool, celebrating: Bool) -> Bool {
-        inProgress && !celebrating
+    static func needsConfirmation(game: GameID, inProgress: Bool, celebrating: Bool) -> Bool {
+        asksFirst.contains(game) && inProgress && !celebrating
     }
 }
 
-extension View {
-    /// Replaces the system back button with one that asks first when a board is half played (#404).
-    /// One stray tap or edge swipe used to throw away minutes of play: nothing is saved until a
-    /// game finishes. Hiding the system button also turns off the edge swipe, so the only way out
-    /// is this button. Put it inside `gameHeader`, so the prompt wears the game's ink.
-    func leaveGuard(inProgress: Bool, celebrating: Bool) -> some View {
-        modifier(LeaveGuardModifier(inProgress: inProgress, celebrating: celebrating))
-    }
-}
-
-/// The back button and its prompt. The prompt is a card over the game, not a `confirmationDialog`
-/// or alert: the system draws those buttons (under 100pt) and on iPad turns a dialog into a
-/// popover without its cancel action.
-private struct LeaveGuardModifier: ViewModifier {
+/// Every game's back button (#528), put on by `gameHeader`, and its prompt (#404). One stray tap
+/// or edge swipe used to throw away minutes of play: nothing is saved until a game finishes.
+/// Hiding the system button also turns off the edge swipe, so this 100pt chevron is the one way
+/// out, in the same place in all 14 games. The prompt is a card over the game, not a
+/// `confirmationDialog` or alert: the system draws those buttons (under 100pt) and on iPad turns
+/// a dialog into a popover without its cancel action.
+struct LeaveGuardModifier: ViewModifier {
+    let game: GameID
     let inProgress: Bool
     let celebrating: Bool
 
@@ -51,7 +51,7 @@ private struct LeaveGuardModifier: ViewModifier {
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button {
-                        if LeaveGuard.needsConfirmation(inProgress: inProgress, celebrating: celebrating) {
+                        if LeaveGuard.needsConfirmation(game: game, inProgress: inProgress, celebrating: celebrating) {
                             asking = true
                         } else {
                             dismiss()

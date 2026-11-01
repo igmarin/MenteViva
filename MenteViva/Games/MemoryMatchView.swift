@@ -194,8 +194,11 @@ struct MemoryMatchView: View {
         }
         .padding()
         // A finished board is recorded already, so leaving in the beat before the cover never asks.
-        .leaveGuard(inProgress: moves > 0 || !board.faceUp.isEmpty, celebrating: showCelebration || board.isComplete)
-        .gameHeader(variant.game, instruction: AppLanguage.localized(variant.instructionKey))
+        .gameHeader(
+            variant.game, instruction: AppLanguage.localized(variant.instructionKey),
+            inProgress: moves > 0 || !board.faceUp.isEmpty,
+            celebrating: showCelebration || board.isComplete
+        )
         .onDisappear {
             flipBackTask?.cancel()
             flipBackTask = nil

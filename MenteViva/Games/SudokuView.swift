@@ -94,8 +94,10 @@ struct SudokuView: View {
             if let puzzle, puzzle.fits(width: area.width) { return }
             restart()
         }
-        .leaveGuard(inProgress: attempts > 0, celebrating: showCelebration)
-        .gameHeader(.sudoku, instruction: AppLanguage.localized("game.sudoku.instruction"))
+        .gameHeader(
+            .sudoku, instruction: AppLanguage.localized("game.sudoku.instruction"), inProgress: attempts > 0,
+            celebrating: showCelebration
+        )
         .firstPlayGuide(.sudoku, line: AppLanguage.localized("game.sudoku.guide"), example: guideExample)
         .celebration(isPresented: $showCelebration, game: .sudoku, detail: finalDetail, onPlayAgain: restart)
     }
@@ -140,6 +142,28 @@ struct SudokuView: View {
                 }
             }
         }
+        .overlay(alignment: .topLeading) { boxOutlines(puzzle, side: side) }
+    }
+
+    /// A 2pt espresso line round every box (#528): the shading alone was about 1.1:1, so the
+    /// boxes all but vanished, most of all in dark mode and on the bigger boards. Each line is
+    /// centred in the 2pt gap between squares, so it never covers a digit or the selection ring.
+    private func boxOutlines(_ puzzle: SudokuPuzzle, side: Double) -> some View {
+        let gap = SudokuPuzzle.gap
+        let width = Double(puzzle.boxColumns) * (side + gap)
+        let height = Double(puzzle.boxRows) * (side + gap)
+        return Path { path in
+            for top in stride(from: 0, to: puzzle.size, by: puzzle.boxRows) {
+                for left in stride(from: 0, to: puzzle.size, by: puzzle.boxColumns) {
+                    let x = Double(left) * (side + gap) - gap / 2
+                    let y = Double(top) * (side + gap) - gap / 2
+                    path.addRect(CGRect(x: x, y: y, width: width, height: height))
+                }
+            }
+        }
+        .stroke(Color.espresso, lineWidth: gap)
+        .allowsHitTesting(false)
+        .accessibilityHidden(true)
     }
 
     @ViewBuilder

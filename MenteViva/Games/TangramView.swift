@@ -68,10 +68,11 @@ struct TangramView: View {
                 settleTray()
             }
             // A whole figure is recorded already, so leaving in the beat before the cover never asks.
-            .leaveGuard(
-                inProgress: puzzle.attempts > 0 || !turns.isEmpty, celebrating: showCelebration || puzzle.isComplete
+            .gameHeader(
+                .tangram, instruction: AppLanguage.localized("game.tangram.instruction"),
+                inProgress: puzzle.attempts > 0 || !turns.isEmpty,
+                celebrating: showCelebration || puzzle.isComplete
             )
-            .gameHeader(.tangram, instruction: AppLanguage.localized("game.tangram.instruction"))
             .firstPlayGuide(
                 .tangram, line: AppLanguage.localized("game.tangram.guide"),
                 example: AppLanguage.localized("guide.tangram.example")
