@@ -10,7 +10,7 @@ App Store Connect and may have moved: follow the intent, not the exact label.
   no entitlements file, so no iCloud/push capability and nothing for App Store Connect to reject.
   **Never archive a `--cloudkit` build for TestFlight**: it traps at launch (AGENTS.md Workflow 3)
   and TestFlight is a real device, which is the case the simulator never reproduces.
-- Version `0.1.0`, build `4` (builds 1 to 3 are already uploaded) live in `tools/generate_project.swift` (`MARKETING_VERSION`,
+- Version `0.1.0`, build `5` (builds 1 to 4 are already uploaded) live in `tools/generate_project.swift` (`MARKETING_VERSION`,
   `CURRENT_PROJECT_VERSION`). Export compliance is answered in the build
   (`ITSAppUsesNonExemptEncryption = NO`: no network, no custom crypto), so uploads don't stop to ask.
 - **Privacy manifest** (`MenteViva/PrivacyInfo.xcprivacy`, copied to the .app root): no tracking, no
