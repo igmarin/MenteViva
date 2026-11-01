@@ -3,10 +3,10 @@ import SwiftUI
 
 /// Shared end-of-game screen (Card Table, step 5): the game's card arrives on
 /// the table stamped "Added to your week", then today's picture for the album
-/// after the day's first game (#376), a warm headline, the progress
-/// line (never points, #45), the week board with today's new card, and two big
-/// actions. During today's games the main one names the next game; otherwise
-/// it is "Play again". Presented as a fullScreenCover by every game on finish.
+/// after the day's first game (#376), a warm headline, the progress line (never points, #45),
+/// two big actions, then the week board with today's new card (the actions come first so they
+/// stay on screen, #526). During today's games the main one names the next game; otherwise it
+/// is "Play again". Presented as a fullScreenCover by every game on finish.
 struct CelebrationView: View {
     let game: GameID
     let detail: String
@@ -88,9 +88,10 @@ struct CelebrationView: View {
                     Feedback.play(.success)
                     AccessibilityNotification.Announcement(AppLanguage.localized("level.explain.raised1")).post()
                 } label: {
-                    Text(AppLanguage.localized("level.offer.yes"))
+                    Text(AppLanguage.localized("level.offer.yes")).font(.title2.weight(.semibold))
                 }
-                .buttonStyle(RetroButtonStyle())
+                // Outlined, so the next action below stays the one filled button (#526).
+                .buttonStyle(AnswerTileStyle(strength: 0.08, minHeight: 100))
                 .accessibilityLabel(AppLanguage.localized("level.offer.yes"))
                 Button {
                     offerAnswered = true
@@ -135,12 +136,23 @@ struct CelebrationView: View {
                 if let today, today.games.contains(game) {
                     progressCapsule(today, closesTheDay: closesTheDay)
                 }
-                card
             }
+            .frame(maxWidth: .infinity)
             .padding(.top, 24)
-            // Room for the stamp, which hangs about 42pt below the card; a little less on the day's
-            // first game, so its picture still leaves the main action on a 6.1" iPhone screen.
-            .padding(.bottom, dailyPicture == nil ? 60 : 44)
+            // The card hangs below the capsule and reserves no room, so the sheet never moves and its
+            // buttons stay put under the finger; for its short rest it floats over the sheet's top (#526).
+            // Hit testing is off: it is only a picture, and opacity 0 would not stop it catching taps.
+            .overlay(alignment: .top) {
+                VStack(spacing: 22) {
+                    // Invisible twin of the capsule, so the card sits where it did at any text size.
+                    if let today, today.games.contains(game) {
+                        progressCapsule(today, closesTheDay: closesTheDay).hidden()
+                    }
+                    card
+                }
+                .padding(.top, 24)
+                .allowsHitTesting(false)
+            }
             // Above the paper sheet below, so the card flies over it to the week board instead of behind it.
             .zIndex(1)
 
@@ -166,6 +178,8 @@ struct CelebrationView: View {
                 } else if shouldShowOffer {
                     offerSection
                 }
+                // Before the week board: the next step is always on screen, never below the fold (#526).
+                actions(next: today?.next(after: game))
                 WeekBoard(
                     days: DayGrouping.thisWeek(sessions, date: \.playedAt).map {
                         (day: $0.day, games: $0.items.compactMap(\.game))
@@ -173,7 +187,6 @@ struct CelebrationView: View {
                     landed: landed
                 )
                 .padding(.vertical, 6)
-                actions(next: today?.next(after: game))
             }
             .padding(24)
             .frame(maxWidth: 560)
@@ -227,7 +240,8 @@ struct CelebrationView: View {
 
     /// The card rests, then shrinks onto today's slot and the slot answers (#421). After the arrival
     /// spring and a hold so the caption can be read. Under Reduce Motion the card cross-fades out
-    /// where it is and the slot is highlighted. The caption stays; VoiceOver is not involved.
+    /// where it is and the slot is highlighted. The stamp leaves with the card; VoiceOver still
+    /// hears the card's fixed label.
     private func landOnTheWeek() async {
         let arrival = reduceMotion ? 0 : 0.65
         try? await Task.sleep(for: .seconds(arrival + CardLanding.hold))
@@ -269,6 +283,8 @@ struct CelebrationView: View {
                     .rotationEffect(.degrees(6))
                     // Below the name band, never over it: the name says which game.
                     .offset(y: 40)
+                    // Lifts away as the card sets off: with no room of its own it would sit over the headline.
+                    .opacity(flown || faded ? 0 : 1)
             }
             .rotationEffect(.degrees(Self.cardTilt))
             .scaleEffect(arrived || reduceMotion ? 1 : 0.8)
