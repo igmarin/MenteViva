@@ -65,6 +65,12 @@ struct RepeatSequenceView: View {
         var name: String { AppLanguage.localized(nameKey) }
     }
 
+    /// `.plain` fades a disabled button, and the board is disabled during the demo: that fade would
+    /// dim the lit tile too. This style draws the label as is, so `tileOpacity` alone decides (#509).
+    private struct TileButtonStyle: ButtonStyle {
+        func makeBody(configuration: Configuration) -> some View { configuration.label }
+    }
+
     private static let roundsPerSession = 5
 
     @State private var difficulty = Difficulty.stored(.repeatSequence)
@@ -148,20 +154,31 @@ struct RepeatSequenceView: View {
                 Button {
                     tap(idx)
                 } label: {
+                    let isLit = lit == idx
                     RoundedRectangle(cornerRadius: 16)
-                        .fill(tile.color.opacity(lit == idx ? 0.95 : 0.75))
+                        .fill(tile.color.opacity(isLit ? 1 : 0.75))
                         .frame(minHeight: 100)
                         .overlay(RoundedRectangle(cornerRadius: 16).strokeBorder(Color.espresso, lineWidth: 3))
+                        // Lit: a thick border in the symbol's colour (white, or espresso on mustard), so the
+                        // cue is shape and contrast, not hue alone (#509).
+                        .overlay {
+                            if isLit {
+                                RoundedRectangle(cornerRadius: 16).strokeBorder(tile.symbolColor, lineWidth: 8)
+                            }
+                        }
                         .overlay {
                             Image(systemName: tile.shape)
                                 .font(.system(size: 40, weight: .bold))
                                 .foregroundStyle(tile.symbolColor)
                                 .accessibilityHidden(true)
                         }
-                        .scaleEffect(lit == idx && !reduceMotion ? 1.06 : 1)
-                        .animation(.easeInOut(duration: 0.2), value: lit)
+                        .shadow(color: isLit ? tile.color.opacity(0.8) : .clear, radius: isLit ? 14 : 0)
+                        .scaleEffect(isLit && !reduceMotion ? 1.06 : 1)
+                        .opacity(SequenceDeal.tileOpacity(isLit: isLit, demoPlaying: showing))
+                        // Reduce Motion: the border and dimming switch without animation.
+                        .animation(reduceMotion ? nil : .easeInOut(duration: 0.2), value: lit)
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(TileButtonStyle())
                 .disabled(showing || isTransitioning)
                 .accessibilityLabel(tile.name)
                 .accessibilityHint(AppLanguage.localized("game.sequence.a11y.hint"))
