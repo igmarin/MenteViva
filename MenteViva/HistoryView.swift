@@ -91,10 +91,6 @@ struct HistoryView: View {
                     .frame(maxWidth: .infinity)
                     .listRowBackground(Color.clear)
                     .accessibilityAddTraits(.isHeader)
-                Text(snapshot.summary.text)
-                    .font(.title3)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.vertical, 8)
             }
 
             Section {
