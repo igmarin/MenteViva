@@ -335,7 +335,7 @@ struct HomeView: View {
                 Spacer()
                 Image(systemName: "chevron.forward")
                     .font(.headline)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Color.inkSoft)
             }
             WeekBoard(days: week)
         }

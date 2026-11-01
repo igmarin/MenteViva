@@ -19,9 +19,11 @@ struct SetUpView: View {
             } header: {
                 Text(AppLanguage.localized("family.games.header"))
                     .font(.title3.weight(.semibold))
+                    .foregroundStyle(Color.inkSoft)
             } footer: {
                 Text(AppLanguage.localized("family.games.footer"))
                     .font(.footnote)
+                    .foregroundStyle(Color.inkSoft)
             }
 
             FamilyPhotosSection()
@@ -117,7 +119,7 @@ private struct FamilyPhotosSection: View {
                                 PhotoThumb(url: url)
                                 Text(captions[url] ?? AppLanguage.localized("family.photos.noname"))
                                     .font(.body)
-                                    .foregroundStyle(captions[url] == nil ? .secondary : .primary)
+                                    .foregroundStyle(captions[url] == nil ? Color.inkSoft : Color.primary)
                                     // Two lines show most names (up to 60 characters); the sheet behind Edit shows all.
                                     .lineLimit(2)
                                     .truncationMode(.tail)
@@ -181,9 +183,11 @@ private struct FamilyPhotosSection: View {
                 Text(AppLanguage.localized("family.photos.why"))
                     .font(.body)
             }
+            .foregroundStyle(Color.inkSoft)
         } footer: {
             Text(String(format: AppLanguage.localized("family.photos.footer %lld"), MemoryPhotos.maxCount))
                 .font(.footnote)
+                .foregroundStyle(Color.inkSoft)
         }
         // A task, not onChange + Task: it is cancelled if Set up goes away mid-pick.
         .task(id: picked) {
@@ -254,7 +258,7 @@ private struct FamilyGameRow: View {
                 .font(.title3.weight(.semibold))
             Text(status)
                 .font(.body)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Color.inkSoft)
         }
         .frame(maxWidth: .infinity, minHeight: 100, alignment: .leading)
         .accessibilityElement(children: .combine)
@@ -306,7 +310,7 @@ private struct FamilyGameView: View {
                 .disabled(isLastVisible)
             } footer: {
                 if isLastVisible {
-                    Text(AppLanguage.localized("family.show.last")).font(.footnote)
+                    Text(AppLanguage.localized("family.show.last")).font(.footnote).foregroundStyle(Color.inkSoft)
                 }
             }
 
@@ -327,9 +331,9 @@ private struct FamilyGameView: View {
                         levelStepper
                     }
                 } header: {
-                    Text(AppLanguage.localized("family.difficulty")).font(.title3)
+                    Text(AppLanguage.localized("family.difficulty")).font(.title3).foregroundStyle(Color.inkSoft)
                 } footer: {
-                    Text(AppLanguage.localized("family.difficulty.footer")).font(.footnote)
+                    Text(AppLanguage.localized("family.difficulty.footer")).font(.footnote).foregroundStyle(Color.inkSoft)
                 }
             }
         }

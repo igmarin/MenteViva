@@ -32,7 +32,7 @@ struct ReminiscenceView: View {
                         if let question = card.question {
                             Text(AppLanguage.localized(question))
                                 .font(.title2)
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(Color.inkSoft)
                         }
                     }
                     .multilineTextAlignment(.center)

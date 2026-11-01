@@ -25,7 +25,7 @@ struct MyPlanView: View {
                 warmUp
                 Text(AppLanguage.localized("myplan.note"))
                     .font(.footnote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Color.inkSoft)
                     .fixedSize(horizontal: false, vertical: true)
             }
             .padding()

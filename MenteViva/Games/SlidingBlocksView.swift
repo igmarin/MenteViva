@@ -209,7 +209,7 @@ struct SlidingBlocksView: View {
             } else {
                 Text(AppLanguage.localized("game.sliding.tapblock"))
                     .font(.title2)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Color.inkSoft)
                     .frame(maxWidth: .infinity, minHeight: 100)
             }
         }
