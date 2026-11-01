@@ -24,6 +24,8 @@ struct SettingsView: View {
                         .accessibilityAddTraits(.isHeader)
                     VStack(spacing: 0) {
                         ForEach(AppLanguage.allCases) { language in
+                            // A line between the options, as the rows below have (#531).
+                            if language != AppLanguage.allCases.first { Divider() }
                             Button {
                                 AppLanguage.apply(language.rawValue)
                             } label: {
@@ -35,6 +37,7 @@ struct SettingsView: View {
                                             .accessibilityHidden(true)
                                     }
                                 }
+                                .font(.title3)
                                 .frame(maxWidth: .infinity, minHeight: 100, alignment: .leading)
                             }
                             .buttonStyle(.plain)

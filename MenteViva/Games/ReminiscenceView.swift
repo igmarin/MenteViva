@@ -2,7 +2,7 @@ import SwiftData
 import SwiftUI
 
 /// Photo Stories (#139, renamed #513): the family's photos one at a time, "Tell a story
-/// about this photo", and a tap on "Show me" reveals the name that helps remember. Nothing
+/// about this photo", and a tap on "Show the name" reveals the name that helps remember. Nothing
 /// can be answered wrongly. It is only dealt once photos are added (`GameAvailability`); the
 /// everyday-object cards stay in the deck, but nothing reaches them.
 struct ReminiscenceView: View {
@@ -21,7 +21,6 @@ struct ReminiscenceView: View {
     var body: some View {
         VStack(spacing: 20) {
             if let card {
-                RoundCounter(progress: progress)
                 picture(of: card)
                     .frame(maxWidth: .infinity, minHeight: 160, maxHeight: .infinity)
                 if revealed, let caption = card.caption {
@@ -42,6 +41,7 @@ struct ReminiscenceView: View {
                         .multilineTextAlignment(.center)
                 }
                 controls(for: card)
+                RoundCounter(progress: progress)
             }
         }
         .gameColumn()

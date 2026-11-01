@@ -997,13 +997,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tap every picture for:"
+            "value" : "Tap every picture in this category."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Toca cada imagen de:"
+            "value" : "Toca cada imagen de esta categoría."
           }
         }
       }
@@ -1558,13 +1558,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tap the color of the ink, not the word"
+            "value" : "Tap the color of the ink, not the word."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Toca el color de la tinta, no la palabra"
+            "value" : "Toca el color de la tinta, no la palabra."
           }
         }
       }
@@ -1795,13 +1795,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tap the correct answer"
+            "value" : "Tap the correct answer."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Toca la respuesta correcta"
+            "value" : "Toca la respuesta correcta."
           }
         }
       }
@@ -1947,13 +1947,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Find the matching pairs"
+            "value" : "Find the matching pairs."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Encuentra las parejas"
+            "value" : "Encuentra las parejas."
           }
         }
       }
@@ -2013,13 +2013,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Turn over a photo and a name. Find the name that goes with each photo"
+            "value" : "Flip cards to match photos with names."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Voltea una foto y un nombre. Encuentra el nombre que va con cada foto"
+            "value" : "Voltea cartas para unir cada foto con su nombre."
           }
         }
       }
@@ -2096,13 +2096,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "A picture flashes on screen. Look closely, then tap the one you saw"
+            "value" : "Watch the quick picture, then find it."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aparecerá una imagen por un instante. Mírala bien y luego tócala"
+            "value" : "Mira la imagen rápida y luego búscala."
           }
         }
       }
@@ -2112,13 +2112,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "A picture appears. Look as long as you like, tap “Got it”, then tap the one you saw"
+            "value" : "Take your time, tap “Got it”, then find it."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aparecerá una imagen. Mírala el tiempo que quieras, toca «Listo» y luego toca la que viste"
+            "value" : "Mira con calma, toca «Listo» y luego búscala."
           }
         }
       }
@@ -2378,13 +2378,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Show me"
+            "value" : "Show the name"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Muéstrame"
+            "value" : "Ver el nombre"
           }
         }
       }
@@ -2443,13 +2443,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "How does this saying end?"
+            "value" : "Tap the right ending for the saying."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "¿Cómo termina este refrán?"
+            "value" : "Toca el final correcto del refrán."
           }
         }
       }
@@ -11389,13 +11389,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "That was perfect. Shall we try the next level?"
+            "value" : "That went really well. Shall we try the next level?"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "¡Te salió perfecto! ¿Probamos el siguiente nivel?"
+            "value" : "¡Te salió muy bien! ¿Probamos el siguiente nivel?"
           }
         }
       }
