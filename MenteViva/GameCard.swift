@@ -75,8 +75,9 @@ struct GameCard: View {
             PictureView(picture: hero, size: picture)
                 .accessibilityHidden(true)
         } else {
+            let side = Emblem.boards.contains(game) ? picture : emblem
             Emblem(game: game)
-                .frame(width: emblem, height: emblem)
+                .frame(width: side, height: side)
         }
     }
 }
@@ -225,6 +226,10 @@ struct GameName: View {
 struct Emblem: View {
     let game: GameID
 
+    /// The games whose emblem is a mini board of the game itself (#512). They replaced an
+    /// unrelated hero picture, so Home and the celebration draw them at the picture's size.
+    static let boards: Set<GameID> = [.tangram, .slidingBlocks, .mathStreaks, .quickEyes, .reminiscence]
+
     var body: some View {
         Canvas { context, size in
             let scale = min(size.width, size.height) / 64
@@ -258,36 +263,53 @@ struct Emblem: View {
             for (x, y) in [(16.0, 41.0), (31, 41), (23.5, 29)] { context.fill(circle(x, y, 6), with: ink) }
             context.fill(circle(54, 22, 6), with: amber)
         case .mathStreaks:
-            // Stepping stones along a dotted trail.
+            // Number Trail: a dotted trail through stones numbered 1, 2, 3, the last one amber.
             var trail = Path()
-            trail.move(to: CGPoint(x: 14, y: 50))
-            trail.addCurve(to: CGPoint(x: 33, y: 32), control1: CGPoint(x: 26, y: 50), control2: CGPoint(x: 23, y: 32))
-            trail.addCurve(to: CGPoint(x: 52, y: 14), control1: CGPoint(x: 43, y: 32), control2: CGPoint(x: 44, y: 14))
+            trail.move(to: CGPoint(x: 13, y: 50))
+            trail.addCurve(to: CGPoint(x: 32, y: 32), control1: CGPoint(x: 25, y: 50), control2: CGPoint(x: 22, y: 32))
+            trail.addCurve(to: CGPoint(x: 51, y: 14), control1: CGPoint(x: 42, y: 32), control2: CGPoint(x: 43, y: 14))
             context.stroke(trail, with: ink, style: StrokeStyle(lineWidth: 3, lineCap: .round, dash: [1, 6]))
-            context.fill(circle(14, 50, 7.5), with: ink)
-            context.fill(circle(33, 32, 7.5), with: ink)
-            context.fill(circle(52, 14, 7.5), with: amber)
+            for (index, (x, y)) in [(13.0, 50.0), (32, 32), (51, 14)].enumerated() {
+                let last = index == 2
+                context.fill(circle(x, y, 10), with: last ? amber : ink)
+                digit(index + 1, at: CGPoint(x: x, y: y), color: last ? .onAmber : .paper, in: &context)
+            }
         case .quickEyes:
-            // An eye, with an amber glint.
+            // Quick Eyes: an eye over a picture card that flashes past, its flash in amber.
             var eye = Path()
-            eye.move(to: CGPoint(x: 6, y: 32))
-            eye.addQuadCurve(to: CGPoint(x: 58, y: 32), control: CGPoint(x: 32, y: 8))
-            eye.addQuadCurve(to: CGPoint(x: 6, y: 32), control: CGPoint(x: 32, y: 56))
+            eye.move(to: CGPoint(x: 8, y: 20))
+            eye.addQuadCurve(to: CGPoint(x: 56, y: 20), control: CGPoint(x: 32, y: 2))
+            eye.addQuadCurve(to: CGPoint(x: 8, y: 20), control: CGPoint(x: 32, y: 38))
             context.stroke(eye, with: ink, style: line)
-            context.fill(circle(32, 32, 10), with: ink)
-            context.fill(circle(36, 28, 3), with: amber)
+            context.fill(circle(32, 20, 7), with: ink)
+            let glimpse = Path(roundedRect: CGRect(x: 21, y: 37, width: 22, height: 24), cornerRadius: 4)
+            context.stroke(glimpse, with: ink, style: line)
+            context.fill(circle(32, 49, 5), with: amber)
+            var flash = Path()
+            let rays = [((16.0, 42.0), (10.0, 39.0)), ((16, 55), (10, 58)), ((48, 42), (54, 39)), ((48, 55), (54, 58))]
+            for (from, to) in rays {
+                flash.move(to: CGPoint(x: from.0, y: from.1))
+                flash.addLine(to: CGPoint(x: to.0, y: to.1))
+            }
+            context.stroke(flash, with: amber, style: line)
         case .reminiscence:
-            // A framed photo: hills and an amber sun.
+            // Photo Stories: a framed photo (hills, amber sun) and a speech bubble telling its story.
             context.stroke(
-                Path(roundedRect: CGRect(x: 10, y: 12, width: 44, height: 40), cornerRadius: 5), with: ink, style: line)
+                Path(roundedRect: CGRect(x: 6, y: 22, width: 40, height: 34), cornerRadius: 5), with: ink, style: line)
             var hills = Path()
             hills.addLines([
-                CGPoint(x: 14, y: 48), CGPoint(x: 27, y: 33), CGPoint(x: 35, y: 41), CGPoint(x: 41, y: 35),
-                CGPoint(x: 50, y: 48),
+                CGPoint(x: 10, y: 52), CGPoint(x: 21, y: 39), CGPoint(x: 28, y: 46), CGPoint(x: 33, y: 41),
+                CGPoint(x: 42, y: 52),
             ])
             hills.closeSubpath()
             context.fill(hills, with: ink)
-            context.fill(circle(44, 22, 4.5), with: amber)
+            context.fill(circle(16, 31, 4), with: amber)
+            var bubble = Path(roundedRect: CGRect(x: 32, y: 6, width: 28, height: 20), cornerRadius: 7)
+            bubble.move(to: CGPoint(x: 38, y: 26))
+            bubble.addLines([CGPoint(x: 34, y: 33), CGPoint(x: 45, y: 26)])
+            context.fill(bubble, with: .color(.paper))
+            context.stroke(bubble, with: ink, style: line)
+            for x in [40.0, 46, 52] { context.fill(circle(x, 16, 2.5), with: ink) }
         case .sudoku:
             // A 3×3 board with a heavy frame and thin dividers, one square filled in amber. Three
             // columns, not Repeat the Sequence's two, so the pair differs in grayscale at 52pt.
@@ -325,18 +347,20 @@ struct Emblem: View {
                 if index == 1 { context.fill(square, with: amber) } else { context.stroke(square, with: ink, style: line) }
             }
         case .tangram:
-            // A square split into triangles, one piece amber.
-            let square = CGRect(x: 10, y: 10, width: 44, height: 44)
-            var cuts = Path(roundedRect: square, cornerRadius: 4)
-            cuts.move(to: CGPoint(x: 10, y: 10))
-            cuts.addLine(to: CGPoint(x: 54, y: 54))
-            cuts.move(to: CGPoint(x: 54, y: 10))
-            cuts.addLine(to: CGPoint(x: 32, y: 32))
-            context.stroke(cuts, with: ink, style: line)
-            var piece = Path()
-            piece.addLines([CGPoint(x: 54, y: 10), CGPoint(x: 54, y: 54), CGPoint(x: 32, y: 32)])
-            piece.closeSubpath()
-            context.fill(piece, with: amber)
+            // Tangram: the classic seven pieces in their square (two large triangles, a medium one,
+            // two small ones, the square and the parallelogram), the square in amber, paper seams.
+            let pieces: [[(Double, Double)]] = [
+                [(0, 0), (4, 0), (2, 2)], [(0, 0), (2, 2), (0, 4)], [(4, 2), (4, 4), (2, 4)],
+                [(4, 0), (4, 2), (3, 1)], [(2, 2), (3, 3), (1, 3)], [(0, 4), (1, 3), (3, 3), (2, 4)],
+                [(3, 1), (4, 2), (3, 3), (2, 2)],
+            ]
+            for (index, corners) in pieces.enumerated() {
+                var piece = Path()
+                piece.addLines(corners.map { CGPoint(x: 8 + $0.0 * 12, y: 8 + $0.1 * 12) })
+                piece.closeSubpath()
+                context.fill(piece, with: index == 6 ? amber : ink)
+                context.stroke(piece, with: .color(.paper), style: StrokeStyle(lineWidth: 2.5, lineJoin: .round))
+            }
         case .tilePairs:
             // Two stacked tiles and an amber dot.
             context.stroke(Path(roundedRect: CGRect(x: 12, y: 6, width: 40, height: 24), cornerRadius: 6), with: ink, style: line)
@@ -344,15 +368,19 @@ struct Emblem: View {
                 Path(roundedRect: CGRect(x: 12, y: 34, width: 40, height: 24), cornerRadius: 6), with: ink, style: line)
             context.fill(circle(32, 46, 5), with: amber)
         case .slidingBlocks:
-            // A frame with blocks and an amber block at the exit.
+            // Sliding Blocks: a board with an exit in the middle of the bottom wall, the big amber
+            // block above it with a chevron pointing out, and three small blocks around it.
             var frame = Path()
-            frame.addLines([CGPoint(x: 8, y: 36), CGPoint(x: 8, y: 8), CGPoint(x: 56, y: 8), CGPoint(x: 56, y: 22)])
-            frame.move(to: CGPoint(x: 56, y: 40))
-            frame.addLines([CGPoint(x: 56, y: 56), CGPoint(x: 8, y: 56), CGPoint(x: 8, y: 44)])
+            frame.addLines([CGPoint(x: 22, y: 56), CGPoint(x: 8, y: 56), CGPoint(x: 8, y: 8), CGPoint(x: 56, y: 8)])
+            frame.addLines([CGPoint(x: 56, y: 8), CGPoint(x: 56, y: 56), CGPoint(x: 42, y: 56)])
             context.stroke(frame, with: ink, style: line)
-            context.fill(Path(roundedRect: CGRect(x: 14, y: 14, width: 16, height: 16), cornerRadius: 3), with: ink)
-            context.fill(Path(roundedRect: CGRect(x: 14, y: 36, width: 28, height: 14), cornerRadius: 3), with: ink)
-            context.fill(Path(roundedRect: CGRect(x: 36, y: 22, width: 16, height: 16), cornerRadius: 3), with: amber)
+            for (x, y) in [(12.0, 12.0), (42, 12), (43, 36)] {
+                context.fill(Path(roundedRect: CGRect(x: x, y: y, width: 10, height: 10), cornerRadius: 2.5), with: ink)
+            }
+            context.fill(Path(roundedRect: CGRect(x: 22, y: 23, width: 20, height: 20), cornerRadius: 3), with: amber)
+            var arrow = Path()
+            arrow.addLines([CGPoint(x: 27, y: 47), CGPoint(x: 32, y: 52), CGPoint(x: 37, y: 47)])
+            context.stroke(arrow, with: amber, style: line)
         case .photoCaptions:
             // A photo frame over a name line, with an amber sun in the frame.
             context.stroke(Path(roundedRect: CGRect(x: 10, y: 8, width: 44, height: 32), cornerRadius: 6), with: ink, style: line)
@@ -371,6 +399,13 @@ struct Emblem: View {
 
     private func circle(_ x: Double, _ y: Double, _ r: Double) -> Path {
         Path(ellipseIn: CGRect(x: x - r, y: y - r, width: r * 2, height: r * 2))
+    }
+
+    /// A number in the round print face, centred on `point`; the emblem's only text, so
+    /// verbatim (digits read the same in EN and ES).
+    private func digit(_ number: Int, at point: CGPoint, color: Color, in context: inout GraphicsContext) {
+        let text = Text(verbatim: "\(number)").font(.system(size: 13, weight: .heavy, design: .rounded)).foregroundStyle(color)
+        context.draw(text, at: point)
     }
 
     /// A 28 × 38 card turned by `angle` degrees around its centre.

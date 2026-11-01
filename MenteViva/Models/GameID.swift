@@ -44,8 +44,9 @@ nonisolated enum GameID: String, CaseIterable, Codable {
     }
 
     /// The retro illustration Home and the celebration card show for this game
-    /// instead of the emblem (#373). Nil keeps the emblem: those four games have
-    /// no picture that says what they are yet, and an owner task will commission them.
+    /// instead of the emblem (#373). Nil keeps the emblem: four games have no picture
+    /// that says what they are yet, and five show a drawn mini board of the game
+    /// instead of an unrelated picture (#512, `Emblem.boards`).
     var heroPicture: GamePicture? { heroSlug.map { GamePictures.named($0) } }
 
     /// The slug behind `heroPicture`, kept apart so a test can check it is in the catalogue
@@ -54,15 +55,11 @@ nonisolated enum GameID: String, CaseIterable, Codable {
         switch self {
         case .memoryMatch: "teapot"
         case .photoCaptions: "picture_frame"
-        case .reminiscence: "sofa"
         case .categoryFluency: "dog"
-        case .mathStreaks: "apple"
-        case .quickEyes: "sunflower"
         case .sayings: "book"
         case .repeatSequence: "piano"
-        case .tangram: "sailboat"
-        case .slidingBlocks: "train"
         case .stroop, .sudoku, .upOrDown, .tilePairs: nil
+        case .tangram, .slidingBlocks, .mathStreaks, .quickEyes, .reminiscence: nil
         }
     }
 
