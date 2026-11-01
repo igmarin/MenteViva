@@ -128,6 +128,15 @@ private struct FamilyPhotosSection: View {
                     }
                 }
                 .padding(.vertical, 8)
+                // On the grid, not the Section (#508): a List hands a Section's modifiers to each of
+                // its rows, header and footer, so the sheet had four presenters; the extra ones
+                // dismissed it a second after it opened.
+                .sheet(item: $captioning) { target in
+                    FamilyPhotoCaptionSheet(photo: target.url) {
+                        reload()
+                        note = nil
+                    }
+                }
             }
             if let note {
                 Text(note)
@@ -149,12 +158,6 @@ private struct FamilyPhotosSection: View {
         } footer: {
             Text(String(format: AppLanguage.localized("family.photos.footer %lld"), MemoryPhotos.maxCount))
                 .font(.footnote)
-        }
-        .sheet(item: $captioning) { target in
-            FamilyPhotoCaptionSheet(photo: target.url) {
-                reload()
-                note = nil
-            }
         }
         // A task, not onChange + Task: it is cancelled if Set up goes away mid-pick.
         .task(id: picked) {
