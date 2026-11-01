@@ -37,13 +37,18 @@ struct UpOrDownView: View {
             if let deal {
                 note(for: deal)
                 piles(deal)
-                // Top-aligned: the deck's caption hangs below it, and the two cards stay level.
-                HStack(alignment: .top, spacing: 32) {
-                    face(deal.open, width: cardWidth(deal) * 1.15)
-                        .accessibilityElement(children: .ignore)
-                        .accessibilityLabel(
-                            String(format: AppLanguage.localized("game.upordown.a11y.open %@"), name(deal.open)))
-                    deckButton(deal)
+                ViewThatFits(in: .horizontal) {
+                    // Top-aligned: the deck's caption hangs below it, and the two cards stay level.
+                    HStack(alignment: .top, spacing: 32) {
+                        openCard(deal)
+                        deckButton(deal)
+                    }
+                    // At the largest text sizes "Otra carta" is wider than a small phone's row
+                    // leaves beside the open card, so the deck goes under it (#528).
+                    VStack(spacing: 16) {
+                        openCard(deal)
+                        deckButton(deal)
+                    }
                 }
             }
         }
@@ -69,6 +74,13 @@ struct UpOrDownView: View {
     }
 
     // MARK: - Table
+
+    private func openCard(_ deal: UpOrDownDeal) -> some View {
+        face(deal.open, width: cardWidth(deal) * 1.15)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(
+                String(format: AppLanguage.localized("game.upordown.a11y.open %@"), name(deal.open)))
+    }
 
     private func cardWidth(_ deal: UpOrDownDeal) -> Double {
         let count = Double(deal.piles.count)

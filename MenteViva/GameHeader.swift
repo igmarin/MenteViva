@@ -7,8 +7,9 @@ extension View {
     /// speaker that reads the instruction aloud. Tapping it is asking to hear
     /// it, so it speaks even with "Read names aloud" off, like the photo
     /// speaker (#139). The page fills the screen, so the paper reaches every edge (#528), and
-    /// the back button is the same 100pt chevron in every game; `inProgress` and `celebrating`
-    /// only matter to the puzzle games that ask before leaving (`LeaveGuard`, #404).
+    /// the back button is the same 100pt chevron in every game. Each game passes its own progress as
+    /// `inProgress` (round games their completed rounds); `LeaveGuard` alone decides which games ask
+    /// before leaving (#404).
     func gameHeader(
         _ game: GameID, instruction: String, inProgress: Bool = false, celebrating: Bool = false
     ) -> some View {

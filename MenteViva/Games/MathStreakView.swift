@@ -67,7 +67,10 @@ struct MathStreakView: View {
         .gameColumn()
         .padding()
         .fitOrScroll()
-        .gameHeader(.mathStreaks, instruction: AppLanguage.localized("game.math.instruction") + " " + question.spoken())
+        .gameHeader(
+            .mathStreaks, instruction: AppLanguage.localized("game.math.instruction") + " " + question.spoken(),
+            inProgress: progress.completedRounds > 0
+        )
         // Not when the celebration closes: Play again has dealt already (#415).
         .onAppear { if options.isEmpty { deal() } }
         .onDisappear {

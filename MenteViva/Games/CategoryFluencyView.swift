@@ -124,7 +124,8 @@ struct CategoryFluencyView: View {
         }
         .gameHeader(
             .categoryFluency,
-            instruction: AppLanguage.localized("game.category.instruction") + " " + (currentRound.map(name(of:)) ?? "")
+            instruction: AppLanguage.localized("game.category.instruction") + " " + (currentRound.map(name(of:)) ?? ""),
+            inProgress: progress.completedRounds > 0
         )
         .onAppear(perform: dealForBoard)
         .onDisappear { completionTask?.cancel() }

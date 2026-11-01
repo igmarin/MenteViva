@@ -18,9 +18,19 @@ final class LeaveGuardTests: XCTestCase {
         XCTAssertFalse(LeaveGuard.needsConfirmation(game: .sudoku, inProgress: true, celebrating: true))
     }
 
-    func testGivenRoundsPlayedInARoundGameWhenLeavingThenItClosesAtOnce() {
-        // A round game loses only a few one-tap rounds, so #404 left it without a prompt.
-        XCTAssertFalse(LeaveGuard.needsConfirmation(game: .mathStreaks, inProgress: true, celebrating: false))
+    func testGivenARoundPlayedInEachRoundGameWhenLeavingThenItClosesAtOnce() {
+        // What the round games pass in: their own round counter after one round (#528). A round game
+        // loses only a few one-tap rounds, so #404 left it without a prompt even then.
+        var progress = RoundProgress(totalRounds: 10)
+        progress.completeRound()
+        let roundGames: [GameID] = [
+            .mathStreaks, .stroop, .sayings, .repeatSequence, .quickEyes, .categoryFluency, .reminiscence,
+        ]
+        for game in roundGames {
+            XCTAssertFalse(
+                LeaveGuard.needsConfirmation(game: game, inProgress: progress.completedRounds > 0, celebrating: false),
+                "\(game)")
+        }
     }
 
     func testGivenEveryGameMidPlayWhenLeavingThenOnlyThePuzzlesFrom404Ask() {
