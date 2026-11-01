@@ -222,37 +222,36 @@ struct OnboardingView: View {
     /// Back and one forward button, both 100pt and always on screen: leaving a question
     /// unanswered is as easy as answering it (#212). On the question that takes several answers
     /// the forward button says "Skip" until something is picked and then "Next", so one button
-    /// does both jobs and the screen keeps a 100pt row (#529).
+    /// does both jobs and the screen keeps a 100pt row (#529). At accessibility sizes the two
+    /// stack, because half the width cannot hold "Siguiente" at that size.
     private func footer(for question: OnboardingQuestion) -> some View {
         let forward = OnboardingSteps.forwardButton(for: question, profile: profile)
-        return HStack(spacing: 12) {
+        let layout =
+            typeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(spacing: 12)) : AnyLayout(HStackLayout(spacing: 12))
+        return layout {
             Button {
                 back()
             } label: {
                 Text(AppLanguage.localized("onboarding.back"))
                     .font(.title2)
             }
-            .buttonStyle(AnswerTileStyle(strength: 0.10))
+            .buttonStyle(AnswerTileStyle(strength: 0.10, minHeight: 100))
             .accessibilityHint(AppLanguage.localized("onboarding.back.hint"))
 
-            // Filled once there is something to keep, quiet while it only skips.
+            let button = Button {
+                next()
+            } label: {
+                Text(AppLanguage.localized(forward.labelKey))
+            }
+            .accessibilityHint(AppLanguage.localized(forward.hintKey))
+
+            // Filled once there is something to keep, quiet while it only skips. Both are 100pt,
+            // so the button does not jump when the first answer is picked.
             if forward == .next {
-                Button {
-                    next()
-                } label: {
-                    Text(AppLanguage.localized(forward.labelKey))
-                }
-                .buttonStyle(RetroButtonStyle())
-                .accessibilityHint(AppLanguage.localized(forward.hintKey))
+                button.buttonStyle(RetroButtonStyle())
             } else {
-                Button {
-                    next()
-                } label: {
-                    Text(AppLanguage.localized(forward.labelKey))
-                        .font(.title2)
-                }
-                .buttonStyle(AnswerTileStyle(strength: 0.10))
-                .accessibilityHint(AppLanguage.localized(forward.hintKey))
+                button.font(.title2).buttonStyle(AnswerTileStyle(strength: 0.10, minHeight: 100))
             }
         }
     }
@@ -327,6 +326,9 @@ struct OnboardingView: View {
             if picked.isEmpty {
                 PhotosPicker(selection: $picked, maxSelectionCount: MemoryPhotos.maxCount, matching: .images) {
                     Label(AppLanguage.localized("family.photos.add"), systemImage: "photo.on.rectangle.angled")
+                        // The style adds no height padding, so a two-line label at the largest sizes
+                        // would touch the edge.
+                        .padding(.vertical, 10)
                 }
                 // The same edged, shadowed button as Start and Next, so the main choice looks
                 // at least as pressable as "Later" (#529).
@@ -410,6 +412,7 @@ struct OnboardingView: View {
                 hasSeenOnboarding = true
             } label: {
                 Text(AppLanguage.localized("warmup.accept"))
+                    .padding(.vertical, 10)
             }
             .buttonStyle(RetroButtonStyle())
             .accessibilityHint(AppLanguage.localized("warmup.accept.hint"))
