@@ -45,7 +45,7 @@ final class FirstPlayGuideTests: XCTestCase {
 
     func testGivenATargetHighOnTheScreenWhenTheArrowIsPlacedThenItStandsBesideTheRing() {
         let frame = CGRect(x: 20, y: 100, width: 80, height: 80)
-        let arrow = GuideArrow.placement(frame: frame, containerWidth: 400)
+        let arrow = GuideArrow.placement(frame: frame, container: CGSize(width: 400, height: 800))
         XCTAssertEqual(arrow.symbol, "arrow.left")
         XCTAssertGreaterThan(arrow.center.x, frame.maxX)
         XCTAssertEqual(arrow.center.y, frame.midY)
@@ -53,15 +53,30 @@ final class FirstPlayGuideTests: XCTestCase {
 
     func testGivenAHighTargetOnTheRightWhenTheArrowIsPlacedThenItStandsOnTheLeftPointingRight() {
         let frame = CGRect(x: 300, y: 100, width: 80, height: 80)
-        let arrow = GuideArrow.placement(frame: frame, containerWidth: 400)
+        let arrow = GuideArrow.placement(frame: frame, container: CGSize(width: 400, height: 800))
         XCTAssertEqual(arrow.symbol, "arrow.right")
         XCTAssertLessThan(arrow.center.x, frame.minX)
     }
 
     func testGivenATargetLowerDownWhenTheArrowIsPlacedThenItPointsDownFromAbove() {
-        let frame = CGRect(x: 100, y: 400, width: 80, height: 80)
-        let arrow = GuideArrow.placement(frame: frame, containerWidth: 400)
+        let frame = CGRect(x: 100, y: 500, width: 80, height: 80)
+        let arrow = GuideArrow.placement(frame: frame, container: CGSize(width: 400, height: 800))
         XCTAssertEqual(arrow.symbol, "arrow.down")
         XCTAssertLessThan(arrow.center.y, frame.minY)
+    }
+
+    func testGivenATallScreenWhenTheBoardStartsWellDownThenTheArrowStillStaysBesideTheRing() {
+        // An iPad portrait Sudoku: the board's top is about 310pt down, the instruction just above it.
+        let frame = CGRect(x: 100, y: 310, width: 90, height: 90)
+        let arrow = GuideArrow.placement(frame: frame, container: CGSize(width: 834, height: 1194))
+        XCTAssertEqual(arrow.symbol, "arrow.left")
+        XCTAssertEqual(arrow.center.y, frame.midY)
+    }
+
+    func testGivenASideArrowWhenPlacedThenItStartsAtTheRingEdgeAndNotOverTheNextSquare() {
+        let frame = CGRect(x: 20, y: 100, width: 80, height: 80)
+        let arrow = GuideArrow.placement(frame: frame, container: CGSize(width: 400, height: 800))
+        // The ring's stroke reaches 6pt past the frame.
+        XCTAssertEqual(arrow.center.x - arrow.size / 2, frame.maxX + 6)
     }
 }

@@ -62,7 +62,7 @@ private struct FirstPlayGuide: ViewModifier {
         return ZStack {
             Color.black.opacity(0.3).ignoresSafeArea()
             if let target {
-                GuideRing(frame: target, containerWidth: size.width, reduceMotion: reduceMotion).id(replay)
+                GuideRing(frame: target, container: size, reduceMotion: reduceMotion).id(replay)
             }
             VStack {
                 if !cardAtTop { Spacer() }
@@ -118,12 +118,12 @@ private struct FirstPlayGuide: ViewModifier {
 /// covers the instruction above the board (#531).
 private struct GuideRing: View {
     let frame: CGRect
-    let containerWidth: CGFloat
+    let container: CGSize
     let reduceMotion: Bool
     @State private var pulse = false
 
     var body: some View {
-        let placement = GuideArrow.placement(frame: frame, containerWidth: containerWidth)
+        let placement = GuideArrow.placement(frame: frame, container: container)
         ZStack {
             RoundedRectangle(cornerRadius: 14)
                 .strokeBorder(Color.amber, lineWidth: 6)
@@ -145,27 +145,23 @@ private struct GuideRing: View {
 
 /// Where the guide's arrow stands for a target, as plain values so it can be tested (#531).
 enum GuideArrow {
-    /// Under this top edge the arrow stands beside the ring: above it, it would cover the
-    /// instruction line, and below it, the card or the example.
-    static let besideBelowMinY: CGFloat = 140
-
-    /// Distance from the ring to the arrow's centre above it, and beside it. The side arrow is
-    /// smaller and closer so it sits in the margin of the neighbouring square, not over its digit.
+    /// Distance from the ring to the arrow's centre above it.
     private static let gap: CGFloat = 40
-    private static let sideGap: CGFloat = 30
-    private static let sideSize: CGFloat = 30
+    /// The ring's stroke reaches 6pt past the target; the side arrow starts right at that edge, so
+    /// it never reaches the next square's digit.
+    private static let ringEdge: CGFloat = 6
+    private static let sideSize: CGFloat = 24
 
-    /// The arrow's SF Symbol, point size and centre: sideways on the roomier side for a high target, else
-    /// pointing down at the ring from above.
-    static func placement(frame: CGRect, containerWidth: CGFloat) -> (symbol: String, size: CGFloat, center: CGPoint) {
-        if frame.minY < besideBelowMinY {
-            // Pointing at the ring from the roomier side, so the arrow stays on screen.
-            let onRight = frame.midX < containerWidth / 2
+    /// The arrow's SF Symbol, point size and centre. A target in the upper half of the screen is
+    /// a board's top rows, with the instruction line right above it, so the arrow stands beside the
+    /// ring on the roomier side. A target lower down gets the arrow above, pointing down.
+    static func placement(frame: CGRect, container: CGSize) -> (symbol: String, size: CGFloat, center: CGPoint) {
+        if frame.midY < container.height / 2 {
+            let onRight = frame.midX < container.width / 2
+            let offset = ringEdge + sideSize / 2
             return (
                 onRight ? "arrow.left" : "arrow.right", sideSize,
-                CGPoint(
-                    x: onRight ? frame.maxX + sideGap : frame.minX - sideGap,
-                    y: frame.midY)
+                CGPoint(x: onRight ? frame.maxX + offset : frame.minX - offset, y: frame.midY)
             )
         }
         return ("arrow.down", 40, CGPoint(x: frame.midX, y: frame.minY - gap))

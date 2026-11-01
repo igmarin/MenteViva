@@ -2096,13 +2096,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Look closely, then tap the one you saw."
+            "value" : "Watch the quick picture, then find it."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mírala bien y luego toca la que viste."
+            "value" : "Mira la imagen rápida y luego búscala."
           }
         }
       }
@@ -2112,13 +2112,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Look, tap “Got it”, then tap what you saw."
+            "value" : "Take your time, tap “Got it”, then find it."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mira, toca «Listo» y luego toca lo que viste."
+            "value" : "Mira con calma, toca «Listo» y luego búscala."
           }
         }
       }
@@ -2443,13 +2443,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tap the ending that finishes the saying."
+            "value" : "Tap the right ending for the saying."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Toca el final que completa el refrán."
+            "value" : "Toca el final correcto del refrán."
           }
         }
       }

@@ -28,7 +28,7 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `about.build` | The app was built with the help of AI coding assistants, including Meta's Muse Code. | La app se creó con ayuda de asistentes de programación con IA, entre ellos Muse Code de Meta. | AboutView |  |
 | `about.offline` | Nothing in the app uses AI while you play. Your games and photos stay on this device. | Nada en la app usa IA mientras juegas. Tus partidas y fotos se quedan en este dispositivo. | AboutView |  |
 | `about.pictures` | The pictures in this app were made with AI image tools, including Meta's Muse Image, and checked by a person. | Las imágenes de esta app se hicieron con herramientas de IA, entre ellas Muse Image de Meta, y las revisó una persona. | AboutView |  |
-| `about.row` | About | Acerca de | AboutView, SettingsView |  |
+| `about.row` | About | Acerca de | SettingsView |  |
 | `about.row.hint` | How the pictures and the app were made. | Cómo se hicieron las imágenes y la app. | SettingsView |  |
 | `about.title` | About MenteViva | Acerca de MenteViva | AboutView |  |
 | `album.title` | Your picture album | Tu álbum de imágenes | HistoryView |  |
@@ -156,8 +156,8 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `game.quickeyes.a11y.flash %@` | Picture shown: %@ | Imagen mostrada: %@ | QuickEyesView |  |
 | `game.quickeyes.almost` | Almost — let's slow down a touch | Casi — vamos un poquito más despacio | QuickEyesView |  |
 | `game.quickeyes.gotit` | Got it | Listo | QuickEyesView |  |
-| `game.quickeyes.instruction` | Look closely, then tap the one you saw. | Mírala bien y luego toca la que viste. | QuickEyesView |  |
-| `game.quickeyes.instruction.paced` | Look, tap “Got it”, then tap what you saw. | Mira, toca «Listo» y luego toca lo que viste. | QuickEyesView |  |
+| `game.quickeyes.instruction` | Watch the quick picture, then find it. | Mira la imagen rápida y luego búscala. | QuickEyesView |  |
+| `game.quickeyes.instruction.paced` | Take your time, tap “Got it”, then find it. | Mira con calma, toca «Listo» y luego búscala. | QuickEyesView |  |
 | `game.quickeyes.invite.no` | No, this is fine | No, así está bien | QuickEyesView |  |
 | `game.quickeyes.invite.title` | Want a faster one? | ¿Quieres una más rápida? | QuickEyesView |  |
 | `game.quickeyes.invite.yes` | Yes, a faster one | Sí, más rápida | QuickEyesView |  |
@@ -177,7 +177,7 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `game.reminiscence.title` | Photo Stories | Historias en fotos | GameID |  |
 | `game.round.a11y %lld %lld` | Round %1$lld of %2$lld | Ronda %1$lld de %2$lld | RoundCounter |  |
 | `game.sayings.a11y.listen` | Hear the saying | Escuchar el refrán | SayingsView |  |
-| `game.sayings.instruction` | Tap the ending that finishes the saying. | Toca el final que completa el refrán. | SayingsView |  |
+| `game.sayings.instruction` | Tap the right ending for the saying. | Toca el final correcto del refrán. | SayingsView |  |
 | `game.sayings.miss` | Almost — try again. | Casi — inténtalo de nuevo. | SayingsView |  |
 | `game.sayings.next` | Next | Siguiente | SayingsView |  |
 | `game.sayings.title` | Finish the Saying | Termina el refrán | GameID |  |
