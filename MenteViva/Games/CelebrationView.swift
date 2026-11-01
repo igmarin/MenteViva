@@ -4,8 +4,8 @@ import SwiftUI
 /// Shared end-of-game screen (Card Table, step 5): the game's card arrives on
 /// the table stamped "Added to your week", then today's picture for the album
 /// after the day's first game (#376), a warm headline, the progress
-/// line (never points, #45), the week board with today's new card, and two big
-/// actions. During today's games the main one names the next game; otherwise
+/// line (never points, #45), two big actions, then the week board with today's new card (the
+/// actions come first so they stay on screen, #526). During today's games the main one names the next game; otherwise
 /// it is "Play again". Presented as a fullScreenCover by every game on finish.
 struct CelebrationView: View {
     let game: GameID
@@ -40,6 +40,9 @@ struct CelebrationView: View {
     @State private var faded = false
     /// The slot is showing that the card arrived: a short swell, or a steady highlight under Reduce Motion.
     @State private var landed = false
+    /// The card's flight is over, so the card and the room reserved for its stamp can go (#526). Not `faded`:
+    /// the sheet moving while the card is still arriving would pull the slot out from under it.
+    @State private var settled = false
 
     /// Today's games from the plan saved for today; nil before there is one.
     private var today: TodayRun? {
@@ -88,9 +91,10 @@ struct CelebrationView: View {
                     Feedback.play(.success)
                     AccessibilityNotification.Announcement(AppLanguage.localized("level.explain.raised1")).post()
                 } label: {
-                    Text(AppLanguage.localized("level.offer.yes"))
+                    Text(AppLanguage.localized("level.offer.yes")).font(.title2.weight(.semibold))
                 }
-                .buttonStyle(RetroButtonStyle())
+                // Outlined, so the next action below stays the one filled button (#526).
+                .buttonStyle(AnswerTileStyle(strength: 0.08, minHeight: 100))
                 .accessibilityLabel(AppLanguage.localized("level.offer.yes"))
                 Button {
                     offerAnswered = true
@@ -135,12 +139,13 @@ struct CelebrationView: View {
                 if let today, today.games.contains(game) {
                     progressCapsule(today, closesTheDay: closesTheDay)
                 }
-                card
+                // Gone once it has landed: its empty frame and the stamp's room pushed the actions below the fold (#526).
+                if !settled { card }
             }
             .padding(.top, 24)
             // Room for the stamp, which hangs about 42pt below the card; a little less on the day's
             // first game, so its picture still leaves the main action on a 6.1" iPhone screen.
-            .padding(.bottom, dailyPicture == nil ? 60 : 44)
+            .padding(.bottom, settled ? 0 : (dailyPicture == nil ? 60 : 44))
             // Above the paper sheet below, so the card flies over it to the week board instead of behind it.
             .zIndex(1)
 
@@ -166,6 +171,8 @@ struct CelebrationView: View {
                 } else if shouldShowOffer {
                     offerSection
                 }
+                // Before the week board: the next step is always on screen, never below the fold (#526).
+                actions(next: today?.next(after: game))
                 WeekBoard(
                     days: DayGrouping.thisWeek(sessions, date: \.playedAt).map {
                         (day: $0.day, games: $0.items.compactMap(\.game))
@@ -173,7 +180,6 @@ struct CelebrationView: View {
                     landed: landed
                 )
                 .padding(.vertical, 6)
-                actions(next: today?.next(after: game))
             }
             .padding(24)
             .frame(maxWidth: 560)
@@ -235,6 +241,7 @@ struct CelebrationView: View {
         if reduceMotion {
             withAnimation(.easeOut(duration: 0.3)) { faded = true }
             landed = true
+            withAnimation(.easeOut(duration: 0.3)) { settled = true }
             return
         }
         withAnimation(.easeInOut(duration: CardLanding.flight)) { flown = true }
@@ -243,6 +250,7 @@ struct CelebrationView: View {
         try? await Task.sleep(for: .seconds(CardLanding.flight))
         guard !Task.isCancelled else { return }
         landed = true
+        withAnimation(.easeOut(duration: 0.3)) { settled = true }
         try? await Task.sleep(for: .seconds(0.4))
         landed = false
     }
