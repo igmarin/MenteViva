@@ -5,7 +5,8 @@ import UIKit
 /// Sudoku (#179): a 4×4, 6×6 or 9×9 board made fresh each game (`SudokuPuzzle`,
 /// levels 1–10 in #201). Tap a square, then a big number. A number that doesn't
 /// fit gets a gentle "try another"; "Show me one" fills the square when he's
-/// stuck. No timer.
+/// stuck. The selection moves only when the player moves it, and a number with
+/// every copy on the board leaves the pad (#510). No timer.
 struct SudokuView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -28,9 +29,23 @@ struct SudokuView: View {
     /// Squares of just-finished units, wearing the game's ink wash (#239).
     @State private var washed: Set<Int> = []
     @State private var washTask: Task<Void, Never>?
-    @State private var showAlmost = false
+    /// The gentle note in the note slot, if any.
+    @State private var note: Note?
     @State private var showCelebration = false
     @State private var finalDetail = ""
+
+    /// Which gentle note shows: the near miss, or the ask to choose a square first (#510).
+    private enum Note {
+        case almost
+        case chooseSquare
+
+        var key: String {
+            switch self {
+            case .almost: "game.sudoku.miss"
+            case .chooseSquare: "game.sudoku.tapfirst"
+            }
+        }
+    }
 
     var body: some View {
         VStack(spacing: 20) {
@@ -101,8 +116,8 @@ struct SudokuView: View {
     /// The same soft amber note as Quick Eyes: kind and easy to read.
     @ViewBuilder
     private var almostNote: some View {
-        if showAlmost {
-            AlmostNote(text: AppLanguage.localized("game.sudoku.miss"))
+        if let note {
+            AlmostNote(text: AppLanguage.localized(note.key))
         }
     }
 
@@ -154,6 +169,7 @@ struct SudokuView: View {
         } else {
             Button {
                 selected = index
+                if note == .chooseSquare { note = nil }
             } label: {
                 face.overlay {
                     if selected == index {
@@ -162,6 +178,7 @@ struct SudokuView: View {
                 }
             }
             .buttonStyle(.plain)
+            .guideTarget(selected == nil && index == openSquares.first)
             .modifier(MissCue(active: missedSquare == index ? $missed : .constant(false)))
             .accessibilityLabel(
                 String(format: AppLanguage.localized("game.sudoku.a11y.empty %lld %lld"), row + 1, column + 1)
@@ -184,18 +201,30 @@ struct SudokuView: View {
         let rowWidth = SudokuPuzzle.rowPadWidth(side: arrangement.side, width: playArea.width)
         let keyHeight = pad == .row ? SudokuPuzzle.padKeyHeight(width: rowWidth) : 100
         let columns = Array(repeating: GridItem(.flexible(), spacing: spacing), count: count)
+        let complete = puzzle.completedNumbers(entries: entries)
         return LazyVGrid(columns: columns, spacing: spacing) {
             ForEach(1...puzzle.size, id: \.self) { digit in
+                let done = complete.contains(digit)
                 Button {
                     place(digit)
                 } label: {
                     Text(verbatim: "\(digit)")
                         .font(.system(size: digitSize, weight: .semibold))
                         .minimumScaleFactor(0.5)
+                        // A complete number keeps its place, faded, with a tick: not colour alone (#510).
+                        .opacity(done ? 0.35 : 1)
+                        .overlay(alignment: .topTrailing) {
+                            if done {
+                                Image(systemName: "checkmark").font(.footnote.weight(.bold))
+                                    .offset(x: 14, y: -10)
+                            }
+                        }
                 }
                 .buttonStyle(AnswerTileStyle(minHeight: keyHeight))
+                .disabled(done)
                 .accessibilityLabel(String(format: AppLanguage.localized("game.sudoku.a11y.put %lld"), digit))
-                .guideTarget(digit == guideDigit)
+                .accessibilityValue(done ? AppLanguage.localized("game.sudoku.a11y.allplaced") : "")
+                .guideTarget(selected != nil && digit == guideDigit)
             }
         }
         .frame(maxWidth: pad == .row ? rowWidth : .infinity)
@@ -208,10 +237,11 @@ struct SudokuView: View {
         return puzzle.solution.indices.filter { !puzzle.givens.contains($0) && entries[$0] == nil }
     }
 
-    /// The number that fits the chosen square: the first-play guide points at it (#243).
+    /// The number that fits the chosen square, or the first open one while nothing is chosen: the
+    /// first-play guide points at it (#243).
     private var guideDigit: Int? {
-        guard let puzzle, let selected else { return nil }
-        return puzzle.solution[selected]
+        guard let puzzle, let index = selected ?? openSquares.first else { return nil }
+        return puzzle.solution[index]
     }
 
     /// The guide's example move in words, for VoiceOver and for reading.
@@ -224,7 +254,7 @@ struct SudokuView: View {
         var generator = SystemRandomNumberGenerator()
         let layout = SudokuPuzzle.layout(for: difficulty, width: playArea.width, height: budgetHeight)
         puzzle = SudokuPuzzle.make(layout: layout, using: &generator)
-        selected = openSquares.first
+        selected = nil
     }
 
     private func restart() {
@@ -236,13 +266,17 @@ struct SudokuView: View {
         shown = []
         correct = 0
         attempts = 0
-        showAlmost = false
+        note = nil
         startedAt = .now
         deal()
     }
 
     private func place(_ digit: Int) {
-        guard let puzzle, let index = selected, entries[index] == nil else { return }
+        guard let puzzle else { return }
+        guard case .place(let index) = SudokuPuzzle.padTap(selected: selected), entries[index] == nil else {
+            askForSquare()
+            return
+        }
         attempts += 1
         if puzzle.solution[index] == digit {
             correct += 1
@@ -262,16 +296,28 @@ struct SudokuView: View {
         } else {
             missedSquare = index
             missed = true
-            showAlmost = true
+            note = .almost
             Feedback.play(.miss)
             // Posted here, not from a `.task(id:)`: two misses in a row keep the same text.
             AccessibilityNotification.Announcement(AppLanguage.localized("game.sudoku.miss")).post()
         }
     }
 
-    /// Fills the selected square with its answer; it counts as a try, not a right answer.
+    /// The gentle "Tap a square first": no sound, no try. Posted here, not from a `.task(id:)`, so
+    /// a second tap with the same text is still announced.
+    private func askForSquare() {
+        note = .chooseSquare
+        AccessibilityNotification.Announcement(AppLanguage.localized(Note.chooseSquare.key)).post()
+    }
+
+    /// Fills the selected square with its answer; it counts as a try, not a right answer. With no
+    /// square chosen it asks for one, as the pad does.
     private func showMe() {
-        guard let puzzle, let index = selected, entries[index] == nil else { return }
+        guard let puzzle else { return }
+        guard let index = selected, entries[index] == nil else {
+            askForSquare()
+            return
+        }
         attempts += 1
         shown.insert(index)
         let digit = puzzle.solution[index]
@@ -327,18 +373,16 @@ struct SudokuView: View {
         }
     }
 
-    /// Fills one square; the callers decide the finish from their `finishes`
-    /// flag, so this never finishes twice.
+    /// Fills one square and clears the selection; the callers decide the finish from their
+    /// `finishes` flag, so this never finishes twice.
     private func fill(_ index: Int, with digit: Int) {
         // The spring animates the placed digit's pop; Reduce Motion fades it.
         withAnimation(.spring(duration: 0.25)) {
             entries[index] = digit
         }
-        showAlmost = false
-        let open = openSquares
-        if !open.isEmpty {
-            selected = open.first { $0 > index } ?? open.first
-        }
+        note = nil
+        // No auto-jump (#510): the player taps the next square.
+        selected = nil
     }
 
     private func finish() {
