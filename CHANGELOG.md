@@ -5,6 +5,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 ## [Unreleased]
 
 ### Changed
+- **Repeat the Sequence: the lit tile is unmistakable (#509):** a lit tile now has full colour, a thick white border (dark on the mustard tile) and a soft glow, and the other tiles dim while the sequence plays. Your own taps flash the same way without dimming the rest. With Reduce Motion it switches with no scaling or fading. Timing and sound are unchanged.
 - **One spelling of the name (#389):** the app is "MenteViva", one word, on the home screen, the Home title, About, the website and the store text.
 - **Tangram remembers the figures you have seen (#416):** a new Tangram figure is one you have not seen yet, even across days, until every figure has been shown; then it starts over.
 - **Leaving a half-played game asks first (#404):** Sudoku, Tangram, Sliding Blocks, Tile Pairs, Up or Down and Memory Lane (and Names and Faces) now have their own back arrow in the top left, as big as the speaker. After your first move it asks "Leave this game?" with two big buttons, Keep playing and Leave, so one stray tap no longer throws away the board; before any move, or once the game is finished, it closes at once. The edge swipe is off in these games. EN + ES.
