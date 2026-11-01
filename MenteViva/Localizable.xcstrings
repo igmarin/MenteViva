@@ -11373,13 +11373,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "That was perfect. Shall we try the next level?"
+            "value" : "That went really well. Shall we try the next level?"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "¡Te salió perfecto! ¿Probamos el siguiente nivel?"
+            "value" : "¡Te salió muy bien! ¿Probamos el siguiente nivel?"
           }
         }
       }

@@ -1,7 +1,7 @@
 # ES review packet — for the native-speaker pass (#12)
 
 Hand this whole file to the reviewer. Generated from `Localizable.xcstrings`
-(820 user-facing strings; keys that are only format specifiers are omitted).
+(821 user-facing strings; keys that are only format specifiers are omitted).
 Rows already signed off on #12 are pre-marked ✅.
 Regenerate after any string change: `python3 tools/generate_es_packet.py`.
 
@@ -276,6 +276,7 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `game.upordown.a11y.empty` | Empty pile | Montón vacío | UpOrDownView |  |
 | `game.upordown.a11y.fits` | fits | sirve | UpOrDownView |  |
 | `game.upordown.a11y.open %@` | Open card: %@ | Carta abierta: %@ | UpOrDownView |  |
+| `game.upordown.deck.caption` | New card | Otra carta | UpOrDownView |  |
 | `game.upordown.guide` | Tap a card one higher or one lower than this one | Toca una carta que sea uno más o uno menos que esta | UpOrDownView |  |
 | `game.upordown.instruction` | Tap a card one higher or one lower. | Toca una carta con uno más o uno menos. | UpOrDownView |  |
 | `game.upordown.miss %@` | Almost — it needs one more or one less than %@. | Casi — necesita uno más o uno menos que %@. | UpOrDownView |  |
@@ -340,7 +341,7 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `level.explain.raised1` | We made it a little harder: you've been doing great. | Lo subimos un poquito: te ha ido muy bien. | CelebrationView, LevelPolicy |  |
 | `level.explain.raised2` | Two steps up: you're flying! | Subimos dos pasos: ¡vas volando! | LevelPolicy |  |
 | `level.offer.keep` | Keep it as it is | Así está bien | CelebrationView |  |
-| `level.offer.prompt` | That was perfect. Shall we try the next level? | ¡Te salió perfecto! ¿Probamos el siguiente nivel? | CelebrationView |  |
+| `level.offer.prompt` | That went really well. Shall we try the next level? | ¡Te salió muy bien! ¿Probamos el siguiente nivel? | CelebrationView |  |
 | `level.offer.yes` | Yes, let's try | Sí, probemos | CelebrationView |  |
 | `myplan.note` | Today's plan stays as it is. These answers decide tomorrow's. | El plan de hoy se queda como está. Estas respuestas deciden el de mañana. | MyPlanView |  |
 | `myplan.open.hint` | Who plays, what to exercise, how long a day and how to start. | Quién juega, qué ejercitar, cuánto tiempo al día y cómo empezar. | SettingsView |  |
