@@ -461,14 +461,16 @@ final class TangramPuzzleTests: XCTestCase {
 
     // MARK: - Tray (#396)
 
+    /// The scale a 100pt cell shows its widest tile at, as the tray draws it.
+    private let cellScale = Double((TangramLayout.cell - TangramLayout.trayInset) / TangramLayout.trayReach)
+
     func testGivenTheThreeTrianglesAtOneTurnWhenDrawnInTheTrayThenTheirLegsKeepTheirRatio() {
-        let scale = TangramPuzzle.trayScale(for: TangramPiece.allCases)
         for rotation in 0..<8 {
             for flipped in [false, true] {
                 let legs = [TangramPiece.large, .medium, .small].map { piece in
                     let points = TangramPuzzle.trayPoints(
                         of: TangramPlacement(piece: piece, position: .zero, rotation: rotation, flipped: flipped),
-                        scale: scale)
+                        scale: cellScale)
                     // Corner 0 is the right angle, corner 1 the end of a leg.
                     return Double(hypot(points[1].x - points[0].x, points[1].y - points[0].y))
                 }
@@ -479,40 +481,112 @@ final class TangramPuzzleTests: XCTestCase {
         }
     }
 
-    func testGivenAnyTileAloneInTheTrayWhenDrawnAtAnyOfEightTurnsThenItFitsCentredInItsCell() {
-        // A tile alone is drawn at the largest scale the tray ever uses for it.
-        for piece in TangramPiece.allCases {
-            let scale = TangramPuzzle.trayScale(for: [piece])
-            for rotation in 0..<8 {
-                for flipped in [false, true] {
-                    let points = TangramPuzzle.trayPoints(
-                        of: TangramPlacement(piece: piece, position: .zero, rotation: rotation, flipped: flipped),
-                        scale: scale)
-                    let xs = points.map(\.x)
-                    let ys = points.map(\.y)
-                    let label = "\(piece) turn \(rotation) flipped \(flipped)"
-                    XCTAssertGreaterThanOrEqual(xs.min() ?? -1, 12 - 0.000_001, label)
-                    XCTAssertLessThanOrEqual(xs.max() ?? 101, 88 + 0.000_001, label)
-                    XCTAssertGreaterThanOrEqual(ys.min() ?? -1, 12 - 0.000_001, label)
-                    XCTAssertLessThanOrEqual(ys.max() ?? 101, 88 + 0.000_001, label)
-                    XCTAssertEqual(((xs.min() ?? 0) + (xs.max() ?? 0)) / 2, 50, accuracy: 0.000_001, label)
-                    XCTAssertEqual(((ys.min() ?? 0) + (ys.max() ?? 0)) / 2, 50, accuracy: 0.000_001, label)
+    func testGivenAnyTileInACellWhenDrawnAtAnyOfEightTurnsThenItFitsCentredInsideTheInset() {
+        // A 100pt cell and a 180pt one, each at the largest scale it shows a tile at.
+        for cell in [100.0, 180.0] {
+            let scale = (cell - Double(TangramLayout.trayInset)) / Double(TangramLayout.trayReach)
+            let margin = Double(TangramLayout.trayInset) / 2
+            for piece in TangramPiece.allCases {
+                for rotation in 0..<8 {
+                    for flipped in [false, true] {
+                        let points = TangramPuzzle.trayPoints(
+                            of: TangramPlacement(piece: piece, position: .zero, rotation: rotation, flipped: flipped),
+                            scale: scale, cell: cell)
+                        let xs = points.map(\.x)
+                        let ys = points.map(\.y)
+                        let label = "\(cell) \(piece) turn \(rotation) flipped \(flipped)"
+                        XCTAssertGreaterThanOrEqual(xs.min() ?? -1, margin - 0.000_001, label)
+                        XCTAssertLessThanOrEqual(xs.max() ?? cell + 1, cell - margin + 0.000_001, label)
+                        XCTAssertGreaterThanOrEqual(ys.min() ?? -1, margin - 0.000_001, label)
+                        XCTAssertLessThanOrEqual(ys.max() ?? cell + 1, cell - margin + 0.000_001, label)
+                        XCTAssertEqual(((xs.min() ?? 0) + (xs.max() ?? 0)) / 2, cell / 2, accuracy: 0.000_001, label)
+                        XCTAssertEqual(((ys.min() ?? 0) + (ys.max() ?? 0)) / 2, cell / 2, accuracy: 0.000_001, label)
+                    }
                 }
             }
         }
     }
 
-    func testGivenOnlySmallTilesLeftWhenTheTrayIsScaledThenTheyDrawTwiceAsBigAsBesideALargeOne() {
-        let small: [TangramPiece] = [.small, .small2, .square]
-        XCTAssertEqual(
-            TangramPuzzle.trayScale(for: small), 2 * TangramPuzzle.trayScale(for: small + [.large]),
-            accuracy: 0.000_001)
-        // The small triangle's leg, 2√2 units, is over 50pt: easy to see for a low-vision player.
-        XCTAssertGreaterThan(2 * sqrt(2) * TangramPuzzle.trayScale(for: small), 50)
+    // MARK: - One scale for board and tray (#511)
+
+    /// The board and tray a stacked table settles on: the board measured with a 100pt cell under
+    /// it, then measured again with the side it asked for. Returns the side and the shared scale.
+    private func settle(
+        _ layout: TangramLayout, width: CGFloat, shared: CGFloat, figure: CGSize, tiles: Int = 7
+    ) -> (side: CGFloat, scale: CGFloat, board: CGSize) {
+        func tray(_ side: CGFloat) -> CGFloat {
+            layout == .grid ? TangramLayout.gridHeight(side: side, width: width, tiles: tiles) : side
+        }
+        let first = CGSize(width: width, height: shared - tray(TangramLayout.cell))
+        let side = layout.traySide(board: first, tray: TangramLayout.cell, figure: figure, tiles: tiles)
+        let board = CGSize(width: width, height: shared - tray(side))
+        // A second pass asks for the same side, so the table never flickers between two.
+        XCTAssertEqual(layout.traySide(board: board, tray: side, figure: figure, tiles: tiles), side)
+        return (side, TangramLayout.pieceScale(board: board, tray: side, figure: figure), board)
     }
 
-    func testGivenAnEmptyTrayWhenScaledThenItUsesTheLargeTilesScale() {
-        XCTAssertEqual(TangramPuzzle.trayScale(for: []), TangramPuzzle.trayScale(for: [.large]))
+    func testGivenABoardRoomierThanItsTrayWhenScaledThenTheFigureIsHeldToTheTraysScale() {
+        let scale = TangramLayout.pieceScale(
+            board: CGSize(width: 358, height: 425), tray: 100, figure: CGSize(width: 8, height: 8))
+        XCTAssertEqual(scale, (100 - TangramLayout.trayInset) / TangramLayout.trayReach, accuracy: 0.000_001)
+    }
+
+    func testGivenAnUprightPhoneAtASmallAndALargeWidthWhenTheTraySettlesThenATileIsTheSizeOfItsSlot() {
+        // iPhone SE and iPhone 17e upright: the table's width and the height board and tray share.
+        // A tall figure, a square one and a wide one.
+        for (width, shared) in [(CGFloat(343), CGFloat(330)), (358, 525)] {
+            for figure in [CGSize(width: 8, height: 21), CGSize(width: 8, height: 8), CGSize(width: 14, height: 6)] {
+                let result = settle(.row, width: width, shared: shared, figure: figure)
+                let label = "\(width)x\(shared) \(figure)"
+                // The figure is drawn at the shared scale, and fits its board.
+                XCTAssertLessThanOrEqual(figure.width * result.scale, result.board.width + 0.001, label)
+                XCTAssertLessThanOrEqual(figure.height * result.scale, result.board.height + 0.001, label)
+                // The widest tile at that scale fits inside its cell's inset.
+                XCTAssertLessThanOrEqual(
+                    TangramLayout.trayReach * result.scale + TangramLayout.trayInset, result.side + 0.001, label)
+                XCTAssertGreaterThanOrEqual(result.side, TangramLayout.cell, label)
+                // Never smaller than the old 100pt cell allowed both.
+                XCTAssertGreaterThanOrEqual(
+                    result.scale,
+                    TangramLayout.pieceScale(
+                        board: CGSize(width: width, height: shared - TangramLayout.cell), tray: TangramLayout.cell,
+                        figure: figure) - 0.001, label)
+            }
+        }
+    }
+
+    func testGivenTheTallFigureOnAnIPhone17eWhenTheTraySettlesThenItsTilesGrowFromAThirdOfTheirSlot() {
+        // Before #511 the tray drew a large tile at 9.5pt a unit beside a board at about 20.
+        let result = settle(.row, width: 358, shared: 525, figure: CGSize(width: 8, height: 21))
+        XCTAssertGreaterThan(result.scale, 15)
+        XCTAssertGreaterThan(result.side, 140)
+    }
+
+    func testGivenAFullScreenIPadWhenTheGridSettlesThenItsRowsFitTheWidthAtTheSharedScale() {
+        // iPad Pro 11" upright: the table's width and the height board and grid share.
+        for figure in [CGSize(width: 8, height: 21), CGSize(width: 8, height: 8), CGSize(width: 14, height: 6)] {
+            for tiles in [3, 7] {
+                let result = settle(.grid, width: 802, shared: 960, figure: figure, tiles: tiles)
+                let label = "\(figure) \(tiles)"
+                let columns = Int((802 + TangramLayout.cellGap) / (result.side + TangramLayout.cellGap))
+                XCTAssertGreaterThanOrEqual(columns, 1, label)
+                XCTAssertLessThanOrEqual(figure.height * result.scale, result.board.height + 0.001, label)
+                XCTAssertLessThanOrEqual(
+                    TangramLayout.trayReach * result.scale + TangramLayout.trayInset, result.side + 0.001, label)
+                // Room to spare on an iPad: tiles and figure both grow past a 100pt cell's scale.
+                XCTAssertGreaterThan(result.side, TangramLayout.cell, label)
+            }
+        }
+    }
+
+    func testGivenAPhoneOnItsSideWhenTheTraySettlesThenItKeepsItsCellAndTheFigureTakesItsScale() {
+        let board = CGSize(width: 300, height: 300)
+        let figure = CGSize(width: 8, height: 8)
+        let side = TangramLayout.sideBySide.traySide(board: board, tray: 100, figure: figure, tiles: 7)
+        XCTAssertEqual(side, TangramLayout.cell)
+        XCTAssertEqual(
+            TangramLayout.pieceScale(board: board, tray: side, figure: figure),
+            (TangramLayout.cell - TangramLayout.trayInset) / TangramLayout.trayReach, accuracy: 0.000_001)
     }
 
     // MARK: - Layout (#396)

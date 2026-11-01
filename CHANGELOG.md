@@ -5,6 +5,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 ## [Unreleased]
 
 ### Changed
+- **Tangram tiles are the size of their place in the figure (#511):** the tiles under the figure are now drawn at the figure's own scale, so a tile and the spot it fills look the same size; the tile boxes grow to hold them (the row still slides sideways on a phone, and an iPad wraps them in rows). "Show me one" now sits under the tiles as a quiet outlined button, still 100pt tall and read by VoiceOver; Turn and Flip sit beside it.
 - **Repeat the Sequence: the lit tile is unmistakable (#509):** a lit tile now has full colour, a thick white border (dark on the mustard tile) and a soft glow, and the other tiles dim while the sequence plays. Your own taps flash the same way without dimming the rest. With Reduce Motion it switches with no scaling or fading. Timing and sound are unchanged.
 - **One spelling of the name (#389):** the app is "MenteViva", one word, on the home screen, the Home title, About, the website and the store text.
 - **Tangram remembers the figures you have seen (#416):** a new Tangram figure is one you have not seen yet, even across days, until every figure has been shown; then it starts over.

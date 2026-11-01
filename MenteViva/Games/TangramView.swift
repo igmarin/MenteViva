@@ -39,10 +39,19 @@ struct TangramView: View {
     /// Held here, above `fitOrScroll`: turning the phone can swap its fitting copy of the table for
     /// the scrolling one (or back), and a banner built afresh would lose today's note (#481).
     @State private var noteMemo = LevelExplainBanner.Memo()
+    /// The tray cell's side, settled from the measured board so tiles and figure share one scale (#511).
+    @State private var traySide = TangramLayout.cell
 
     private var shape: TangramShape { puzzle.shape }
     private var rules: TangramRules { puzzle.rules }
     private var layout: TangramLayout { TangramLayout.choose(for: area) }
+    private var figure: CGSize { TangramPuzzle.boundingBox(of: shape).size }
+    /// The tiles dealt to the tray this round: the grid keeps room for all of them as they go home.
+    private var dealtTiles: Int { shape.placements.count - rules.prefill }
+    /// Points per unit for figure and tray alike, so a tile is the size of its slot (#511).
+    private var pieceScale: CGFloat {
+        TangramLayout.pieceScale(board: boardFrame.size, tray: traySide, figure: figure)
+    }
 
     var body: some View {
         measuredTable
@@ -82,7 +91,8 @@ struct TangramView: View {
     }
 
     /// Stacked on an iPad or an upright iPhone; on an iPhone on its side the board takes the left
-    /// half and the rest stands beside it, since the stack is taller than the screen there. Side by
+    /// half and the rest stands beside it, since the stack is taller than the screen there. The
+    /// buttons sit under the tray, so the tiles come right after the figure they fill (#511). Side by
     /// side the gaps and the top and bottom padding are halved: an iPhone SE on its side leaves
     /// about 300pt, and the hint, buttons and tray need 272pt of it. One `AnyLayout` holds the same
     /// two groups either way, so the level note keeps its place in the tree (and its memo) when the
@@ -99,8 +109,8 @@ struct TangramView: View {
             }
             VStack(spacing: sideBySide ? TangramLayout.cellGap / 1.5 : gap) {
                 hintLine
-                controls
                 tray
+                controls
             }
         }
     }
@@ -139,14 +149,28 @@ struct TangramView: View {
             $0.frame(in: .named(Self.space))
         } action: { frame in
             boardFrame = frame
+            settleTray()
         }
         .modifier(MissCue(active: $missed))
+    }
+
+    /// Resizes the tray cells for the board just measured; the board then grows or shrinks by as
+    /// much and is measured again, and that pass asks for the same side (`TangramLayout.traySide`).
+    private func settleTray() {
+        let side = layout.traySide(board: boardFrame.size, tray: traySide, figure: figure, tiles: dealtTiles)
+        if abs(side - traySide) >= 1 { traySide = side }
+    }
+
+    /// The board's transform, held to the tray's scale so a placed tile matches its tray tile.
+    private func boardFit(_ size: CGSize) -> (scale: CGFloat, origin: CGPoint) {
+        let cap = (traySide - TangramLayout.trayInset) / TangramLayout.trayReach
+        return TangramPuzzle.fitTransform(box: TangramPuzzle.boundingBox(of: shape), in: size, maxScale: cap)
     }
 
     /// The silhouette and the slots already home. A free slot shows its own outline while the
     /// level gives it; a filled one is drawn solid with a dark edge. One tap handler reads the point.
     private func board(size: CGSize) -> some View {
-        let fit = TangramPuzzle.fitTransform(box: TangramPuzzle.boundingBox(of: shape), in: size)
+        let fit = boardFit(size)
         return ZStack {
             ForEach(shape.placements.indices, id: \.self) { slot in
                 slotView(slot, scale: fit.scale, origin: fit.origin)
@@ -196,7 +220,8 @@ struct TangramView: View {
 
     // MARK: - Controls
 
-    /// Turn from level 7, Flip from level 9, "Show me one" at every level; all 100pt.
+    /// Turn from level 7, Flip from level 9, "Show me one" at every level; all 100pt. "Show me one"
+    /// is the quiet one, last and outlined with no fill (#511): it helps, it isn't the game.
     /// At accessibility text sizes the buttons stack, one to a row: three side by side leave a word
     /// about 80pt, and "Muéstrame" at that size would be cut to "Muést…" (#481).
     private var controls: some View {
@@ -210,8 +235,18 @@ struct TangramView: View {
             if rules.matchFlip {
                 controlButton("game.tangram.flip", enabled: selected != nil) { adjustSelected(TangramPuzzle.mirrored) }
             }
-            controlButton("game.tangram.showone", enabled: !puzzle.isComplete, action: showOne)
+            showOneButton
         }
+    }
+
+    private var showOneButton: some View {
+        let title = AppLanguage.localized("game.tangram.showone")
+        return Button(action: showOne) {
+            controlLabel(title, weight: .regular)
+        }
+        .buttonStyle(QuietTileStyle())
+        .accessibilityLabel(title)
+        .disabled(puzzle.isComplete)
     }
 
     private func controlButton(_ key: String, enabled: Bool, action: @escaping () -> Void) -> some View {
@@ -228,13 +263,13 @@ struct TangramView: View {
     /// steps down a size together until the longest word fits: side by side at levels 9-10 three
     /// buttons share about 300pt, and a plain two-line label broke "Muéstrame" mid-word with a
     /// hyphen, which `minimumScaleFactor` does not prevent (#481). The last step may still shrink.
-    private func controlLabel(_ title: String) -> some View {
+    private func controlLabel(_ title: String, weight: Font.Weight = .semibold) -> some View {
         let words = title.split(separator: " ").map(String.init)
         return ViewThatFits(in: .horizontal) {
-            Text(title).font(.title2.weight(.semibold)).lineLimit(1)
-            wordStack(words, font: .title2.weight(.semibold))
-            wordStack(words, font: .title3.weight(.semibold))
-            wordStack(words, font: .headline).minimumScaleFactor(0.5)
+            Text(title).font(.title2.weight(weight)).lineLimit(1)
+            wordStack(words, font: .title2.weight(weight))
+            wordStack(words, font: .title3.weight(weight))
+            wordStack(words, font: .headline.weight(weight)).minimumScaleFactor(0.5)
         }
     }
 
@@ -251,7 +286,8 @@ struct TangramView: View {
 
     // MARK: - Tray
 
-    /// One 100pt cell per tile still to place. Tapping selects (a thick edge, not colour, marks it);
+    /// One square cell per tile still to place, at least 100pt and as big as the shared scale needs
+    /// (#511): the tiles are drawn at the figure's own scale. Tapping selects (a thick edge, not colour, marks it);
     /// dragging drops it on the board; VoiceOver lists the slots it fits as actions. Where there is
     /// room (a full-screen iPad) the cells wrap in a grid. Elsewhere they sit in one row that
     /// scrolls sideways (#396): two or three wrapped rows pushed the whole page into scrolling. At
@@ -263,17 +299,21 @@ struct TangramView: View {
             ScrollView(.horizontal) {
                 LazyHStack(spacing: gap) { trayTiles }
             }
-            .frame(height: TangramLayout.cell)
+            .frame(height: traySide)
             .scrollIndicators(.visible)
         } else {
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: TangramLayout.cell), spacing: gap)], spacing: gap) {
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: traySide), spacing: gap)], spacing: gap) {
                 trayTiles
             }
+            // The dealt rows stay, so the board keeps its scale as the tiles go home.
+            .frame(
+                minHeight: TangramLayout.gridHeight(side: traySide, width: boardFrame.width, tiles: dealtTiles),
+                alignment: .top)
         }
     }
 
     private var trayTiles: some View {
-        let scale = TangramPuzzle.trayScale(for: puzzle.freeSlots.map { shape.placements[$0].piece })
+        let scale = Double(pieceScale)
         return ForEach(puzzle.freeSlots, id: \.self) { slot in
             trayTile(slot, scale: scale)
         }
@@ -286,8 +326,8 @@ struct TangramView: View {
             selected = isSelected ? nil : slot
             hint = nil
         } label: {
-            Self.drawing(of: tile, scale: scale)
-                .frame(width: 100, height: 100)
+            Self.drawing(of: tile, scale: scale, cell: traySide)
+                .frame(width: traySide, height: traySide)
                 .background(Color.paper, in: .rect(cornerRadius: 16))
                 .overlay {
                     RoundedRectangle(cornerRadius: 16)
@@ -297,7 +337,7 @@ struct TangramView: View {
                 }
         }
         .buttonStyle(.plain)
-        return withDrag(button, slot: slot, preview: Self.drawing(of: tile, scale: scale))
+        return withDrag(button, slot: slot, preview: Self.drawing(of: tile, scale: scale, cell: traySide))
             .guideTarget(slot == puzzle.freeSlots.first)
             .accessibilityLabel(AppLanguage.localized(tile.piece.nameKey))
             .accessibilityAddTraits(isSelected ? .isSelected : [])
@@ -314,7 +354,7 @@ struct TangramView: View {
     /// its tile follows the finger and drops where the tile's middle is when the drag ends (#415).
     @ViewBuilder private func withDrag(_ tile: some View, slot: Int, preview: some View) -> some View {
         if layout.traySlides {
-            tile.draggable(String(slot)) { preview.frame(width: 100, height: 100) }
+            tile.draggable(String(slot)) { preview.frame(width: traySide, height: traySide) }
         } else {
             tile
                 .offset(grab?.slot == slot ? grab?.offset ?? .zero : .zero)
@@ -340,10 +380,10 @@ struct TangramView: View {
         }
     }
 
-    /// A tray tile drawn turned and mirrored as it is now, at the tray's one shared scale.
-    private static func drawing(of tile: TangramPlacement, scale: Double) -> some View {
+    /// A tray tile drawn turned and mirrored as it is now, at the figure's scale, in a `cell`-point square.
+    private static func drawing(of tile: TangramPlacement, scale: Double, cell: CGFloat) -> some View {
         var path = Path()
-        path.addLines(TangramPuzzle.trayPoints(of: tile, scale: scale))
+        path.addLines(TangramPuzzle.trayPoints(of: tile, scale: scale, cell: Double(cell)))
         path.closeSubpath()
         return path.fill(GameID.tangram.ink.opacity(0.55))
     }
@@ -379,7 +419,7 @@ struct TangramView: View {
     private func drop(_ slot: Int, at location: CGPoint) {
         guard boardFrame.contains(location) else { return }
         let local = CGPoint(x: location.x - boardFrame.minX, y: location.y - boardFrame.minY)
-        let fit = TangramPuzzle.fitTransform(box: TangramPuzzle.boundingBox(of: shape), in: boardFrame.size)
+        let fit = boardFit(boardFrame.size)
         place(slot, at: TangramPuzzle.fromScreen(local, scale: fit.scale, origin: fit.origin), boardSize: boardFrame.size)
     }
 
@@ -391,7 +431,9 @@ struct TangramView: View {
         let tile = orientation(of: slot)
         let result = puzzle.place(
             tile.piece, at: point, rotation: tile.rotation, flipped: tile.flipped,
-            minimumReach: TangramPuzzle.reachFloor(points: 30, shape: shape, in: boardSize))
+            minimumReach: TangramPuzzle.reachFloor(
+                points: 30, shape: shape, in: boardSize,
+                maxScale: (traySide - TangramLayout.trayInset) / TangramLayout.trayReach))
         respond(to: result, from: slot)
         return result
     }
@@ -455,6 +497,7 @@ struct TangramView: View {
         let next = TangramPuzzle.nextShape(defaults: .standard, using: &generator)
         dealt = true
         puzzle = TangramPuzzle(shape: next, rules: TangramPuzzle.rules(for: difficulty))
+        settleTray()
         turns = [:]
         selected = nil
         hint = nil
@@ -476,6 +519,22 @@ struct TangramView: View {
         AccessibilityNotification.Announcement(finalDetail).post()
         finishTask?.cancel()
         finishTask = FinishBeat.after { showCelebration = true }
+    }
+}
+
+/// "Show me one" (#511): as tall as the other buttons, but outlined in grey with no fill, wash or
+/// shadow, so it reads as a helper beside the board and the tiles. A press dims it, with no motion.
+private struct QuietTileStyle: ButtonStyle {
+    @Environment(\.isEnabled) private var isEnabled
+
+    func makeBody(configuration: Configuration) -> some View {
+        let shape = RoundedRectangle(cornerRadius: 16)
+        configuration.label
+            .foregroundStyle(Color.primary)
+            .frame(maxWidth: .infinity, minHeight: 100)
+            .overlay(shape.strokeBorder(Color.secondary.opacity(0.5), lineWidth: 2))
+            .contentShape(shape)
+            .opacity(isEnabled ? (configuration.isPressed ? 0.6 : 1) : 0.4)
     }
 }
 
