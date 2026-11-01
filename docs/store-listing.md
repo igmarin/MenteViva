@@ -60,7 +60,7 @@ no countdown clock. When a move doesn't fit, it says "almost", never "wrong". So
 one example move the first time, so anyone can start on their own.
 
 FOURTEEN GAMES
-• Memory: Memory Lane, Names and Faces, Repeat the Sequence, Remember Together (with your own family photos)
+• Memory: Memory Lane, Names and Faces, Repeat the Sequence, Photo Stories (with your own family photos)
 • Attention: Quick Eyes, Color Clash, Tangram, Tile Pairs, Sliding Blocks
 • Numbers: Number Trail, Sudoku, Up or Down
 • Words: Name the Herd, Finish the Saying
@@ -93,7 +93,7 @@ Algunos juegos muestran una jugada de ejemplo la primera vez, para que cualquier
 su cuenta.
 
 CATORCE JUEGOS
-• Memoria: Camino de Memoria, Nombres y Caras, Repite la secuencia, Recordar juntos (con tus propias fotos de familia)
+• Memoria: Camino de Memoria, Nombres y Caras, Repite la secuencia, Historias en fotos (con tus propias fotos de familia)
 • Atención: Ojos Ágiles, Choque de Colores, Tangram, Parejas de fichas, Bloques deslizantes
 • Números: Sendero de Números, Sudoku, Sube o baja
 • Palabras: Nombra la Manada, Termina el refrán

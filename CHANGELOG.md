@@ -5,6 +5,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 ## [Unreleased]
 
 ### Changed
+- **Remember Together is now Photo Stories (#513):** the game is called "Photo Stories" ("Historias en fotos"), and each family photo asks "Tell a story about this photo". It is dealt only once family photos are added: with none, it is not on Home, in today's plan or in the warm-up, and a plan saved earlier that day quietly drops it. Set up's photo section says that adding photos unlocks it, and one of its follow-up questions was reworded so it no longer repeats the prompt. Naming a photo still asks "Who is this?".
 - **Sudoku stops surprising you (#510):** a number with every copy on the board leaves the pad: its key fades, shows a tick and says "All placed" to VoiceOver, and keeps its place. After a number the selected square no longer jumps ahead, and no square is selected when a board is dealt; you tap the next one. Tapping a number (or Show me one) with no square chosen shows "Tap a square first", with no sound and no try counted. EN + ES.
 - **Repeat the Sequence: the lit tile is unmistakable (#509):** a lit tile now has full colour, a thick white border (dark on the mustard tile) and a soft glow, and the other tiles dim while the sequence plays. Your own taps flash the same way without dimming the rest. With Reduce Motion it switches with no scaling or fading. Timing and sound are unchanged.
 - **One spelling of the name (#389):** the app is "MenteViva", one word, on the home screen, the Home title, About, the website and the store text.

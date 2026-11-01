@@ -13,11 +13,13 @@ nonisolated enum PlanStore {
     private static let changeKey = "jev.difficultyChangedOn"
 
     /// Today's plan: the one saved for today if there is one, otherwise a fresh
-    /// `DailyPolicy` plan, saved so the day keeps one plan. Nothing leaves the device.
+    /// `DailyPolicy` plan, saved so the day keeps one plan. Nothing leaves the device. `unavailable` is
+    /// a parameter so a test can say which games have nothing to play (no photos yet, #513).
     static func todaysPlan(
         state: PlayerStateSummary,
         now: Date = .now,
-        defaults: UserDefaults = .standard
+        defaults: UserDefaults = .standard,
+        unavailable: Set<GameID> = GameAvailability.unavailable()
     ) -> DailyPlan {
         let stamp = dayStamp(now)
         if let cached = cachedPlan(defaults: defaults), cached.dayStamp == stamp { return cached }
@@ -26,7 +28,7 @@ nonisolated enum PlanStore {
             lastChange: lastDifficultyChange(defaults: defaults),
             dayStamp: stamp,
             pinned: FamilySettings.pinned(defaults: defaults),
-            hidden: FamilySettings.hidden(defaults: defaults).union(GameAvailability.unavailable()),
+            hidden: FamilySettings.hidden(defaults: defaults).union(unavailable),
             profile: ProfileStore.load(defaults: defaults))
         cache(plan, defaults: defaults)
         return plan

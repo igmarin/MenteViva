@@ -1,6 +1,6 @@
 import Foundation
 
-/// One card of Remember Together (#139): a picture and, if there is one, the
+/// One card of Photo Stories (#139): a picture and, if there is one, the
 /// name that helps remember it, and the warm question (#379) that invites a story.
 nonisolated struct ReminiscenceCard: Equatable, Identifiable {
     enum Picture: Equatable {
@@ -16,16 +16,16 @@ nonisolated struct ReminiscenceCard: Equatable, Identifiable {
     var question: String?
 
     /// Localization key of the prompt shown before the name is revealed; the screen, the
-    /// header and the VoiceOver announcement of the next card all read this one key.
+    /// header and the VoiceOver announcement of the next card all read this one key. A photo
+    /// invites a story whether or not it has a name (#513); "Who is this?" now only names a photo.
     var promptKey: String {
-        guard caption != nil else { return "game.reminiscence.together" }
-        if case .photo = picture { return "game.reminiscence.prompt.photo" }
+        if case .photo = picture { return "game.reminiscence.prompt.story" }
         return "game.reminiscence.prompt.object"
     }
 }
 
-/// Which cards a session shows: the family's photos first, in the order given
-/// (the view shuffles); everyday objects only when there are no photos at all.
+/// Which cards a session shows: the family's photos, in the order given (the view shuffles).
+/// Everyday objects only when there are no photos at all, which the game is not dealt for (#513).
 enum ReminiscenceDeck {
     static let cardsPerSession = 5
 

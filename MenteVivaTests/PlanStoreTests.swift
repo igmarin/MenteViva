@@ -136,4 +136,58 @@ final class PlanStoreTests: XCTestCase {
 
         XCTAssertEqual(PlanStore.storedDifficulty(defaults: defaults)[.tangram], Difficulty(level: 4))
     }
+
+    // MARK: Photo Stories needs photos (#513)
+
+    /// A temporary album, with or without one photo; the rule reads the folder, never the app's own.
+    private func album(photos: Int) throws -> URL {
+        let folder = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+        addTeardownBlock { try? FileManager.default.removeItem(at: folder) }
+        for index in 0..<photos { try Data([0xFF]).write(to: folder.appendingPathComponent("\(index).jpg")) }
+        return folder
+    }
+
+    /// A memory focus and a 15-minute day make Photo Stories one of the five dealt games.
+    private func memoryDay(defaults: UserDefaults) {
+        ProfileStore.save(PlayerProfile(focus: [.memory], minutesPerDay: 15), defaults: defaults)
+    }
+
+    func testGivenNoFamilyPhotosWhenPlanBuiltThenPhotoStoriesIsNotDealt() throws {
+        let defaults = try isolatedDefaults()
+        memoryDay(defaults: defaults)
+        let unavailable = GameAvailability.unavailable(in: try album(photos: 0))
+
+        let plan = PlanStore.todaysPlan(
+            state: PlayerStateSummary(games: [:]), now: now, defaults: defaults, unavailable: unavailable)
+
+        XCTAssertFalse(plan.games.contains(.reminiscence))
+    }
+
+    func testGivenFamilyPhotosWhenPlanBuiltThenPhotoStoriesCanBeDealt() throws {
+        let defaults = try isolatedDefaults()
+        memoryDay(defaults: defaults)
+        let unavailable = GameAvailability.unavailable(in: try album(photos: 1))
+
+        let plan = PlanStore.todaysPlan(
+            state: PlayerStateSummary(games: [:]), now: now, defaults: defaults, unavailable: unavailable)
+
+        XCTAssertTrue(plan.games.contains(.reminiscence))
+    }
+
+    func testGivenPlanSavedTodayWithPhotoStoriesAndNoPhotosNowWhenHomeOpensThenItIsNotShown() throws {
+        let defaults = try isolatedDefaults()
+        PlanStore.cache(
+            DailyPlan(
+                dayStamp: PlanStore.dayStamp(now), games: [.reminiscence, .stroop],
+                difficulty: [.stroop: Difficulty(level: 4)]),
+            defaults: defaults)
+        let unavailable = GameAvailability.unavailable(in: try album(photos: 0))
+
+        let table = TodayRun(
+            plan: PlanStore.plannedToday(now: now, defaults: defaults) ?? [], hidden: unavailable, sessions: [],
+            now: now)
+
+        XCTAssertEqual(table.games, [.stroop])
+    }
 }
