@@ -172,4 +172,14 @@ final class SequenceDealTests: XCTestCase {
         XCTAssertFalse(session.needsReplay)
         XCTAssertEqual(session.index, 0)
     }
+
+    func test_givenDemoPlaying_whenATileIsLit_thenTheOthersDimAndItStaysFull() {
+        XCTAssertEqual(SequenceDeal.tileOpacity(isLit: true, demoPlaying: true), 1)
+        XCTAssertEqual(SequenceDeal.tileOpacity(isLit: false, demoPlaying: true), 0.4)
+    }
+
+    func test_givenThePlayersTurn_whenATileIsTapped_thenNoTileDims() {
+        XCTAssertEqual(SequenceDeal.tileOpacity(isLit: true, demoPlaying: false), 1)
+        XCTAssertEqual(SequenceDeal.tileOpacity(isLit: false, demoPlaying: false), 1)
+    }
 }
