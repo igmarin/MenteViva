@@ -1,8 +1,7 @@
 import Foundation
 
-/// A familiar thing the deck can still show when it is dealt no photos (Photo Stories itself is only dealt
-/// with photos, #513)
-/// (#139): our picture once its art ships (#324), the SF Symbol until then,
+/// A familiar thing the deck shows when it has no photos (#139); Photo Stories is only dealt photos (#513),
+/// so nothing reaches it today. Our picture once its art ships (#324), the SF Symbol until then,
 /// and the key of the name the player tries to remember.
 nonisolated struct EverydayObject: Equatable {
     let symbol: String

@@ -59,7 +59,7 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `family.photos.added %lld` | one: Added %lld photo. / other: Added %lld photos. | one: Se agregó %lld foto. / other: Se agregaron %lld fotos. | MemoryMatchView, SetUpView |  |
 | `family.photos.caption.a11y %lld` | Photo %lld: add or change its name | Foto %lld: poner o cambiar su nombre | SetUpView |  |
 | `family.photos.caption.add` | Add a name | Poner un nombre | SetUpView |  |
-| `family.photos.footer %lld` | Up to %lld photos, kept on this device and never uploaded. Memory Lane and Names and Faces use them, and adding photos unlocks Photo Stories. | Hasta %lld fotos, que se quedan en este dispositivo y nunca se suben a internet. Camino de Memoria y Nombres y Caras las usan, y al agregar fotos se desbloquea Historias en fotos. | SetUpView |  |
+| `family.photos.footer %lld` | Up to %lld photos, kept on this device and never uploaded. Memory Lane and Names and Faces use them, and adding photos unlocks Photo Stories. | Hasta %lld fotos, que se quedan en este dispositivo y nunca se suben a internet. Camino de Memoria y Nombres y Caras las usan, y al añadir fotos se desbloquea Historias en fotos. | SetUpView |  |
 | `family.photos.full %lld` | The album holds %lld photos. Remove one to add another. | El álbum guarda %lld fotos. Quita una para agregar otra. | SetUpView |  |
 | `family.photos.header` | Family photos | Fotos de la familia | SetUpView |  |
 | `family.photos.remove` | Remove | Quitar | FamilyPhotoCaptionSheet |  |
@@ -805,7 +805,7 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `why.game.memory` | Memory Lane exercises remembering where things are. | Camino de Memoria ejercita recordar dónde está cada cosa. | WhyTheseGamesView |  |
 | `why.game.photocaptions` | Names and Faces exercises matching a name to a face. | Nombres y Caras ejercita unir un nombre con una cara. | WhyTheseGamesView |  |
 | `why.game.quickeyes` | Quick Eyes exercises noticing things quickly. | Ojos Ágiles ejercita fijarse en las cosas con rapidez. | WhyTheseGamesView |  |
-| `why.game.reminiscence` | Photo Stories is a chance to enjoy your own photos and tell stories about them with someone. There are no right or wrong answers. | Historias en fotos es una ocasión para disfrutar tus fotos y contar historias sobre ellas con alguien. No hay respuestas buenas ni malas. | WhyTheseGamesView |  |
+| `why.game.reminiscence` | Photo Stories is a chance to enjoy your own photos and the stories they hold, on your own or with someone. There are no right or wrong answers. | Historias en fotos es una ocasión para disfrutar tus fotos y las historias que guardan, a solas o con alguien. No hay respuestas buenas ni malas. | WhyTheseGamesView |  |
 | `why.game.sayings` | Finish the Saying exercises finding words you already know. | Termina el refrán ejercita encontrar palabras que ya conoces. | WhyTheseGamesView |  |
 | `why.game.sequence` | Repeat the Sequence exercises holding a few things in mind at once. | Repite la secuencia ejercita tener varias cosas en mente a la vez. | WhyTheseGamesView |  |
 | `why.game.sliding` | Sliding Blocks exercises planning your moves before you make them. | Bloques deslizantes ejercita planear los movimientos antes de hacerlos. | WhyTheseGamesView |  |

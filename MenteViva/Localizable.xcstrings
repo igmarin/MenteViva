@@ -522,7 +522,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hasta %lld fotos, que se quedan en este dispositivo y nunca se suben a internet. Camino de Memoria y Nombres y Caras las usan, y al agregar fotos se desbloquea Historias en fotos."
+            "value" : "Hasta %lld fotos, que se quedan en este dispositivo y nunca se suben a internet. Camino de Memoria y Nombres y Caras las usan, y al añadir fotos se desbloquea Historias en fotos."
           }
         }
       }
@@ -12720,13 +12720,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Photo Stories is a chance to enjoy your own photos and tell stories about them with someone. There are no right or wrong answers."
+            "value" : "Photo Stories is a chance to enjoy your own photos and the stories they hold, on your own or with someone. There are no right or wrong answers."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Historias en fotos es una ocasión para disfrutar tus fotos y contar historias sobre ellas con alguien. No hay respuestas buenas ni malas."
+            "value" : "Historias en fotos es una ocasión para disfrutar tus fotos y las historias que guardan, a solas o con alguien. No hay respuestas buenas ni malas."
           }
         }
       }
