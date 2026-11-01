@@ -32,6 +32,17 @@ final class ReminiscenceDeckTests: XCTestCase {
         XCTAssertFalse(GameAvailability.unavailable(in: folder).contains(.reminiscence), "one photo is enough")
     }
 
+    func testGivenTheLastPhotoWhenRemovedThenPhotoStoriesIsUnavailableAgain() throws {
+        let folder = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: folder) }
+        try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+        let photo = folder.appendingPathComponent("0.jpg")
+        try Data([0xFF]).write(to: photo)
+        XCTAssertFalse(GameAvailability.unavailable(in: folder).contains(.reminiscence))
+        MemoryPhotos.remove(photo)
+        XCTAssertTrue(GameAvailability.unavailable(in: folder).contains(.reminiscence))
+    }
+
     func testGivenSevenPhotosWhenDealtThenFiveInGivenOrder() {
         let urls = photos(7)
         let cards = ReminiscenceDeck.deal(photos: urls, captions: [:])
