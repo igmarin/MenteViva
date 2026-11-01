@@ -178,6 +178,7 @@ struct SudokuView: View {
                 }
             }
             .buttonStyle(.plain)
+            .guideTarget(selected == nil && index == openSquares.first)
             .modifier(MissCue(active: missedSquare == index ? $missed : .constant(false)))
             .accessibilityLabel(
                 String(format: AppLanguage.localized("game.sudoku.a11y.empty %lld %lld"), row + 1, column + 1)
@@ -223,7 +224,7 @@ struct SudokuView: View {
                 .disabled(done)
                 .accessibilityLabel(String(format: AppLanguage.localized("game.sudoku.a11y.put %lld"), digit))
                 .accessibilityValue(done ? AppLanguage.localized("game.sudoku.a11y.allplaced") : "")
-                .guideTarget(digit == guideDigit)
+                .guideTarget(selected != nil && digit == guideDigit)
             }
         }
         .frame(maxWidth: pad == .row ? rowWidth : .infinity)

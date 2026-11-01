@@ -12273,13 +12273,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "For example, the number %lld fits the first empty square."
+            "value" : "For example, the number %lld fits the ringed square."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Por ejemplo, el número %lld encaja en el primer cuadro vacío."
+            "value" : "Por ejemplo, en el cuadro marcado encaja el número %lld."
           }
         }
       }

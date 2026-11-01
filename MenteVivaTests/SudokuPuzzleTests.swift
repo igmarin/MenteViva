@@ -264,13 +264,11 @@ final class SudokuPuzzleTests: XCTestCase {
         }
     }
 
-    func testGivenALevelOneBoardWhenNothingIsPlacedThenOnlyGivenOutNumbersAreComplete() {
-        var generator = SeededGenerator(state: 7)
-        let layout = SudokuPuzzle.layout(for: Difficulty(level: 1), width: Self.wide)
-        let puzzle = SudokuPuzzle.make(layout: layout, using: &generator)
-        for digit in puzzle.completedNumbers(entries: [:]) {
-            XCTAssertEqual(puzzle.givens.filter { puzzle.solution[$0] == digit }.count, puzzle.size)
-        }
+    func testGivenEveryCopyOfANumberIsAGivenWhenNothingIsPlacedThenOnlyThatNumberIsComplete() {
+        // Squares 3, 5, 10 and 12 hold the four 4s.
+        let puzzle = SudokuPuzzle(
+            size: 4, boxRows: 2, boxColumns: 2, solution: Self.tinySolution, givens: [3, 5, 10, 12])
+        XCTAssertEqual(puzzle.completedNumbers(entries: [:]), [4])
     }
 
     func testGivenNoSquareSelectedWhenTappingANumberThenThePlayerIsAskedToChooseOne() {
