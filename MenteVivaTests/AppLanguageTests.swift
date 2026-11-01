@@ -31,6 +31,15 @@ final class AppLanguageTests: XCTestCase {
         XCTAssertEqual(defaults.string(forKey: AppLanguage.storageKey), "es")
     }
 
+    /// #529: "Device" / "Sistema" meant nothing to a non-technical reader and the two words did
+    /// not match; both languages now say the same plain thing.
+    func testGivenTheFollowThePhoneChoiceWhenLabelledThenBothLanguagesSaySameAsMyPhone() {
+        AppLanguage.apply("en", to: defaults)
+        XCTAssertEqual(AppLanguage.localized("settings.language.system", defaults: defaults), "Same as my phone")
+        AppLanguage.apply("es", to: defaults)
+        XCTAssertEqual(AppLanguage.localized("settings.language.system", defaults: defaults), "Igual que el teléfono")
+    }
+
     func testGivenPluralValueWhenSpanishChosenThenPluralFormResolves() {
         AppLanguage.apply("es", to: defaults)
         XCTAssertEqual(

@@ -151,8 +151,12 @@ struct HomeView: View {
 
     private var todayColumn: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text(Date.now, format: .dateTime.weekday(.wide).day().month(.wide))
-                .font(.title3.weight(.semibold))
+            // At accessibility sizes the date, greeting and status fill the first screen, so the
+            // date goes and the play button rises above the cards (#529).
+            if !typeSize.isAccessibilitySize {
+                Text(Date.now, format: .dateTime.weekday(.wide).day().month(.wide))
+                    .font(.title3.weight(.semibold))
+            }
             Text(AppLanguage.localized(Greeting.key(hour: Calendar.current.component(.hour, from: .now))))
                 .font(.largeTitle.bold())
                 .fontDesign(.serif)
@@ -179,6 +183,9 @@ struct HomeView: View {
                 pile
                 shareButton
                 weekLink { weekBoardCard }
+            } else if typeSize.isAccessibilitySize {
+                nextButton
+                hand
             } else {
                 hand
                 nextButton
@@ -253,7 +260,9 @@ struct HomeView: View {
             NavigationLink(value: next) {
                 HStack(spacing: 14) {
                     Image(systemName: "play.fill")
-                        .font(.title3)
+                        // A fixed size: at accessibility sizes a text-scaled glyph outgrew its
+                        // circle and was cut off (#529).
+                        .font(.system(size: 20))
                         .foregroundStyle(Color.paper)
                         .frame(width: 46, height: 46)
                         .background(Color.brand, in: .circle)
@@ -271,6 +280,7 @@ struct HomeView: View {
                     .multilineTextAlignment(.leading)
                 }
                 .padding(.horizontal, 16)
+                .padding(.vertical, 12)
                 .frame(maxWidth: .infinity, minHeight: 100)
                 .background(Color.paper, in: .rect(cornerRadius: 26))
                 .overlay(RoundedRectangle(cornerRadius: 26).strokeBorder(Color.espresso, lineWidth: 2))

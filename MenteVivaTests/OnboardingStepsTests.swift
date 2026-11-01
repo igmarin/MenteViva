@@ -52,6 +52,46 @@ final class OnboardingStepsTests: XCTestCase {
         }
     }
 
+    // MARK: The one forward button (#529)
+
+    func testGivenAOneAnswerQuestionWhenShownThenItsForwardButtonIsAlwaysSkip() {
+        for question in OnboardingSteps.questions where !question.allowsMultiple {
+            for answered in [PlayerProfile(), PlayerProfile(forWhom: .me, minutesPerDay: 10, startPace: .calm)] {
+                XCTAssertEqual(OnboardingSteps.forwardButton(for: question, profile: answered), .skip, "\(question)")
+            }
+        }
+    }
+
+    func testGivenNothingPickedOnTheMultiSelectQuestionWhenShownThenTheButtonSaysSkip() {
+        XCTAssertEqual(OnboardingSteps.forwardButton(for: .focus, profile: PlayerProfile()), .skip)
+    }
+
+    func testGivenSomethingPickedOnTheMultiSelectQuestionWhenShownThenTheButtonSaysNext() {
+        XCTAssertEqual(OnboardingSteps.forwardButton(for: .focus, profile: profile(after: [.focus(.memory)])), .next)
+        XCTAssertEqual(
+            OnboardingSteps.forwardButton(for: .focus, profile: profile(after: [.focus(.memory), .focus(.words)])), .next)
+    }
+
+    func testGivenTheOnlyPickTakenBackWhenShownThenTheButtonSaysSkipAgain() {
+        let undone = profile(after: [.focus(.memory), .focus(.memory)])
+        XCTAssertEqual(OnboardingSteps.forwardButton(for: .focus, profile: undone), .skip)
+    }
+
+    func testGivenEachForwardButtonWhenShownThenItsWordsExistInBothLanguages() throws {
+        let data = try Data(
+            contentsOf: URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
+                .appendingPathComponent("MenteViva/Localizable.xcstrings"))
+        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
+        let strings = try XCTUnwrap(json["strings"] as? [String: Any])
+        for button in [OnboardingForwardButton.skip, .next] {
+            for key in [button.labelKey, button.hintKey] {
+                let localizations = (strings[key] as? [String: Any])?["localizations"] as? [String: Any]
+                XCTAssertNotNil(localizations?["en"], "\(key) [en]")
+                XCTAssertNotNil(localizations?["es"], "\(key) [es]")
+            }
+        }
+    }
+
     // MARK: After the questions (#374: the photo offer, then the warm-up)
 
     func testGivenEmptyAlbumWhenOnboardingEndsThenPhotosStepIsOffered() {
