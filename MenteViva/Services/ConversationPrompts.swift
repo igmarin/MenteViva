@@ -1,6 +1,6 @@
 import Foundation
 
-/// The warm question under each revealed card in Remember Together (#379), so
+/// The warm question under each revealed card in Photo Stories (#379), so
 /// two people playing side by side get a conversation, not just a name. The
 /// questions invite a story and have no right answer; they never ask who is in
 /// the photo. Which one goes with which card is seeded and never repeats in a

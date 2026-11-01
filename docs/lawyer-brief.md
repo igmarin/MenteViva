@@ -51,7 +51,7 @@ BrainHQ game names.
 | 3 | Name the Herd / Nombra la Manada | none |
 | 4 | Number Trail / Sendero de Números | none |
 | 5 | Quick Eyes / Ojos Ágiles | none |
-| 6 | Remember Together / Recordar juntos | none |
+| 6 | Photo Stories / Historias en fotos | none |
 | 7 | Sudoku / Sudoku | none outside Japan (see below) |
 | 8 | Up or Down / Sube o baja | none |
 | 9 | Finish the Saying / Termina el refrán | none |

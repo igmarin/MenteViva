@@ -76,7 +76,7 @@ final class PhotoCaptionDealTests: XCTestCase {
     func testGivenTooFewCaptionedPhotosWhenCheckedThenTheGameIsUnavailable() throws {
         let folder = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         defer { try? FileManager.default.removeItem(at: folder) }
-        XCTAssertEqual(GameAvailability.unavailable(in: folder), [.photoCaptions])
+        XCTAssertEqual(GameAvailability.unavailable(in: folder), [.photoCaptions, .reminiscence])
         try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
         for (index, name) in names.prefix(4).enumerated() {
             let photo = folder.appendingPathComponent("\(index).jpg")

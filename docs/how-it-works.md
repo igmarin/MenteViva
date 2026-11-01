@@ -35,7 +35,7 @@ launch
 
 ## The games
 
-Memory Lane, Name the Herd, Quick Eyes, Remember Together, Color Clash and Number Trail (the last two are
+Memory Lane, Name the Herd, Quick Eyes, Photo Stories, Color Clash and Number Trail (the last two are
 hidden on dad's iPad). Sudoku (#179), Up or Down (#180) and Finish the Saying (#181) are new. Each game has the same shape:
 a `View`, `@State` for the round, `Difficulty.stored(.game)` read once on open, and one
 `modelContext.record(GameSession(...))` when it finishes. Games with real logic keep it in a separate pure
@@ -70,7 +70,7 @@ score = value[game] × (0.5 + 0.5 × daysSinceLastPlayed / 7)     (days capped a
   correct, duration, played-at, level (-1 for old rows).
 - **Rounds / attempts / correct mean the same in every game** (#58): `rounds` is what the session was made of,
   `attempts` is the picks the player made, `correct` is how many were right. `accuracy` is `correct / attempts`,
-  or nil when there were no attempts (Remember Together records none).
+  or nil when there were no attempts (Photo Stories records none).
 - **Small settings live in `UserDefaults`:** the cached daily plan and levels (`PlanStore`), hidden games and
   pinned levels (`FamilySettings`), language, bigger text, sound, "Read names aloud", and which sayings have been
   seen (`sayings.seen`).

@@ -3,7 +3,7 @@ import XCTest
 
 @testable import MenteViva
 
-/// #139: which cards a Remember Together session shows.
+/// #139: which cards a Photo Stories session shows.
 final class ReminiscenceDeckTests: XCTestCase {
     private func photos(_ count: Int) -> [URL] {
         (0..<count).map { URL(fileURLWithPath: "/\($0).jpg") }
@@ -13,12 +13,34 @@ final class ReminiscenceDeckTests: XCTestCase {
         let url = URL(fileURLWithPath: "/0.jpg")
         let object = EverydayObjects.all[0]
         XCTAssertEqual(
-            ReminiscenceCard(id: 0, picture: .photo(url), caption: "Ana").promptKey, "game.reminiscence.prompt.photo")
+            ReminiscenceCard(id: 0, picture: .photo(url), caption: "Ana").promptKey, "game.reminiscence.prompt.story")
         XCTAssertEqual(
             ReminiscenceCard(id: 0, picture: .object(object), caption: "Cup").promptKey,
             "game.reminiscence.prompt.object")
         XCTAssertEqual(
-            ReminiscenceCard(id: 0, picture: .photo(url), caption: nil).promptKey, "game.reminiscence.together")
+            ReminiscenceCard(id: 0, picture: .photo(url), caption: nil).promptKey, "game.reminiscence.prompt.story",
+            "a photo with no name still invites a story")
+    }
+
+    func testGivenNoFamilyPhotosWhenCheckedThenPhotoStoriesIsUnavailable() throws {
+        let folder = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: folder) }
+        XCTAssertTrue(GameAvailability.unavailable(in: folder).contains(.reminiscence))
+        try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+        XCTAssertTrue(GameAvailability.unavailable(in: folder).contains(.reminiscence), "an empty album")
+        try Data([0xFF]).write(to: folder.appendingPathComponent("0.jpg"))
+        XCTAssertFalse(GameAvailability.unavailable(in: folder).contains(.reminiscence), "one photo is enough")
+    }
+
+    func testGivenTheLastPhotoWhenRemovedThenPhotoStoriesIsUnavailableAgain() throws {
+        let folder = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: folder) }
+        try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+        let photo = folder.appendingPathComponent("0.jpg")
+        try Data([0xFF]).write(to: photo)
+        XCTAssertFalse(GameAvailability.unavailable(in: folder).contains(.reminiscence))
+        MemoryPhotos.remove(photo)
+        XCTAssertTrue(GameAvailability.unavailable(in: folder).contains(.reminiscence))
     }
 
     func testGivenSevenPhotosWhenDealtThenFiveInGivenOrder() {

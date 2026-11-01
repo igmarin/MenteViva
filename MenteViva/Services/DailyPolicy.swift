@@ -76,7 +76,7 @@ nonisolated enum DailyPolicy {
         .mathStreaks: .numbers,
         /// Quick Eyes: one picture among four, quickly.
         .quickEyes: .attention,
-        /// Remember Together: family faces and names.
+        /// Photo Stories: family faces and names.
         .reminiscence: .memory,
         /// Sudoku: numbers that fit a square.
         .sudoku: .numbers,
@@ -146,7 +146,7 @@ nonisolated enum DailyPolicy {
         .mathStreaks: Threshold(strong: 0.90, weak: 0.65),
         /// Quick Eyes: picture recognised then picked. Accuracy is correct / attempts.
         .quickEyes: Threshold(strong: 0.90, weak: 0.65),
-        /// Remember Together has no levels; never evaluated, kept for completeness.
+        /// Photo Stories has no levels; never evaluated, kept for completeness.
         .reminiscence: Threshold(strong: 0.90, weak: 0.65),
         /// Sudoku: numbers that fit. Accuracy is placements correct.
         .sudoku: Threshold(strong: 0.90, weak: 0.65),

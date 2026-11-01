@@ -1,9 +1,10 @@
 import SwiftData
 import SwiftUI
 
-/// Remember Together (#139): the family's photos one at a time, "Who is this?",
-/// and a tap on "Show me" reveals the name that helps remember. Nothing can be
-/// answered wrongly. With no photos it shows everyday objects instead.
+/// Photo Stories (#139, renamed #513): the family's photos one at a time, "Tell a story
+/// about this photo", and a tap on "Show me" reveals the name that helps remember. Nothing
+/// can be answered wrongly. It is only dealt once photos are added (`GameAvailability`); the
+/// everyday-object cards stay in the deck, but nothing reaches them.
 struct ReminiscenceView: View {
     @Environment(\.modelContext) private var modelContext
     @State private var cards: [ReminiscenceCard] = []
