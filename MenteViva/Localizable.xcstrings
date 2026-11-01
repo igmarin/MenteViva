@@ -483,30 +483,81 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Photo %lld: add or change its name"
+            "value" : "Edit name of photo %lld"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Foto %lld: poner o cambiar su nombre"
+            "value" : "Editar el nombre de la foto %lld"
           }
         }
       }
     },
-    "family.photos.caption.add" : {
+    "family.photos.why" : {
       "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Add a name"
+            "value" : "Faces, places and pets you love make Memory Lane, Names and Faces and Photo Stories feel like yours."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Poner un nombre"
+            "value" : "Caras, lugares y mascotas que quieres hacen que Camino de Memoria, Nombres y Caras e Historias en fotos se sientan tuyos."
+          }
+        }
+      }
+    },
+    "family.photos.noname" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No name yet"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todavía sin nombre"
+          }
+        }
+      }
+    },
+    "family.photos.edit" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Editar"
+          }
+        }
+      }
+    },
+    "family.photos.a11y.photo %lld" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Photo %lld"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Foto %lld"
           }
         }
       }
@@ -516,13 +567,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Up to %lld photos, kept on this device and never uploaded. Memory Lane and Names and Faces use them, and adding photos unlocks Photo Stories."
+            "value" : "Up to %lld photos, kept on this device and never uploaded. Photo Stories shows up once you add photos."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hasta %lld fotos, que se quedan en este dispositivo y nunca se suben a internet. Camino de Memoria y Nombres y Caras las usan, y al añadir fotos se desbloquea Historias en fotos."
+            "value" : "Hasta %lld fotos, que se quedan en este dispositivo y nunca se suben a internet. Historias en fotos aparece cuando añades fotos."
           }
         }
       }
@@ -550,13 +601,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Family photos"
+            "value" : "Photos for the games"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Fotos de la familia"
+            "value" : "Fotos para los juegos"
           }
         }
       }
@@ -1930,13 +1981,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Family photo %lld"
+            "value" : "Photo %lld"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Foto familiar %lld"
+            "value" : "Foto %lld"
           }
         }
       }
@@ -2226,13 +2277,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Family photo, no name yet"
+            "value" : "Photo, no name yet"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Foto de familia, todavía sin nombre"
+            "value" : "Foto, todavía sin nombre"
           }
         }
       }
@@ -2876,35 +2927,35 @@
       }
     },
     "game.slidingblocks.guide" : {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tap a block, then an arrow to slide it."
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tap a block, then an arrow to slide it."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Toca un bloque y luego una flecha para deslizarlo."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toca un bloque y luego una flecha para deslizarlo."
           }
         }
       }
     },
     "game.tangram.guide" : {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tap a piece, then tap where it fits."
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tap a piece, then tap where it fits."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Toca una pieza y luego toca dónde encaja."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toca una pieza y luego toca dónde encaja."
           }
         }
       }
@@ -2926,18 +2977,18 @@
       }
     },
     "game.tilepairs.guide" : {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tap two matching tiles that are not covered."
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tap two matching tiles that are not covered."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Toca dos fichas iguales que no estén tapadas."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toca dos fichas iguales que no estén tapadas."
           }
         }
       }
@@ -3599,52 +3650,52 @@
       }
     },
     "guide.slidingblocks.example" : {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Try this block."
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Try this block."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Prueba este bloque."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prueba este bloque."
           }
         }
       }
     },
     "guide.tangram.example" : {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Start with this piece."
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start with this piece."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Empieza con esta pieza."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Empieza con esta pieza."
           }
         }
       }
     },
     "guide.tilepairs.example" : {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "This one has a twin that is not covered."
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This one has a twin that is not covered."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Esta tiene una gemela que no está tapada."
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esta tiene una gemela que no está tapada."
           }
         }
       }
@@ -10948,26 +10999,66 @@
     },
     "settings.privacy.policy" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Privacy policy" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Política de privacidad" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Privacy policy"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Política de privacidad"
+          }
+        }
       }
     },
     "settings.privacy.policy.url" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "https://menteviva-e4s.pages.dev/en/privacy" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "https://menteviva-e4s.pages.dev/es/privacy" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "https://menteviva-e4s.pages.dev/en/privacy"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "https://menteviva-e4s.pages.dev/es/privacy"
+          }
+        }
       }
     },
     "settings.privacy.support" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Help and support" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Ayuda y soporte" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Help and support"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayuda y soporte"
+          }
+        }
       }
     },
     "settings.privacy.support.url" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "https://menteviva-e4s.pages.dev/en/support" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "https://menteviva-e4s.pages.dev/es/support" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "https://menteviva-e4s.pages.dev/en/support"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "https://menteviva-e4s.pages.dev/es/support"
+          }
+        }
       }
     },
     "settings.privacy.photos" : {
@@ -11180,13 +11271,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Which games show, their difficulty, and family photos"
+            "value" : "Which games show, their difficulty, and photos for the games"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Qué juegos se muestran, su dificultad y las fotos de la familia"
+            "value" : "Qué juegos se muestran, su dificultad y las fotos para los juegos"
           }
         }
       }

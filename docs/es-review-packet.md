@@ -1,7 +1,7 @@
 # ES review packet — for the native-speaker pass (#12)
 
 Hand this whole file to the reviewer. Generated from `Localizable.xcstrings`
-(815 user-facing strings; keys that are only format specifiers are omitted).
+(820 user-facing strings; keys that are only format specifiers are omitted).
 Rows already signed off on #12 are pre-marked ✅.
 Regenerate after any string change: `python3 tools/generate_es_packet.py`.
 
@@ -55,17 +55,20 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `family.level.lower` | Lower level | Bajar de nivel | SetUpView |  |
 | `family.level.max` | This is the highest level | Es el nivel más alto | SetUpView |  |
 | `family.level.min` | This is the lowest level | Es el nivel más bajo | SetUpView |  |
+| `family.photos.a11y.photo %lld` | Photo %lld | Foto %lld | SetUpView |  |
 | `family.photos.add` | Add photos | Añadir fotos | MemoryMatchView, OnboardingView, SetUpView |  |
 | `family.photos.added %lld` | one: Added %lld photo. / other: Added %lld photos. | one: Se agregó %lld foto. / other: Se agregaron %lld fotos. | MemoryMatchView, SetUpView |  |
-| `family.photos.caption.a11y %lld` | Photo %lld: add or change its name | Foto %lld: poner o cambiar su nombre | SetUpView |  |
-| `family.photos.caption.add` | Add a name | Poner un nombre | SetUpView |  |
-| `family.photos.footer %lld` | Up to %lld photos, kept on this device and never uploaded. Memory Lane and Names and Faces use them, and adding photos unlocks Photo Stories. | Hasta %lld fotos, que se quedan en este dispositivo y nunca se suben a internet. Camino de Memoria y Nombres y Caras las usan, y al añadir fotos se desbloquea Historias en fotos. | SetUpView |  |
+| `family.photos.caption.a11y %lld` | Edit name of photo %lld | Editar el nombre de la foto %lld | SetUpView |  |
+| `family.photos.edit` | Edit | Editar | SetUpView |  |
+| `family.photos.footer %lld` | Up to %lld photos, kept on this device and never uploaded. Photo Stories shows up once you add photos. | Hasta %lld fotos, que se quedan en este dispositivo y nunca se suben a internet. Historias en fotos aparece cuando añades fotos. | SetUpView |  |
 | `family.photos.full %lld` | The album holds %lld photos. Remove one to add another. | El álbum guarda %lld fotos. Quita una para agregar otra. | SetUpView |  |
-| `family.photos.header` | Family photos | Fotos de la familia | SetUpView |  |
+| `family.photos.header` | Photos for the games | Fotos para los juegos | SetUpView |  |
+| `family.photos.noname` | No name yet | Todavía sin nombre | SetUpView |  |
 | `family.photos.remove` | Remove | Quitar | FamilyPhotoCaptionSheet |  |
 | `family.photos.remove.cancel` | Keep it | Dejarla | FamilyPhotoCaptionSheet |  |
 | `family.photos.remove.confirm` | Remove this photo and its name? | ¿Quitar esta foto y su nombre? | FamilyPhotoCaptionSheet |  |
 | `family.photos.unreadable %lld` | one: %lld photo couldn't be used. Try another one. / other: %lld photos couldn't be used. Try other ones. | one: %lld foto no se pudo usar. Prueba con otra. / other: %lld fotos no se pudieron usar. Prueba con otras. | SetUpView |  |
+| `family.photos.why` | Faces, places and pets you love make Memory Lane, Names and Faces and Photo Stories feel like yours. | Caras, lugares y mascotas que quieres hacen que Camino de Memoria, Nombres y Caras e Historias en fotos se sientan tuyos. | SetUpView |  |
 | `family.pinned` | set by you | elegido por ti | SetUpView |  |
 | `family.share` | Share with family | Compartir con la familia | MyProgressView |  |
 | `family.share.hint` | Sends these numbers as a text message | Envía estos números como un mensaje de texto | MyProgressView |  |
@@ -146,7 +149,7 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `game.memory.card.hidden` | Hidden card | Carta oculta | MemoryMatchView |  |
 | `game.memory.instruction` | Find the matching pairs | Encuentra las parejas | MemoryMatchView |  |
 | `game.memory.miss` | Almost — %1$@ and %2$@ are different | Casi — %1$@ y %2$@ no son pareja | MemoryBoard |  |
-| `game.memory.photo %lld` | Family photo %lld | Foto familiar %lld | MemoryMatchView |  |
+| `game.memory.photo %lld` | Photo %lld | Foto %lld | MemoryMatchView |  |
 | `game.memory.title` | Memory Lane | Camino de Memoria | GameID |  |
 | `game.photocaptions.instruction` | Turn over a photo and a name. Find the name that goes with each photo | Voltea una foto y un nombre. Encuentra el nombre que va con cada foto | MemoryMatchView |  |
 | `game.photocaptions.title` | Names and Faces | Nombres y Caras | GameID |  |
@@ -164,7 +167,7 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `game.readaloud` | Read aloud | Leer en voz alta | GameHeader | ✅ |
 | `game.readaloud.hint` | Reads the instructions out loud | Lee las instrucciones en voz alta | GameHeader | ✅ |
 | `game.reminiscence.a11y.object` | A familiar object | Un objeto conocido | ReminiscenceView |  |
-| `game.reminiscence.a11y.photo` | Family photo, no name yet | Foto de familia, todavía sin nombre | ReminiscenceView |  |
+| `game.reminiscence.a11y.photo` | Photo, no name yet | Foto, todavía sin nombre | ReminiscenceView |  |
 | `game.reminiscence.hear` | Hear it again | Escucharlo otra vez | ReminiscenceView |  |
 | `game.reminiscence.next` | Next | Siguiente | ReminiscenceView |  |
 | `game.reminiscence.prompt.object` | What is this? | ¿Qué es esto? | ReminiscenceDeck |  |
@@ -219,6 +222,7 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `game.sliding.title` | Sliding Blocks | Bloques deslizantes | GameID |  |
 | `game.sliding.undo` | Undo | Deshacer | SlidingBlocksView |  |
 | `game.slidingblocks.guide` | Tap a block, then an arrow to slide it. | Toca un bloque y luego una flecha para deslizarlo. | SlidingBlocksView |  |
+| `game.sudoku.a11y.allplaced` | All placed | Todos puestos | SudokuView |  |
 | `game.sudoku.a11y.cell %lld %lld %lld` | Row %1$lld, column %2$lld, %3$lld | Fila %1$lld, columna %2$lld, %3$lld | SudokuView |  |
 | `game.sudoku.a11y.empty %lld %lld` | Row %1$lld, column %2$lld, empty | Fila %1$lld, columna %2$lld, vacío | SudokuView |  |
 | `game.sudoku.a11y.put %lld` | Put %lld | Poner %lld | SudokuView |  |
@@ -230,6 +234,7 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `game.sudoku.instruction` | Tap a square, then a number. | Toca un cuadro y luego un número. | SudokuView |  |
 | `game.sudoku.miss` | Almost — try another number. | Casi — prueba otro número. | SudokuView |  |
 | `game.sudoku.showme` | Show me one | Muéstrame uno | SudokuView |  |
+| `game.sudoku.tapfirst` | Tap a square first | Primero toca un cuadro | SudokuView |  |
 | `game.sudoku.title` | Sudoku | Sudoku | GameID |  |
 | `game.tangram.a11y.pickfirst` | Pick a piece first | Elige primero una pieza | TangramView |  |
 | `game.tangram.a11y.place %@` | Place in %@ | Colocar %@ | TangramView |  |
@@ -297,7 +302,7 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `guide.colorclash.example %@` | The ink is %@: tap that color. | La tinta es de color %@: toca ese color. | ColorClashView |  |
 | `guide.gotit` | Got it | Entendido | FirstPlayGuide |  |
 | `guide.slidingblocks.example` | Try this block. | Prueba este bloque. | SlidingBlocksView |  |
-| `guide.sudoku.example %lld` | The framed square is chosen. The number %lld fits there. | El cuadro con marco está elegido. Ahí encaja el número %lld. | SudokuView |  |
+| `guide.sudoku.example %lld` | For example, the number %lld fits the ringed square. | Por ejemplo, en el cuadro marcado encaja el número %lld. | SudokuView |  |
 | `guide.tangram.example` | Start with this piece. | Empieza con esta pieza. | TangramView |  |
 | `guide.tilepairs.example` | This one has a twin that is not covered. | Esta tiene una gemela que no está tapada. | TilePairsView |  |
 | `guide.upordown.example %@` | This one fits: %@ is one away from the open card. | Esta encaja: %@ está a un número de la carta abierta. | UpOrDownView |  |
@@ -395,7 +400,7 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `picture.butterfly` | Butterfly | Mariposa | — |  |
 | `picture.cactus` | Cactus | Cactus | — |  |
 | `picture.cake` | Cake | Pastel | — |  |
-| `picture.car` | Car | Auto | — |  |
+| `picture.car` | Car | Auto | GameCard |  |
 | `picture.cat` | Cat | Gato | — |  |
 | `picture.chair` | Chair | Silla | — |  |
 | `picture.cheese` | Cheese | Queso | — |  |
@@ -765,7 +770,7 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `settings.textsize` | Bigger text | Texto más grande | SettingsView |  |
 | `settings.title` | Settings | Ajustes | HomeView, SettingsView |  |
 | `settings.version` | Version | Versión | SettingsView |  |
-| `setup.open.hint` | Which games show, their difficulty, and family photos | Qué juegos se muestran, su dificultad y las fotos de la familia | SettingsView |  |
+| `setup.open.hint` | Which games show, their difficulty, and photos for the games | Qué juegos se muestran, su dificultad y las fotos para los juegos | SettingsView |  |
 | `setup.title` | Set up | Ajustes de juego | SetUpView, SettingsView |  |
 | `tangram.shape.01` | Boat | Barco | TangramShapes |  |
 | `tangram.shape.02` | Fish | Pez | TangramShapes |  |

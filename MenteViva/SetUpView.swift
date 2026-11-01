@@ -71,8 +71,8 @@ enum FamilyPhotoImport {
     }
 }
 
-/// Family photos (#110, #374): picked with the system photo picker (no library
-/// permission), kept on this device only. Tapping one opens its name sheet, where Remove asks first (#403).
+/// Photos for the games (#110, #374, #524): picked with the system photo picker (no library
+/// permission), kept on this device only. Each shows its name; Edit opens its name sheet, where Remove asks first (#403).
 private struct FamilyPhotosSection: View {
     @State private var photos: [URL]
     /// Captions by photo, read when the album changes, never inside `body`.
@@ -82,7 +82,11 @@ private struct FamilyPhotosSection: View {
     @State private var note: String?
     /// The photo being named (#139).
     @State private var captioning: CaptionTarget?
-    private let columns = [GridItem(.adaptive(minimum: 120), spacing: 12)]
+    @Environment(\.dynamicTypeSize) private var typeSize
+    /// One column at accessibility sizes, so "Editar" and a name get the full width of the row.
+    private var columns: [GridItem] {
+        [GridItem(.adaptive(minimum: typeSize.isAccessibilitySize ? 240 : 120), spacing: 12)]
+    }
 
     init() {
         let all = MemoryPhotos.all()
@@ -107,23 +111,40 @@ private struct FamilyPhotosSection: View {
                 LazyVGrid(columns: columns, spacing: 12) {
                     ForEach(Array(photos.enumerated()), id: \.element) { index, url in
                         VStack(spacing: 6) {
-                            PhotoThumb(url: url)
+                            // One VoiceOver element per photo: "Photo N", then the name once.
+                            VStack(spacing: 6) {
+                                PhotoThumb(url: url)
+                                Text(captions[url] ?? AppLanguage.localized("family.photos.noname"))
+                                    .font(.body)
+                                    .foregroundStyle(captions[url] == nil ? .secondary : .primary)
+                                    // The placeholder may take two lines at accessibility sizes.
+                                    .lineLimit(captions[url] == nil && typeSize.isAccessibilitySize ? 2 : 1)
+                                    .truncationMode(.tail)
+                                    .multilineTextAlignment(.center)
+                            }
+                            .accessibilityElement(children: .ignore)
+                            .accessibilityLabel(
+                                String(format: AppLanguage.localized("family.photos.a11y.photo %lld"), index + 1)
+                            )
+                            .accessibilityValue(captions[url] ?? AppLanguage.localized("family.photos.noname"))
                             // Bordered style keeps each button separate inside one list row.
                             Button {
                                 captioning = CaptionTarget(url: url)
                             } label: {
-                                Text(captions[url] ?? AppLanguage.localized("family.photos.caption.add"))
+                                Text(AppLanguage.localized("family.photos.edit"))
                                     .font(.body)
-                                    .lineLimit(2)
-                                    .multilineTextAlignment(.center)
+                                    .lineLimit(1)
                                     .frame(minWidth: 104, minHeight: 60)
                             }
                             .buttonStyle(.bordered)
                             .accessibilityLabel(
                                 String(format: AppLanguage.localized("family.photos.caption.a11y %lld"), index + 1)
                             )
-                            // The label says which photo; the value says the name it has now.
-                            .accessibilityValue(captions[url] ?? "")
+                            // Voice Control: "Edit" works as well as the full spoken label.
+                            .accessibilityInputLabels([
+                                AppLanguage.localized("family.photos.edit"),
+                                String(format: AppLanguage.localized("family.photos.caption.a11y %lld"), index + 1),
+                            ])
                         }
                     }
                 }
@@ -153,8 +174,12 @@ private struct FamilyPhotosSection: View {
                 }
             }
         } header: {
-            Text(AppLanguage.localized("family.photos.header"))
-                .font(.title3.weight(.semibold))
+            VStack(alignment: .leading, spacing: 4) {
+                Text(AppLanguage.localized("family.photos.header"))
+                    .font(.title3.weight(.semibold))
+                Text(AppLanguage.localized("family.photos.why"))
+                    .font(.body)
+            }
         } footer: {
             Text(String(format: AppLanguage.localized("family.photos.footer %lld"), MemoryPhotos.maxCount))
                 .font(.footnote)
