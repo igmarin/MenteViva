@@ -50,7 +50,7 @@ struct FamilyPhotoCaptionSheet: View {
                         }
                     Text(AppLanguage.localized("family.caption.privacy"))
                         .font(.body)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Color.inkSoft)
                     if saveProblem {
                         Text(AppLanguage.localized("family.caption.save.problem"))
                             .font(.body)

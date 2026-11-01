@@ -98,6 +98,7 @@ struct HistoryView: View {
             } header: {
                 Text(AppLanguage.localized("history.progress.header"))
                     .font(.title3.weight(.semibold))
+                    .foregroundStyle(Color.inkSoft)
             }
 
             Section {
@@ -105,6 +106,7 @@ struct HistoryView: View {
             } header: {
                 Text(AppLanguage.localized("history.days.header"))
                     .font(.title3.weight(.semibold))
+                    .foregroundStyle(Color.inkSoft)
             }
 
             if !snapshot.album.isEmpty {
@@ -114,6 +116,7 @@ struct HistoryView: View {
                 } header: {
                     Text(AppLanguage.localized("album.title"))
                         .font(.title3.weight(.semibold))
+                        .foregroundStyle(Color.inkSoft)
                 }
             }
         }
@@ -217,7 +220,7 @@ struct HistoryView: View {
                 invitation
                 Text(AppLanguage.localized("album.title"))
                     .font(.title3.weight(.semibold))
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Color.inkSoft)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .accessibilityAddTraits(.isHeader)
                 albumShelf(album)

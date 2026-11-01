@@ -85,4 +85,26 @@ final class ContrastTests: XCTestCase {
             XCTAssertGreaterThanOrEqual(ratio, 4.5, "style \(style.rawValue)")
         }
     }
+
+    /// Hint and secondary lines (#527): `.secondary` grey measured 3.3:1 on cream, so every
+    /// line a player reads in a quieter voice uses `inkSoft`. It sits on the paper, and on a
+    /// list row (white in light mode, the system's raised grey in dark).
+    func testGivenInkSoftWhenUsedAsTextOnPaperOrAListRowThenContrastIsAtLeastAAInBothModes() {
+        for style in styles {
+            let ink = rgb(UIColor(Color.inkSoft), style)
+            let surfaces = [
+                ("paper", rgb(UIColor(Color.paper), style)),
+                ("list row", rgb(.secondarySystemGroupedBackground, style)),
+            ]
+            for (name, surface) in surfaces {
+                XCTAssertGreaterThanOrEqual(contrast(ink, surface), 4.5, "\(name), style \(style.rawValue)")
+            }
+        }
+    }
+
+    /// Pure white is not the list row in dark mode, but the light-mode row is exactly white.
+    func testGivenInkSoftWhenUsedOnWhiteThenContrastIsAtLeastAA() {
+        let ink = rgb(UIColor(Color.inkSoft), .light)
+        XCTAssertGreaterThanOrEqual(contrast(ink, (1, 1, 1)), 4.5)
+    }
 }
