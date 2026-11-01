@@ -94,7 +94,8 @@ struct LevelExplainBanner: View {
         }
     }
 
-    final class Memo {
+    /// `nonisolated`: a main-actor class gets an isolated deinit, which crashed tests on Xcode 26.6 (#520).
+    nonisolated final class Memo {
         var note: LevelExplainNote?
 
         /// `readChange` runs only while this open has no note yet, so the plan is decoded once per open.
