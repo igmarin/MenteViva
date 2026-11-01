@@ -85,7 +85,8 @@ private struct FamilyPhotosSection: View {
     @Environment(\.dynamicTypeSize) private var typeSize
     /// One column at accessibility sizes, so "Editar" and a name get the full width of the row.
     private var columns: [GridItem] {
-        [GridItem(.adaptive(minimum: typeSize.isAccessibilitySize ? 240 : 120), spacing: 12)]
+        typeSize.isAccessibilitySize
+            ? [GridItem(.flexible())] : [GridItem(.adaptive(minimum: 120), spacing: 12)]
     }
 
     init() {
@@ -117,8 +118,8 @@ private struct FamilyPhotosSection: View {
                                 Text(captions[url] ?? AppLanguage.localized("family.photos.noname"))
                                     .font(.body)
                                     .foregroundStyle(captions[url] == nil ? .secondary : .primary)
-                                    // The placeholder may take two lines at accessibility sizes.
-                                    .lineLimit(captions[url] == nil && typeSize.isAccessibilitySize ? 2 : 1)
+                                    // Two lines show most names (up to 60 characters); the sheet behind Edit shows all.
+                                    .lineLimit(2)
                                     .truncationMode(.tail)
                                     .multilineTextAlignment(.center)
                             }
