@@ -215,6 +215,28 @@ nonisolated struct SudokuPuzzle: Equatable {
     /// (#400): a board that turns too short for its pad is kept and scrolls, never dealt again.
     func fits(width: Double) -> Bool { Self.squaresFit(size, in: width) }
 
+    /// The numbers with every copy on the board, givens plus the player's `entries` (square ->
+    /// number). A number is complete at `size` copies, so the pad can retire its key (#510).
+    func completedNumbers(entries: [Int: Int]) -> Set<Int> {
+        var copies = [Int: Int]()
+        for index in givens { copies[solution[index], default: 0] += 1 }
+        for digit in entries.values { copies[digit, default: 0] += 1 }
+        return Set(copies.filter { $0.value == size }.keys)
+    }
+
+    /// What a tap on a pad key means (#510).
+    enum PadTap: Equatable {
+        case place(Int)
+        /// No square is chosen: a gentle note, no sound, no try counted.
+        case chooseSquareFirst
+    }
+
+    /// The selection only moves when the player moves it, so a key can be tapped with nothing
+    /// chosen; that asks for a square instead of counting a try.
+    static func padTap(selected: Int?) -> PadTap {
+        selected.map(PadTap.place) ?? .chooseSquareFirst
+    }
+
     /// A finished row, column or box (#239). Indices are 0-based.
     enum Unit: Equatable {
         case row(Int)
