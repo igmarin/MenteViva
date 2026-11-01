@@ -37,12 +37,18 @@ struct UpOrDownView: View {
             if let deal {
                 note(for: deal)
                 piles(deal)
-                HStack(alignment: .bottom, spacing: 32) {
-                    face(deal.open, width: cardWidth(deal) * 1.15)
-                        .accessibilityElement(children: .ignore)
-                        .accessibilityLabel(
-                            String(format: AppLanguage.localized("game.upordown.a11y.open %@"), name(deal.open)))
-                    deckButton(deal)
+                ViewThatFits(in: .horizontal) {
+                    // Top-aligned: the deck's caption hangs below it, and the two cards stay level.
+                    HStack(alignment: .top, spacing: 32) {
+                        openCard(deal)
+                        deckButton(deal)
+                    }
+                    // At the largest text sizes "Otra carta" is wider than a small phone's row
+                    // leaves beside the open card, so the deck goes under it (#528).
+                    VStack(spacing: 16) {
+                        openCard(deal)
+                        deckButton(deal)
+                    }
                 }
             }
         }
@@ -59,13 +65,22 @@ struct UpOrDownView: View {
         }
         .padding()
         .fitOrScroll()
-        .leaveGuard(inProgress: taps > 0 || turnedDeck, celebrating: showCelebration)
-        .gameHeader(.upOrDown, instruction: AppLanguage.localized("game.upordown.instruction"))
+        .gameHeader(
+            .upOrDown, instruction: AppLanguage.localized("game.upordown.instruction"), inProgress: taps > 0 || turnedDeck,
+            celebrating: showCelebration
+        )
         .firstPlayGuide(.upOrDown, line: AppLanguage.localized("game.upordown.guide"), example: guideExample)
         .celebration(isPresented: $showCelebration, game: .upOrDown, detail: finalDetail, onPlayAgain: restart)
     }
 
     // MARK: - Table
+
+    private func openCard(_ deal: UpOrDownDeal) -> some View {
+        face(deal.open, width: cardWidth(deal) * 1.15)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(
+                String(format: AppLanguage.localized("game.upordown.a11y.open %@"), name(deal.open)))
+    }
 
     private func cardWidth(_ deal: UpOrDownDeal) -> Double {
         let count = Double(deal.piles.count)
@@ -156,14 +171,22 @@ struct UpOrDownView: View {
         let width = cardWidth(deal) * 1.15
         let nudge = deal.playablePiles.isEmpty && !deal.deck.isEmpty
         return Button(action: turnDeck) {
-            RoundedRectangle(cornerRadius: 10)
-                .fill(GameID.upOrDown.ink)
-                .overlay {
-                    RoundedRectangle(cornerRadius: 6).strokeBorder(Color.amber, lineWidth: 3).padding(8)
-                }
-                .overlay { if nudge { RoundedRectangle(cornerRadius: 10).stroke(Color.amber, lineWidth: 6) } }
-                .frame(width: width, height: width * 1.4)
-                .opacity(deal.deck.isEmpty ? 0.3 : 1)
+            VStack(spacing: 8) {
+                RoundedRectangle(cornerRadius: 10)
+                    .fill(GameID.upOrDown.ink)
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 6).strokeBorder(Color.amber, lineWidth: 3).padding(8)
+                    }
+                    .overlay { if nudge { RoundedRectangle(cornerRadius: 10).stroke(Color.amber, lineWidth: 6) } }
+                    .frame(width: width, height: width * 1.4)
+                // A face-down card does not say it can be tapped; the word does, all game long (#528).
+                Text(AppLanguage.localized("game.upordown.deck.caption"))
+                    .font(.title3.weight(.semibold))
+                    .multilineTextAlignment(.center)
+                    // Its own width, wider than the card if need be: never cut to "Otra c…".
+.fixedSize(horizontal: false, vertical: true)
+            }
+            .opacity(deal.deck.isEmpty ? 0.3 : 1)
         }
         .buttonStyle(.plain)
         .scaleEffect(nudge && pulse && !reduceMotion ? 1.06 : 1)

@@ -6,9 +6,17 @@ extension View {
     /// behind the page (dark surround in dark mode), and a
     /// speaker that reads the instruction aloud. Tapping it is asking to hear
     /// it, so it speaks even with "Read names aloud" off, like the photo
-    /// speaker (#139).
-    func gameHeader(_ game: GameID, instruction: String) -> some View {
-        navigationTitle(AppLanguage.localized(game.title))
+    /// speaker (#139). The page fills the screen, so the paper reaches every edge (#528), and
+    /// the back button is the same 100pt chevron in every game. Each game passes its own progress as
+    /// `inProgress` (round games their completed rounds); `LeaveGuard` alone decides which games ask
+    /// before leaving (#404).
+    func gameHeader(
+        _ game: GameID, instruction: String, inProgress: Bool = false, celebrating: Bool = false
+    ) -> some View {
+        frame(maxWidth: .infinity, maxHeight: .infinity)
+            // Inside the tint, so the leave prompt wears the game's ink.
+            .modifier(LeaveGuardModifier(game: game, inProgress: inProgress, celebrating: celebrating))
+            .navigationTitle(AppLanguage.localized(game.title))
             .navigationBarTitleDisplayMode(.inline)
             .tint(game.ink)
             // Cream paper behind every game, and its bar once content scrolls under it (#336).

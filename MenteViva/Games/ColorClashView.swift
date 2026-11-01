@@ -98,7 +98,10 @@ struct ColorClashView: View {
         .gameColumn()
         .padding()
         .fitOrScroll()
-        .gameHeader(.stroop, instruction: AppLanguage.localized("game.colorclash.instruction"))
+        .gameHeader(
+            .stroop, instruction: AppLanguage.localized("game.colorclash.instruction"),
+            inProgress: progress.completedRounds > 0
+        )
         .firstPlayGuide(.stroop, line: AppLanguage.localized("game.colorclash.instruction"), example: guideExample)
         .onAppear {
             // Fires again when the celebration closes; Play again has already dealt, so deal only once.

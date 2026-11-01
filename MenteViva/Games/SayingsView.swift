@@ -138,7 +138,10 @@ struct SayingsView: View {
         } action: { height in
             areaHeight = height
         }
-        .gameHeader(.sayings, instruction: AppLanguage.localized("game.sayings.instruction"))
+        .gameHeader(
+            .sayings, instruction: AppLanguage.localized("game.sayings.instruction"),
+            inProgress: progress.completedRounds > 0
+        )
         .onAppear { if rounds.isEmpty { deal() } }
         .onDisappear { CaptionSpeaker.stop() }
         .celebration(isPresented: $showCelebration, game: .sayings, detail: finalDetail, onPlayAgain: restart)

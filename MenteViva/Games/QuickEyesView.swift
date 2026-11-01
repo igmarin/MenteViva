@@ -157,7 +157,8 @@ struct QuickEyesView: View {
             instruction: AppLanguage.localized(
                 phase == .showing
                     ? (isPaced ? "game.quickeyes.instruction.paced" : "game.quickeyes.instruction")
-                    : phase == .invite ? "game.quickeyes.invite.title" : "game.quickeyes.prompt")
+                    : phase == .invite ? "game.quickeyes.invite.title" : "game.quickeyes.prompt"),
+            inProgress: progress.completedRounds > 0
         )
         // Not when the celebration closes: Play again has started the round already (#415).
         .onAppear { if options.isEmpty { startRound() } }

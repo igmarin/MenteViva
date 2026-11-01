@@ -129,7 +129,10 @@ struct RepeatSequenceView: View {
         // The board no longer stretches to fill the screen, so the screen does: the paper
         // background from `gameHeader` then reaches every edge.
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .gameHeader(.repeatSequence, instruction: AppLanguage.localized("game.sequence.instruction"))
+        .gameHeader(
+            .repeatSequence, instruction: AppLanguage.localized("game.sequence.instruction"),
+            inProgress: progress.completedRounds > 0
+        )
         .onAppear {
             // Dealt on the first measured width (the geometry action below): the screen is wider than
             // a Slide Over or Split View window, and a deal for it would be dealt again at once.
