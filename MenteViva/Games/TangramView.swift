@@ -157,6 +157,7 @@ struct TangramView: View {
     /// Resizes the tray cells for the board just measured; the board then grows or shrinks by as
     /// much and is measured again, and that pass asks for the same side (`TangramLayout.traySide`).
     private func settleTray() {
+        guard boardFrame.width > 0 else { return }
         let side = layout.traySide(board: boardFrame.size, tray: traySide, figure: figure, tiles: dealtTiles)
         if abs(side - traySide) >= 1 { traySide = side }
     }
@@ -305,9 +306,11 @@ struct TangramView: View {
             LazyVGrid(columns: [GridItem(.adaptive(minimum: traySide), spacing: gap)], spacing: gap) {
                 trayTiles
             }
-            // The dealt rows stay, so the board keeps its scale as the tiles go home.
+            // The dealt rows stay, so the board keeps its scale as the tiles go home. No reserve until
+            // the board is measured: at width 0 it would be one column of seven, squeezing the board.
             .frame(
-                minHeight: TangramLayout.gridHeight(side: traySide, width: boardFrame.width, tiles: dealtTiles),
+                minHeight: boardFrame.width > 0
+                    ? TangramLayout.gridHeight(side: traySide, width: boardFrame.width, tiles: dealtTiles) : 0,
                 alignment: .top)
         }
     }
@@ -532,7 +535,7 @@ private struct QuietTileStyle: ButtonStyle {
         configuration.label
             .foregroundStyle(Color.primary)
             .frame(maxWidth: .infinity, minHeight: 100)
-            .overlay(shape.strokeBorder(Color.secondary.opacity(0.5), lineWidth: 2))
+            .overlay(shape.strokeBorder(Color.secondary.opacity(0.7), lineWidth: 2))
             .contentShape(shape)
             .opacity(isEnabled ? (configuration.isPressed ? 0.6 : 1) : 0.4)
     }

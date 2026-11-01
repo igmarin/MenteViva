@@ -589,6 +589,36 @@ final class TangramPuzzleTests: XCTestCase {
             (TangramLayout.cell - TangramLayout.trayInset) / TangramLayout.trayReach, accuracy: 0.000_001)
     }
 
+    func testGivenAShapeOnABoardWhenFittedWithTheTraysCapThenItsScaleIsThePieceScale() {
+        // The view draws and hit-tests the board with this transform; the tray draws at `pieceScale`.
+        for key in ["tangram.shape.15", "tangram.shape.19", TangramShapes.all[0].key] {
+            let box = TangramPuzzle.boundingBox(of: shape(key))
+            for board in [CGSize(width: 343, height: 230), CGSize(width: 358, height: 425), CGSize(width: 802, height: 600)] {
+                for tray in [CGFloat(100), 140, 180] {
+                    let cap = (tray - TangramLayout.trayInset) / TangramLayout.trayReach
+                    XCTAssertEqual(
+                        TangramPuzzle.fitTransform(box: box, in: board, maxScale: cap).scale,
+                        TangramLayout.pieceScale(board: board, tray: tray, figure: box.size),
+                        accuracy: 0.000_001, "\(key) \(board) \(tray)")
+                }
+            }
+        }
+    }
+
+    func testGivenACapWhenTheReachFloorIsWorkedOutThenItUsesTheCappedScaleOnlyBelowTheFit() {
+        let shape = shape("tangram.shape.15")
+        let size = CGSize(width: 358, height: 425)
+        let fit = TangramPuzzle.fitTransform(box: TangramPuzzle.boundingBox(of: shape), in: size).scale
+        let uncapped = TangramPuzzle.reachFloor(points: 30, shape: shape, in: size)
+        let below = fit / 2
+        XCTAssertEqual(
+            TangramPuzzle.reachFloor(points: 30, shape: shape, in: size, maxScale: below), 30 / Double(below),
+            accuracy: 0.000_001)
+        XCTAssertEqual(
+            TangramPuzzle.reachFloor(points: 30, shape: shape, in: size, maxScale: fit * 2), uncapped,
+            accuracy: 0.000_001)
+    }
+
     // MARK: - Layout (#396)
 
     func testGivenAnIPhoneHeldUprightWhenTheLayoutIsChosenThenTheTraySlidesSideways() {
