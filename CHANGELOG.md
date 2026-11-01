@@ -5,6 +5,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Newest first.
 ## [Unreleased]
 
 ### Changed
+- **Remember Together is now Photo Stories (#513):** the game is called "Photo Stories" ("Historias en fotos"), and each family photo asks "Tell a story about this photo". It is dealt only once family photos are added: with none, it is not on Home, in today's plan or in the warm-up, and a plan saved earlier that day quietly drops it. Set up's photo section says that adding photos unlocks it, and one of its follow-up questions was reworded so it no longer repeats the prompt. Naming a photo still asks "Who is this?".
 - **Repeat the Sequence: the lit tile is unmistakable (#509):** a lit tile now has full colour, a thick white border (dark on the mustard tile) and a soft glow, and the other tiles dim while the sequence plays. Your own taps flash the same way without dimming the rest. With Reduce Motion it switches with no scaling or fading. Timing and sound are unchanged.
 - **One spelling of the name (#389):** the app is "MenteViva", one word, on the home screen, the Home title, About, the website and the store text.
 - **Tangram remembers the figures you have seen (#416):** a new Tangram figure is one you have not seen yet, even across days, until every figure has been shown; then it starts over.

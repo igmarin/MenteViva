@@ -56,7 +56,7 @@ final class WhyTheseGamesStringsTests: XCTestCase {
         XCTAssertEqual(value(strings["why.footer"], "es"), "Información educativa, no consejo médico.")
     }
 
-    /// A game line exercises; it never improves, boosts or prevents anything. Remember Together is
+    /// A game line exercises; it never improves, boosts or prevents anything. Photo Stories is
     /// the one line that describes the game instead — nothing in it can be answered wrongly, so it
     /// has no verb to claim with — and the approved copy says that in both languages.
     func testGivenEveryGameLineWhenReadThenItSaysWhatTheGameExercises() throws {

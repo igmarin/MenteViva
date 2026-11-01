@@ -21,7 +21,7 @@ for what changed, [docs/roadmap.md](docs/roadmap.md) for what's next, and
 | Name the Herd | Tap everything that belongs to the category |
 | Number Trail | Quick sums in a row; the operations and numbers grow with the level |
 | Quick Eyes | Look at a picture, then find it among the choices. Paced at levels 1–5; a quick flash at levels 6–10 |
-| Remember Together | Look at your family's photos (or everyday objects until you add some), one at a time. Nothing to get wrong |
+| Photo Stories | Look at your family's photos one at a time and tell a story about each. Dealt once you have added photos. Nothing to get wrong |
 | Sudoku | Fill the board, from 4×4 up to 9×9, each with one solution |
 | Up or Down | Golf solitaire: play a card one higher or one lower |
 | Finish the Saying | Pick the ending of a familiar saying |
@@ -39,7 +39,7 @@ decided by a small rule policy on the device (no network, no cost).
 - Zero third-party dependencies: SwiftUI, SwiftData and Foundation only.
 - Daily picks and levels are decided on the device by `DailyPolicy`. Each level follows a staircase:
   at most one move per game a day, never mid-game.
-- Every game except Remember Together has levels 1–10.
+- Every game except Photo Stories has levels 1–10.
 - Deals are small pure types that take the random generator as a parameter, so tests can
   replay them. Sudoku boards are generated with exactly one solution.
 - Every string is in one catalogue, `MenteViva/Localizable.xcstrings`, in English and Spanish.

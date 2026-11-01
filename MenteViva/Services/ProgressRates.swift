@@ -5,7 +5,7 @@ import Foundation
 /// level reached, and the game's share of the week's plays. A trend appears
 /// only after `minPlaysForTrend` plays this week, and only against this
 /// player's own earlier weeks of the same game. A game with no accuracy
-/// (Remember Together) has plays and days only.
+/// (Photo Stories) has plays and days only.
 struct ProgressRates: Equatable {
     let game: GameID
     let plays: Int

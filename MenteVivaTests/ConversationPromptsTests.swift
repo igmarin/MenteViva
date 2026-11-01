@@ -2,7 +2,7 @@ import XCTest
 
 @testable import MenteViva
 
-/// #379: which warm question goes with which Remember Together card.
+/// #379: which warm question goes with which Photo Stories card.
 final class ConversationPromptsTests: XCTestCase {
     /// Deterministic generator so the shuffle tests never flake.
     private struct SeededGenerator: RandomNumberGenerator {
@@ -86,5 +86,19 @@ final class ConversationPromptsTests: XCTestCase {
             XCTAssertFalse(english.contains("who is") || english.contains("who was"), key)
             XCTAssertFalse(spanish.contains("quién es") || spanish.contains("quién era"), key)
         }
+    }
+
+    /// #513: the game is Photo Stories, and a photo invites a story. "Who is this?" stays for naming a photo.
+    func testGivenTheCatalogWhenReadThenTheGameIsPhotoStoriesWithAStoryPrompt() throws {
+        let strings = try catalog()
+        func value(_ key: String, _ language: String) -> String? {
+            let localizations = (strings[key] as? [String: Any])?["localizations"] as? [String: [String: [String: String]]]
+            return localizations?[language]?["stringUnit"]?["value"]
+        }
+        XCTAssertEqual(value("game.reminiscence.title", "en"), "Photo Stories")
+        XCTAssertEqual(value("game.reminiscence.title", "es"), "Historias en fotos")
+        XCTAssertEqual(value("game.reminiscence.prompt.story", "en"), "Tell a story about this photo")
+        XCTAssertEqual(value("game.reminiscence.prompt.story", "es"), "Cuéntame una historia de esta foto")
+        XCTAssertEqual(value("game.reminiscence.prompt.photo", "en"), "Who is this?", "naming a photo keeps its question")
     }
 }

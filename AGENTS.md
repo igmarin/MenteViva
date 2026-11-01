@@ -59,7 +59,7 @@ docs/                 start at docs/README.md
 ## Current status
 
 - 14 games playable (the list is `GameID.swift` and README.md), levels 1–10 in every game but
-  Remember Together; ES/EN complete; local-only build is the default.
+  Photo Stories; ES/EN complete; local-only build is the default.
 - **Daily picks and levels are decided on the device** (`DailyPolicy`, #101): no model, no network,
   no cost. The app no longer calls Jev (#195); `docs/jev-json/` and `docs/jev-integration.md` are history.
 - Onboarding with goals and an optional warm-up set the starting levels (#212, #213). Each game is a

@@ -59,7 +59,7 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `family.photos.added %lld` | one: Added %lld photo. / other: Added %lld photos. | one: Se agregó %lld foto. / other: Se agregaron %lld fotos. | MemoryMatchView, SetUpView |  |
 | `family.photos.caption.a11y %lld` | Photo %lld: add or change its name | Foto %lld: poner o cambiar su nombre | SetUpView |  |
 | `family.photos.caption.add` | Add a name | Poner un nombre | SetUpView |  |
-| `family.photos.footer %lld` | Up to %lld photos. Memory Lane, Remember Together and Names and Faces use them. They stay on this device and are never uploaded. | Hasta %lld fotos. Camino de Memoria, Recordar juntos y Nombres y Caras las usan. Se quedan en este dispositivo y nunca se suben a internet. | SetUpView |  |
+| `family.photos.footer %lld` | Up to %lld photos, kept on this device and never uploaded. Memory Lane and Names and Faces use them, and adding photos unlocks Photo Stories. | Hasta %lld fotos, que se quedan en este dispositivo y nunca se suben a internet. Camino de Memoria y Nombres y Caras las usan, y al agregar fotos se desbloquea Historias en fotos. | SetUpView |  |
 | `family.photos.full %lld` | The album holds %lld photos. Remove one to add another. | El álbum guarda %lld fotos. Quita una para agregar otra. | SetUpView |  |
 | `family.photos.header` | Family photos | Fotos de la familia | SetUpView |  |
 | `family.photos.remove` | Remove | Quitar | FamilyPhotoCaptionSheet |  |
@@ -168,10 +168,10 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `game.reminiscence.hear` | Hear it again | Escucharlo otra vez | ReminiscenceView |  |
 | `game.reminiscence.next` | Next | Siguiente | ReminiscenceView |  |
 | `game.reminiscence.prompt.object` | What is this? | ¿Qué es esto? | ReminiscenceDeck |  |
-| `game.reminiscence.prompt.photo` | Who is this? | ¿Quién es? | OnboardingView, ReminiscenceDeck |  |
+| `game.reminiscence.prompt.photo` | Who is this? | ¿Quién es? | OnboardingView |  |
+| `game.reminiscence.prompt.story` | Tell a story about this photo | Cuéntame una historia de esta foto | ReminiscenceDeck |  |
 | `game.reminiscence.show` | Show me | Muéstrame | ReminiscenceView |  |
-| `game.reminiscence.title` | Remember Together | Recordar juntos | GameID |  |
-| `game.reminiscence.together` | Let's look together | Veámoslo juntos | ReminiscenceDeck |  |
+| `game.reminiscence.title` | Photo Stories | Historias en fotos | GameID |  |
 | `game.round.a11y %lld %lld` | Round %1$lld of %2$lld | Ronda %1$lld de %2$lld | RoundCounter |  |
 | `game.sayings.a11y.listen` | Hear the saying | Escuchar el refrán | SayingsView |  |
 | `game.sayings.instruction` | How does this saying end? | ¿Cómo termina este refrán? | SayingsView |  |
@@ -370,7 +370,7 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `onboarding.pace.normal` | Normal | Normal | OnboardingSteps |  |
 | `onboarding.pace.title` | How would you like to start? | ¿Cómo quieres empezar? | OnboardingSteps |  |
 | `onboarding.photos.add.hint` | Opens your photos. Pick a few of people you love. | Abre tus fotos. Elige unas de personas queridas. | OnboardingView |  |
-| `onboarding.photos.body` | Three games use them: Memory Lane, Remember Together and Names and Faces. They stay on this device. | Tres juegos las usan: Camino de Memoria, Recordar juntos y Nombres y Caras. Se quedan en este dispositivo. | OnboardingView |  |
+| `onboarding.photos.body` | Three games use them: Memory Lane, Photo Stories and Names and Faces. They stay on this device. | Tres juegos las usan: Camino de Memoria, Historias en fotos y Nombres y Caras. Se quedan en este dispositivo. | OnboardingView |  |
 | `onboarding.photos.later` | Later, in Settings | Más tarde, en Ajustes | OnboardingView |  |
 | `onboarding.photos.later.hint` | Goes on without photos. You can add them any time in Settings. | Sigue sin fotos. Puedes añadirlas cuando quieras en Ajustes. | OnboardingView |  |
 | `onboarding.photos.title` | Add a few photos of people you love? | ¿Añadimos unas fotos de personas queridas? | OnboardingView |  |
@@ -478,7 +478,7 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `reminiscence.ask.01` | Where was this? | ¿Dónde fue esto? | ConversationPrompts |  |
 | `reminiscence.ask.02` | What made you laugh that day? | ¿Qué los hizo reír ese día? | — |  |
 | `reminiscence.ask.03` | What does this picture make you think of? | ¿En qué te hace pensar esta foto? | — |  |
-| `reminiscence.ask.04` | Is there a story that goes with this one? | ¿Hay alguna historia que acompañe a esta foto? | — |  |
+| `reminiscence.ask.04` | Who would enjoy hearing this story? | ¿A quién le gustaría oír esta historia? | — |  |
 | `reminiscence.ask.05` | What do you like most about this picture? | ¿Qué es lo que más te gusta de esta foto? | — |  |
 | `reminiscence.ask.06` | What time of year does this feel like? | ¿A qué época del año te recuerda? | — |  |
 | `reminiscence.ask.07` | What do you imagine was happening here? | ¿Qué te imaginas que pasaba aquí? | — |  |
@@ -761,7 +761,7 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `settings.sound` | Sound & haptics | Sonido y vibración | SettingsView |  |
 | `settings.sound.hint` | Gentle tones and taps | Tonos y toques suaves | SettingsView |  |
 | `settings.speak` | Read names aloud | Leer los nombres en voz alta | SettingsView |  |
-| `settings.speak.hint` | Says the name out loud when you tap Show me in Remember Together. Off by default. | Dice el nombre en voz alta cuando tocas Muéstrame en Recordar juntos. Desactivado de forma predeterminada. | SettingsView |  |
+| `settings.speak.hint` | Says the name out loud when you tap Show me in Photo Stories. Off by default. | Dice el nombre en voz alta cuando tocas Muéstrame en Historias en fotos. Desactivado de forma predeterminada. | SettingsView |  |
 | `settings.textsize` | Bigger text | Texto más grande | SettingsView |  |
 | `settings.title` | Settings | Ajustes | HomeView, SettingsView |  |
 | `settings.version` | Version | Versión | SettingsView |  |
@@ -805,7 +805,7 @@ Mark rows: ✅ fine / ✏️ suggestion (write the fix) / ❓ needs context (ask
 | `why.game.memory` | Memory Lane exercises remembering where things are. | Camino de Memoria ejercita recordar dónde está cada cosa. | WhyTheseGamesView |  |
 | `why.game.photocaptions` | Names and Faces exercises matching a name to a face. | Nombres y Caras ejercita unir un nombre con una cara. | WhyTheseGamesView |  |
 | `why.game.quickeyes` | Quick Eyes exercises noticing things quickly. | Ojos Ágiles ejercita fijarse en las cosas con rapidez. | WhyTheseGamesView |  |
-| `why.game.reminiscence` | Remember Together is a chance to enjoy your own photos and talk about them with someone. There are no right or wrong answers. | Recordar juntos es una ocasión para disfrutar tus fotos y conversar sobre ellas con alguien. No hay respuestas buenas ni malas. | WhyTheseGamesView |  |
+| `why.game.reminiscence` | Photo Stories is a chance to enjoy your own photos and tell stories about them with someone. There are no right or wrong answers. | Historias en fotos es una ocasión para disfrutar tus fotos y contar historias sobre ellas con alguien. No hay respuestas buenas ni malas. | WhyTheseGamesView |  |
 | `why.game.sayings` | Finish the Saying exercises finding words you already know. | Termina el refrán ejercita encontrar palabras que ya conoces. | WhyTheseGamesView |  |
 | `why.game.sequence` | Repeat the Sequence exercises holding a few things in mind at once. | Repite la secuencia ejercita tener varias cosas en mente a la vez. | WhyTheseGamesView |  |
 | `why.game.sliding` | Sliding Blocks exercises planning your moves before you make them. | Bloques deslizantes ejercita planear los movimientos antes de hacerlos. | WhyTheseGamesView |  |
