@@ -96,8 +96,8 @@ struct OnboardingView: View {
             .padding(.horizontal, 8)
 
             Text(AppLanguage.localized("onboarding.disclaimer"))
-                .font(.footnote)
-                .foregroundStyle(.secondary)
+                .font(.body)
+                .foregroundStyle(Color.inkSoft)
                 .multilineTextAlignment(.center)
 
             Spacer()
@@ -196,7 +196,7 @@ struct OnboardingView: View {
         VStack(spacing: 10) {
             Text(String(format: AppLanguage.localized("onboarding.step %lld %lld"), step, OnboardingSteps.stepCount))
                 .font(.body)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Color.inkSoft)
 
             HStack(spacing: 10) {
                 ForEach(1...OnboardingSteps.stepCount, id: \.self) { dot in

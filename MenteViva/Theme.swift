@@ -24,6 +24,11 @@ extension Color {
     /// Faded blue: the label of secondary actions (6.9:1 on cream).
     static let fadedBlue = Color(light: 0x35566D, dark: 0x9DBBD3)
 
+    /// Hints, helper lines and list headers: the quiet voice that still has to be read. Replaces
+    /// `.secondary`, which blends to 3.3:1 on cream (#527). 6.7:1 on cream, 7.6:1 on white,
+    /// 8.8:1 on the dark surround.
+    static let inkSoft = Color(light: 0x5E5248, dark: 0xC9BC9F)
+
     init(light: UInt32, dark: UInt32) {
         self.init(UIColor { $0.userInterfaceStyle == .dark ? UIColor(rgb: dark) : UIColor(rgb: light) })
     }

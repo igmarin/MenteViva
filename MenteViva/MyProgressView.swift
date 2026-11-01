@@ -38,6 +38,7 @@ struct MyProgressView: View {
                 } header: {
                     Text(AppLanguage.localized("progress.share.header"))
                         .font(.title3.weight(.semibold))
+                        .foregroundStyle(Color.inkSoft)
                 }
 
                 ForEach(rates, id: \.game) { r in
@@ -47,6 +48,7 @@ struct MyProgressView: View {
                     } header: {
                         GameName(game: r.game)
                             .font(.title3.weight(.semibold))
+                            .foregroundStyle(Color.inkSoft)
                             .accessibilityAddTraits(.isHeader)
                     }
                 }
