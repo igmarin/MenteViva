@@ -195,7 +195,7 @@ nonisolated enum MemoryPhotos {
     }
 }
 
-/// Games that cannot be played yet, kept off Home, the plan and the family's list (#142).
+/// Games that cannot be played yet, kept off Home and out of the plan (#142).
 nonisolated enum GameAvailability {
     private static let lock = NSLock()
     nonisolated(unsafe) private static var cached: Set<GameID>?
@@ -220,8 +220,14 @@ nonisolated enum GameAvailability {
         lock.unlock()
     }
 
+    /// Photo Stories (#513) is about the family's photos, so with none added it is not dealt. It
+    /// needs one photo, not a name; Names and Faces needs several captioned ones.
     private static func read(_ folder: URL) -> Set<GameID> {
-        PhotoCaptionDeal.eligible(MemoryPhotos.captioned(in: folder)).count < PhotoCaptionDeal.minPairs
-            ? [.photoCaptions] : []
+        var games: Set<GameID> = []
+        if PhotoCaptionDeal.eligible(MemoryPhotos.captioned(in: folder)).count < PhotoCaptionDeal.minPairs {
+            games.insert(.photoCaptions)
+        }
+        if MemoryPhotos.all(in: folder).isEmpty { games.insert(.reminiscence) }
+        return games
     }
 }

@@ -2,7 +2,7 @@ import XCTest
 
 @testable import MenteViva
 
-/// #139: nothing in Remember Together can be answered wrongly, so a session
+/// #139: nothing in Photo Stories can be answered wrongly, so a session
 /// records plays and days but never accuracy, and the level rules ignore it.
 final class ReminiscenceSessionTests: XCTestCase {
     private func sessions(_ count: Int) -> [GameSession] {

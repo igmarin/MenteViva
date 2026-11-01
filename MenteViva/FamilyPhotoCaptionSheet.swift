@@ -5,7 +5,7 @@ import SwiftUI
 struct FamilyPhotoCaptionSheet: View {
     let photo: URL
     /// The line above the field. Set up asks for "a name or a few words"; the first run asks
-    /// "Who is this?", the same question Remember Together asks of a photo (#374).
+    /// "Who is this?", the question that names a photo (#374). Photo Stories asks for a story instead (#513).
     let promptKey: String
     /// Called after a save or a removal so the photo list can refresh.
     let onChange: () -> Void

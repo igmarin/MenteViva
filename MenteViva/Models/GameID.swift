@@ -85,7 +85,7 @@ nonisolated enum GameID: String, CaseIterable, Codable {
         }
     }
 
-    /// Whether the game has easy/medium/hard. Remember Together has none: nothing in it
+    /// Whether the game has easy/medium/hard. Photo Stories has none: nothing in it
     /// can be answered wrongly, so there is no level to reach or pin (#139).
     var hasLevels: Bool { self != .reminiscence }
 }
